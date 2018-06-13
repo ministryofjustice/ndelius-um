@@ -1,0 +1,27 @@
+dn: dc=bcl,dc=local
+objectclass: top
+objectclass: domain
+objectclass: extensibleObject
+dc: bcl
+
+dn: cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: organizationalUnit
+cn: Users
+
+dn: cn=test.user,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: person
+objectclass: NDUser
+cn: test.user
+uid: test.user
+password: $2a$10$GpcWCqXWKxK1DKzkmM7MS.9qtIQbAQdow0i/Lt7i4Dn9E4seVajMC
+description: Test user for basic authentication (password=secret)
+
+dn: cn=TestUser1,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: person
+objectclass: NDUser
+cn: TestUser1
+uid: TestUser1
+description: Test user for single sign-on (no password)

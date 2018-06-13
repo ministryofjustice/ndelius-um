@@ -1,0 +1,55 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.2.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+		gradlePluginPortal()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.moowork.node'
+
+group = 'uk.co.bconline.ndelius'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+sourceSets {
+	main.resources.srcDirs 'src/main/resources', 'ui/dist'
+}
+
+npm_install.args = ['ui']
+npm_run.args = ['build', '--prefix=ui']
+npm_run.dependsOn(npm_install)
+processResources.dependsOn(npm_run)
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-data-ldap')
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.boot:spring-boot-starter-hateoas')
+	compile('org.springframework.security.kerberos:spring-security-kerberos-web:1.0.1.RELEASE')
+	compile('io.jsonwebtoken:jjwt:0.9.0')
+	runtime('org.springframework.boot:spring-boot-devtools')
+	runtime('com.h2database:h2')
+	runtime('com.unboundid:unboundid-ldapsdk')
+	compileOnly('org.projectlombok:lombok')
+	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
+	testCompile('org.springframework.security:spring-security-test')
+}

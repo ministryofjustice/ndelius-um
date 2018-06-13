@@ -1,0 +1,11 @@
+spring.application.name: ndelius-um
+
+spring.resources.static-locations: classpath:/ui
+
+jwt:
+  cookie: AUTH-TOKEN
+  expiry: 30
+  secret: a-randomly-generated-secret-key # change me!
+
+logging.level:
+  org.springframework.web: ERROR

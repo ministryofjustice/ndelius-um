@@ -1,0 +1,39 @@
+{
+  "properties": [
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret key used for signing JWT tokens."
+    },
+    {
+      "name": "jwt.expiry",
+      "type": "java.lang.Integer",
+      "description": "JWT token expiry in minutes."
+    },
+    {
+      "name": "jwt.cookie",
+      "type": "java.lang.String",
+      "description": "Name of the cookie used for storing the JWT token in the login response."
+    },
+    {
+      "name": "spnego.debug",
+      "type": "java.lang.String",
+      "description": "Enable debug output during SPGNEGO authentication. It may also be useful to set 'logging.level.org.springframework.security.kerberos: DEBUG'."
+    },
+    {
+      "name": "spnego.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether or not Kerberos/SPNEGO authentication against ad.primary is enabled for this environment. If disabled, Basic Authentication against oid will be used."
+    },
+    {
+      "name": "spnego.service-principal",
+      "type": "java.lang.String",
+      "description": "Service principal defined in Active Directory for this application. Used to verify Kerberos credentials."
+    },
+    {
+      "name": "spnego.keytab",
+      "type": "java.lang.String",
+      "description": "Filesystem location of the keytab file used for verification of Kerberos credentials."
+    }
+  ]
+}

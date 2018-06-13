@@ -1,0 +1,22 @@
+spring.profiles.include: default
+
+spring.h2.console.enabled: true
+spring.datasource.url: 'jdbc:h2:mem:testdb;Mode=Oracle'
+
+spring.ldap.embedded:
+  base-dn: dc=bcl,dc=local
+  credential:
+    username: cn=orcladmin
+    password: OIDmanager1
+  ldif: classpath:schema.ldif
+  port: 3060
+  validation.enabled: false
+
+oid:
+  base: dc=bcl,dc=local
+  urls: ldap://localhost:3060
+  username: cn=orcladmin
+  password: OIDmanager1
+
+logging.level:
+  uk.co.bconline.ndelius: DEBUG
