@@ -15,7 +15,7 @@ objectclass: person
 objectclass: NDUser
 cn: test.user
 uid: test.user
-password: $2a$10$GpcWCqXWKxK1DKzkmM7MS.9qtIQbAQdow0i/Lt7i4Dn9E4seVajMC
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test user for basic authentication (password=secret)
 
 dn: cn=TestUser1,cn=Users,dc=bcl,dc=local

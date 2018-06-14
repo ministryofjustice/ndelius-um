@@ -29,7 +29,7 @@ public final class OIDUser implements UserDetails, Serializable
 	private String username;
 
 	@JsonIgnore
-	@Attribute(name="password")
+	@Attribute(name="userPassword")
 	private String password;
 
 	@Override

@@ -7,7 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
@@ -32,7 +32,26 @@ public class WebSecurityGlobalConfig extends WebSecurityConfigurerAdapter
 	@Bean
 	public PasswordEncoder passwordEncoder()
 	{
-		return new BCryptPasswordEncoder();
+		return new LdapShaPasswordEncoder()
+		{
+			@Override
+			public boolean matches(CharSequence rawPassword, String encodedPassword)
+			{
+				if (!encodedPassword.startsWith("{"))
+				{
+					// OID passes back the password as a stringify'd byte array, so we manually unpick it and turn it
+					// back into a hashed string for verification here.
+					String[] split = encodedPassword.split(",");
+					byte[] bytes = new byte[split.length];
+					for (int i = 0; i < split.length; i++)
+					{
+						bytes[i] = Byte.valueOf(split[i]);
+					}
+					encodedPassword = new String(bytes);
+				}
+				return super.matches(rawPassword, encodedPassword);
+			}
+		};
 	}
 
 	@Bean
