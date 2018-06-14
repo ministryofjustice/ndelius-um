@@ -27,7 +27,7 @@ sourceSets {
 }
 
 npm_install.args = ['ui']
-npm_run.args = ['build', '--prefix=ui']
+npm_run.args = ['build-prod', '--prefix=ui']
 npm_run.dependsOn(npm_install)
 processResources.dependsOn(npm_run)
 
