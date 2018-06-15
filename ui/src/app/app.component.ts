@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {environment} from "../environments/environment";
 import {HttpClient} from "@angular/common/http";
 
@@ -7,13 +7,15 @@ import {HttpClient} from "@angular/common/http";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title: string = "NDelius User Management";
   me: string;
-  constructor(private http:HttpClient) {
-    http.get(environment.api.baseurl + "whoami")
-      .subscribe(
-        res => this.me = res['username'],
-        error => console.error(error));
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.http
+      .get(environment.api.baseurl + "whoami")
+      .subscribe(res => this.me = res['username']);
   }
 }

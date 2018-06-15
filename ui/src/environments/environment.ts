@@ -5,7 +5,11 @@
 export const environment = {
   production: false,
   api: {
-    baseurl: '/api/'
+    baseurl: 'http://localhost:8080/api/'
+  },
+  test: {
+    user: 'test.user',
+    pass: 'secret'
   }
 };
 

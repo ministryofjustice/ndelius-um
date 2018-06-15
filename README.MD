@@ -61,6 +61,14 @@ Once running, go to http://localhost:8080 in your browser and login with the cre
 * username=*test.user*
 * password=*secret*
 
+## UI Development
+To enable live reloading of the front-end during development, run
+```bash
+npm start --prefix=ui
+```
+and go to http://localhost:4200.
+Authentication will be performed using the credentials provided in `environment.ts`. 
+
 ## Authentication 
 Authentication against the API should be first performed against the `/api/login` endpoint:
 ```bash
