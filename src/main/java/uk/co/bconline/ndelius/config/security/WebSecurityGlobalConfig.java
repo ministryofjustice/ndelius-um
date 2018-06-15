@@ -13,6 +13,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
 
@@ -67,5 +69,15 @@ public class WebSecurityGlobalConfig extends WebSecurityConfigurerAdapter
 		return new OrRequestMatcher(
 				new NegatedRequestMatcher(new AntPathRequestMatcher("/api/**")),	// static resources
 				new AntPathRequestMatcher("/api/login"));							// login endpoint
+	}
+
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**");
+			}
+		};
 	}
 }

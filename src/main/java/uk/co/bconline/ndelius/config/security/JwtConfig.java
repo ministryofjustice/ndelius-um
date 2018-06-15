@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.config.security;
 
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE;
+import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import java.io.IOException;
@@ -62,6 +63,7 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 				.addFilterBefore(jwtAuthenticationFilter(), BasicAuthenticationFilter.class)
 				.authenticationProvider(jwtAuthenticationProvider())
 				.authorizeRequests()
+					.antMatchers(OPTIONS).permitAll()
 					.requestMatchers(new NegatedRequestMatcher(loginRequestMatcher)).authenticated()
 					.and()
 				.csrf().disable();
@@ -96,7 +98,7 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 						}
 					}
 				}
-				else if (!loginRequestMatcher.matches(request))
+				else if (!loginRequestMatcher.matches(request) && !"OPTIONS".equals(request.getMethod()))
 				{
 					jwtEntryPoint().commence(request, response, new InsufficientAuthenticationException("Missing token"));
 					return;

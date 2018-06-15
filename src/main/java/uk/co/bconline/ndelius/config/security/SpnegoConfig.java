@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.config.security;
 
+import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import java.io.IOException;
@@ -78,6 +79,7 @@ public class SpnegoConfig extends WebSecurityConfigurerAdapter
 				.authenticationProvider(kerberosAuthenticationProvider())
 				.authenticationProvider(kerberosServiceAuthenticationProvider())
 				.authorizeRequests()
+					.antMatchers(OPTIONS).permitAll()
 					.requestMatchers(loginRequestMatcher).authenticated()
 					.and()
 				.csrf().disable();
@@ -111,7 +113,7 @@ public class SpnegoConfig extends WebSecurityConfigurerAdapter
 			{
 				HttpServletRequest request = (HttpServletRequest) req;
 				HttpServletResponse response = (HttpServletResponse) res;
-				if (shouldNotFilter(request)) {
+				if ("OPTIONS".equals(request.getMethod()) || shouldNotFilter(request)) {
 					filterChain.doFilter(request, response);
 				} else {
 					Authentication existingAuth = SecurityContextHolder.getContext().getAuthentication();

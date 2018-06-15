@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.config.security;
 
+import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import java.io.IOException;
@@ -51,6 +52,7 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter
 					.and()
 				.addFilter(basicAuthenticationFilter())
 				.authorizeRequests()
+					.antMatchers(OPTIONS).permitAll()
 					.requestMatchers(loginRequestMatcher).authenticated()
 					.and()
 				.csrf().disable();
@@ -69,10 +71,10 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter
 					FilterChain filterChain) throws IOException, ServletException
 			{
 				String header = request.getHeader("Authorization");
-				if (header != null && header.startsWith("Basic "))
+				if ("OPTIONS".equals(request.getMethod()) || (header != null && header.startsWith("Basic ")))
 				{
 					super.doFilterInternal(request, response, filterChain);
-				} else  {
+				} else {
 					basicEntryPoint().commence(request, response, null);
 				}
 			}
