@@ -12,6 +12,10 @@ import {flatMap} from "rxjs/operators";
 @Injectable()
 export class LoginInterceptor implements HttpInterceptor {
   static token: string;
+  user = {
+    name: 'test.user',
+    pass: 'secret'
+  };
 
   constructor(private http: HttpClient) {
   }
@@ -22,10 +26,10 @@ export class LoginInterceptor implements HttpInterceptor {
     if (LoginInterceptor.token != null) {
       return LoginInterceptor.appendToken(req, next);
     } else {
-      console.log("In development mode, authenticating as", environment.test.user);
+      console.log("In development mode, authenticating as", this.user.name);
 
       return this.http.get(environment.api.baseurl + "login", {
-        headers: {"Authorization": "Basic " + btoa(environment.test.user + ":" + environment.test.pass)}
+        headers: {"Authorization": "Basic " + btoa(this.user.name + ":" + this.user.pass)}
       }).pipe(flatMap((res: HttpResponse<any>) => {
         console.log("Storing auth token", res);
         LoginInterceptor.token = res['token'];
