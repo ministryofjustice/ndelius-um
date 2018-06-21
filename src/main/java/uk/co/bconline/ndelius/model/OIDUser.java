@@ -28,6 +28,12 @@ public final class OIDUser implements UserDetails, Serializable
 	@Attribute(name="cn")
 	private String username;
 
+	@Attribute(name="givenName")
+	private String forenames;
+
+	@Attribute(name="sn")
+	private String surname;
+
 	@JsonIgnore
 	@Attribute(name="userPassword")
 	private String password;

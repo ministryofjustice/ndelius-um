@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, Output} from "@angular/core";
 import {User} from "../../model/User";
 import {ActivatedRoute, Router} from "@angular/router";
-import {filter, flatMap} from "rxjs/operators";
+import {flatMap} from "rxjs/operators";
 import {UserService} from "../../service/user.service";
 
 @Component({
@@ -12,7 +12,8 @@ export class SearchComponent implements OnInit {
   @Input()  query: string = "";
   @Output() users: User[] = [];
 
-  page: number = 1;
+  page: number;
+  hasMoreResults: boolean = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private service: UserService) {}
 
@@ -20,12 +21,23 @@ export class SearchComponent implements OnInit {
     this.route.queryParams.pipe(
       flatMap(params => this.service.users(
         this.query = params.q,
-        this.page = params.page || 1
+        this.page = +params.page || 1
       ))
-    ).subscribe(users => this.users = users);
+    ).subscribe(users => {
+      this.hasMoreResults = users.length >= 10;
+      this.users = users
+    });
   }
 
   search() {
     this.router.navigate(['/search'], { queryParams: { q: this.query } });
+  }
+
+  nextPage() {
+    this.router.navigate(['/search'], { queryParams: { q: this.query, page: this.page+1 } });
+  }
+
+  prevPage() {
+    this.router.navigate(['/search'], { queryParams: { q: this.query, page: this.page-1 } });
   }
 }
