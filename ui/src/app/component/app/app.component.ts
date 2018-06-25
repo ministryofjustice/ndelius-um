@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {environment} from "../../../environments/environment";
+import {UserService} from "../../service/user.service";
 
 @Component({
   selector: 'app-root',
@@ -10,11 +9,9 @@ export class AppComponent implements OnInit {
   title: string = "NDelius User Management";
   me: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(private service: UserService) {}
 
   ngOnInit() {
-    this.http
-      .get(environment.api.baseurl + "whoami")
-      .subscribe(res => this.me = res['username']);
+    this.service.whoami().subscribe(res => this.me = res['username']);
   }
 }

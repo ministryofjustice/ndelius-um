@@ -8,17 +8,17 @@ import {SearchComponent} from "../component/search/search.component";
 import {UserComponent} from "../component/user/user.component";
 import {AppRoutingModule} from "./app.routing.module";
 import {LoginInterceptor} from "../interceptor/login.interceptor";
-
 import {environment} from "../../environments/environment";
+import {RestUserService} from "../service/impl/rest.user.service";
+import {UserService} from "../service/user.service";
 
 @NgModule({
   declarations: [AppComponent, SearchComponent, UserComponent],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
-  providers: environment.production? []: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: LoginInterceptor,
-    multi: true,
-  }],
+  providers: [
+    {provide: UserService, useClass: RestUserService},
+    ...(environment.production? []: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}])
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
