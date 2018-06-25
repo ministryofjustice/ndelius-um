@@ -32,30 +32,35 @@ public final class ADUser implements UserDetails, Serializable
 	@Attribute(name="password")
 	private String password;
 
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities()
 	{
 		return null;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired()
 	{
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked()
 	{
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired()
 	{
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isEnabled()
 	{
