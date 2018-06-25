@@ -18,7 +18,7 @@ import lombok.ToString;
 
 @Data
 @ToString(exclude = "password")
-@Entry(objectClasses = "NDUser")
+@Entry(objectClasses = "NDUser", base="cn=Users")
 public final class OIDUser implements UserDetails, Serializable
 {
 	@Id
@@ -44,24 +44,28 @@ public final class OIDUser implements UserDetails, Serializable
 		return null;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired()
 	{
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked()
 	{
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired()
 	{
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isEnabled()
 	{

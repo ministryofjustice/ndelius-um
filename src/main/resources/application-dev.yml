@@ -3,20 +3,50 @@ spring.profiles.include: default
 spring.h2.console.enabled: true
 spring.datasource.url: 'jdbc:h2:mem:testdb;Mode=Oracle'
 
-spring.ldap.embedded:
-  base-dn: dc=bcl,dc=local
-  credential:
-    username: cn=orcladmin
-    password: OIDmanager1
-  ldif: classpath:schema.ldif
-  port: 3060
-  validation.enabled: false
+embedded:
+  oid:
+    base-dn: dc=bcl,dc=local
+    credential:
+      username: cn=orcladmin
+      password: OIDmanager1
+    ldif: classpath:ldif/oid.ldif
+    port: 3060
+    validation.enabled: false
+  ad:
+    primary:
+      base-dn: dc=ad1,dc=local
+      credential:
+        username: cn=Administrator,cn=Users,dc=ad1,dc=local
+        password: secret
+      ldif: classpath:ldif/ad1.ldif
+      port: 389
+      validation.enabled: false
+    secondary:
+      base-dn: dc=ad2,dc=local
+      credential:
+        username: cn=Administrator,cn=Users,dc=ad2,dc=local
+        password: secret
+      ldif: classpath:ldif/ad2.ldif
+      port: 390
+      validation.enabled: false
 
 oid:
   base: dc=bcl,dc=local
   urls: ldap://localhost:3060
   username: cn=orcladmin
   password: OIDmanager1
+
+ad:
+  primary:
+    base: dc=ad1,dc=local
+    urls: ldap://localhost:389
+    username: cn=Administrator,cn=Users,dc=ad1,dc=local
+    password: secret
+  secondary:
+    base: dc=ad2,dc=local
+    urls: ldap://localhost:390
+    username: cn=Administrator,cn=Users,dc=ad2,dc=local
+    password: secret
 
 logging.level:
   uk.co.bconline.ndelius: DEBUG

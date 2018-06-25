@@ -8,7 +8,7 @@ to DOM1.
 ### Requirements
 The following dependencies are required to build this application:
 * [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-* [npm 5+](https://www.npmjs.com/)
+* [NodeJS + NPM](https://www.nodejs.org/download)
 * [Angular CLI 6+](https://cli.angular.io/) (`npm install -g angular-cli`)
 
 ### Build and run tests
@@ -19,7 +19,7 @@ The following dependencies are required to build this application:
 ```bash
 ./gradlew clean assemble
 ```
-This will also package and build the UI module into the application. For more info on the UI module, see /ui/README.MD.
+This will also package and build the UI module into the application. For more info on the UI module, see ui/README.MD.
 
 ## Configuration
 The application is configured with [conventional Spring parameters](https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html).
@@ -32,6 +32,7 @@ oid
 ad.primary
 ad.secondary
 ```
+See application-dev.yml for an example of how these can be configured.
 
 ### JWT
 The below properties are used to configure JWT token generation and verification:
@@ -47,14 +48,14 @@ jwt:
 By default, the app will run on http://localhost:8080. This can be overridden with the parameters `server.address` and 
 `server.port`
 ```bash
-java -jar /build/libs/ndelius-um-api.jar
+java -jar build/libs/ndelius-um-api.jar
 ```
 
 ### Run with the development profile
-Activating the `dev` profile will start the application in Basic Auth mode with an embedded LDAP server to emulate OID, 
-and an embedded H2 database. 
+Activating the `dev` profile will start the application in Basic Auth mode with 3 embedded LDAP servers to emulate OID 
+(port 3060) and the two Active Directory instances (ports 389, 390), as well as an embedded H2 database. 
 ```bash
-java -jar /build/libs/ndelius-um-api.jar --spring.profiles.active=dev
+java -jar build/libs/ndelius-um-api.jar --spring.profiles.active=dev
 ```
 
 Once running, go to http://localhost:8080 in your browser and login with the credentials:

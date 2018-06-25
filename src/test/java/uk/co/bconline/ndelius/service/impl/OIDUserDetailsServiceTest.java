@@ -1,8 +1,8 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
@@ -32,5 +32,15 @@ public class OIDUserDetailsServiceTest
 		users.forEach(user ->
 				assertThat(user.getForenames(), startsWith("J"))
 		);
+	}
+
+	@Test
+	public void retrieveRoles()
+	{
+		List<String> roles = service.getUserRoles("test.user");
+
+		assertFalse(roles.isEmpty());
+		assertThat(roles, hasItem("UMBI001"));
+		assertThat(roles, not(hasItem("UMBI999")));
 	}
 }

@@ -9,6 +9,22 @@ objectclass: top
 objectclass: organizationalUnit
 cn: Users
 
+dn: cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: organizationalUnit
+cn: ndRoleCatalogue
+
+dn: cn=UMBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: NDRole
+cn: UMBT001
+description: User Administrator
+UIBusinessInteraction: UMBI001
+UIBusinessInteraction: UMBI002
+UIBusinessInteraction: UMBI003
+UIBusinessInteraction: UMBI004
+UIBusinessInteraction: UMBI005
+
 dn: cn=test.user,cn=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: person
@@ -17,6 +33,13 @@ cn: test.user
 uid: test.user
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test user for basic authentication (password=secret)
+
+dn: cn=UMBT001,cn=test.user,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UMBT001
+aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
 
 dn: cn=TestUser1,cn=Users,dc=bcl,dc=local
 objectclass: top
