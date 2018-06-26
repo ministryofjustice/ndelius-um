@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.service.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.util.List;
@@ -42,5 +43,14 @@ public class OIDUserDetailsServiceTest
 		assertFalse(roles.isEmpty());
 		assertThat(roles, hasItem("UMBI001"));
 		assertThat(roles, not(hasItem("UMBI999")));
+	}
+
+	@Test
+	public void retrieveOIDUser()
+	{
+		service.getOIDUser("test.user").ifPresent(oidUser -> {
+			assertEquals("Test", oidUser.getForenames());
+			assertEquals("User", oidUser.getSurname());
+		});
 	}
 }

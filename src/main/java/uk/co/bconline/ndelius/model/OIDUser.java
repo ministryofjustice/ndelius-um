@@ -2,12 +2,14 @@ package uk.co.bconline.ndelius.model;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import javax.naming.Name;
 
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.odm.annotations.Transient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -37,6 +39,9 @@ public final class OIDUser implements UserDetails, Serializable
 	@JsonIgnore
 	@Attribute(name="userPassword")
 	private String password;
+
+	@Transient
+	private List<String> roles;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities()

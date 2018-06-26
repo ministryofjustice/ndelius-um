@@ -5,6 +5,7 @@ import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,5 +122,11 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				.spliterator(), false)
 				.skip(pageSize * (page-1))
 				.collect(toList());
+	}
+
+	@Override
+	public Optional<OIDUser> getOIDUser(String username)
+	{
+		return userRepository.findByUsername(username);
 	}
 }

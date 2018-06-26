@@ -31,6 +31,8 @@ objectclass: person
 objectclass: NDUser
 cn: test.user
 uid: test.user
+givenName: Test
+sn: User
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test user for basic authentication (password=secret)
 
