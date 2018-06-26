@@ -8,10 +8,20 @@ import {UserService} from "../../service/user.service";
 export class AppComponent implements OnInit {
   title: string = "NDelius User Management";
   me: string;
+  static globalMessage: string;
+  static globalMessageSeverity: string = "info";
 
   constructor(private service: UserService) {}
 
   ngOnInit() {
     this.service.whoami().subscribe(res => this.me = res['username']);
+  }
+
+  get globalMessage(){
+    return AppComponent.globalMessage;
+  }
+
+  get globalMessageSeverity(){
+    return AppComponent.globalMessageSeverity;
   }
 }

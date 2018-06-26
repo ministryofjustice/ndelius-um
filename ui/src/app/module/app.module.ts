@@ -11,12 +11,15 @@ import {LoginInterceptor} from "../interceptor/login.interceptor";
 import {environment} from "../../environments/environment";
 import {RestUserService} from "../service/impl/rest.user.service";
 import {UserService} from "../service/user.service";
+import {ErrorInterceptor} from "../interceptor/error.interceptor";
+import {MessageComponent} from "../component/message/message.component";
 
 @NgModule({
-  declarations: [AppComponent, SearchComponent, UserComponent],
+  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [
     {provide: UserService, useClass: RestUserService},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     ...(environment.production? []: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}])
   ],
   bootstrap: [AppComponent]
