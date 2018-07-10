@@ -1,44 +1,53 @@
-<div class="jumbotron">
-  <div class="container">
-    <h1>Search</h1>
-    <form (ngSubmit)="search()" #form="ngForm">
-      <div class="form-group">
-        <label for="query">
-            Use this screen to search for an existing user<ng-container *ngIf="canAddUser" >, or
-            <a routerLink="/user">click here to add a new user</a> </ng-container>.
-        </label>
-        <div class="input-group">
-          <input id="query" name="query" type="search" class="form-control" [(ngModel)]="query"
-                 placeholder="Search using name, email address, staff code..."
-                 autocomplete="off">
-          <div class="input-group-append">
-            <button class="btn btn-primary" type="submit">Search</button>
+<div *ngIf="canSearchUser; else unauthorised">
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Search</h1>
+      <form (ngSubmit)="search()" #form="ngForm">
+        <div class="form-group">
+          <label for="query">
+              Use this screen to search for an existing user<ng-container *ngIf="canAddUser" >, or
+              <a routerLink="/user">click here to add a new user</a> </ng-container>.
+          </label>
+          <div class="input-group">
+            <input id="query" name="query" type="search" class="form-control" [(ngModel)]="query"
+                   placeholder="Search using name, email address, staff code..."
+                   autocomplete="off">
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="submit">Search</button>
+            </div>
           </div>
         </div>
-      </div>
-    </form>
-  </div>
-</div>
-<div class="container" *ngIf="users.length > 0">
-  <div class="list-group">
-    <a *ngFor="let user of users" routerLink="/user/{{user.username}}"
-       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-      {{user.forenames}} {{user.surname}}
-      <span class="oi oi-chevron-right"></span>
-    </a>
-  </div>
-  <hr/>
-  <div class="btn-toolbar justify-content-center">
-    <div class="btn-group">
-      <button class="btn btn-outline-secondary" [disabled]="page <= 1" (click)="prevPage()">
-        <span class="oi oi-arrow-left"></span>
-        Previous
-      </button>
-      <button class="btn btn-outline-secondary" [disabled]="!hasMoreResults" (click)="nextPage()">
-        Next
-        <span class="oi oi-arrow-right"></span>
-      </button>
+      </form>
     </div>
   </div>
-  <br/>
+  <div class="container" *ngIf="users.length > 0">
+    <div class="list-group" *ngIf="canGetUser">
+      <a *ngFor="let user of users" routerLink="/user/{{user.username}}"
+         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        {{user.forenames}} {{user.surname}}
+        <span class="oi oi-chevron-right"></span>
+      </a>
+    </div>
+    <div class="list-group" *ngIf="!canGetUser">
+      <a *ngFor="let user of users"
+         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        {{user.forenames}} {{user.surname}}
+      </a>
+    </div>
+    <hr/>
+    <div class="btn-toolbar justify-content-center">
+      <div class="btn-group">
+        <button class="btn btn-outline-secondary" [disabled]="page <= 1" (click)="prevPage()">
+          <span class="oi oi-arrow-left"></span>
+          Previous
+        </button>
+        <button class="btn btn-outline-secondary" [disabled]="!hasMoreResults" (click)="nextPage()">
+          Next
+          <span class="oi oi-arrow-right"></span>
+        </button>
+      </div>
+    </div>
+    <br/>
+  </div>
 </div>
+<ng-template #unauthorised>You are not authorised to search for offenders.</ng-template>

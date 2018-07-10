@@ -17,6 +17,8 @@ export class SearchComponent implements OnInit {
   page: number;
   hasMoreResults: boolean = false;
   canAddUser: boolean = false;
+  canSearchUser: boolean = false;
+  canGetUser: boolean = false;
 
 
   constructor(private route: ActivatedRoute, private router: Router, private service: UserService, private authorisationService: AuthorisationService) {
@@ -34,8 +36,15 @@ export class SearchComponent implements OnInit {
     });
 
     this.authorisationService.canAddUser().subscribe((canAddUser: boolean) => {
-      console.log("Can Add User: ",canAddUser);
       this.canAddUser = canAddUser;
+    })
+
+    this.authorisationService.canGetUser().subscribe((canGetUser: boolean) => {
+      this.canGetUser = canGetUser;
+    })
+
+    this.authorisationService.canSearchUser().subscribe((canSearchUser: boolean) => {
+      this.canSearchUser = canSearchUser;
     })
   }
 

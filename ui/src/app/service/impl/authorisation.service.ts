@@ -23,4 +23,13 @@ export class AuthorisationService {
   canAddUser(): Observable<boolean> {
     return this.hasRole(AuthorisationService.ADD_USER_ROLE);
   }
+
+  canGetUser(): Observable<boolean> {
+    return this.hasRole(AuthorisationService.GET_USER_ROLE);
+  }
+
+  canSearchUser(): Observable<boolean> {
+    return this.hasRole(AuthorisationService.SEARCH_USER_ROLE);
+  }
+
 }
