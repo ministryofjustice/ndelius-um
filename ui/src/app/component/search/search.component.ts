@@ -3,9 +3,11 @@ import {User} from "../../model/User";
 import {ActivatedRoute, Router} from "@angular/router";
 import {flatMap} from "rxjs/operators";
 import {UserService} from "../../service/user.service";
+import {AuthorisationService} from "../../service/impl/authorisation.service";
 
 @Component({
   selector: 'search',
+  providers: [AuthorisationService],
   templateUrl: './search.component.html'
 })
 export class SearchComponent implements OnInit {
@@ -14,8 +16,13 @@ export class SearchComponent implements OnInit {
 
   page: number;
   hasMoreResults: boolean = false;
+  canAddUser: boolean = false;
+  canSearchUser: boolean = false;
+  canGetUser: boolean = false;
 
-  constructor(private route: ActivatedRoute, private router: Router, private service: UserService) {}
+
+  constructor(private route: ActivatedRoute, private router: Router, private service: UserService, private authorisationService: AuthorisationService) {
+  }
 
   ngOnInit(): void {
     this.route.queryParams.pipe(
@@ -27,6 +34,18 @@ export class SearchComponent implements OnInit {
       this.hasMoreResults = users.length >= 10;
       this.users = users
     });
+
+    this.authorisationService.canAddUser().subscribe((canAddUser: boolean) => {
+      this.canAddUser = canAddUser;
+    })
+
+    this.authorisationService.canGetUser().subscribe((canGetUser: boolean) => {
+      this.canGetUser = canGetUser;
+    })
+
+    this.authorisationService.canSearchUser().subscribe((canSearchUser: boolean) => {
+      this.canSearchUser = canSearchUser;
+    })
   }
 
   search() {
