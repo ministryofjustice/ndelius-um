@@ -43,6 +43,7 @@ public final class OIDUser implements UserDetails, Serializable
 	@Transient
 	private List<String> roles;
 
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities()
 	{
