@@ -4,7 +4,8 @@
     <form (ngSubmit)="search()" #form="ngForm">
       <div class="form-group">
         <label for="query">
-          Use this screen to search for an existing user, or <a routerLink="/user">click here to add a new user</a>.
+            Use this screen to search for an existing user<ng-container *ngIf="canAddUser" >, or
+            <a routerLink="/user">click here to add a new user</a> </ng-container>.
         </label>
         <div class="input-group">
           <input id="query" name="query" type="search" class="form-control" [(ngModel)]="query"

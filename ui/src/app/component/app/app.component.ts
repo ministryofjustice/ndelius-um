@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../service/user.service";
+import {User} from "../../model/user";
 
 @Component({
   selector: 'app-root',
@@ -7,14 +8,14 @@ import {UserService} from "../../service/user.service";
 })
 export class AppComponent implements OnInit {
   title: string = "NDelius User Management";
-  me: string;
+  static me: User;
   static globalMessage: string;
   static globalMessageSeverity: string = "info";
 
   constructor(private service: UserService) {}
 
   ngOnInit() {
-    this.service.whoami().subscribe(res => this.me = res['username']);
+    this.service.whoami().subscribe((res: User) => AppComponent.me = res);
   }
 
   get globalMessage(){
@@ -23,5 +24,9 @@ export class AppComponent implements OnInit {
 
   get globalMessageSeverity(){
     return AppComponent.globalMessageSeverity;
+  }
+
+  get me(){
+    return AppComponent.me;
   }
 }
