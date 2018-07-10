@@ -44,7 +44,7 @@ public class LoginController
 	{
 		 val username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 
-		 return oidUserService.getOIDUser(username).map(oidUser -> {
+		 return oidUserService.getUser(username).map(oidUser -> {
 			 oidUser.setRoles(oidUserService.getUserRoles(oidUser.getUsername()));
 			 return oidUser;
 		 });

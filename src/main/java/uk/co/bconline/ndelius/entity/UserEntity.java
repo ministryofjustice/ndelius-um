@@ -1,13 +1,14 @@
 package uk.co.bconline.ndelius.entity;
 
-import lombok.Data;
-import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
+
+import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
+import lombok.Data;
 
 @Entity
 @Table(name = "USER_")
@@ -34,7 +35,7 @@ public class UserEntity implements Serializable {
     private boolean privateUser = false;
 
     @Column(name = "DISTINGUISHED_NAME")
-    private String distinguishedName;
+    private String username;
 
     @ManyToOne
     @JoinColumn(name = "ORGANISATION_ID", insertable = false, updatable = false)

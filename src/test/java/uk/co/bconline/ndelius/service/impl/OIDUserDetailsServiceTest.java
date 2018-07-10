@@ -48,7 +48,7 @@ public class OIDUserDetailsServiceTest
 	@Test
 	public void retrieveOIDUser()
 	{
-		service.getOIDUser("test.user").ifPresent(oidUser -> {
+		service.getUser("test.user").ifPresent(oidUser -> {
 			assertEquals("Test", oidUser.getForenames());
 			assertEquals("User", oidUser.getSurname());
 		});

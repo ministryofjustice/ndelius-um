@@ -1,12 +1,11 @@
 package uk.co.bconline.ndelius.controller;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +51,7 @@ public class UserControllerTest
 	public void searchQueryIsRequired() throws Exception
 	{
 		mvc.perform(get("/api/users")
-				.header("Authorization", "Bearer " + token()))
+				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isBadRequest());
 	}
 
@@ -60,7 +59,7 @@ public class UserControllerTest
 	public void maxPageSizeForSearchIs100() throws Exception
 	{
 		mvc.perform(get("/api/users")
-				.header("Authorization", "Bearer " + token())
+				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "")
 				.param("pageSize", "101"))
 				.andExpect(status().isBadRequest());
@@ -70,7 +69,7 @@ public class UserControllerTest
 	public void minPageSizeIs1() throws Exception
 	{
 		mvc.perform(get("/api/users")
-				.header("Authorization", "Bearer " + token())
+				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "")
 				.param("pageSize", "0"))
 				.andExpect(status().isBadRequest());
@@ -80,7 +79,7 @@ public class UserControllerTest
 	public void searchResultsMatchQuery() throws Exception
 	{
 		mvc.perform(get("/api/users")
-				.header("Authorization", "Bearer " + token())
+				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "j blog"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(3)))
@@ -93,19 +92,22 @@ public class UserControllerTest
 	public void searchResultsAreLimitedToPageSize() throws Exception
 	{
 		mvc.perform(get("/api/users")
-				.header("Authorization", "Bearer " + token())
+				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "j blog")
 				.param("pageSize", "1"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(1)));
 	}
 
-	private String token() throws Exception
+	@Test
+	public void combinedUserIsReturned() throws Exception
 	{
-		return mvc.perform(get("/api/login")
-				.with(httpBasic("test.user", "secret")))
-				.andReturn()
-				.getResponse()
-				.getCookie("my-cookie").getValue();
+		mvc.perform(get("/api/user/test.user")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.username", equalTo("test.user")))
+				.andExpect(jsonPath("$.forenames", equalTo("Test")))			// From OID
+				.andExpect(jsonPath("$.surname", equalTo("User")))				// From OID
+				.andExpect(jsonPath("$.organisation.code", equalTo("NPS")));	// From DB
 	}
 }

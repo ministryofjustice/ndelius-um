@@ -125,7 +125,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	}
 
 	@Override
-	public Optional<OIDUser> getOIDUser(String username)
+	public Optional<OIDUser> getUser(String username)
 	{
 		return userRepository.findByUsername(username);
 	}

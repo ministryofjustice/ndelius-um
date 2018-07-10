@@ -1,10 +1,14 @@
 package uk.co.bconline.ndelius.controller;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
+
+import java.util.concurrent.ExecutionException;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +17,10 @@ import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
+import uk.co.bconline.ndelius.model.NDUser;
 import uk.co.bconline.ndelius.model.OIDUser;
-import uk.co.bconline.ndelius.model.User;
+import uk.co.bconline.ndelius.service.NDUserService;
 import uk.co.bconline.ndelius.service.OIDUserService;
-import uk.co.bconline.ndelius.service.UserService;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @Validated
@@ -28,13 +29,13 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserController
 {
 	private final OIDUserService oidUserService;
-	private final UserService userService;
+	private final NDUserService ndUserService;
 
 	@Autowired
-	public UserController(OIDUserService oidUserService, UserService userService)
+	public UserController(OIDUserService oidUserService, NDUserService ndUserService)
 	{
 		this.oidUserService = oidUserService;
-		this.userService = userService;
+		this.ndUserService = ndUserService;
 	}
 
 	@Interaction("UMBI001")
@@ -49,9 +50,10 @@ public class UserController
 
 	@Interaction("UMBI002")
 	@RequestMapping(path="/user/{username}", method=RequestMethod.GET)
-	public ResponseEntity<User> getUser(
-			final @RequestHeader HttpHeaders httpHeaders, final @PathVariable("username") String username)
+	public ResponseEntity<NDUser> getUser(final @PathVariable("username") String username) throws ExecutionException, InterruptedException
 	{
-		return userService.getUser(username).map(u -> new ResponseEntity(u, OK)).orElse(new ResponseEntity(NOT_FOUND));
+		return ndUserService.getUser(username)
+				.map(u -> new ResponseEntity<>(u, OK))
+				.orElse(new ResponseEntity<>(NOT_FOUND));
 	}
 }
