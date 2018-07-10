@@ -39,6 +39,7 @@ public class UserTransformer {
                         .id(de.getKey().getProbationAreaID())
                         .code(de.getProbationArea().getCode())
                         .description(de.getProbationArea().getDescription())
+                        .organisation(organisationOf(de.getProbationArea().getOrganisation()))
                         .build())
                         .collect(Collectors.toList());
     }
