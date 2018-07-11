@@ -18,7 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.co.bconline.ndelius.model.OIDUser;
+import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 import uk.co.bconline.ndelius.service.OIDUserService;
@@ -125,7 +125,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	}
 
 	@Override
-	public Optional<OIDUser> getOIDUser(String username)
+	public Optional<OIDUser> getUser(String username)
 	{
 		return userRepository.findByUsername(username);
 	}

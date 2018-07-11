@@ -18,4 +18,8 @@ export class UserComponent implements OnInit {
       .pipe(flatMap(params => this.service.user(params.id)))
       .subscribe((user: User) => this.user = user);
   }
+
+  get json() {
+    return JSON.stringify(this.user);
+  }
 }

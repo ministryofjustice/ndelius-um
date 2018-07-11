@@ -1,5 +1,7 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.val;
-import uk.co.bconline.ndelius.repository.ad1.AD1UserRepository;
+import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.repository.ad2.AD2UserRepository;
 
 @Service
@@ -27,9 +29,12 @@ public class AD2UserDetailsService implements UserDetailsService
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
 	{
 		val name = stripDomain(username);
-		return repository
-				.findByUsername(name)
-				.orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", name)));
+		return getUser(name).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", name)));
+	}
+
+	public Optional<ADUser> getUser(String username)
+	{
+		return repository.findByUsername(username);
 	}
 
 	private String stripDomain(String username)

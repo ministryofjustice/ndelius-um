@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.val;
-import uk.co.bconline.ndelius.model.OIDUser;
+import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.service.OIDUserService;
 
 @RestController
@@ -44,7 +44,7 @@ public class LoginController
 	{
 		 val username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 
-		 return oidUserService.getOIDUser(username).map(oidUser -> {
+		 return oidUserService.getUser(username).map(oidUser -> {
 			 oidUser.setRoles(oidUserService.getUserRoles(oidUser.getUsername()));
 			 return oidUser;
 		 });

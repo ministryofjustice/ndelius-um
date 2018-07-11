@@ -1,7 +1,12 @@
 spring.profiles.include: default
 
-spring.h2.console.enabled: true
-spring.datasource.url: 'jdbc:h2:mem:testdb;Mode=Oracle'
+spring:
+  datasource:
+    url: 'jdbc:h2:mem:testdb;Mode=Oracle'
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari.leak-detection-threshold: 20000
+  jpa.hibernate.ddl-auto: create
+  h2.console.enabled: true
 
 embedded:
   oid:

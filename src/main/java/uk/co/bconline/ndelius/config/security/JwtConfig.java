@@ -67,6 +67,7 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 					.requestMatchers(new NegatedRequestMatcher(loginRequestMatcher)).authenticated()
 					.and()
 				.csrf().disable();
+		httpSecurity.headers().frameOptions().sameOrigin();
 	}
 
 	@Bean

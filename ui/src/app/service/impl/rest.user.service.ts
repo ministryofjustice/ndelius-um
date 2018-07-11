@@ -24,9 +24,6 @@ export class RestUserService implements UserService {
   }
 
   user(username: string): Observable<User> {
-    // TODO replace this with http call to /user endpoint when it has been created
-    let user = new User();
-    user.username = username;
-    return Observable.of(user);
+    return this.http.get<User>(environment.api.baseurl + "user/" + username);
   }
 }

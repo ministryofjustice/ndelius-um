@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.ldap.repository.LdapRepository;
 
-import uk.co.bconline.ndelius.model.ADUser;
+import uk.co.bconline.ndelius.model.ldap.ADUser;
 
 public interface AD1UserRepository extends LdapRepository<ADUser>
 {

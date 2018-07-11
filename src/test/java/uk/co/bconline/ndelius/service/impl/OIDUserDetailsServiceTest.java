@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import uk.co.bconline.ndelius.model.OIDUser;
+import uk.co.bconline.ndelius.model.ldap.OIDUser;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -48,7 +48,7 @@ public class OIDUserDetailsServiceTest
 	@Test
 	public void retrieveOIDUser()
 	{
-		service.getOIDUser("test.user").ifPresent(oidUser -> {
+		service.getUser("test.user").ifPresent(oidUser -> {
 			assertEquals("Test", oidUser.getForenames());
 			assertEquals("User", oidUser.getSurname());
 		});
