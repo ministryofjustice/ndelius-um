@@ -33,7 +33,7 @@ public class StaffEntity  implements Serializable {
     @Type(type = "java.time.LocalDate")
     private LocalDate endDate;
 
-    @Column(name = "CODE")
+    @Column(name = "OFFICER_CODE")
     private String code;
 
     @Column(name = "FORENAME")

@@ -53,6 +53,7 @@ public class UserTransformer {
 						.username(v.getUsername())
 						.datasets(map(v.getDatasets()))
 						.organisation(map(v.getOrganisation()))
+						.staffCode(Optional.ofNullable(v.getStaff()).map(s -> s.getCode()).orElse(null))
 						.endDate(v.getEndDate())
 						.build()).orElse(u))
 				.map(u -> ofNullable(oidUser).map(v -> u.toBuilder()
