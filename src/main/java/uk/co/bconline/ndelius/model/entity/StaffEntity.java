@@ -1,11 +1,13 @@
-package uk.co.bconline.ndelius.entity;
+package uk.co.bconline.ndelius.model.entity;
 
-import lombok.Data;
-import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+
+import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
+import lombok.Data;
 
 @Entity
 @Table(name = "STAFF")

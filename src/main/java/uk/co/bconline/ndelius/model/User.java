@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
 
 /**
  * This will eventually become the compound user object with data from all sources
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public final class NDUser implements Serializable
+public final class User implements Serializable
 {
 	private String username;
 	private String forenames;

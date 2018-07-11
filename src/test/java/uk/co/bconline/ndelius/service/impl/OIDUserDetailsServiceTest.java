@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import uk.co.bconline.ndelius.model.OIDUser;
+import uk.co.bconline.ndelius.model.ldap.OIDUser;
 
 @SpringBootTest
 @ActiveProfiles("test")

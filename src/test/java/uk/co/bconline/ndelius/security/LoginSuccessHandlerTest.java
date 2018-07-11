@@ -1,8 +1,8 @@
 package uk.co.bconline.ndelius.security;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import javax.jws.Oneway;
 import javax.servlet.http.Cookie;
 
 import org.junit.Test;
@@ -13,7 +13,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import uk.co.bconline.ndelius.model.OIDUser;
+import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.util.JwtHelper;
 
 @SpringBootTest

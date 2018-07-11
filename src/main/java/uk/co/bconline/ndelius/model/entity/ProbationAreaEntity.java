@@ -1,9 +1,10 @@
-package uk.co.bconline.ndelius.entity;
+package uk.co.bconline.ndelius.model.entity;
 
-import lombok.Data;
+import java.io.Serializable;
 
 import javax.persistence.*;
-import java.io.Serializable;
+
+import lombok.Data;
 
 @Entity
 @Table(name = "PROBATION_AREA")

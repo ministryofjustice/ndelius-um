@@ -5,16 +5,16 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import uk.co.bconline.ndelius.entity.UserEntity;
-import uk.co.bconline.ndelius.repository.db.DBUserRepository;
+import uk.co.bconline.ndelius.model.entity.UserEntity;
+import uk.co.bconline.ndelius.repository.db.UserEntityRepository;
 
 @Service
 public class DBUserDetailsService
 {
-	private final DBUserRepository repository;
+	private final UserEntityRepository repository;
 
 	@Autowired
-	public DBUserDetailsService(DBUserRepository repository)
+	public DBUserDetailsService(UserEntityRepository repository)
 	{
 		this.repository = repository;
 	}

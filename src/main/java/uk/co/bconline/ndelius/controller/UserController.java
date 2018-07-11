@@ -3,8 +3,6 @@ package uk.co.bconline.ndelius.controller;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
-import java.util.concurrent.ExecutionException;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -17,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
-import uk.co.bconline.ndelius.model.NDUser;
-import uk.co.bconline.ndelius.model.OIDUser;
-import uk.co.bconline.ndelius.service.NDUserService;
+import uk.co.bconline.ndelius.model.User;
+import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.service.OIDUserService;
+import uk.co.bconline.ndelius.service.UserService;
 
 @Slf4j
 @Validated
@@ -29,13 +27,13 @@ import uk.co.bconline.ndelius.service.OIDUserService;
 public class UserController
 {
 	private final OIDUserService oidUserService;
-	private final NDUserService ndUserService;
+	private final UserService userService;
 
 	@Autowired
-	public UserController(OIDUserService oidUserService, NDUserService ndUserService)
+	public UserController(OIDUserService oidUserService, UserService ndUserService)
 	{
 		this.oidUserService = oidUserService;
-		this.ndUserService = ndUserService;
+		this.userService = ndUserService;
 	}
 
 	@Interaction("UMBI001")
@@ -50,9 +48,9 @@ public class UserController
 
 	@Interaction("UMBI002")
 	@RequestMapping(path="/user/{username}", method=RequestMethod.GET)
-	public ResponseEntity<NDUser> getUser(final @PathVariable("username") String username) throws ExecutionException, InterruptedException
+	public ResponseEntity<User> getUser(final @PathVariable("username") String username)
 	{
-		return ndUserService.getUser(username)
+		return userService.getUser(username)
 				.map(u -> new ResponseEntity<>(u, OK))
 				.orElse(new ResponseEntity<>(NOT_FOUND));
 	}

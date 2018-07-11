@@ -1,4 +1,4 @@
-package uk.co.bconline.ndelius.entity;
+package uk.co.bconline.ndelius.model.entity;
 
 import java.io.Serializable;
 

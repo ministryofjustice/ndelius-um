@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class Organisation {
-    private Long id;
     private String code;
     private String description;
 }

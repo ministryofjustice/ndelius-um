@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.val;
-import uk.co.bconline.ndelius.model.ADUser;
+import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.repository.ad2.AD2UserRepository;
 
 @Service
