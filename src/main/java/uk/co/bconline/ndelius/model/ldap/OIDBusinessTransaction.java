@@ -9,8 +9,6 @@ import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Data;
 
 @Data
@@ -18,7 +16,6 @@ import lombok.Data;
 public final class OIDBusinessTransaction implements Serializable
 {
 	@Id
-	@JsonIgnore
 	private Name dn;
 
 	@Attribute(name="cn")

@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
 
 /**
  * This will eventually become the compound user object with data from all sources
@@ -26,5 +25,5 @@ public final class User implements Serializable
 	private LocalDate endDate;
 	private Organisation organisation;
 	private List<Dataset> datasets;
-	private List<OIDBusinessTransaction> transactions;
+	private List<Transaction> transactions;
 }
