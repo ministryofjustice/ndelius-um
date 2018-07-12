@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.transformer;
 
 import static java.util.Optional.ofNullable;
+import static org.springframework.util.StringUtils.isEmpty;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.Organisation;
+import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.DatasetEntity;
 import uk.co.bconline.ndelius.model.entity.OrganisationEntity;
@@ -40,6 +42,16 @@ public class UserTransformer {
                         .collect(Collectors.toList());
     }
 
+    public SearchResult map(UserEntity user)
+	{
+		return SearchResult.builder()
+				.username(user.getUsername())
+				.forenames(combineForenames(user.getForename(), user.getForename2()))
+				.surname(user.getSurname())
+				.staffCode(ofNullable(user.getStaff()).map(StaffEntity::getCode).orElse(null))
+				.build();
+	}
+
 	public Optional<User> combine(UserEntity dbUser, OIDUser oidUser, ADUser ad1User, ADUser ad2User)
 	{
 		return Optional.of(ofNullable(ad2User)
@@ -56,7 +68,7 @@ public class UserTransformer {
 						.username(v.getUsername())
 						.datasets(map(v.getDatasets()))
 						.organisation(map(v.getOrganisation()))
-						.staffCode(Optional.ofNullable(v.getStaff()).map(StaffEntity::getCode).orElse(null))
+						.staffCode(ofNullable(v.getStaff()).map(StaffEntity::getCode).orElse(null))
 						.endDate(v.getEndDate())
 						.build()).orElse(u))
 				.map(u -> ofNullable(oidUser).map(v -> u.toBuilder()
@@ -65,5 +77,12 @@ public class UserTransformer {
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
 						.build()).orElse(u));
+	}
+
+	private String combineForenames(String forename, String forename2)
+	{
+		if (isEmpty(forename)) return "";
+		if (isEmpty(forename2)) return forename;
+		return forename + " " + forename2;
 	}
 }

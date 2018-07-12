@@ -36,8 +36,6 @@ repositories {
 }
 
 dependencies {
-	compile files('lib/ojdbc8-12.2.0.1.jar')
-
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -47,8 +45,10 @@ dependencies {
 	compile('org.springframework.security.kerberos:spring-security-kerberos-web:1.0.1.RELEASE')
 	compile('io.jsonwebtoken:jjwt:0.9.0')
     compile('com.unboundid:unboundid-ldapsdk')
+	compile('org.hibernate:hibernate-search-orm:5.9.2.Final')
 	runtime('org.springframework.boot:spring-boot-devtools')
 	runtime('com.h2database:h2')
+	runtime files('lib/ojdbc8-12.2.0.1.jar')
 	compileOnly('org.projectlombok:lombok')
 	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
 	testCompile('org.springframework.boot:spring-boot-starter-test')

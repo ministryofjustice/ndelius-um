@@ -6,44 +6,49 @@ import java.time.LocalDate;
 import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
 
 import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "STAFF")
-@Data
 public class StaffEntity  implements Serializable {
 
-    @Id
-    @GeneratedValue(generator = "staff_seq")
-    @SequenceGenerator(name = "staff_seq", sequenceName = "STAFF_ID_SEQ", allocationSize = 1)
-    @Column(name = "STAFF_ID")
-    private Long staffId;
+	@Id
+	@Column(name = "STAFF_ID")
+	@GeneratedValue(generator = "STAFF_ID_SEQ")
+	@SequenceGenerator(name = "STAFF_ID_SEQ", sequenceName = "STAFF_ID_SEQ", allocationSize = 1)
+	private Long id;
 
-    @ManyToOne()
-    @JoinColumn(name = "STAFF_GRADE_ID", insertable = false, updatable = false)
-    private ReferenceDataEntity staffGrade;
+	@Field(analyze = Analyze.NO)
+	@Column(name = "OFFICER_CODE")
+	private String code;
 
-    @OneToOne(mappedBy = "staff", optional = true, fetch = FetchType.LAZY)
-    private UserEntity user;
+	@Column(name = "FORENAME")
+	private String forename;
 
-    @Column(name = "START_DATE")
-    @Type(type = "java.time.LocalDate")
-    private LocalDate startDate;
+	@Column(name = "FORENAME2")
+	private String forename2;
 
-    @Column(name = "END_DATE")
-    @Type(type = "java.time.LocalDate")
-    private LocalDate endDate;
+	@Column(name = "SURNAME")
+	private String surname;
 
-    @Column(name = "OFFICER_CODE")
-    private String code;
+	@ManyToOne
+	@JoinColumn(name = "STAFF_GRADE_ID", insertable = false, updatable = false)
+	private ReferenceDataEntity staffGrade;
 
-    @Column(name = "FORENAME")
-    private String forename;
+	@ContainedIn
+	@OneToOne(mappedBy = "staff")
+	private UserEntity user;
 
-    @Column(name = "FORENAME2")
-    private String forename2;
+	@Column(name = "START_DATE")
+	@Type(type = "java.time.LocalDate")
+	private LocalDate startDate;
 
-    @Column(name = "SURNAME")
-    private String surname;
+	@Column(name = "END_DATE")
+	@Type(type = "java.time.LocalDate")
+	private LocalDate endDate;
 }

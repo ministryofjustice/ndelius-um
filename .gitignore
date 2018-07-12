@@ -54,3 +54,6 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+
+### Project-specific ###
+/um-index/

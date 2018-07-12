@@ -7,44 +7,56 @@ import java.util.List;
 import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import lombok.Data;
 
-@Entity
-@Table(name = "USER_")
 @Data
-public class UserEntity implements Serializable {
+@Entity
+@Indexed
+@Table(name = "USER_")
+public class UserEntity implements Serializable
+{
+	@Id
+	@Column(name = "USER_ID")
+	@GeneratedValue(generator = "USER_ID_SEQ")
+	@SequenceGenerator(name = "USER_ID_SEQ", sequenceName = "USER_ID_SEQ", allocationSize = 1)
+	private long id;
 
-    @Id
-    @GeneratedValue(generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "USER_ID_SEQ", allocationSize = 1)
-    @Column(name = "USER_ID", unique = true, nullable = false, precision = 38)
-    private long userId;
+	@Field
+	@Column(name = "DISTINGUISHED_NAME")
+	private String username;
 
-    @Column(name = "END_DATE")
-    @Type(type = "java.time.LocalDate")
-    private LocalDate endDate;
+	@Field
+	@Column(name = "FORENAME")
+	private String forename;
 
-    private String forename;
+	@Field
+	@Column(name = "FORENAME2")
+	private String forename2;
 
-    private String forename2;
+	@Field
+	@Column(name = "SURNAME")
+	private String surname;
 
-    private String surname;
+	@Column(name = "PRIVATE")
+	private boolean privateUser;
 
-    @Column(name = "PRIVATE")
-    private boolean privateUser = false;
+	@Column(name = "END_DATE")
+	@Type(type = "java.time.LocalDate")
+	private LocalDate endDate;
 
-    @Column(name = "DISTINGUISHED_NAME")
-    private String username;
+	@OneToOne
+	@IndexedEmbedded
+	@JoinColumn(name = "STAFF_ID")
+	private StaffEntity staff;
 
-    @ManyToOne
-    @JoinColumn(name = "ORGANISATION_ID", insertable = false, updatable = false)
-    private OrganisationEntity organisation;
+	@ManyToOne
+	@JoinColumn(name = "ORGANISATION_ID")
+	private OrganisationEntity organisation;
 
-    @OneToOne
-    @JoinColumn(name = "STAFF_ID", insertable = false, updatable = false)
-    private StaffEntity staff;
-
-    @OneToMany(mappedBy="user", fetch=FetchType.EAGER)
-    private List<DatasetEntity> datasets;
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	private List<DatasetEntity> datasets;
 }
