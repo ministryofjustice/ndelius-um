@@ -3,10 +3,11 @@ package uk.co.bconline.ndelius.config.security;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class BasicAuthConfigTest
 	@Test
 	public void noCredentialsReturnsUnauthorized() throws Exception
 	{
-		mvc.perform(get("/api/login"))
+		mvc.perform(post("/api/login"))
 				.andExpect(status().isUnauthorized())
 				.andExpect(header().string("WWW-Authenticate", "Basic realm=\"ndelius-um\""));
 	}
@@ -59,7 +60,7 @@ public class BasicAuthConfigTest
 	@Test
 	public void invalidCredentialsReturnsUnauthorized() throws Exception
 	{
-		mvc.perform(get("/api/login")
+		mvc.perform(post("/api/login")
 				.header("Authorization", "Basic invalid"))
 				.andExpect(status().isUnauthorized())
 				.andExpect(header().string("WWW-Authenticate", "Basic realm=\"ndelius-um\""));
@@ -68,7 +69,7 @@ public class BasicAuthConfigTest
 	@Test
 	public void successfulLoginReturnsBearerToken() throws Exception
 	{
-		mvc.perform(get("/api/login")
+		mvc.perform(post("/api/login")
 				.with(httpBasic("test.user", "secret")))
 				.andExpect(status().isOk())
 				.andExpect(header().doesNotExist("WWW-Authenticate"))
@@ -80,7 +81,7 @@ public class BasicAuthConfigTest
 	@Test
 	public void invalidAuthTypeReturnsUnauthorized() throws Exception
 	{
-		mvc.perform(get("/api/login")
+		mvc.perform(post("/api/login")
 				.header("Authorization", "Bearer invalid"))
 				.andExpect(status().isUnauthorized())
 				.andExpect(header().string("WWW-Authenticate", "Basic realm=\"ndelius-um\""));
@@ -89,14 +90,8 @@ public class BasicAuthConfigTest
 	@Test
 	public void bearerTokenAuthIsAllowedOnLoginEndpoint() throws Exception
 	{
-		String token = mvc.perform(get("/api/login")
-				.with(httpBasic("test.user", "secret")))
-				.andReturn()
-				.getResponse()
-				.getCookie("my-cookie").getValue();
-
-		mvc.perform(get("/api/login")
-				.header("Authorization", "Bearer " + token))
+		mvc.perform(post("/api/login")
+				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
 				.andExpect(header().doesNotExist("WWW-Authenticate"));
 	}

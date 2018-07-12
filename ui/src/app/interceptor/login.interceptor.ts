@@ -1,4 +1,4 @@
-import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpClient, HttpResponse,} from '@angular/common/http';
+import {HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse,} from '@angular/common/http';
 import {Observable} from "rxjs/Observable";
 import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
@@ -28,7 +28,7 @@ export class LoginInterceptor implements HttpInterceptor {
     } else {
       console.log("In development mode, authenticating as", this.user.name);
 
-      return this.http.get(environment.api.baseurl + "login", {
+      return this.http.post(environment.api.baseurl + "login", "", {
         headers: {"Authorization": "Basic " + btoa(this.user.name + ":" + this.user.pass)}
       }).pipe(flatMap((res: HttpResponse<any>) => {
         console.log("Storing auth token", res);

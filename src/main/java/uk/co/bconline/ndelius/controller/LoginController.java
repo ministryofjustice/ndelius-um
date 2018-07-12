@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,7 +51,7 @@ public class LoginController
 		 });
 	}
 
-	@RequestMapping("/login")
+	@PostMapping("/login")
 	public TokenResponse login()
 	{
 		val authentication = SecurityContextHolder.getContext().getAuthentication();
