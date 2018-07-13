@@ -78,7 +78,7 @@ public class DBUserDetailsService
 		}
 		catch (EmptyQueryException e)
 		{
-			log.debug("Analyzed query was empty: {}", searchTerm, e);
+			log.debug("Analyzed query was empty: '{}'", searchTerm);
 			return emptyList();
 		}
 	}

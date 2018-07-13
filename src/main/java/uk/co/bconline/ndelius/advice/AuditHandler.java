@@ -25,7 +25,7 @@ public class AuditHandler
 		if (interaction.audited())
 		{
 			val user = (UserDetails) getContext().getAuthentication().getPrincipal();
-			log.info("{}: {} {}", user.getUsername(), interaction.value(), joinPoint.getArgs());
+			log.info("{} {} {}", user.getUsername(), interaction.value(), joinPoint.getArgs());
 		}
 		return joinPoint.proceed();
 	}

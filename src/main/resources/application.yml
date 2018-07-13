@@ -15,3 +15,5 @@ spring.jpa.properties.hibernate.search.default:
 logging.level:
   org.springframework.web: ERROR
   org.hibernate.search.batchindexing: WARN
+
+logging.path: ./log/

@@ -42,7 +42,7 @@ public class AuthorisationHandler
 			val allowed = service.getUserRoles(username).containsAll(asList(interaction.value()));
 			if (!allowed)
 			{
-				if (interaction.audited()) log.error("{}: {} {}", username, interaction.value(), joinPoint.getArgs());
+				if (interaction.audited()) log.error("{} {} {}", username, interaction.value(), joinPoint.getArgs());
 				return new ResponseEntity<>(new ForbiddenResponse(username, interaction.value()), FORBIDDEN);
 			}
 		}

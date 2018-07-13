@@ -12,10 +12,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import uk.co.bconline.ndelius.util.JwtHelper;
 
 @Component
+@Slf4j(topic = "audit")
 public class LoginSuccessHandler implements AuthenticationSuccessHandler
 {
 	@Value("${jwt.expiry}")
@@ -46,5 +48,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler
 		cookie.setMaxAge(expiry * 60);
 		cookie.setPath("/");
 		response.addCookie(cookie);
+
+		log.info("{} {}", user.getUsername(), "[UMLOGIN] []");
 	}
 }
