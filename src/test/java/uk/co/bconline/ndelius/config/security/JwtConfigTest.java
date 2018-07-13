@@ -1,11 +1,11 @@
 package uk.co.bconline.ndelius.config.security;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -76,18 +76,12 @@ public class JwtConfigTest
 	@Test
 	public void successfulAuthWithBearerToken() throws Exception
 	{
-		String token = mvc.perform(get("/api/login")
-				.with(httpBasic("test.user", "secret")))
-				.andReturn()
-				.getResponse()
-				.getCookie("my-cookie").getValue();
-
 		mvc.perform(get("/api/whoami"))
 				.andExpect(status().isUnauthorized())
 				.andExpect(header().string("WWW-Authenticate", "Bearer"));
 
 		mvc.perform(get("/api/whoami")
-				.header("Authorization", "Bearer " + token))
+				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
 				.andExpect(header().doesNotExist("WWW-Authenticate"))
 				.andExpect(jsonPath("$.username", is("test.user")));
