@@ -8,14 +8,18 @@ import {User} from "../../model/user";
 })
 export class AppComponent implements OnInit {
   title: string = "NDelius User Management";
-  me: User;
+  loaded: boolean;
+  static me: User;
   static globalMessage: string;
   static globalMessageSeverity: string = "info";
 
   constructor(private service: UserService) {}
 
   ngOnInit() {
-    this.service.whoami().subscribe((res: User) => this.me = res);
+    this.service.whoami().subscribe((res: User) => {
+      AppComponent.me = res;
+      this.loaded = true;
+    });
   }
 
   get globalMessage(){
@@ -24,5 +28,9 @@ export class AppComponent implements OnInit {
 
   get globalMessageSeverity(){
     return AppComponent.globalMessageSeverity;
+  }
+
+  get me() {
+    return AppComponent.me;
   }
 }
