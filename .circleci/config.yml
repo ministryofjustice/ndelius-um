@@ -36,13 +36,9 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
+            - .gradle
             - node_modules
           key: v1-dependencies-{{ checksum "build.gradle" }}-{{ checksum "ui/package.json" }}
 
       # run tests!
       - run: gradle test
-
-      # build jar
-      - run: gradle assemble
-
-
