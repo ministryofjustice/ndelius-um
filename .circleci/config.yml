@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/openjdk:8-jdk-node
+      - image: circleci/openjdk:8-jdk
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -36,10 +36,8 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
+            - node_modules
           key: v1-dependencies-{{ checksum "build.gradle" }}-{{ checksum "ui/package.json" }}
-
-      # install angular-cli
-      - run: sudo npm install -g @angular/cli
 
       # run tests!
       - run: gradle test
