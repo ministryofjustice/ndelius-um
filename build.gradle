@@ -26,7 +26,7 @@ sourceSets {
 	main.resources.srcDirs 'src/main/resources', 'ui/dist'
 }
 
-npm_install.args = ['ui']
+npm_install.args = ['ui', '--prefix=ui']
 npm_run.args = ['build-prod', '--prefix=ui']
 npm_run.dependsOn(npm_install)
 processResources.dependsOn(npm_run)
