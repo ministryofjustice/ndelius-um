@@ -26,9 +26,20 @@ sourceSets {
 	main.resources.srcDirs 'src/main/resources', 'ui/dist'
 }
 
-npm_install.args = ['ui']
+node {
+	version = '8.10.0'
+	npmVersion = '5.6.0'
+	download = true
+}
+
+task npm_install_cli(type: NpmTask) {
+	args = ['install', '@angular/cli']
+}
+npm_install.args = ['ui', '--prefix=ui']
 npm_run.args = ['build-prod', '--prefix=ui']
-npm_run.dependsOn(npm_install)
+
+npm_install_cli.dependsOn(npm_install)
+npm_run.dependsOn(npm_install_cli)
 processResources.dependsOn(npm_run)
 
 repositories {
