@@ -3,4 +3,12 @@
 @import '~bootstrap/scss/bootstrap';
 @import '~open-iconic/font/css/open-iconic-bootstrap.css';
 
+.animate-padding {
+  transition: padding 300ms;
+  -webkit-transition: padding 300ms;
+}
 
+.jumbotron-compact {
+  padding-top: $jumbotron-padding * 2/3;
+  padding-bottom: $jumbotron-padding / 2;
+}
