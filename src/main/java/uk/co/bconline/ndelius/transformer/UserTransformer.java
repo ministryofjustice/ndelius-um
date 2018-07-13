@@ -1,18 +1,15 @@
 package uk.co.bconline.ndelius.transformer;
 
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static org.springframework.util.StringUtils.isEmpty;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import uk.co.bconline.ndelius.model.Dataset;
-import uk.co.bconline.ndelius.model.Organisation;
-import uk.co.bconline.ndelius.model.SearchResult;
-import uk.co.bconline.ndelius.model.User;
+import uk.co.bconline.ndelius.model.*;
 import uk.co.bconline.ndelius.model.entity.DatasetEntity;
 import uk.co.bconline.ndelius.model.entity.OrganisationEntity;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
@@ -39,10 +36,10 @@ public class UserTransformer {
                         .description(de.getProbationArea().getDescription())
                         .organisation(map(de.getProbationArea().getOrganisation()))
                         .build())
-                        .collect(Collectors.toList());
+                        .collect(toList());
     }
 
-    public SearchResult map(UserEntity user)
+	public SearchResult map(UserEntity user)
 	{
 		return SearchResult.builder()
 				.username(user.getUsername())
@@ -76,7 +73,20 @@ public class UserTransformer {
 						.username(v.getUsername())
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
+						.transactions(ofNullable(v.getTransactions())
+								.map(transactions -> transactions.stream()
+										.map(transaction -> Transaction.builder()
+												.name(transaction.getName())
+												.roles(transaction.getRoles())
+												.build())
+										.collect(toList()))
+								.orElse(null))
 						.build()).orElse(u));
+	}
+
+	public Optional<User> map(OIDUser user)
+	{
+		return combine(null, user, null, null);
 	}
 
 	private String combineForenames(String forename, String forename2)

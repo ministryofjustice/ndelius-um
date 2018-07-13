@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
 import {UserService} from "../user.service";
 import {User} from "../../model/user";
+import {Transaction} from "../../model/transaction";
 import {Observable} from "rxjs/Observable";
 import {map} from "rxjs/operators";
 
@@ -16,7 +17,9 @@ export class AuthorisationService {
 
   hasRole(role: string): Observable<boolean> {
     return this.userService.whoami().pipe(map((currentUser: User) => {
-      return currentUser.roles.indexOf(role) !== -1
+      return currentUser.transactions
+        .filter((t: Transaction) => t.roles.indexOf(role) !== -1)
+        .length > 0;
     }));
   }
 
