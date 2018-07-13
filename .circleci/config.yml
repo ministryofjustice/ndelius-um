@@ -39,7 +39,7 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # install angular-cli
-      - run: npm install -g angular-cli
+      - run: npm install angular-cli
 
       # run tests!
       - run: gradle test
