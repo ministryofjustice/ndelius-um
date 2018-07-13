@@ -39,7 +39,6 @@ export class LoginInterceptor implements HttpInterceptor {
   }
 
   private static appendToken(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log("Appending token to request", req);
     return next.handle(req.clone({
       headers: req.headers.set('Authorization', 'Bearer ' + this.token)
     }));
