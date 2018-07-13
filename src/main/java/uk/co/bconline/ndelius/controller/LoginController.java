@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.val;
 import uk.co.bconline.ndelius.model.TokenResponse;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.OIDUserService;
+import uk.co.bconline.ndelius.transformer.UserTransformer;
 
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -24,22 +25,21 @@ public class LoginController
 	private int expiry;
 
 	private final OIDUserService oidUserService;
+	private final UserTransformer transformer;
 
 	@Autowired
-	public LoginController(OIDUserService oidUserService)
+	public LoginController(OIDUserService oidUserService, UserTransformer transformer)
 	{
 		this.oidUserService = oidUserService;
+		this.transformer = transformer;
 	}
 
 	@RequestMapping("/whoami")
-	public Optional<OIDUser> whoami()
+	public Optional<User> whoami()
 	{
 		 val username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 
-		 return oidUserService.getUser(username).map(oidUser -> {
-			 oidUser.setRoles(oidUserService.getUserRoles(oidUser.getUsername()));
-			 return oidUser;
-		 });
+		 return oidUserService.getUser(username).flatMap(transformer::map);
 	}
 
 	@PostMapping("/login")

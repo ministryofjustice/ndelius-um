@@ -13,8 +13,6 @@ import org.springframework.ldap.odm.annotations.Transient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Data;
 import lombok.ToString;
 
@@ -24,7 +22,6 @@ import lombok.ToString;
 public final class OIDUser implements UserDetails, Serializable
 {
 	@Id
-	@JsonIgnore
 	private Name dn;
 
 	@Attribute(name="cn")
@@ -36,42 +33,36 @@ public final class OIDUser implements UserDetails, Serializable
 	@Attribute(name="sn")
 	private String surname;
 
-	@JsonIgnore
 	@Attribute(name="userPassword")
 	private String password;
 
 	@Transient
-	private List<String> roles;
+	private List<OIDBusinessTransaction> transactions;
 
-	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities()
 	{
 		return null;
 	}
 
-	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired()
 	{
 		return true;
 	}
 
-	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked()
 	{
 		return true;
 	}
 
-	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired()
 	{
 		return true;
 	}
 
-	@JsonIgnore
 	@Override
 	public boolean isEnabled()
 	{

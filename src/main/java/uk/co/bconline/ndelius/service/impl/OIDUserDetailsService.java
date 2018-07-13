@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
@@ -75,12 +76,19 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public List<String> getUserRoles(String username)
 	{
+		return getUserTransactions(username).stream()
+				.flatMap(bt -> bt.getRoles().stream())
+				.collect(toList());
+	}
+
+	@Override
+	public List<OIDBusinessTransaction> getUserTransactions(String username)
+	{
 		return stream(roleRepository
 				.findAll(query()
 						.base(String.format("cn=%s,%s", username, OIDUser.class.getAnnotation(Entry.class).base()))
 						.where("objectclass").like("NDRole*"))
 				.spliterator(), false)
-				.flatMap(bt -> bt.getRoles().stream())
 				.collect(toList());
 	}
 
@@ -127,6 +135,10 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public Optional<OIDUser> getUser(String username)
 	{
-		return userRepository.findByUsername(username);
+		Optional<OIDUser> user = userRepository.findByUsername(username);
+		return user.map(u -> {
+			u.setTransactions(getUserTransactions(username));
+			return u;
+		});
 	}
 }

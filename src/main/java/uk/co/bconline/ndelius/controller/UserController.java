@@ -39,7 +39,7 @@ public class UserController
 	}
 
 	@Interaction("UMBI001")
-	@RequestMapping("/users")
+	@GetMapping("/users")
 	public ResponseEntity<List<SearchResult>> search(
 			@RequestParam("q") String query,
 			@Min(1) @RequestParam(value = "page", defaultValue = "1") Integer page,
@@ -49,7 +49,7 @@ public class UserController
 	}
 
 	@Interaction("UMBI002")
-	@RequestMapping(path="/user/{username}", method=RequestMethod.GET)
+	@GetMapping(path="/user/{username}")
 	public ResponseEntity<User> getUser(final @PathVariable("username") String username)
 	{
 		return userService.getUser(username)
