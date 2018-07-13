@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ForbiddenResponse
+public class TokenResponse
 {
-	private String user;
-	private String[] requiredRoles;
+	private String token;
+	private int expiresIn;
 }

@@ -1,12 +1,11 @@
 package uk.co.bconline.ndelius.config.data.embedded;
 
-import javax.annotation.PreDestroy;
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
 import org.springframework.boot.autoconfigure.ldap.LdapProperties;
@@ -15,9 +14,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
-import org.springframework.ldap.core.ContextSource;
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.sdk.LDAPException;
@@ -38,23 +35,9 @@ public class EmbeddedOIDConfig extends AliasDereferencingEmbeddedLdap
 		super(embeddedProperties, properties, applicationContext, environment);
 	}
 
-	@Bean
-	@DependsOn("oidDirectoryServer")
-	@ConditionalOnMissingBean
-	public ContextSource ldapContextSource() {
-		return super.ldapContextSource();
-	}
-
 	@Bean(name = "oidDirectoryServer")
-	public InMemoryDirectoryServer oidDirectoryServer() throws LDAPException
+	public InMemoryDirectoryServer oidDirectoryServer() throws LDAPException, IOException
 	{
 		return super.directoryServer();
-	}
-
-	@PreDestroy
-	public void close() {
-		if (this.server != null) {
-			this.server.shutDown(true);
-		}
 	}
 }

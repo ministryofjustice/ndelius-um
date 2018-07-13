@@ -20,8 +20,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.config.authentication.AuthenticationManagerBeanDefinitionParser
+		.NullAuthenticationProvider;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -121,19 +121,6 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 	@Bean
 	public AuthenticationProvider jwtAuthenticationProvider()
 	{
-		return new AuthenticationProvider()
-		{
-			@Override
-			public Authentication authenticate(Authentication authentication) throws AuthenticationException
-			{
-				return authentication;
-			}
-
-			@Override
-			public boolean supports(Class<?> authentication)
-			{
-				return authentication.isAssignableFrom(AuthenticationToken.class);
-			}
-		};
+		return new NullAuthenticationProvider();
 	}
 }

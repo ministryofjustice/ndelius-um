@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.val;
+import uk.co.bconline.ndelius.model.TokenResponse;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.service.OIDUserService;
 
@@ -30,14 +29,6 @@ public class LoginController
 	public LoginController(OIDUserService oidUserService)
 	{
 		this.oidUserService = oidUserService;
-	}
-
-	@Data
-	@AllArgsConstructor
-	private class TokenResponse
-	{
-		private String token;
-		private int expiresIn;
 	}
 
 	@RequestMapping("/whoami")

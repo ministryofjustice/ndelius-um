@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.config.data.embedded;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +16,6 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.util.StringUtils;
 
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
@@ -57,17 +56,7 @@ public abstract class AliasDereferencingEmbeddedLdap
 		this.environment = environment;
 	}
 
-	public ContextSource ldapContextSource() {
-		LdapContextSource source = new LdapContextSource();
-		if (hasCredentials(this.embeddedProperties.getCredential())) {
-			source.setUserDn(this.embeddedProperties.getCredential().getUsername());
-			source.setPassword(this.embeddedProperties.getCredential().getPassword());
-		}
-		source.setUrls(this.properties.determineUrls(this.environment));
-		return source;
-	}
-
-	public InMemoryDirectoryServer directoryServer() throws LDAPException
+	public InMemoryDirectoryServer directoryServer() throws LDAPException, IOException
 	{
 		String[] baseDn = StringUtils.toStringArray(this.embeddedProperties.getBaseDn());
 		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(baseDn);
@@ -118,19 +107,15 @@ public abstract class AliasDereferencingEmbeddedLdap
 				&& StringUtils.hasText(credential.getPassword());
 	}
 
-	private void importLdif() throws LDAPException {
+	private void importLdif() throws LDAPException, IOException
+	{
 		String location = this.embeddedProperties.getLdif();
 		if (StringUtils.hasText(location)) {
-			try {
-				Resource resource = this.applicationContext.getResource(location);
-				if (resource.exists()) {
-					try (InputStream inputStream = resource.getInputStream()) {
-						this.server.importFromLDIF(true, new LDIFReader(inputStream));
-					}
+			Resource resource = this.applicationContext.getResource(location);
+			if (resource.exists()) {
+				try (InputStream inputStream = resource.getInputStream()) {
+					this.server.importFromLDIF(true, new LDIFReader(inputStream));
 				}
-			}
-			catch (Exception ex) {
-				throw new IllegalStateException("Unable to load LDIF " + location, ex);
 			}
 		}
 	}
