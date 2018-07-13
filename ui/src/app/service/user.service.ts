@@ -1,4 +1,4 @@
-import {User} from "../model/User";
+import {User} from "../model/user";
 import {Observable} from "rxjs/Observable";
 
 export abstract class UserService {

@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {User} from "../../model/User";
+import {User} from "../../model/user";
 import {ActivatedRoute, Router} from "@angular/router";
 import {filter, flatMap} from "rxjs/operators";
 import {UserService} from "../../service/user.service";
