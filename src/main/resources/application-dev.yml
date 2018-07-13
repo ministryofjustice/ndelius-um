@@ -24,7 +24,7 @@ embedded:
         username: cn=Administrator,cn=Users,dc=ad1,dc=local
         password: secret
       ldif: classpath:ldif/ad1.ldif
-      port: 389
+      port: 3061
       validation.enabled: false
     secondary:
       base-dn: dc=ad2,dc=local
@@ -32,7 +32,7 @@ embedded:
         username: cn=Administrator,cn=Users,dc=ad2,dc=local
         password: secret
       ldif: classpath:ldif/ad2.ldif
-      port: 390
+      port: 3062
       validation.enabled: false
 
 oid:
@@ -44,12 +44,12 @@ oid:
 ad:
   primary:
     base: dc=ad1,dc=local
-    urls: ldap://localhost:389
+    urls: ldap://localhost:3061
     username: cn=Administrator,cn=Users,dc=ad1,dc=local
     password: secret
   secondary:
     base: dc=ad2,dc=local
-    urls: ldap://localhost:390
+    urls: ldap://localhost:3062
     username: cn=Administrator,cn=Users,dc=ad2,dc=local
     password: secret
 
