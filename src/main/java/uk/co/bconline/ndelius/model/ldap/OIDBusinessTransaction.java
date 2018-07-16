@@ -12,7 +12,7 @@ import org.springframework.ldap.odm.annotations.Id;
 import lombok.Data;
 
 @Data
-@Entry(objectClasses = "NDRole", base="cn=ndRoleCatalogue")
+@Entry(objectClasses = "top", base = "cn=ndRoleCatalogue,cn=Users")
 public final class OIDBusinessTransaction implements Serializable
 {
 	@Id
