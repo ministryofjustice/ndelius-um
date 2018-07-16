@@ -76,7 +76,7 @@ public class UserControllerTest
 	}
 
 	@Test
-	public void searchResultsMatchQuery() throws Exception
+	public void searchOnName() throws Exception
 	{
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
@@ -84,6 +84,39 @@ public class UserControllerTest
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(3)))
 				.andExpect(jsonPath("$[*].forenames", containsInAnyOrder("Jim", "Joe", "Jane")));
+	}
+
+	@Test
+	public void searchOnUsername() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc))
+				.param("q", "joe.bloggs"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", not(empty())))
+				.andExpect(jsonPath("$[0].username", is("Joe.Bloggs")));
+	}
+
+	@Test
+	public void searchOnTeamDescriptionReturnsWholeTeam() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc))
+				.param("q", "test team"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", not(empty())))
+				.andExpect(jsonPath("$[*].username", hasItems("test.user", "Joe.Bloggs", "Jane.Bloggs")));
+	}
+
+	@Test
+	public void searchOnStaffCode() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc))
+				.param("q", "N01A001"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", not(empty())))
+				.andExpect(jsonPath("$[0].staffCode", is("N01A001")));
 	}
 
 	@Test

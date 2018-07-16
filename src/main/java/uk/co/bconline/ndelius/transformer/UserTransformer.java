@@ -1,44 +1,37 @@
 package uk.co.bconline.ndelius.transformer;
 
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
+import static org.springframework.util.StringUtils.isEmpty;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.co.bconline.ndelius.model.*;
-import uk.co.bconline.ndelius.model.entity.DatasetEntity;
-import uk.co.bconline.ndelius.model.entity.OrganisationEntity;
+
+import uk.co.bconline.ndelius.model.SearchResult;
+import uk.co.bconline.ndelius.model.Team;
+import uk.co.bconline.ndelius.model.Transaction;
+import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
+import uk.co.bconline.ndelius.model.entity.TeamEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
-import static org.springframework.util.StringUtils.isEmpty;
-
 @Component
-public class UserTransformer {
+public class UserTransformer
+{
+	private final DatasetTransformer datasetTransformer;
 
-    public Organisation map(OrganisationEntity organisationEntity) {
-        return ofNullable(organisationEntity)
-                .map(oe -> Organisation.builder()
-                        .code(oe.getCode())
-                        .description(oe.getDescription())
-                        .build())
-                .orElse(null);
-    }
-
-    public List<Dataset> map(List<DatasetEntity> datasetEntity) {
-        return datasetEntity.stream()
-                .map(de -> Dataset.builder()
-                        .code(de.getProbationArea().getCode())
-                        .description(de.getProbationArea().getDescription())
-                        .organisation(map(de.getProbationArea().getOrganisation()))
-						 .active("Y".equalsIgnoreCase(de.getProbationArea().getSelectable()))
-                        .build())
-                        .collect(toList());
-    }
+	@Autowired
+	public UserTransformer(DatasetTransformer datasetTransformer)
+	{
+		this.datasetTransformer = datasetTransformer;
+	}
 
 	public SearchResult map(UserEntity user)
 	{
@@ -48,6 +41,19 @@ public class UserTransformer {
 				.surname(user.getSurname())
 				.staffCode(ofNullable(user.getStaff()).map(StaffEntity::getCode).orElse(null))
 				.build();
+	}
+
+	public Transaction map(OIDBusinessTransaction transaction){
+		return Transaction.builder()
+				.name(transaction.getName())
+				.roles(transaction.getRoles())
+				.description(transaction.getDescription())
+				.build();
+	}
+
+	public Optional<User> map(OIDUser user)
+	{
+		return combine(null, user, null, null);
 	}
 
 	public Optional<User> combine(UserEntity dbUser, OIDUser oidUser, ADUser ad1User, ADUser ad2User)
@@ -64,9 +70,10 @@ public class UserTransformer {
 				.map(u -> ofNullable(dbUser).map(v -> u.toBuilder()
 						// DB details
 						.username(v.getUsername())
-						.datasets(map(v.getDatasets()))
-						.organisation(map(v.getOrganisation()))
+						.datasets(datasetTransformer.map(v.getDatasets()))
+						.organisation(datasetTransformer.map(v.getOrganisation()))
 						.staffCode(ofNullable(v.getStaff()).map(StaffEntity::getCode).orElse(null))
+						.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeam).map(this::map).orElse(null))
 						.endDate(v.getEndDate())
 						.build()).orElse(u))
 				.map(u -> ofNullable(oidUser).map(v -> u.toBuilder()
@@ -82,17 +89,14 @@ public class UserTransformer {
 						.build()).orElse(u));
 	}
 
-	public Transaction map(OIDBusinessTransaction transaction){
-    	return Transaction.builder()
-				.name(transaction.getName())
-				.roles(transaction.getRoles())
-				.description(transaction.getDescription())
-				.build();
-	}
-
-	public Optional<User> map(OIDUser user)
+	private List<Team> map(Collection<TeamEntity> teams)
 	{
-		return combine(null, user, null, null);
+		return teams.stream()
+				.map(team -> Team.builder()
+						.code(team.getCode())
+						.description(team.getDescription())
+						.build())
+				.collect(toList());
 	}
 
 	private String combineForenames(String forename, String forename2)

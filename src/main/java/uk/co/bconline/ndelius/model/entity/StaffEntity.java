@@ -1,7 +1,10 @@
 package uk.co.bconline.ndelius.model.entity;
 
+import static javax.persistence.FetchType.EAGER;
+
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -9,6 +12,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import lombok.Data;
 
@@ -36,14 +40,6 @@ public class StaffEntity  implements Serializable {
 	@Column(name = "SURNAME")
 	private String surname;
 
-	@ManyToOne
-	@JoinColumn(name = "STAFF_GRADE_ID", insertable = false, updatable = false)
-	private ReferenceDataEntity staffGrade;
-
-	@ContainedIn
-	@OneToOne(mappedBy = "staff")
-	private UserEntity user;
-
 	@Column(name = "START_DATE")
 	@Type(type = "java.time.LocalDate")
 	private LocalDate startDate;
@@ -51,4 +47,19 @@ public class StaffEntity  implements Serializable {
 	@Column(name = "END_DATE")
 	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
+
+	@ManyToOne
+	@JoinColumn(name = "STAFF_GRADE_ID", insertable = false, updatable = false)
+	private ReferenceDataEntity staffGrade;
+
+	@IndexedEmbedded
+	@ManyToMany(fetch = EAGER)
+	@JoinTable(name = "STAFF_TEAM",
+			   joinColumns = @JoinColumn(name = "STAFF_ID"),
+			   inverseJoinColumns = @JoinColumn(name = "TEAM_ID"))
+	private Set<TeamEntity> team;
+
+	@ContainedIn
+	@OneToOne(mappedBy = "staff")
+	private UserEntity user;
 }
