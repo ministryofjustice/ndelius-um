@@ -1,15 +1,13 @@
 package uk.co.bconline.ndelius.model.ldap;
 
-import java.io.Serializable;
-import java.util.List;
-
-import javax.naming.Name;
-
+import lombok.Data;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 
-import lombok.Data;
+import javax.naming.Name;
+import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Entry(objectClasses = "top")
@@ -26,4 +24,7 @@ public final class OIDBusinessTransaction implements Serializable
 
 	@Attribute(name="UIBusinessInteraction")
 	private List<String> roles;
+
+	@Attribute(name="description")
+	private String description;
 }

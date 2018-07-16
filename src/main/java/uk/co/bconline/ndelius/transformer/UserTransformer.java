@@ -7,6 +7,7 @@ import uk.co.bconline.ndelius.model.entity.OrganisationEntity;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.ldap.ADUser;
+import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 
 import java.util.List;
@@ -75,13 +76,18 @@ public class UserTransformer {
 						.surname(v.getSurname())
 						.transactions(ofNullable(v.getTransactions())
 								.map(transactions -> transactions.stream()
-										.map(transaction -> Transaction.builder()
-												.name(transaction.getName())
-												.roles(transaction.getRoles())
-												.build())
+										.map(this::map)
 										.collect(toList()))
 								.orElse(null))
 						.build()).orElse(u));
+	}
+
+	private Transaction map(OIDBusinessTransaction transaction){
+    	return Transaction.builder()
+				.name(transaction.getName())
+				.roles(transaction.getRoles())
+				.description(transaction.getDescription())
+				.build();
 	}
 
 	public Optional<User> map(OIDUser user)
