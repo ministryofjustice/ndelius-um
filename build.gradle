@@ -9,11 +9,14 @@ buildscript {
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("com.moowork.gradle:gradle-node-plugin:1.2.0")
+        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2")
 	}
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'jacoco'
+apply plugin: 'org.sonarqube'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.moowork.node'
@@ -32,14 +35,9 @@ node {
 	download = true
 }
 
-task npm_install_cli(type: NpmTask) {
-	args = ['install', '@angular/cli']
-}
 npm_install.args = ['ui', '--prefix=ui']
 npm_run.args = ['build-prod', '--prefix=ui']
-
-npm_install_cli.dependsOn(npm_install)
-npm_run.dependsOn(npm_install_cli)
+npm_run.dependsOn(npm_install)
 processResources.dependsOn(npm_run)
 
 repositories {
