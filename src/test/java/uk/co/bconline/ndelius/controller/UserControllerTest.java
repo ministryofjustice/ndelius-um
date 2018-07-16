@@ -83,9 +83,7 @@ public class UserControllerTest
 				.param("q", "j blog"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(3)))
-				.andExpect(jsonPath("$[0].forenames", is("Jim")))
-				.andExpect(jsonPath("$[1].forenames", is("Joe")))
-				.andExpect(jsonPath("$[2].forenames", is("Jane")));
+				.andExpect(jsonPath("$[*].forenames", containsInAnyOrder("Jim", "Joe", "Jane")));
 	}
 
 	@Test
