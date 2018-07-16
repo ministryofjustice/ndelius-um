@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
+import uk.co.bconline.ndelius.model.ForbiddenResponse;
 import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
 
 @RunWith(SpringRunner.class)
@@ -31,12 +32,16 @@ public class AuthorisationHandlerTest
 	{
 		when(service.getUserRoles("user")).thenReturn(singletonList("ROLE_USER"));
 
-		Object response = handler.authorise(joinPoint, interaction("SOME_OTHER_ROLE"));
+		ResponseEntity response = (ResponseEntity) handler.authorise(joinPoint, interaction("SOME_OTHER_ROLE"));
 
 		verify(joinPoint, never()).proceed();
 		assertNotNull(response);
-		assertTrue(response instanceof ResponseEntity);
-		assertEquals(403, ((ResponseEntity) response).getStatusCodeValue());
+		assertEquals(403, response.getStatusCodeValue());
+		assertTrue(response.getBody() instanceof ForbiddenResponse);
+		ForbiddenResponse body = ((ForbiddenResponse) response.getBody());
+		assertEquals("user", body.getUser());
+		assertEquals(1, body.getRequiredRoles().length);
+		assertEquals("SOME_OTHER_ROLE", body.getRequiredRoles()[0]);
 	}
 
 	@Test

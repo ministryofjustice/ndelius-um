@@ -14,6 +14,7 @@ objectclass: top
 objectclass: person
 cn: Administrator
 uid: Administrator
+samAccountName: Administrator
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=test.user,cn=Users,dc=ad2,dc=local
@@ -21,4 +22,5 @@ objectclass: top
 objectclass: person
 cn: test.user
 uid: test.user
+samAccountName: test.user
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==

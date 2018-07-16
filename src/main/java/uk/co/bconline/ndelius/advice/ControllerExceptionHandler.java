@@ -52,6 +52,7 @@ public class ControllerExceptionHandler
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public Map handle(AppException exception) {
 		log.error("Application exception occurred. Returning 500 response", exception);
+		if (exception.getMessage() == null) return null;
 		return singletonMap("error", exception.getMessage());
 	}
 }

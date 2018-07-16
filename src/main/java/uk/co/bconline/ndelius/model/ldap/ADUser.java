@@ -16,7 +16,7 @@ import lombok.ToString;
 
 @Data
 @ToString(exclude = "password")
-@Entry(objectClasses = "user")
+@Entry(objectClasses = "person")
 public final class ADUser implements UserDetails, Serializable
 {
 	@Id
