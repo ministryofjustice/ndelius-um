@@ -24,6 +24,11 @@ UIBusinessInteraction: UMBI002
 UIBusinessInteraction: UMBI003
 UIBusinessInteraction: UMBI004
 UIBusinessInteraction: UMBI005
+UIBusinessInteraction: UMBI006
+UIBusinessInteraction: UMBI007
+UIBusinessInteraction: UMBI008
+UIBusinessInteraction: UMBI009
+UIBusinessInteraction: UMBI010
 
 dn: cn=UMBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
 objectclass: top
@@ -51,6 +56,7 @@ dn: cn=UMBT001,cn=test.user,cn=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: alias
 objectclass: NDRoleAssociation
+objectclass: NDRole
 cn: UMBT001
 aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
 
@@ -58,6 +64,7 @@ dn: cn=UMBT002,cn=test.user,cn=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: alias
 objectclass: NDRoleAssociation
+objectclass: NDRole
 cn: UMBT002
 aliasedObjectName: cn=UMBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
 

@@ -29,7 +29,7 @@ public class DatasetController
 		this.datasetService = datasetService;
 	}
 
-	@Interaction("UMBI003")
+	@Interaction("UMBI006")
 	@GetMapping("/datasets")
 	public ResponseEntity<List<Dataset>> getDatsets()
 	{
