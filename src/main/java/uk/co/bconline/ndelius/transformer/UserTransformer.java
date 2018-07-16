@@ -1,14 +1,6 @@
 package uk.co.bconline.ndelius.transformer;
 
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
-import static org.springframework.util.StringUtils.isEmpty;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Component;
-
 import uk.co.bconline.ndelius.model.*;
 import uk.co.bconline.ndelius.model.entity.DatasetEntity;
 import uk.co.bconline.ndelius.model.entity.OrganisationEntity;
@@ -16,6 +8,13 @@ import uk.co.bconline.ndelius.model.entity.StaffEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
+
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Component
 public class UserTransformer {
@@ -35,6 +34,7 @@ public class UserTransformer {
                         .code(de.getProbationArea().getCode())
                         .description(de.getProbationArea().getDescription())
                         .organisation(map(de.getProbationArea().getOrganisation()))
+						 .active("Y".equalsIgnoreCase(de.getProbationArea().getSelectable()))
                         .build())
                         .collect(toList());
     }

@@ -1,10 +1,9 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import java.io.Serializable;
+import lombok.Data;
 
 import javax.persistence.*;
-
-import lombok.Data;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "PROBATION_AREA")
@@ -29,4 +28,7 @@ public class ProbationAreaEntity  implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ORGANISATION_ID", insertable = false, updatable = false)
     private OrganisationEntity organisation;
+
+    @Column(name = "SELECTABLE")
+    private String selectable;
 }
