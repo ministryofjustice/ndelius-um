@@ -1,21 +1,21 @@
 package uk.co.bconline.ndelius.transformer;
 
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
-import static org.springframework.util.StringUtils.isEmpty;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Component;
-
 import uk.co.bconline.ndelius.model.*;
 import uk.co.bconline.ndelius.model.entity.DatasetEntity;
 import uk.co.bconline.ndelius.model.entity.OrganisationEntity;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.ldap.ADUser;
+import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
+
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Component
 public class UserTransformer {
@@ -75,13 +75,18 @@ public class UserTransformer {
 						.surname(v.getSurname())
 						.transactions(ofNullable(v.getTransactions())
 								.map(transactions -> transactions.stream()
-										.map(transaction -> Transaction.builder()
-												.name(transaction.getName())
-												.roles(transaction.getRoles())
-												.build())
+										.map(this::map)
 										.collect(toList()))
 								.orElse(null))
 						.build()).orElse(u));
+	}
+
+	private Transaction map(OIDBusinessTransaction transaction){
+    	return Transaction.builder()
+				.name(transaction.getName())
+				.roles(transaction.getRoles())
+				.description(transaction.getDescription())
+				.build();
 	}
 
 	public Optional<User> map(OIDUser user)

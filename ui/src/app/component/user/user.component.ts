@@ -40,6 +40,6 @@ export class UserComponent implements OnInit {
   }
 
   get transactionNamesForDisplay(){
-    return this.user.transactions.map(t => t.name).join(' , ')
+    return this.user.transactions.map(t => t.name + '('+ t.description +')').join(' , ')
   }
 }
