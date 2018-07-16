@@ -10,10 +10,12 @@
           </label>
           <div class="input-group">
             <input id="query" name="query" type="search" class="form-control" [(ngModel)]="query"
-                   placeholder="Search using name, username, staff code..."
+                   placeholder="Search using name, username, team, staff code..."
                    autocomplete="off">
             <div class="input-group-append">
-              <button class="btn btn-primary" type="submit">Search</button>
+              <button class="btn btn-primary" type="submit">
+                <span class="oi oi-magnifying-glass"></span>
+              </button>
             </div>
           </div>
         </div>

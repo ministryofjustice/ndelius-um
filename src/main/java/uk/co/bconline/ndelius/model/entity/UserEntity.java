@@ -1,8 +1,10 @@
 package uk.co.bconline.ndelius.model.entity;
 
+import static javax.persistence.FetchType.EAGER;
+
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -57,6 +59,9 @@ public class UserEntity implements Serializable
 	@JoinColumn(name = "ORGANISATION_ID")
 	private OrganisationEntity organisation;
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-	private List<DatasetEntity> datasets;
+	@OneToMany(fetch = EAGER)
+	@JoinTable(name = "PROBATION_AREA_USER",
+			   joinColumns = @JoinColumn(name = "USER_ID"),
+			   inverseJoinColumns = @JoinColumn(name = "PROBATION_AREA_ID"))
+	private Set<ProbationAreaEntity> datasets;
 }
