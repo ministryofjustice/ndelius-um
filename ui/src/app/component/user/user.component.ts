@@ -38,4 +38,8 @@ export class UserComponent implements OnInit {
   get json() {
     return JSON.stringify(this.user);
   }
+
+  get transactionNamesForDisplay(){
+    return this.user.transactions.map(t => t.name).join(' , ')
+  }
 }
