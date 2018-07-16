@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-@Entry(objectClasses = "top")
+@Entry(objectClasses = "NDRole", base="cn=ndRoleCatalogue")
 public final class OIDBusinessTransaction implements Serializable
 {
 	@Id

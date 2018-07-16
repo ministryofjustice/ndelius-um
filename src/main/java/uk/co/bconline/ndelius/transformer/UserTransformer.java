@@ -82,7 +82,7 @@ public class UserTransformer {
 						.build()).orElse(u));
 	}
 
-	private Transaction map(OIDBusinessTransaction transaction){
+	public Transaction map(OIDBusinessTransaction transaction){
     	return Transaction.builder()
 				.name(transaction.getName())
 				.roles(transaction.getRoles())
