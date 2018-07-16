@@ -1,7 +1,8 @@
 package uk.co.bconline.ndelius.controller;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -55,8 +56,7 @@ public class LoginControllerTest
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.username", is("test.user")))
-				.andExpect(jsonPath("$.transactions", hasSize(1)))
-				.andExpect(jsonPath("$.transactions[0].roles", hasSize(5)));
+				.andExpect(jsonPath("$.transactions", not(empty())));
 	}
 
 }
