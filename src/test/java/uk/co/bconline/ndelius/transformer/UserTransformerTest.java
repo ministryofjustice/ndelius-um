@@ -20,7 +20,7 @@ public class UserTransformerTest
 		user.setForename2("forename2");
 		user.setSurname("surname");
 
-		SearchResult result = new UserTransformer().map(user);
+		SearchResult result = new UserTransformer(new DatasetTransformer()).map(user);
 
 		assertEquals("username", result.getUsername());
 		assertEquals("forename forename2", result.getForenames());

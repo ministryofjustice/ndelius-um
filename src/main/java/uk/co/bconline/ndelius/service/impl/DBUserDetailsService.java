@@ -64,7 +64,8 @@ public class DBUserDetailsService
 					.keyword()
 					.fuzzy()
 					.withPrefixLength(1)
-					.onFields("username", "forename", "forename2", "surname", "staff.code")
+					.onFields("username", "forename", "forename2", "surname",
+							"staff.code", "staff.team.code", "staff.team.description")
 					.matching(searchTerm)
 					.createQuery(), UserEntity.class)
 					.setFirstResult(pageSize * (page-1))

@@ -24,6 +24,7 @@ public final class User implements Serializable
 	private String staffCode;
 	private LocalDate endDate;
 	private Organisation organisation;
+	private List<Team> teams;
 	private List<Dataset> datasets;
 	private List<Transaction> transactions;
 }

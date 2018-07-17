@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.service.impl;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
+import static org.springframework.ldap.query.SearchScope.ONELEVEL;
 
 import java.util.List;
 import java.util.Optional;
@@ -86,6 +87,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	{
 		return stream(roleRepository
 				.findAll(query()
+						.searchScope(ONELEVEL)
 						.base(String.format("cn=%s,%s", username, OIDUser.class.getAnnotation(Entry.class).base()))
 						.where("objectclass").like("NDRole*"))
 				.spliterator(), false)

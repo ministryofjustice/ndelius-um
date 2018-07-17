@@ -9,4 +9,5 @@ public class Dataset {
     private String code;
     private String description;
     private Organisation organisation;
+    private boolean active;
 }
