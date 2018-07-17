@@ -10,10 +10,14 @@ import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "TEAM")
+@ToString(exclude = "staff")
+@EqualsAndHashCode(exclude = "staff")
 public class TeamEntity implements Serializable
 {
 	@Id

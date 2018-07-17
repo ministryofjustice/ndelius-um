@@ -1,14 +1,19 @@
 package uk.co.bconline.ndelius.model.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.*;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "PROBATION_AREA")
+@ToString(exclude = "usersWithDataset")
+@EqualsAndHashCode(exclude = "usersWithDataset")
 public class ProbationAreaEntity  implements Serializable 
 {
 	@Id
@@ -33,4 +38,7 @@ public class ProbationAreaEntity  implements Serializable
 
 	@Column(name = "SELECTABLE")
 	private String selectable;
+
+	@ManyToMany(mappedBy = "datasets")
+	private Set<UserEntity> usersWithDataset;
 }

@@ -82,8 +82,9 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "j blog"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(3)))
-				.andExpect(jsonPath("$[*].forenames", containsInAnyOrder("Jim", "Joe", "Jane")));
+				.andExpect(jsonPath("$", hasSize(2)))
+				.andExpect(jsonPath("$[0].forenames", startsWith("J")))
+				.andExpect(jsonPath("$[1].forenames", startsWith("J")));
 	}
 
 	@Test
@@ -138,6 +139,16 @@ public class UserControllerTest
 				.param("pageSize", "1"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(1)));
+	}
+
+	@Test
+	public void searchResultsAreFilteredOnTheCurrentUsersDatasets() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc))
+				.param("q", "Jim.Bloggs"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", not(hasItem("Jim.Bloggs"))));
 	}
 
 	@Test
