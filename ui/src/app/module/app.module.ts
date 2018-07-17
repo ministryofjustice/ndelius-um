@@ -13,9 +13,10 @@ import {RestUserService} from "../service/impl/rest.user.service";
 import {UserService} from "../service/user.service";
 import {ErrorInterceptor} from "../interceptor/error.interceptor";
 import {MessageComponent} from "../component/message/message.component";
+import {RoleSelectorComponent} from "../component/role/roleselector.component";
 
 @NgModule({
-  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent],
+  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, RoleSelectorComponent],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [
     {provide: UserService, useClass: RestUserService},

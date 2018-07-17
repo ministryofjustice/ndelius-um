@@ -10,6 +10,7 @@ export class AuthorisationService {
   static GET_USER_ROLE: string = 'UMBI002';
   static ADD_USER_ROLE: string = 'UMBI003';
   static UPDATE_USER_ROLE: string = 'UMBI004';
+  static DELETE_USER_ROLE: string = 'UMBI005';
 
   hasRole(role: string): boolean {
     return AppComponent.me.transactions

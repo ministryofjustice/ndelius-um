@@ -1,0 +1,19 @@
+<div id="component-container" [ngStyle]="{height: componentHeight, width: componentWidth}" style="overflow-x: hidden; overflow-y: auto">
+  <div id="selection-area">
+    <button (click)="toggleOptions()" type="button" class="btn btn-primary">{{buttonName}}</button>
+  </div>
+  <div id="results-area" *ngIf="optionsDisplayed">
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let transaction of userTransactions">
+        <div class="row">
+          <div class="col-sm-6">{{transaction.name}} ({{transaction.description}})</div>
+          <div class="col-sm-6 float-right" >
+            <button type="button" class="close" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
