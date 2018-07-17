@@ -1,16 +1,22 @@
 package uk.co.bconline.ndelius.service.impl;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
+import static java.util.stream.Collectors.toList;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import lombok.val;
 import uk.co.bconline.ndelius.exception.AppException;
+import uk.co.bconline.ndelius.model.Dataset;
+import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.UserService;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
@@ -40,6 +46,20 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
+	public List<SearchResult> search(String query, int page, int pageSize)
+	{
+		val me = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+		val myDatasets = dbService.getDatasets(me).stream().map(Dataset::getCode).collect(toList());
+
+		return dbService.search(query).stream()
+				.filter(user -> myDatasets.contains(oidService.getUserHomeArea(user.getUsername())))
+				.skip((long) (page-1) * pageSize)
+				.limit(pageSize)
+				.map(transformer::map)
+				.collect(toList());
+	}
+
+	@Override
 	public Optional<User> getUser(String username)
 	{
 		val dbFuture = supplyAsync(() -> dbService.getUser(username).orElse(null));
@@ -50,7 +70,7 @@ public class UserServiceImpl implements UserService
 		try
 		{
 			return CompletableFuture.allOf(dbFuture, oidFuture, ad1Future, ad2Future)
-					.thenApply($ -> transformer.combine(dbFuture.join(), oidFuture.join(), ad1Future.join(), ad2Future.join()))
+					.thenApply(v -> transformer.combine(dbFuture.join(), oidFuture.join(), ad1Future.join(), ad2Future.join()))
 					.get();
 		}
 		catch (InterruptedException | ExecutionException e)

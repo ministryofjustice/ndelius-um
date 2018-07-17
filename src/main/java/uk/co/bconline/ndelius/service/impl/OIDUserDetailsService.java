@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
 import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 import uk.co.bconline.ndelius.service.OIDUserService;
@@ -142,5 +143,11 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 			u.setTransactions(getUserTransactions(username));
 			return u;
 		});
+	}
+
+	@Override
+	public String getUserHomeArea(String username)
+	{
+		return userRepository.getOIDUserHomeAreaByUsername(username).map(OIDUserHomeArea::getHomeArea).orElse(null);
 	}
 }

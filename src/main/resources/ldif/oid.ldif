@@ -49,6 +49,7 @@ cn: test.user
 uid: test.user
 givenName: Test
 sn: User
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test user for basic authentication (password=secret)
 
@@ -72,6 +73,7 @@ objectclass: person
 objectclass: NDUser
 cn: TestUser1
 uid: TestUser1
+userHomeArea: N01
 description: Test user for single sign-on (no password)
 
 dn: cn=Joe.Bloggs,cn=Users,dc=bcl,dc=local
@@ -82,6 +84,7 @@ cn: Joe.Bloggs
 uid: Joe.Bloggs
 givenName: Joe
 sn: Bloggs
+userHomeArea: N02
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jane.Bloggs,cn=Users,dc=bcl,dc=local
@@ -92,6 +95,7 @@ cn: Jane.Bloggs
 uid: Jane.Bloggs
 givenName: Jane
 sn: Bloggs
+userHomeArea: N03
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jim.Blogs,cn=Users,dc=bcl,dc=local
@@ -102,6 +106,7 @@ cn: Jim.Blogs
 uid: Jim.Blogs
 givenName: Jim
 sn: Blogs
+userHomeArea: N04
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Tiffiny.Thrasher,cn=Users,dc=bcl,dc=local
@@ -112,6 +117,7 @@ cn: Tiffiny.Thrasher
 uid: Tiffiny.Thrasher
 givenName: Tiffiny
 sn: Thrasher
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Yon.Yingling,cn=Users,dc=bcl,dc=local
@@ -122,6 +128,7 @@ cn: Yon.Yingling
 uid: Yon.Yingling
 givenName: Yon
 sn: Yingling
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Emma.Elks,cn=Users,dc=bcl,dc=local
@@ -132,6 +139,7 @@ cn: Emma.Elks
 uid: Emma.Elks
 givenName: Emma
 sn: Elks
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Brittaney.Bohl,cn=Users,dc=bcl,dc=local
@@ -142,6 +150,7 @@ cn: Brittaney.Bohl
 uid: Brittaney.Bohl
 givenName: Brittaney
 sn: Bohl
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Patrina.Pendergraft,cn=Users,dc=bcl,dc=local
@@ -152,6 +161,7 @@ cn: Patrina.Pendergraft
 uid: Patrina.Pendergraft
 givenName: Patrina
 sn: Pendergraft
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Kieth.Kallas,cn=Users,dc=bcl,dc=local
@@ -162,6 +172,7 @@ cn: Kieth.Kallas
 uid: Kieth.Kallas
 givenName: Kieth
 sn: Kallas
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Melany.Matte,cn=Users,dc=bcl,dc=local
@@ -172,6 +183,7 @@ cn: Melany.Matte
 uid: Melany.Matte
 givenName: Melany
 sn: Matte
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Kathlyn.Kass,cn=Users,dc=bcl,dc=local
@@ -182,6 +194,7 @@ cn: Kathlyn.Kass
 uid: Kathlyn.Kass
 givenName: Kathlyn
 sn: Kass
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Shawanna.Savedra,cn=Users,dc=bcl,dc=local
@@ -192,6 +205,7 @@ cn: Shawanna.Savedra
 uid: Shawanna.Savedra
 givenName: Shawanna
 sn: Savedra
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Hortencia.Heinecke,cn=Users,dc=bcl,dc=local
@@ -202,6 +216,7 @@ cn: Hortencia.Heinecke
 uid: Hortencia.Heinecke
 givenName: Hortencia
 sn: Heinecke
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Zella.Zajac,cn=Users,dc=bcl,dc=local
@@ -212,6 +227,7 @@ cn: Zella.Zajac
 uid: Zella.Zajac
 givenName: Zella
 sn: Zajac
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Daniele.Dodge,cn=Users,dc=bcl,dc=local
@@ -222,6 +238,7 @@ cn: Daniele.Dodge
 uid: Daniele.Dodge
 givenName: Daniele
 sn: Dodge
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Luanna.Lannon,cn=Users,dc=bcl,dc=local
@@ -232,6 +249,7 @@ cn: Luanna.Lannon
 uid: Luanna.Lannon
 givenName: Luanna
 sn: Lannon
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Ela.Espy,cn=Users,dc=bcl,dc=local
@@ -242,6 +260,7 @@ cn: Ela.Espy
 uid: Ela.Espy
 givenName: Ela
 sn: Espy
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Bibi.Baumgarten,cn=Users,dc=bcl,dc=local
@@ -252,6 +271,7 @@ cn: Bibi.Baumgarten
 uid: Bibi.Baumgarten
 givenName: Bibi
 sn: Baumgarten
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Creola.Chaffin,cn=Users,dc=bcl,dc=local
@@ -262,6 +282,7 @@ cn: Creola.Chaffin
 uid: Creola.Chaffin
 givenName: Creola
 sn: Chaffin
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Pennie.Pembleton,cn=Users,dc=bcl,dc=local
@@ -272,6 +293,7 @@ cn: Pennie.Pembleton
 uid: Pennie.Pembleton
 givenName: Pennie
 sn: Pembleton
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jada.Jankowski,cn=Users,dc=bcl,dc=local
@@ -282,6 +304,7 @@ cn: Jada.Jankowski
 uid: Jada.Jankowski
 givenName: Jada
 sn: Jankowski
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Delmer.Dishon,cn=Users,dc=bcl,dc=local
@@ -292,6 +315,7 @@ cn: Delmer.Dishon
 uid: Delmer.Dishon
 givenName: Delmer
 sn: Dishon
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Joanna.Jong,cn=Users,dc=bcl,dc=local
@@ -302,6 +326,7 @@ cn: Joanna.Jong
 uid: Joanna.Jong
 givenName: Joanna
 sn: Jong
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Margarita.Mchugh,cn=Users,dc=bcl,dc=local
@@ -312,6 +337,7 @@ cn: Margarita.Mchugh
 uid: Margarita.Mchugh
 givenName: Margarita
 sn: Mchugh
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Casimira.Celestine,cn=Users,dc=bcl,dc=local
@@ -322,6 +348,7 @@ cn: Casimira.Celestine
 uid: Casimira.Celestine
 givenName: Casimira
 sn: Celestine
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Efrain.Elsberry,cn=Users,dc=bcl,dc=local
@@ -332,6 +359,7 @@ cn: Efrain.Elsberry
 uid: Efrain.Elsberry
 givenName: Efrain
 sn: Elsberry
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Kiana.Kovacs,cn=Users,dc=bcl,dc=local
@@ -342,6 +370,7 @@ cn: Kiana.Kovacs
 uid: Kiana.Kovacs
 givenName: Kiana
 sn: Kovacs
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Austin.Apo,cn=Users,dc=bcl,dc=local
@@ -352,6 +381,7 @@ cn: Austin.Apo
 uid: Austin.Apo
 givenName: Austin
 sn: Apo
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jason.Jellison,cn=Users,dc=bcl,dc=local
@@ -362,6 +392,7 @@ cn: Jason.Jellison
 uid: Jason.Jellison
 givenName: Jason
 sn: Jellison
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Raymundo.Rehberg,cn=Users,dc=bcl,dc=local
@@ -372,6 +403,7 @@ cn: Raymundo.Rehberg
 uid: Raymundo.Rehberg
 givenName: Raymundo
 sn: Rehberg
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Evan.Emery,cn=Users,dc=bcl,dc=local
@@ -382,6 +414,7 @@ cn: Evan.Emery
 uid: Evan.Emery
 givenName: Evan
 sn: Emery
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Joette.Judon,cn=Users,dc=bcl,dc=local
@@ -392,6 +425,7 @@ cn: Joette.Judon
 uid: Joette.Judon
 givenName: Joette
 sn: Judon
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Shanae.Scarbrough,cn=Users,dc=bcl,dc=local
@@ -402,6 +436,7 @@ cn: Shanae.Scarbrough
 uid: Shanae.Scarbrough
 givenName: Shanae
 sn: Scarbrough
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Onie.Olivarria,cn=Users,dc=bcl,dc=local
@@ -412,6 +447,7 @@ cn: Onie.Olivarria
 uid: Onie.Olivarria
 givenName: Onie
 sn: Olivarria
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Bethann.Bowersox,cn=Users,dc=bcl,dc=local
@@ -422,6 +458,7 @@ cn: Bethann.Bowersox
 uid: Bethann.Bowersox
 givenName: Bethann
 sn: Bowersox
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Emerson.Eisenberg,cn=Users,dc=bcl,dc=local
@@ -432,6 +469,7 @@ cn: Emerson.Eisenberg
 uid: Emerson.Eisenberg
 givenName: Emerson
 sn: Eisenberg
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Freeda.Frizzell,cn=Users,dc=bcl,dc=local
@@ -442,6 +480,7 @@ cn: Freeda.Frizzell
 uid: Freeda.Frizzell
 givenName: Freeda
 sn: Frizzell
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Deana.Dennie,cn=Users,dc=bcl,dc=local
@@ -452,6 +491,7 @@ cn: Deana.Dennie
 uid: Deana.Dennie
 givenName: Deana
 sn: Dennie
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Mozelle.Miraglia,cn=Users,dc=bcl,dc=local
@@ -462,6 +502,7 @@ cn: Mozelle.Miraglia
 uid: Mozelle.Miraglia
 givenName: Mozelle
 sn: Miraglia
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Georgianna.Giroir,cn=Users,dc=bcl,dc=local
@@ -472,6 +513,7 @@ cn: Georgianna.Giroir
 uid: Georgianna.Giroir
 givenName: Georgianna
 sn: Giroir
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Palmer.Parramore,cn=Users,dc=bcl,dc=local
@@ -482,6 +524,7 @@ cn: Palmer.Parramore
 uid: Palmer.Parramore
 givenName: Palmer
 sn: Parramore
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Lois.Loper,cn=Users,dc=bcl,dc=local
@@ -492,6 +535,7 @@ cn: Lois.Loper
 uid: Lois.Loper
 givenName: Lois
 sn: Loper
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Shawnda.Sawicki,cn=Users,dc=bcl,dc=local
@@ -502,6 +546,7 @@ cn: Shawnda.Sawicki
 uid: Shawnda.Sawicki
 givenName: Shawnda
 sn: Sawicki
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Loreen.Lorence,cn=Users,dc=bcl,dc=local
@@ -512,6 +557,7 @@ cn: Loreen.Lorence
 uid: Loreen.Lorence
 givenName: Loreen
 sn: Lorence
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Kellee.Kerner,cn=Users,dc=bcl,dc=local
@@ -522,6 +568,7 @@ cn: Kellee.Kerner
 uid: Kellee.Kerner
 givenName: Kellee
 sn: Kerner
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Josiah.Jeanbaptiste,cn=Users,dc=bcl,dc=local
@@ -532,6 +579,7 @@ cn: Josiah.Jeanbaptiste
 uid: Josiah.Jeanbaptiste
 givenName: Josiah
 sn: Jeanbaptiste
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Coy.Caswell,cn=Users,dc=bcl,dc=local
@@ -542,6 +590,7 @@ cn: Coy.Caswell
 uid: Coy.Caswell
 givenName: Coy
 sn: Caswell
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Sirena.Somma,cn=Users,dc=bcl,dc=local
@@ -552,6 +601,7 @@ cn: Sirena.Somma
 uid: Sirena.Somma
 givenName: Sirena
 sn: Somma
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Allan.Amey,cn=Users,dc=bcl,dc=local
@@ -562,6 +612,7 @@ cn: Allan.Amey
 uid: Allan.Amey
 givenName: Allan
 sn: Amey
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Amee.Alsup,cn=Users,dc=bcl,dc=local
@@ -572,6 +623,7 @@ cn: Amee.Alsup
 uid: Amee.Alsup
 givenName: Amee
 sn: Alsup
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Raleigh.Ricketts,cn=Users,dc=bcl,dc=local
@@ -582,6 +634,7 @@ cn: Raleigh.Ricketts
 uid: Raleigh.Ricketts
 givenName: Raleigh
 sn: Ricketts
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Linn.Liebsch,cn=Users,dc=bcl,dc=local
@@ -592,6 +645,7 @@ cn: Linn.Liebsch
 uid: Linn.Liebsch
 givenName: Linn
 sn: Liebsch
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Mitsuko.Moisan,cn=Users,dc=bcl,dc=local
@@ -602,6 +656,7 @@ cn: Mitsuko.Moisan
 uid: Mitsuko.Moisan
 givenName: Mitsuko
 sn: Moisan
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Latashia.Lothrop,cn=Users,dc=bcl,dc=local
@@ -612,6 +667,7 @@ cn: Latashia.Lothrop
 uid: Latashia.Lothrop
 givenName: Latashia
 sn: Lothrop
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Silva.Schumann,cn=Users,dc=bcl,dc=local
@@ -622,6 +678,7 @@ cn: Silva.Schumann
 uid: Silva.Schumann
 givenName: Silva
 sn: Schumann
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Yajaira.Yim,cn=Users,dc=bcl,dc=local
@@ -632,6 +689,7 @@ cn: Yajaira.Yim
 uid: Yajaira.Yim
 givenName: Yajaira
 sn: Yim
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Melony.Martyn,cn=Users,dc=bcl,dc=local
@@ -642,6 +700,7 @@ cn: Melony.Martyn
 uid: Melony.Martyn
 givenName: Melony
 sn: Martyn
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Lelah.Lepley,cn=Users,dc=bcl,dc=local
@@ -652,6 +711,7 @@ cn: Lelah.Lepley
 uid: Lelah.Lepley
 givenName: Lelah
 sn: Lepley
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Marlana.Messana,cn=Users,dc=bcl,dc=local
@@ -662,6 +722,7 @@ cn: Marlana.Messana
 uid: Marlana.Messana
 givenName: Marlana
 sn: Messana
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Deonna.Deaver,cn=Users,dc=bcl,dc=local
@@ -672,6 +733,7 @@ cn: Deonna.Deaver
 uid: Deonna.Deaver
 givenName: Deonna
 sn: Deaver
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Arline.Aleman,cn=Users,dc=bcl,dc=local
@@ -682,6 +744,7 @@ cn: Arline.Aleman
 uid: Arline.Aleman
 givenName: Arline
 sn: Aleman
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Graciela.Guimond,cn=Users,dc=bcl,dc=local
@@ -692,6 +755,7 @@ cn: Graciela.Guimond
 uid: Graciela.Guimond
 givenName: Graciela
 sn: Guimond
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jamila.Jenks,cn=Users,dc=bcl,dc=local
@@ -702,6 +766,7 @@ cn: Jamila.Jenks
 uid: Jamila.Jenks
 givenName: Jamila
 sn: Jenks
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Lakita.Lofton,cn=Users,dc=bcl,dc=local
@@ -712,6 +777,7 @@ cn: Lakita.Lofton
 uid: Lakita.Lofton
 givenName: Lakita
 sn: Lofton
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jimmie.Jewell,cn=Users,dc=bcl,dc=local
@@ -722,6 +788,7 @@ cn: Jimmie.Jewell
 uid: Jimmie.Jewell
 givenName: Jimmie
 sn: Jewell
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Renay.Rape,cn=Users,dc=bcl,dc=local
@@ -732,6 +799,7 @@ cn: Renay.Rape
 uid: Renay.Rape
 givenName: Renay
 sn: Rape
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Carlo.Charron,cn=Users,dc=bcl,dc=local
@@ -742,6 +810,7 @@ cn: Carlo.Charron
 uid: Carlo.Charron
 givenName: Carlo
 sn: Charron
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Marcus.Mcguirk,cn=Users,dc=bcl,dc=local
@@ -752,6 +821,7 @@ cn: Marcus.Mcguirk
 uid: Marcus.Mcguirk
 givenName: Marcus
 sn: Mcguirk
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Pennie.Puente,cn=Users,dc=bcl,dc=local
@@ -762,6 +832,7 @@ cn: Pennie.Puente
 uid: Pennie.Puente
 givenName: Pennie
 sn: Puente
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Sue.Shaner,cn=Users,dc=bcl,dc=local
@@ -772,6 +843,7 @@ cn: Sue.Shaner
 uid: Sue.Shaner
 givenName: Sue
 sn: Shaner
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Denny.Dalton,cn=Users,dc=bcl,dc=local
@@ -782,6 +854,7 @@ cn: Denny.Dalton
 uid: Denny.Dalton
 givenName: Denny
 sn: Dalton
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Sudie.Sipos,cn=Users,dc=bcl,dc=local
@@ -792,6 +865,7 @@ cn: Sudie.Sipos
 uid: Sudie.Sipos
 givenName: Sudie
 sn: Sipos
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jules.Jeffers,cn=Users,dc=bcl,dc=local
@@ -802,6 +876,7 @@ cn: Jules.Jeffers
 uid: Jules.Jeffers
 givenName: Jules
 sn: Jeffers
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Alicia.Alfrey,cn=Users,dc=bcl,dc=local
@@ -812,6 +887,7 @@ cn: Alicia.Alfrey
 uid: Alicia.Alfrey
 givenName: Alicia
 sn: Alfrey
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Ammie.Aquirre,cn=Users,dc=bcl,dc=local
@@ -822,6 +898,7 @@ cn: Ammie.Aquirre
 uid: Ammie.Aquirre
 givenName: Ammie
 sn: Aquirre
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jacquetta.Janecek,cn=Users,dc=bcl,dc=local
@@ -832,6 +909,7 @@ cn: Jacquetta.Janecek
 uid: Jacquetta.Janecek
 givenName: Jacquetta
 sn: Janecek
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Marvis.Molinar,cn=Users,dc=bcl,dc=local
@@ -842,6 +920,7 @@ cn: Marvis.Molinar
 uid: Marvis.Molinar
 givenName: Marvis
 sn: Molinar
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Leana.Leisinger,cn=Users,dc=bcl,dc=local
@@ -852,6 +931,7 @@ cn: Leana.Leisinger
 uid: Leana.Leisinger
 givenName: Leana
 sn: Leisinger
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Ladawn.Lanman,cn=Users,dc=bcl,dc=local
@@ -862,6 +942,7 @@ cn: Ladawn.Lanman
 uid: Ladawn.Lanman
 givenName: Ladawn
 sn: Lanman
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Remedios.Redwood,cn=Users,dc=bcl,dc=local
@@ -872,6 +953,7 @@ cn: Remedios.Redwood
 uid: Remedios.Redwood
 givenName: Remedios
 sn: Redwood
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jutta.Jansson,cn=Users,dc=bcl,dc=local
@@ -882,6 +964,7 @@ cn: Jutta.Jansson
 uid: Jutta.Jansson
 givenName: Jutta
 sn: Jansson
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Arminda.Altman,cn=Users,dc=bcl,dc=local
@@ -892,6 +975,7 @@ cn: Arminda.Altman
 uid: Arminda.Altman
 givenName: Arminda
 sn: Altman
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Scottie.Stemen,cn=Users,dc=bcl,dc=local
@@ -902,6 +986,7 @@ cn: Scottie.Stemen
 uid: Scottie.Stemen
 givenName: Scottie
 sn: Stemen
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Sonny.Sober,cn=Users,dc=bcl,dc=local
@@ -912,6 +997,7 @@ cn: Sonny.Sober
 uid: Sonny.Sober
 givenName: Sonny
 sn: Sober
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Leia.Leaman,cn=Users,dc=bcl,dc=local
@@ -922,6 +1008,7 @@ cn: Leia.Leaman
 uid: Leia.Leaman
 givenName: Leia
 sn: Leaman
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Beverlee.Basye,cn=Users,dc=bcl,dc=local
@@ -932,6 +1019,7 @@ cn: Beverlee.Basye
 uid: Beverlee.Basye
 givenName: Beverlee
 sn: Basye
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Faith.Farrington,cn=Users,dc=bcl,dc=local
@@ -942,6 +1030,7 @@ cn: Faith.Farrington
 uid: Faith.Farrington
 givenName: Faith
 sn: Farrington
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Hollie.Hornick,cn=Users,dc=bcl,dc=local
@@ -952,6 +1041,7 @@ cn: Hollie.Hornick
 uid: Hollie.Hornick
 givenName: Hollie
 sn: Hornick
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jess.Jalbert,cn=Users,dc=bcl,dc=local
@@ -962,6 +1052,7 @@ cn: Jess.Jalbert
 uid: Jess.Jalbert
 givenName: Jess
 sn: Jalbert
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Sherri.Swords,cn=Users,dc=bcl,dc=local
@@ -972,6 +1063,7 @@ cn: Sherri.Swords
 uid: Sherri.Swords
 givenName: Sherri
 sn: Swords
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Delena.Dauer,cn=Users,dc=bcl,dc=local
@@ -982,6 +1074,7 @@ cn: Delena.Dauer
 uid: Delena.Dauer
 givenName: Delena
 sn: Dauer
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Signe.Stoddart,cn=Users,dc=bcl,dc=local
@@ -992,6 +1085,7 @@ cn: Signe.Stoddart
 uid: Signe.Stoddart
 givenName: Signe
 sn: Stoddart
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Sophia.Stocker,cn=Users,dc=bcl,dc=local
@@ -1002,6 +1096,7 @@ cn: Sophia.Stocker
 uid: Sophia.Stocker
 givenName: Sophia
 sn: Stocker
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Concepcion.Chunn,cn=Users,dc=bcl,dc=local
@@ -1012,6 +1107,7 @@ cn: Concepcion.Chunn
 uid: Concepcion.Chunn
 givenName: Concepcion
 sn: Chunn
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Sha.Sak,cn=Users,dc=bcl,dc=local
@@ -1022,6 +1118,7 @@ cn: Sha.Sak
 uid: Sha.Sak
 givenName: Sha
 sn: Sak
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Louetta.Levy,cn=Users,dc=bcl,dc=local
@@ -1032,6 +1129,7 @@ cn: Louetta.Levy
 uid: Louetta.Levy
 givenName: Louetta
 sn: Levy
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Reva.Rhoads,cn=Users,dc=bcl,dc=local
@@ -1042,6 +1140,7 @@ cn: Reva.Rhoads
 uid: Reva.Rhoads
 givenName: Reva
 sn: Rhoads
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Kirstie.Kinsman,cn=Users,dc=bcl,dc=local
@@ -1052,6 +1151,7 @@ cn: Kirstie.Kinsman
 uid: Kirstie.Kinsman
 givenName: Kirstie
 sn: Kinsman
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Serita.Schulz,cn=Users,dc=bcl,dc=local
@@ -1062,6 +1162,7 @@ cn: Serita.Schulz
 uid: Serita.Schulz
 givenName: Serita
 sn: Schulz
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Johnathon.Joerling,cn=Users,dc=bcl,dc=local
@@ -1072,6 +1173,7 @@ cn: Johnathon.Joerling
 uid: Johnathon.Joerling
 givenName: Johnathon
 sn: Joerling
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Maximo.Marcos,cn=Users,dc=bcl,dc=local
@@ -1082,6 +1184,7 @@ cn: Maximo.Marcos
 uid: Maximo.Marcos
 givenName: Maximo
 sn: Marcos
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Cheree.Castonguay,cn=Users,dc=bcl,dc=local
@@ -1092,6 +1195,7 @@ cn: Cheree.Castonguay
 uid: Cheree.Castonguay
 givenName: Cheree
 sn: Castonguay
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Ruthanne.Rake,cn=Users,dc=bcl,dc=local
@@ -1102,6 +1206,7 @@ cn: Ruthanne.Rake
 uid: Ruthanne.Rake
 givenName: Ruthanne
 sn: Rake
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Martin.Mowers,cn=Users,dc=bcl,dc=local
@@ -1112,6 +1217,7 @@ cn: Martin.Mowers
 uid: Martin.Mowers
 givenName: Martin
 sn: Mowers
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Rachell.Roses,cn=Users,dc=bcl,dc=local
@@ -1122,6 +1228,7 @@ cn: Rachell.Roses
 uid: Rachell.Roses
 givenName: Rachell
 sn: Roses
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jessie.Jeffreys,cn=Users,dc=bcl,dc=local
@@ -1132,6 +1239,7 @@ cn: Jessie.Jeffreys
 uid: Jessie.Jeffreys
 givenName: Jessie
 sn: Jeffreys
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Ressie.Reddy,cn=Users,dc=bcl,dc=local
@@ -1142,6 +1250,7 @@ cn: Ressie.Reddy
 uid: Ressie.Reddy
 givenName: Ressie
 sn: Reddy
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Allie.Alarcon,cn=Users,dc=bcl,dc=local
@@ -1152,6 +1261,7 @@ cn: Allie.Alarcon
 uid: Allie.Alarcon
 givenName: Allie
 sn: Alarcon
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Lida.Lieser,cn=Users,dc=bcl,dc=local
@@ -1162,6 +1272,7 @@ cn: Lida.Lieser
 uid: Lida.Lieser
 givenName: Lida
 sn: Lieser
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Dora.Delph,cn=Users,dc=bcl,dc=local
@@ -1172,6 +1283,7 @@ cn: Dora.Delph
 uid: Dora.Delph
 givenName: Dora
 sn: Delph
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Cathey.Courtemanche,cn=Users,dc=bcl,dc=local
@@ -1182,6 +1294,7 @@ cn: Cathey.Courtemanche
 uid: Cathey.Courtemanche
 givenName: Cathey
 sn: Courtemanche
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Dirk.Desrosiers,cn=Users,dc=bcl,dc=local
@@ -1192,6 +1305,7 @@ cn: Dirk.Desrosiers
 uid: Dirk.Desrosiers
 givenName: Dirk
 sn: Desrosiers
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Glen.Gama,cn=Users,dc=bcl,dc=local
@@ -1202,6 +1316,7 @@ cn: Glen.Gama
 uid: Glen.Gama
 givenName: Glen
 sn: Gama
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Sandi.Sons,cn=Users,dc=bcl,dc=local
@@ -1212,6 +1327,7 @@ cn: Sandi.Sons
 uid: Sandi.Sons
 givenName: Sandi
 sn: Sons
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Sarina.Schroyer,cn=Users,dc=bcl,dc=local
@@ -1222,6 +1338,7 @@ cn: Sarina.Schroyer
 uid: Sarina.Schroyer
 givenName: Sarina
 sn: Schroyer
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Maira.Meggs,cn=Users,dc=bcl,dc=local
@@ -1232,6 +1349,7 @@ cn: Maira.Meggs
 uid: Maira.Meggs
 givenName: Maira
 sn: Meggs
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Vicki.Velarde,cn=Users,dc=bcl,dc=local
@@ -1242,6 +1360,7 @@ cn: Vicki.Velarde
 uid: Vicki.Velarde
 givenName: Vicki
 sn: Velarde
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Rashida.Roma,cn=Users,dc=bcl,dc=local
@@ -1252,6 +1371,7 @@ cn: Rashida.Roma
 uid: Rashida.Roma
 givenName: Rashida
 sn: Roma
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Richie.Rafferty,cn=Users,dc=bcl,dc=local
@@ -1262,6 +1382,7 @@ cn: Richie.Rafferty
 uid: Richie.Rafferty
 givenName: Richie
 sn: Rafferty
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Adria.Alger,cn=Users,dc=bcl,dc=local
@@ -1272,6 +1393,7 @@ cn: Adria.Alger
 uid: Adria.Alger
 givenName: Adria
 sn: Alger
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Donetta.Dorado,cn=Users,dc=bcl,dc=local
@@ -1282,6 +1404,7 @@ cn: Donetta.Dorado
 uid: Donetta.Dorado
 givenName: Donetta
 sn: Dorado
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Milda.Mesta,cn=Users,dc=bcl,dc=local
@@ -1292,6 +1415,7 @@ cn: Milda.Mesta
 uid: Milda.Mesta
 givenName: Milda
 sn: Mesta
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Cythia.Condrey,cn=Users,dc=bcl,dc=local
@@ -1302,6 +1426,7 @@ cn: Cythia.Condrey
 uid: Cythia.Condrey
 givenName: Cythia
 sn: Condrey
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Nery.Nawrocki,cn=Users,dc=bcl,dc=local
@@ -1312,6 +1437,7 @@ cn: Nery.Nawrocki
 uid: Nery.Nawrocki
 givenName: Nery
 sn: Nawrocki
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Brant.Bair,cn=Users,dc=bcl,dc=local
@@ -1322,6 +1448,7 @@ cn: Brant.Bair
 uid: Brant.Bair
 givenName: Brant
 sn: Bair
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Paulene.Pappas,cn=Users,dc=bcl,dc=local
@@ -1332,6 +1459,7 @@ cn: Paulene.Pappas
 uid: Paulene.Pappas
 givenName: Paulene
 sn: Pappas
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Thurman.Tallarico,cn=Users,dc=bcl,dc=local
@@ -1342,6 +1470,7 @@ cn: Thurman.Tallarico
 uid: Thurman.Tallarico
 givenName: Thurman
 sn: Tallarico
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Tawnya.Townsel,cn=Users,dc=bcl,dc=local
@@ -1352,6 +1481,7 @@ cn: Tawnya.Townsel
 uid: Tawnya.Townsel
 givenName: Tawnya
 sn: Townsel
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Dorsey.Delay,cn=Users,dc=bcl,dc=local
@@ -1362,6 +1492,7 @@ cn: Dorsey.Delay
 uid: Dorsey.Delay
 givenName: Dorsey
 sn: Delay
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Zina.Zenon,cn=Users,dc=bcl,dc=local
@@ -1372,6 +1503,7 @@ cn: Zina.Zenon
 uid: Zina.Zenon
 givenName: Zina
 sn: Zenon
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Aisha.Alvidrez,cn=Users,dc=bcl,dc=local
@@ -1382,6 +1514,7 @@ cn: Aisha.Alvidrez
 uid: Aisha.Alvidrez
 givenName: Aisha
 sn: Alvidrez
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Lionel.Landreth,cn=Users,dc=bcl,dc=local
@@ -1392,6 +1525,7 @@ cn: Lionel.Landreth
 uid: Lionel.Landreth
 givenName: Lionel
 sn: Landreth
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jaleesa.Journey,cn=Users,dc=bcl,dc=local
@@ -1402,6 +1536,7 @@ cn: Jaleesa.Journey
 uid: Jaleesa.Journey
 givenName: Jaleesa
 sn: Journey
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Autumn.Aungst,cn=Users,dc=bcl,dc=local
@@ -1412,6 +1547,7 @@ cn: Autumn.Aungst
 uid: Autumn.Aungst
 givenName: Autumn
 sn: Aungst
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Bobbie.Belanger,cn=Users,dc=bcl,dc=local
@@ -1422,6 +1558,7 @@ cn: Bobbie.Belanger
 uid: Bobbie.Belanger
 givenName: Bobbie
 sn: Belanger
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Valda.Vandegrift,cn=Users,dc=bcl,dc=local
@@ -1432,6 +1569,7 @@ cn: Valda.Vandegrift
 uid: Valda.Vandegrift
 givenName: Valda
 sn: Vandegrift
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Randal.Rathke,cn=Users,dc=bcl,dc=local
@@ -1442,6 +1580,7 @@ cn: Randal.Rathke
 uid: Randal.Rathke
 givenName: Randal
 sn: Rathke
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jame.Jameson,cn=Users,dc=bcl,dc=local
@@ -1452,6 +1591,7 @@ cn: Jame.Jameson
 uid: Jame.Jameson
 givenName: Jame
 sn: Jameson
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Lisette.Lazaro,cn=Users,dc=bcl,dc=local
@@ -1462,6 +1602,7 @@ cn: Lisette.Lazaro
 uid: Lisette.Lazaro
 givenName: Lisette
 sn: Lazaro
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Willy.Westhoff,cn=Users,dc=bcl,dc=local
@@ -1472,6 +1613,7 @@ cn: Willy.Westhoff
 uid: Willy.Westhoff
 givenName: Willy
 sn: Westhoff
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Mariella.Mark,cn=Users,dc=bcl,dc=local
@@ -1482,6 +1624,7 @@ cn: Mariella.Mark
 uid: Mariella.Mark
 givenName: Mariella
 sn: Mark
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Porsha.Paugh,cn=Users,dc=bcl,dc=local
@@ -1492,6 +1635,7 @@ cn: Porsha.Paugh
 uid: Porsha.Paugh
 givenName: Porsha
 sn: Paugh
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Pat.Platero,cn=Users,dc=bcl,dc=local
@@ -1502,6 +1646,7 @@ cn: Pat.Platero
 uid: Pat.Platero
 givenName: Pat
 sn: Platero
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Pearle.Pegues,cn=Users,dc=bcl,dc=local
@@ -1512,6 +1657,7 @@ cn: Pearle.Pegues
 uid: Pearle.Pegues
 givenName: Pearle
 sn: Pegues
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Julieta.Jacquet,cn=Users,dc=bcl,dc=local
@@ -1522,6 +1668,7 @@ cn: Julieta.Jacquet
 uid: Julieta.Jacquet
 givenName: Julieta
 sn: Jacquet
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Darcey.Denker,cn=Users,dc=bcl,dc=local
@@ -1532,6 +1679,7 @@ cn: Darcey.Denker
 uid: Darcey.Denker
 givenName: Darcey
 sn: Denker
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Justina.Jawad,cn=Users,dc=bcl,dc=local
@@ -1542,6 +1690,7 @@ cn: Justina.Jawad
 uid: Justina.Jawad
 givenName: Justina
 sn: Jawad
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Charita.Colton,cn=Users,dc=bcl,dc=local
@@ -1552,6 +1701,7 @@ cn: Charita.Colton
 uid: Charita.Colton
 givenName: Charita
 sn: Colton
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Shanae.Sickles,cn=Users,dc=bcl,dc=local
@@ -1562,6 +1712,7 @@ cn: Shanae.Sickles
 uid: Shanae.Sickles
 givenName: Shanae
 sn: Sickles
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Emma.Esteban,cn=Users,dc=bcl,dc=local
@@ -1572,6 +1723,7 @@ cn: Emma.Esteban
 uid: Emma.Esteban
 givenName: Emma
 sn: Esteban
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Chau.Chaffee,cn=Users,dc=bcl,dc=local
@@ -1582,6 +1734,7 @@ cn: Chau.Chaffee
 uid: Chau.Chaffee
 givenName: Chau
 sn: Chaffee
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Brynn.Brumm,cn=Users,dc=bcl,dc=local
@@ -1592,6 +1745,7 @@ cn: Brynn.Brumm
 uid: Brynn.Brumm
 givenName: Brynn
 sn: Brumm
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Vickie.Veiga,cn=Users,dc=bcl,dc=local
@@ -1602,6 +1756,7 @@ cn: Vickie.Veiga
 uid: Vickie.Veiga
 givenName: Vickie
 sn: Veiga
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Kathe.Kingsley,cn=Users,dc=bcl,dc=local
@@ -1612,6 +1767,7 @@ cn: Kathe.Kingsley
 uid: Kathe.Kingsley
 givenName: Kathe
 sn: Kingsley
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Johnathon.Jungers,cn=Users,dc=bcl,dc=local
@@ -1622,6 +1778,7 @@ cn: Johnathon.Jungers
 uid: Johnathon.Jungers
 givenName: Johnathon
 sn: Jungers
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Robby.Riesgo,cn=Users,dc=bcl,dc=local
@@ -1632,6 +1789,7 @@ cn: Robby.Riesgo
 uid: Robby.Riesgo
 givenName: Robby
 sn: Riesgo
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Andra.Abril,cn=Users,dc=bcl,dc=local
@@ -1642,6 +1800,7 @@ cn: Andra.Abril
 uid: Andra.Abril
 givenName: Andra
 sn: Abril
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Kimberli.Kimmell,cn=Users,dc=bcl,dc=local
@@ -1652,6 +1811,7 @@ cn: Kimberli.Kimmell
 uid: Kimberli.Kimmell
 givenName: Kimberli
 sn: Kimmell
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Verda.Valenta,cn=Users,dc=bcl,dc=local
@@ -1662,6 +1822,7 @@ cn: Verda.Valenta
 uid: Verda.Valenta
 givenName: Verda
 sn: Valenta
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Randall.Rowell,cn=Users,dc=bcl,dc=local
@@ -1672,6 +1833,7 @@ cn: Randall.Rowell
 uid: Randall.Rowell
 givenName: Randall
 sn: Rowell
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Keneth.Kennerson,cn=Users,dc=bcl,dc=local
@@ -1682,6 +1844,7 @@ cn: Keneth.Kennerson
 uid: Keneth.Kennerson
 givenName: Keneth
 sn: Kennerson
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Krissy.Knapp,cn=Users,dc=bcl,dc=local
@@ -1692,6 +1855,7 @@ cn: Krissy.Knapp
 uid: Krissy.Knapp
 givenName: Krissy
 sn: Knapp
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Corinne.Cleaver,cn=Users,dc=bcl,dc=local
@@ -1702,6 +1866,7 @@ cn: Corinne.Cleaver
 uid: Corinne.Cleaver
 givenName: Corinne
 sn: Cleaver
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Ranee.Retana,cn=Users,dc=bcl,dc=local
@@ -1712,6 +1877,7 @@ cn: Ranee.Retana
 uid: Ranee.Retana
 givenName: Ranee
 sn: Retana
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Moses.Mcroy,cn=Users,dc=bcl,dc=local
@@ -1722,6 +1888,7 @@ cn: Moses.Mcroy
 uid: Moses.Mcroy
 givenName: Moses
 sn: Mcroy
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Allyson.Allinder,cn=Users,dc=bcl,dc=local
@@ -1732,6 +1899,7 @@ cn: Allyson.Allinder
 uid: Allyson.Allinder
 givenName: Allyson
 sn: Allinder
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Abdul.Austria,cn=Users,dc=bcl,dc=local
@@ -1742,6 +1910,7 @@ cn: Abdul.Austria
 uid: Abdul.Austria
 givenName: Abdul
 sn: Austria
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Eulalia.Echeverria,cn=Users,dc=bcl,dc=local
@@ -1752,6 +1921,7 @@ cn: Eulalia.Echeverria
 uid: Eulalia.Echeverria
 givenName: Eulalia
 sn: Echeverria
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Majorie.Mcginley,cn=Users,dc=bcl,dc=local
@@ -1762,6 +1932,7 @@ cn: Majorie.Mcginley
 uid: Majorie.Mcginley
 givenName: Majorie
 sn: Mcginley
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jong.Jinks,cn=Users,dc=bcl,dc=local
@@ -1772,6 +1943,7 @@ cn: Jong.Jinks
 uid: Jong.Jinks
 givenName: Jong
 sn: Jinks
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Dominque.Draeger,cn=Users,dc=bcl,dc=local
@@ -1782,6 +1954,7 @@ cn: Dominque.Draeger
 uid: Dominque.Draeger
 givenName: Dominque
 sn: Draeger
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Alpha.Abadie,cn=Users,dc=bcl,dc=local
@@ -1792,6 +1965,7 @@ cn: Alpha.Abadie
 uid: Alpha.Abadie
 givenName: Alpha
 sn: Abadie
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Ivory.Inouye,cn=Users,dc=bcl,dc=local
@@ -1802,6 +1976,7 @@ cn: Ivory.Inouye
 uid: Ivory.Inouye
 givenName: Ivory
 sn: Inouye
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jeffery.June,cn=Users,dc=bcl,dc=local
@@ -1812,6 +1987,7 @@ cn: Jeffery.June
 uid: Jeffery.June
 givenName: Jeffery
 sn: June
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Coralee.Cody,cn=Users,dc=bcl,dc=local
@@ -1822,6 +1998,7 @@ cn: Coralee.Cody
 uid: Coralee.Cody
 givenName: Coralee
 sn: Cody
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Willie.Wieland,cn=Users,dc=bcl,dc=local
@@ -1832,6 +2009,7 @@ cn: Willie.Wieland
 uid: Willie.Wieland
 givenName: Willie
 sn: Wieland
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Leonor.Labat,cn=Users,dc=bcl,dc=local
@@ -1842,6 +2020,7 @@ cn: Leonor.Labat
 uid: Leonor.Labat
 givenName: Leonor
 sn: Labat
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Denese.Duchesne,cn=Users,dc=bcl,dc=local
@@ -1852,6 +2031,7 @@ cn: Denese.Duchesne
 uid: Denese.Duchesne
 givenName: Denese
 sn: Duchesne
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Waldo.Wasden,cn=Users,dc=bcl,dc=local
@@ -1862,6 +2042,7 @@ cn: Waldo.Wasden
 uid: Waldo.Wasden
 givenName: Waldo
 sn: Wasden
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Hope.Heer,cn=Users,dc=bcl,dc=local
@@ -1872,6 +2053,7 @@ cn: Hope.Heer
 uid: Hope.Heer
 givenName: Hope
 sn: Heer
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Alan.Aubin,cn=Users,dc=bcl,dc=local
@@ -1882,6 +2064,7 @@ cn: Alan.Aubin
 uid: Alan.Aubin
 givenName: Alan
 sn: Aubin
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Reginald.Reese,cn=Users,dc=bcl,dc=local
@@ -1892,6 +2075,7 @@ cn: Reginald.Reese
 uid: Reginald.Reese
 givenName: Reginald
 sn: Reese
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Bari.Bonomo,cn=Users,dc=bcl,dc=local
@@ -1902,6 +2086,7 @@ cn: Bari.Bonomo
 uid: Bari.Bonomo
 givenName: Bari
 sn: Bonomo
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Tanja.Truehart,cn=Users,dc=bcl,dc=local
@@ -1912,6 +2097,7 @@ cn: Tanja.Truehart
 uid: Tanja.Truehart
 givenName: Tanja
 sn: Truehart
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Terrie.Ton,cn=Users,dc=bcl,dc=local
@@ -1922,6 +2108,7 @@ cn: Terrie.Ton
 uid: Terrie.Ton
 givenName: Terrie
 sn: Ton
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Kirsten.Klenke,cn=Users,dc=bcl,dc=local
@@ -1932,6 +2119,7 @@ cn: Kirsten.Klenke
 uid: Kirsten.Klenke
 givenName: Kirsten
 sn: Klenke
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Neda.Nance,cn=Users,dc=bcl,dc=local
@@ -1942,6 +2130,7 @@ cn: Neda.Nance
 uid: Neda.Nance
 givenName: Neda
 sn: Nance
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Lakeisha.Labat,cn=Users,dc=bcl,dc=local
@@ -1952,6 +2141,7 @@ cn: Lakeisha.Labat
 uid: Lakeisha.Labat
 givenName: Lakeisha
 sn: Labat
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Iraida.Iadarola,cn=Users,dc=bcl,dc=local
@@ -1962,6 +2152,7 @@ cn: Iraida.Iadarola
 uid: Iraida.Iadarola
 givenName: Iraida
 sn: Iadarola
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Jaclyn.Jelley,cn=Users,dc=bcl,dc=local
@@ -1972,6 +2163,7 @@ cn: Jaclyn.Jelley
 uid: Jaclyn.Jelley
 givenName: Jaclyn
 sn: Jelley
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Virgilio.Valles,cn=Users,dc=bcl,dc=local
@@ -1982,6 +2174,7 @@ cn: Virgilio.Valles
 uid: Virgilio.Valles
 givenName: Virgilio
 sn: Valles
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Daphne.Dewees,cn=Users,dc=bcl,dc=local
@@ -1992,6 +2185,7 @@ cn: Daphne.Dewees
 uid: Daphne.Dewees
 givenName: Daphne
 sn: Dewees
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Daniel.Detty,cn=Users,dc=bcl,dc=local
@@ -2002,6 +2196,7 @@ cn: Daniel.Detty
 uid: Daniel.Detty
 givenName: Daniel
 sn: Detty
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Rachell.Ralls,cn=Users,dc=bcl,dc=local
@@ -2012,6 +2207,7 @@ cn: Rachell.Ralls
 uid: Rachell.Ralls
 givenName: Rachell
 sn: Ralls
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Perla.Palmquist,cn=Users,dc=bcl,dc=local
@@ -2022,6 +2218,7 @@ cn: Perla.Palmquist
 uid: Perla.Palmquist
 givenName: Perla
 sn: Palmquist
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Shanel.Saucedo,cn=Users,dc=bcl,dc=local
@@ -2032,6 +2229,7 @@ cn: Shanel.Saucedo
 uid: Shanel.Saucedo
 givenName: Shanel
 sn: Saucedo
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Gearldine.Grasty,cn=Users,dc=bcl,dc=local
@@ -2042,6 +2240,7 @@ cn: Gearldine.Grasty
 uid: Gearldine.Grasty
 givenName: Gearldine
 sn: Grasty
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Marivel.Miraglia,cn=Users,dc=bcl,dc=local
@@ -2052,6 +2251,7 @@ cn: Marivel.Miraglia
 uid: Marivel.Miraglia
 givenName: Marivel
 sn: Miraglia
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Shenita.Sletten,cn=Users,dc=bcl,dc=local
@@ -2062,6 +2262,7 @@ cn: Shenita.Sletten
 uid: Shenita.Sletten
 givenName: Shenita
 sn: Sletten
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Golda.Galvin,cn=Users,dc=bcl,dc=local
@@ -2072,6 +2273,7 @@ cn: Golda.Galvin
 uid: Golda.Galvin
 givenName: Golda
 sn: Galvin
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Suzette.Smail,cn=Users,dc=bcl,dc=local
@@ -2082,6 +2284,7 @@ cn: Suzette.Smail
 uid: Suzette.Smail
 givenName: Suzette
 sn: Smail
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=Mavis.Mehler,cn=Users,dc=bcl,dc=local
@@ -2092,4 +2295,5 @@ cn: Mavis.Mehler
 uid: Mavis.Mehler
 givenName: Mavis
 sn: Mehler
+userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
