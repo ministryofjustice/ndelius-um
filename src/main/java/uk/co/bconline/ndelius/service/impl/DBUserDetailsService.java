@@ -61,6 +61,11 @@ public class DBUserDetailsService
 				.collect(toList());
 	}
 
+	public List<String> getDatasetCodes(String username)
+	{
+		return getDatasets(username).stream().map(Dataset::getCode).collect(toList());
+	}
+
 	@Transactional
 	public List<UserEntity> search(String searchTerm)
 	{

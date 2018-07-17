@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.val;
 import uk.co.bconline.ndelius.exception.AppException;
-import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.UserService;
@@ -49,7 +48,7 @@ public class UserServiceImpl implements UserService
 	public List<SearchResult> search(String query, int page, int pageSize)
 	{
 		val me = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-		val myDatasets = dbService.getDatasets(me).stream().map(Dataset::getCode).collect(toList());
+		val myDatasets = dbService.getDatasetCodes(me);
 
 		return dbService.search(query).stream()
 				.filter(user -> myDatasets.contains(oidService.getUserHomeArea(user.getUsername())))
@@ -62,6 +61,7 @@ public class UserServiceImpl implements UserService
 	@Override
 	public Optional<User> getUser(String username)
 	{
+		val me = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 		val dbFuture = supplyAsync(() -> dbService.getUser(username).orElse(null));
 		val oidFuture = supplyAsync(() -> oidService.getUser(username).orElse(null));
 		val ad1Future = supplyAsync(() -> ad1Service.flatMap(service -> service.getUser(username)).orElse(null));
@@ -71,7 +71,8 @@ public class UserServiceImpl implements UserService
 		{
 			return CompletableFuture.allOf(dbFuture, oidFuture, ad1Future, ad2Future)
 					.thenApply(v -> transformer.combine(dbFuture.join(), oidFuture.join(), ad1Future.join(), ad2Future.join()))
-					.get();
+					.get()
+					.filter(user -> dbService.getDatasetCodes(me).contains(user.getHomeArea()));
 		}
 		catch (InterruptedException | ExecutionException e)
 		{

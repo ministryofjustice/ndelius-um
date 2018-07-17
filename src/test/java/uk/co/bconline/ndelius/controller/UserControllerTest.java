@@ -162,4 +162,12 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.surname", equalTo("User")))				// From OID
 				.andExpect(jsonPath("$.organisation.code", equalTo("NPS")));	// From DB
 	}
+
+	@Test
+	public void usersAreFilteredOnDatasets() throws Exception
+	{
+		mvc.perform(get("/api/user/Jim.Bloggs")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isNotFound());
+	}
 }
