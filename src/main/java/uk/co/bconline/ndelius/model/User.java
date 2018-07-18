@@ -22,6 +22,7 @@ public final class User implements Serializable
 	private String forenames;
 	private String surname;
 	private String staffCode;
+	private String homeArea;
 	private LocalDate endDate;
 	private Organisation organisation;
 	private List<Team> teams;

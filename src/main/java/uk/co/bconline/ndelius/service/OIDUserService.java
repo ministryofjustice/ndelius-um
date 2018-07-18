@@ -12,4 +12,5 @@ public interface OIDUserService
 	List<OIDBusinessTransaction> getUserTransactions(String username);
 	List<OIDUser> search(String query, int page, int pageSize);
 	Optional<OIDUser> getUser(String username);
+	String getUserHomeArea(String username);
 }

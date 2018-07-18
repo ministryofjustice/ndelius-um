@@ -15,12 +15,16 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "STAFF")
-public class StaffEntity  implements Serializable {
-
+@ToString(exclude = "user")
+@EqualsAndHashCode(exclude = "user")
+public class StaffEntity implements Serializable
+{
 	@Id
 	@Column(name = "STAFF_ID")
 	@GeneratedValue(generator = "STAFF_ID_SEQ")

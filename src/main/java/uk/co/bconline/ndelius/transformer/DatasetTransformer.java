@@ -25,14 +25,18 @@ public class DatasetTransformer {
 				.orElse(null);
 	}
 
-	public List<Dataset> map(Collection<ProbationAreaEntity> datasetEntity) {
-		return datasetEntity.stream()
-				.map(de -> Dataset.builder()
-						.code(de.getCode())
-						.description(de.getDescription())
-						.active("Y".equalsIgnoreCase(de.getSelectable()))
-						.organisation(map(de.getOrganisation()))
-						.build())
-						.collect(toList());
+	public List<Dataset> map(Collection<ProbationAreaEntity> entities) {
+		return entities.stream()
+				.map(this::map)
+				.collect(toList());
+	}
+
+	public Dataset map(ProbationAreaEntity entity) {
+		return Dataset.builder()
+				.code(entity.getCode())
+				.description(entity.getDescription())
+				.active("Y".equalsIgnoreCase(entity.getSelectable()))
+				.organisation(map(entity.getOrganisation()))
+				.build();
 	}
 }

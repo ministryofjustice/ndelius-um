@@ -81,6 +81,7 @@ public class UserTransformer
 						.username(v.getUsername())
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
+						.homeArea(v.getHomeArea())
 						.transactions(ofNullable(v.getTransactions())
 								.map(transactions -> transactions.stream()
 										.map(this::map)

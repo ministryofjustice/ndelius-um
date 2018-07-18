@@ -15,11 +15,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Data;
 import lombok.ToString;
+import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
 
 @Data
 @ToString(exclude = "password")
 @Entry(objectClasses = "NDUser", base="cn=Users")
-public final class OIDUser implements UserDetails, Serializable
+public final class OIDUser implements OIDUserHomeArea, UserDetails, Serializable
 {
 	@Id
 	private Name dn;
@@ -32,6 +33,9 @@ public final class OIDUser implements UserDetails, Serializable
 
 	@Attribute(name="sn")
 	private String surname;
+
+	@Attribute(name="userHomeArea")
+	private String homeArea;
 
 	@Attribute(name="userPassword")
 	private String password;
