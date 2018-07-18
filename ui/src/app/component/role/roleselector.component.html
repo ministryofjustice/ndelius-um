@@ -4,15 +4,11 @@
   </div>
   <div id="results-area" *ngIf="optionsDisplayed">
     <ul class="list-group">
-      <li class="list-group-item" *ngFor="let transaction of userTransactions">
-        <div class="row">
-          <div class="col-sm-6">{{transaction.name}} ({{transaction.description}})</div>
-          <div class="col-sm-6 float-right" >
-            <button type="button" class="close" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+      <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" *ngFor="let transaction of availableTransactions">
+          <div>{{transaction.name}} ({{transaction.description}})</div>
+          <div class="float-right" >
+            <input type = "checkbox" [checked]="userTransactions.indexOf(transaction) !== -1"/>
           </div>
-        </div>
       </li>
     </ul>
   </div>
