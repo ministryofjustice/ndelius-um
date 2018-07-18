@@ -1,6 +1,9 @@
 <div id="component-container" [ngStyle]="{height: componentHeight, width: componentWidth}" style="overflow-x: hidden; overflow-y: auto">
-  <div id="selection-area">
-    <button (click)="toggleOptions()" type="button" class="btn btn-primary">{{buttonName}}</button>
+  <div id="selection-area" class="search-bar" >
+    <button (click)="toggleOptions()" type="button" class="btn btn-secondary btn-lg btn-block">
+      <span class="oi oi-chevron-top float-right" *ngIf="optionsDisplayed"></span>
+      <span class="oi oi-chevron-bottom float-right" *ngIf="!optionsDisplayed"></span>
+    </button>
   </div>
   <div id="results-area" *ngIf="optionsDisplayed">
     <ul class="list-group">
@@ -8,7 +11,7 @@
           *ngFor="let transaction of availableTransactions">
           <div>{{transaction.name}} ({{transaction.description}})</div>
           <div class="float-right" >
-            <input type = "checkbox" [checked]="userHasRole(transaction)"/>
+            <input type = "checkbox" [checked]="userHasRole(transaction)" [disabled]="readOnly"  />
           </div>
       </li>
     </ul>

@@ -32,11 +32,19 @@
                  class="form-control" readonly>
         </div>
       </div>
-
-
-          <roleselector [userTransactions]="user.transactions" [availableTransactions]="transactions" componentHeight="25%" componentWidth="50%" id="roles" buttonName="Roles"></roleselector>
-
-
+      <div class="form-group row">
+        <label for="roles" class="col-sm-2 col-form-label">Role(s)</label>
+        <div class="col-sm-4">
+          <roleselector
+            [userTransactions]="user.transactions"
+            [availableTransactions]="transactions"
+            [readOnly]="true"
+            componentHeight="100%" componentWidth="100%" id="roles">
+          </roleselector>
+        </div>
+        <div class="col-sm-4">
+        </div>
+      </div>
     </form>
     <p>{{json}}</p>
   </div>

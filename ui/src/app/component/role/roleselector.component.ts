@@ -16,18 +16,12 @@ export class RoleSelectorComponent{
   @Input()
   componentHeight: string = "25%";
   @Input()
-  buttonName: string = "Default";
+  readOnly: boolean;
 
   public optionsDisplayed: boolean;
 
   toggleOptions(){
     this.optionsDisplayed = !this.optionsDisplayed;
-    if(this.optionsDisplayed){
-      this.buttonName = "Hide Roles"
-    }
-    else{
-      this.buttonName = "Show Roles";
-    }
   }
 
   userHasRole(transaction: Transaction){
