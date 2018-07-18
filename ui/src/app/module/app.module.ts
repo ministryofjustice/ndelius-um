@@ -13,12 +13,16 @@ import {RestUserService} from "../service/impl/rest.user.service";
 import {UserService} from "../service/user.service";
 import {ErrorInterceptor} from "../interceptor/error.interceptor";
 import {MessageComponent} from "../component/message/message.component";
+import {RoleSelectorComponent} from "../component/role/roleselector.component";
+import {RestRoleService} from "../service/impl/rest.role.service";
+import {RoleService} from "../service/role.service";
 
 @NgModule({
-  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent],
+  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, RoleSelectorComponent],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [
     {provide: UserService, useClass: RestUserService},
+    {provide: RoleService, useClass: RestRoleService},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     ...(environment.production? []: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}])
   ],

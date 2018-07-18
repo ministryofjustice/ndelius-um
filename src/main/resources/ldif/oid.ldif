@@ -60,12 +60,7 @@ objectclass: NDRoleAssociation
 cn: UMBT001
 aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
 
-dn: cn=UMBT002,cn=test.user,cn=Users,dc=bcl,dc=local
-objectclass: top
-objectclass: alias
-objectclass: NDRoleAssociation
-cn: UMBT002
-aliasedObjectName: cn=UMBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+
 
 dn: cn=TestUser1,cn=Users,dc=bcl,dc=local
 objectclass: top
