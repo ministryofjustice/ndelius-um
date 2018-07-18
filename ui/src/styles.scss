@@ -12,3 +12,8 @@
   padding-top: $jumbotron-padding * 2/3;
   padding-bottom: $jumbotron-padding / 2;
 }
+
+.form-control.readonly {
+  background-color: $input-disabled-bg;
+  opacity: 1;
+}
