@@ -29,4 +29,13 @@ export class RoleSelectorComponent{
       this.buttonName = "Show Roles";
     }
   }
+
+  userHasRole(transaction: Transaction){
+    for(var i = 0; i < this.userTransactions.length; i++){
+      if(this.userTransactions[i].name === transaction.name){
+        return true;
+      }
+    }
+    return false;
+  }
 }
