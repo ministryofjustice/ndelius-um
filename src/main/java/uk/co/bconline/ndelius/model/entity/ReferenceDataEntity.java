@@ -1,10 +1,9 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import java.io.Serializable;
+import lombok.Data;
 
 import javax.persistence.*;
-
-import lombok.Data;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "R_STANDARD_REFERENCE_LIST")
@@ -24,4 +23,11 @@ public class ReferenceDataEntity implements Serializable {
 
     @Column(name = "SELECTABLE", nullable = false)
     private String selectable;
+
+    @ManyToOne
+    @JoinColumn(name = "REFERENCE_DATA_MASTER_ID", insertable=false, updatable=false)
+    private ReferenceDataMasterEntity referenceDataMaster;
+
+    @Column(name = "REFERENCE_DATA_MASTER_ID")
+    private Long referenceMasterID;
 }
