@@ -2292,3 +2292,5230 @@ givenName: Mavis
 sn: Mehler
 userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+
+# Role Catalogue generated from RBAC Matrix v3.8.1 at 2018/06/26 21:32:12
+
+dn:cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+description:RBAC v3.8.1
+objectclass: Top
+objectclass: person
+sn:ndRoleGroups
+cn:ndRoleGroups
+
+dn:cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Case Admin (public)
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT002,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT002,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT011,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT012,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT012,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT012
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT002,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT003,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT004,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT005,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT011,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0002,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0005,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT004,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT005,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT021,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT021,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT021
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT003,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT002,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT003,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT002,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CDBT001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CDBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CDBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=Case Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Case Admin (private)
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT002,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT002a,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT011,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT012,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT012,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT012
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT002,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT003,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT004,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT005,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT011,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0002a,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT004,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT005,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT003,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT002a,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT003,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT002,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CDBT001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CDBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CDBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=Case Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Offender Manager (public)
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT002,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT002,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT011,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT012,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT012,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT012
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT005,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT011,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0002,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT004,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT005,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT004,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT003,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT002,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT003,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT002,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CDBT001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CDBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CDBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=Offender Manager (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Offender Manager (private)
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT002,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT002a,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT011,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT012,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT012,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT012
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT005,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT011,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0002a,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT004,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT005,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT004,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT003,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT002a,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT004,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT003,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT002,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CDBT001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CDBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CDBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=Offender Manager (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:OM Superuser (public)
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT050,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT050,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT003,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT002,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT002,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT003,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT004,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0003,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT050,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT050,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT002,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT003,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT003,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DMBT002,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DMBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DMBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT002,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0003,cn=OM Superuser (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:OM Superuser (private)
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=RPBT050,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT003a,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT003a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT003a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT002,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT003,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT004,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT050,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT050,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT002,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT003,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT003,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DMBT002,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DMBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DMBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT002,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0003,cn=OM Superuser (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Receptionist Access,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Receptionist Access
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=NSBT001,cn=Receptionist Access,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT004,cn=Receptionist Access,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=Receptionist Access,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=Receptionist Access,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT007,cn=Receptionist Access,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT007,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT007
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=Receptionist Access,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Receptionist Access,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Case Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Case Superuser
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=SEBT003,cn=Case Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT050,cn=Case Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT002,cn=Case Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT004,cn=Case Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT050,cn=Case Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:OMiC Users
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT002,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT001,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT001,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT002,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT001,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT001,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT011,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0002,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT004,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT005,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT001,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT005,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT003,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT002,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT003,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT001,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT002,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT001,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=OMiC Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPW Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:UPW Admin
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=UWBT001,cn=UPW Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT010,cn=UPW Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT050,cn=UPW Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:UPW Operational
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT002,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT001,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT011,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT001,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT001,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPBT002,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SPBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SPBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0002a,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT004,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT005,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT004,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT005,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT002,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT003,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT010,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT050,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT002a,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT001,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT002,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT001,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=UPW Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Programmes Operational
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT002,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT001,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT001,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT001,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0002a,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT004,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT005,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT004,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT002a,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT001,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT002,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT001,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=Programmes Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Programmes Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Programmes Superuser
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CABT011,cn=Programmes Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT001,cn=Programmes Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=Programmes Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT003,cn=Programmes Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT004,cn=Programmes Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT005,cn=Programmes Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT006,cn=Programmes Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT006,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT006
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=Programmes Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=Programmes Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0003,cn=Programmes Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=AP Staff Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:AP Staff Admin
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CABT011,cn=AP Staff Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT002,cn=AP Staff Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT005,cn=AP Staff Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT050,cn=AP Staff Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:AP Staff User
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT002,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT001,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT001,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT001,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT001,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0002,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT004,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT005,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT002,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT003,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT004,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT001,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT002,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT001,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=AP Staff User,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=AP Manager,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:AP Manager
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CABT011,cn=AP Manager,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT002,cn=AP Manager,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT005,cn=AP Manager,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT050,cn=AP Manager,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRR Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:DRR Admin
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=DRBT004,cn=DRR Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT005,cn=DRR Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT006,cn=DRR Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT006,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT006
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRR Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:DRR Operational
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=DRBT004,cn=DRR Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT005,cn=DRR Operational,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Court Superuser
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT001,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT050,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT102,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT102,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT102
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT103,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT103,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT103
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT002,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT003,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT002,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT003,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0005,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT007,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT007,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT007
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT053,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT053,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT053
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT003,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CDBT001,cn=Court Superuser,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CDBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CDBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Cons Conc Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Cons Conc Admin (private)
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT104,cn=Cons Conc Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT104,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT104
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT105,cn=Cons Conc Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT105,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT105
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Cohort Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Cohort Admin
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=SEBT011,cn=Cohort Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT012,cn=Cohort Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT012,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT012
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Auditing Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Auditing Users
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Read-only users
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT002,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT001,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT001,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT005,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT003,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT001,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=Read-only users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Offender Details View,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Offender Details View
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=SEBT001,cn=Offender Details View,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=Offender Details View,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=Offender Details View,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=Offender Details View,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT005,cn=Offender Details View,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT003,cn=Offender Details View,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Offender Details View,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=Offender Details View,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=Offender Details View,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=Offender Details View,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Third Party Update
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=SEBT001,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT004,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT005,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT003,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=Third Party Update,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Staff List Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Staff List Admin
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=RDBT003,cn=Staff List Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RDBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RDBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Manage Component Transfer,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Manage Component Transfer
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CABT001,cn=Manage Component Transfer,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=Manage Component Transfer,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=Manage Component Transfer,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=Manage Component Transfer,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT011,cn=Manage Component Transfer,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Manage Component Transfer,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Manage All Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Manage All Transfers
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CABT001,cn=Manage All Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT002,cn=Manage All Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT003,cn=Manage All Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT004,cn=Manage All Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT005,cn=Manage All Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=Manage All Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=Manage All Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=Manage All Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT011,cn=Manage All Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Manage All Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Transfer for Merge,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Transfer for Merge
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=NSBT005,cn=Transfer for Merge,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Establisment Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Establisment Transfers
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CABT013,cn=Establisment Transfers,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT013,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT013
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Local Data Admin (private)
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT050,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT002a,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT003a,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT003a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT003a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT011,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT012,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT012,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT012
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT004,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT004,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT005,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT013,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT013,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT013
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT011,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPBT002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SPBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SPBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPBT003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RDBT002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RDBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RDBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0002a,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT050,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT004,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT005,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT050,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT004,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT004,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT005,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT006,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT006,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT006
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT010,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT050,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=EXBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=EXBT003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=EXBT050,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT050,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT101,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT002a,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT002a,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT002a
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0052,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0052,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0052
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DMBT002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DMBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DMBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CDBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CDBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CDBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0003,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=GTBT001,cn=Local Data Admin (private),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=GTBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: GTBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPG Exports,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:SPG Exports
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=GTBT001,cn=SPG Exports,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=GTBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: GTBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=MIS Report Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:MIS Report Users
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=WPBT004,cn=MIS Report Users,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=National Search,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:National Search
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=NSBT001,cn=National Search,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Produce Reports,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Produce Reports
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=RPBT001,cn=Produce Reports,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=Produce Reports,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Contact Log Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Contact Log Admin
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CLBT050,cn=Contact Log Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DPA Bulk Delete,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:DPA Bulk Delete
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=DPBT001,cn=DPA Bulk Delete,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Document Delete,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Document Delete
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=WPBT050,cn=Document Delete,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=LAO Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:LAO Admin
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=OIBT0004,cn=LAO Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSAR Reports,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:DSAR Reports
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=EXBT001,cn=DSAR Reports,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=EXBT050,cn=DSAR Reports,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=ViSOR Extracts,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:ViSOR Extracts
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=EXBT002,cn=ViSOR Extracts,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Local Data Admin (public)
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT050,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT102,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT102,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT102
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT103,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT103,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT103
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT050,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT011,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT012,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT012,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT012
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT004,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT004,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT005,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT013,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT013,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT013
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT011,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SPBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SPBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPBT003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RDBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RDBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RDBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0005,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT050,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT004,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT005,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT050,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT004,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT021,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT021,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT021
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT007,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT007,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT007
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT004,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT005,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT006,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT006,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT006
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=EXBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=EXBT003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=EXBT050,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT050,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT101,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT004,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT005,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT050,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0051,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0051,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0051
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DMBT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DMBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DMBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DPBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CDBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CDBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CDBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0003,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPGADBT001,cn=Local Data Admin (public),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SPGADBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SPGADBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Nat Data Admin
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CWBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT050,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT101,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT102,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT102,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT102
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CWBT103,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CWBT103,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CWBT103
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RPBT050,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RPBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RPBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT011,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT012,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT012,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT012
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SEBT013,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SEBT013,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SEBT013
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NSBT004,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NSBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NSBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT004,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT005,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT008,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT008,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT008
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT009,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT009,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT009
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT013,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT013,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT013
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT010,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CABT011,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CABT011,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CABT011
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SPBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SPBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPBT003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RDBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RDBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RDBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RDBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RDBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RDBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0004,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT0005,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT0005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT0005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OIBT050,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OIBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OIBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT004,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT005,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=WPBT050,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=WPBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: WPBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT004,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=TCBT003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=TCBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: TCBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT021,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT021,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT021
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT007,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT007,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT007
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT004,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT005,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DRBT006,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DRBT006,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DRBT006
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT051,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT051,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT051
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT052,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT052,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT052
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT010,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT010,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT010
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UWBT060,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UWBT060,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UWBT060
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=EXBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=EXBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=EXBT003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=EXBT050,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=EXBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: EXBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT050,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CLBT101,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=RRBT003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=RRBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: RRBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT004,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT005,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=APBT050,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=APBT050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: APBT050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0005,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0005,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0005
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0050,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0050
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0051,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0051,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0051
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UABT0052,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UABT0052,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UABT0052
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=UPBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=UPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: UPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DSBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DSBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DSBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DMBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DMBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DMBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DMBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DMBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DMBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=OABT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=OABT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: OABT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=DPBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=DPBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: DPBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=CDBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CDBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CDBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0003,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0003
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=NIBT0004,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=NIBT0004,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: NIBT0004
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=GTBT002,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=GTBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: GTBT002
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=SPGADBT001,cn=Nat Data Admin,cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=SPGADBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: SPGADBT001
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
+
+dn:cn=Contact Extract (Restricted),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+cn:Contact Extract (Restricted)
+objectclass: NDRoleGroup
+objectclass: Top
+
+dn:cn=CLBT101,cn=Contact Extract (Restricted),cn=ndRoleGroups,cn=Users,dc=bcl,dc=local
+aliasedobjectname:cn=CLBT101,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+cn: CLBT101
+objectclass: NDRoleAssociation
+objectclass: alias
+objectclass: Top
