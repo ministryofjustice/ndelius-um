@@ -1,17 +1,16 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import java.io.Serializable;
-import java.util.List;
-
-import javax.persistence.*;
-
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -37,4 +36,16 @@ public class TeamEntity implements Serializable
 	@ContainedIn
 	@ManyToMany(mappedBy = "team")
 	private List<StaffEntity> staff;
+
+	@Column(name = "START_DATE")
+	@Temporal(TemporalType.DATE)
+	private Date startDate;
+
+	@Column(name = "END_DATE")
+	@Temporal(TemporalType.DATE)
+	private Date endDate;
+
+	@ManyToOne
+	@JoinColumn(name = "PROBATION_AREA_ID", insertable = false, updatable = false)
+	private ProbationAreaEntity probationArea;
 }
