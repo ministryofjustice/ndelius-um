@@ -3,7 +3,8 @@
           class="form-control text-left" [ngClass]="{readonly: readonly}"
           (click)="optionsDisplayed = !optionsDisplayed"
           aria-haspopup="true" [attr.aria-expanded]="optionsDisplayed">
-    {{selected.length}} selected
+    <span *ngIf="selected.length === 1">{{mapToLabel(selected[0])}}</span>
+    <span *ngIf="selected.length !== 1">{{selected.length}} selected</span>
     <span class="oi oi-chevron-top float-right" *ngIf="optionsDisplayed"></span>
     <span class="oi oi-chevron-bottom float-right" *ngIf="!optionsDisplayed"></span>
   </button>
