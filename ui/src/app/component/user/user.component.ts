@@ -9,6 +9,8 @@ import {RoleService} from "../../service/role.service";
 import {Transaction} from "../../model/transaction";
 import {Dataset} from "../../model/dataset";
 import {DatasetService} from "../../service/dataset.service";
+import {Team} from "../../model/team";
+import {TeamService} from "../../service/team.service";
 
 @Component({
   selector: 'user',
@@ -19,8 +21,9 @@ export class UserComponent implements OnInit {
 
   mode: string;
   user: User;
-  transactions: Transaction[];
+  teams: Team[];
   datasets: Dataset[];
+  transactions: Transaction[];
 
   constructor(
     private route: ActivatedRoute,
@@ -28,6 +31,7 @@ export class UserComponent implements OnInit {
     private userService: UserService,
     private roleService: RoleService,
     private datasetService: DatasetService,
+    private teamService: TeamService,
     public auth: AuthorisationService) {}
 
   ngOnInit(): void {
@@ -53,6 +57,10 @@ export class UserComponent implements OnInit {
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {
       this.datasets = datasets;
     });
+
+    this.teamService.teams().subscribe((teams: Team[]) => {
+      this.teams = teams;
+    });
   }
 
   add() {
@@ -61,12 +69,16 @@ export class UserComponent implements OnInit {
     });
   }
 
-  transactionToLabel(item: Transaction): string {
-    return item.description + ' - ' + item.name;
+  teamToLabel(item: Team): string {
+    return item.description + ' - ' + item.code;
   }
 
   datasetToLabel(item: Dataset): string {
-    return item.code + ' - ' + item.description;
+    return item.description + ' - ' + item.code;
+  }
+
+  transactionToLabel(item: Transaction): string {
+    return item.description + ' - ' + item.name;
   }
 
   get json() {

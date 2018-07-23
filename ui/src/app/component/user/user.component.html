@@ -9,18 +9,6 @@
     </div>
     <form #form="ngForm">
       <div class="form-group row">
-        <label for="username" class="col-sm-2 col-form-label">Username</label>
-        <div class="col-sm-4">
-          <input id="username" name="username" [(ngModel)]="user.username"
-                 class="form-control" [readonly]="mode === 'View'"/>
-        </div>
-        <label for="staff-code" class="col-sm-2 col-form-label">Staff Code</label>
-        <div class="col-sm-4">
-          <input id="staff-code" name="staff-code" [(ngModel)]="user.staffCode"
-                 class="form-control" [readonly]="mode === 'View'"/>
-        </div>
-      </div>
-      <div class="form-group row">
         <label for="forenames" class="col-sm-2 col-form-label">Forename(s)</label>
         <div class="col-sm-4">
           <input id="forenames" name="forenames" [(ngModel)]="user.forenames" autocomplete="given-name"
@@ -33,16 +21,27 @@
         </div>
       </div>
       <div class="form-group row">
-        <label for="roles" class="col-sm-2 col-form-label">Role(s)</label>
+        <label for="username" class="col-sm-2 col-form-label">Username</label>
         <div class="col-sm-4">
-          <item-selector id="roles"
-                         [selected]="user.transactions"
-                         [available]="transactions"
+          <input id="username" name="username" [(ngModel)]="user.username"
+                 class="form-control" [readonly]="mode === 'View'"/>
+        </div>
+        <label for="staff-code" class="col-sm-2 col-form-label">Staff Code</label>
+        <div class="col-sm-4">
+          <input id="staff-code" name="staff-code" [(ngModel)]="user.staffCode"
+                 class="form-control" [readonly]="mode === 'View'"/>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="teams" class="col-sm-2 col-form-label">Team(s)</label>
+        <div class="col-sm-4">
+          <item-selector id="teams"
+                         [selected]="user.teams"
+                         [available]="teams"
                          [readonly]="mode === 'View'"
-                         [labelMapper]="transactionToLabel"
+                         [labelMapper]="teamToLabel"
                          maxHeight="300px"></item-selector>
         </div>
-
         <label for="datasets" class="col-sm-2 col-form-label">Dataset(s)</label>
         <div class="col-sm-4">
           <item-selector id="datasets"
@@ -50,6 +49,21 @@
                          [available]="datasets"
                          [readonly]="mode === 'View'"
                          [labelMapper]="datasetToLabel"
+                         maxHeight="300px"></item-selector>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Group(s)</label>
+        <div class="col-sm-4">
+          ...
+        </div>
+        <label for="roles" class="col-sm-2 col-form-label">Role(s)</label>
+        <div class="col-sm-4">
+          <item-selector id="roles"
+                         [selected]="user.transactions"
+                         [available]="transactions"
+                         [readonly]="mode === 'View'"
+                         [labelMapper]="transactionToLabel"
                          maxHeight="300px"></item-selector>
         </div>
       </div>

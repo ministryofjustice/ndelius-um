@@ -18,6 +18,8 @@ import {RestRoleService} from "../service/impl/rest.role.service";
 import {RoleService} from "../service/role.service";
 import {DatasetService} from "../service/dataset.service";
 import {RestDatasetService} from "../service/impl/rest.dataset.service";
+import {RestTeamService} from "../service/impl/rest.team.service";
+import {TeamService} from "../service/team.service";
 
 @NgModule({
   declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, ItemSelectorComponent],
@@ -26,6 +28,7 @@ import {RestDatasetService} from "../service/impl/rest.dataset.service";
     {provide: UserService, useClass: RestUserService},
     {provide: RoleService, useClass: RestRoleService},
     {provide: DatasetService, useClass: RestDatasetService},
+    {provide: TeamService, useClass: RestTeamService},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     ...(environment.production? []: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}])
   ],
