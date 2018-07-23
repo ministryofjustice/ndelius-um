@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
@@ -36,5 +37,14 @@ public class RoleGroupController
 	{
 		val roleGroups = roleGroupService.getTransactionGroups();
 		return roleGroups.iterator().hasNext() ? new ResponseEntity<>(roleGroups, OK) : new ResponseEntity<>(NOT_FOUND);
+	}
+
+	@Interaction("UMBI007")
+	@GetMapping(path="/rolegroup/{rolegroupname}")
+	public ResponseEntity<TransactionGroup> getRoleGroup(final @PathVariable("rolegroupname") String roleGroupName)
+	{
+		return roleGroupService.getTransactionGroup(roleGroupName)
+				.map(rg -> new ResponseEntity<>(rg, OK))
+				.orElse(new ResponseEntity<>(NOT_FOUND));
 	}
 }

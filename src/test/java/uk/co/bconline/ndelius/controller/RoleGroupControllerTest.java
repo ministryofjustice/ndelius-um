@@ -47,13 +47,25 @@ public class RoleGroupControllerTest {
     }
 
     @Test
-    public void datasetsAreReturned() throws Exception
+    public void transactionGroupsAreReturned() throws Exception
     {
         mvc.perform(get("/api/rolegroups")
                 .header("Authorization", "Bearer " + token(mvc)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", not(empty())))
-                .andExpect(jsonPath("$[*].transactionGroupName", hasItem("AP Manager")));
+                .andExpect(jsonPath("$[*].name", hasItem("AP Manager")));
+    }
+
+    @Test
+    public void transactionGroupIsReturned() throws Exception
+    {
+        mvc.perform(get("/api/rolegroup/AP Manager")
+                .header("Authorization", "Bearer " + token(mvc)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", not(empty())))
+                .andExpect(jsonPath("$.name", is("AP Manager")))
+                .andExpect(jsonPath("$.transactions", hasSize(4)))
+                .andExpect(jsonPath("$.transactions[*].name", hasItems("APBT002","APBT005","APBT050","CABT011")));
     }
 
 }
