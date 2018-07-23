@@ -1,10 +1,8 @@
 package uk.co.bconline.ndelius.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -13,19 +11,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
-@TestPropertySource(properties = {
-		"jwt.cookie=my-cookie",
-		"jwt.secret=secret"
-})
+@ActiveProfiles("test")
+@RunWith(SpringRunner.class)
 public class JwtHelperTest
 {
 	@Autowired

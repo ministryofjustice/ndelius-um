@@ -6,26 +6,26 @@ import java.util.List;
 
 import javax.naming.Name;
 
-import org.springframework.ldap.odm.annotations.Attribute;
-import org.springframework.ldap.odm.annotations.Entry;
-import org.springframework.ldap.odm.annotations.Id;
-import org.springframework.ldap.odm.annotations.Transient;
+import org.springframework.ldap.odm.annotations.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @ToString(exclude = "password")
-@Entry(objectClasses = "NDUser", base="cn=Users")
+@Entry(objectClasses = {"NDUser", "person", "top"}, base="cn=Users")
 public final class OIDUser implements OIDUserHomeArea, UserDetails, Serializable
 {
 	@Id
 	private Name dn;
 
 	@Attribute(name="cn")
+	@DnAttribute(value="cn", index=1)
 	private String username;
 
 	@Attribute(name="givenName")

@@ -8,11 +8,18 @@ import org.junit.Test;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import uk.co.bconline.ndelius.model.ldap.ADUser;
+import uk.co.bconline.ndelius.repository.ad.ADUserRepository;
 
 public class ADUserDetailsServiceTest
 {
 	private ADUserDetailsService service = new ADUserDetailsService()
 	{
+		@Override
+		public ADUserRepository getRepository()
+		{
+			return null;
+		}
+
 		@Override
 		public Optional<ADUser> getUser(String username)
 		{

@@ -1,14 +1,18 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
 import uk.co.bconline.ndelius.repository.db.DatasetRepository;
 import uk.co.bconline.ndelius.service.DatasetService;
 import uk.co.bconline.ndelius.transformer.DatasetTransformer;
-
-import java.util.List;
 
 @Service
 public class DatasetServiceImpl implements DatasetService
@@ -28,7 +32,29 @@ public class DatasetServiceImpl implements DatasetService
 	@Override
 	public List<Dataset> getDatasets()
 	{
-		List<ProbationAreaEntity> datasetsDB = repository.findAllBySelectable("Y");
-		return transformer.map(datasetsDB);
+		return repository.findAllBySelectable("Y").stream()
+				.map(transformer::map)
+				.collect(toList());
 	}
+
+	@Override
+	public List<Dataset> getDatasets(String username)
+	{
+		return repository.findAllByUsersWithDatasetUsername(username).stream()
+				.map(transformer::map)
+				.collect(toList());
+	}
+
+	@Override
+	public List<String> getDatasetCodes(String username)
+	{
+		return getDatasets(username).stream().map(Dataset::getCode).collect(toList());
+	}
+
+	@Override
+	public Optional<Long> getDatasetId(String code)
+	{
+		return repository.findByCode(code).map(ProbationAreaEntity::getId);
+	}
+
 }

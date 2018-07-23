@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.odm.annotations.Entry;
@@ -19,9 +20,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
+import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransactionAlias;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
+import uk.co.bconline.ndelius.repository.oid.OIDRoleAliasRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 import uk.co.bconline.ndelius.service.OIDUserService;
@@ -30,14 +34,22 @@ import uk.co.bconline.ndelius.service.OIDUserService;
 @Service
 public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 {
+	@Value("${oid.base}")
+	private String oidBase;
+
 	private final OIDUserRepository userRepository;
 	private final OIDRoleRepository roleRepository;
+	private final OIDRoleAliasRepository roleAliasRepository;
 
 	@Autowired
-	public OIDUserDetailsService(OIDUserRepository userRepository, OIDRoleRepository roleRepository)
+	public OIDUserDetailsService(
+			OIDUserRepository userRepository,
+			OIDRoleRepository roleRepository,
+			OIDRoleAliasRepository roleAliasRepository)
 	{
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
+		this.roleAliasRepository = roleAliasRepository;
 	}
 
 	@Override
@@ -149,5 +161,28 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	public String getUserHomeArea(String username)
 	{
 		return userRepository.getOIDUserHomeAreaByUsername(username).map(OIDUserHomeArea::getHomeArea).orElse(null);
+	}
+
+	@Override
+	public void save(OIDUser user)
+	{
+		userRepository.save(user);
+
+		// TODO for update - remove existing role aliases
+//		roleAliasRepository.deleteAll(roleAliasRepository.findAll(query()
+//				.searchScope(SearchScope.ONELEVEL)
+//				.base(String.format("cn=%s,%s", user.getUsername(), OIDUser.class.getAnnotation(Entry.class).base()))
+//				.where("objectclass").is("alias")));
+
+		val roleAliases = user.getTransactions().stream()
+				.map(OIDBusinessTransaction::getName)
+				.map(name -> OIDBusinessTransactionAlias.builder()
+						.name(name)
+						.username(user.getUsername())
+						.aliasedObjectName(String.format("cn=%s,%s,%s", name,
+								OIDBusinessTransaction.class.getAnnotation(Entry.class).base(), oidBase))
+						.build())
+				.collect(toList());
+		roleAliasRepository.saveAll(roleAliases);
 	}
 }

@@ -13,12 +13,18 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Indexed
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "USER_")
+@Builder(toBuilder = true)
 public class UserEntity implements Serializable
 {
 	@Id
@@ -28,7 +34,7 @@ public class UserEntity implements Serializable
 	private long id;
 
 	@Field
-	@Column(name = "DISTINGUISHED_NAME")
+	@Column(name = "DISTINGUISHED_NAME", unique = true)
 	private String username;
 
 	@Field
@@ -50,16 +56,16 @@ public class UserEntity implements Serializable
 	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
-	@OneToOne
 	@IndexedEmbedded
 	@JoinColumn(name = "STAFF_ID")
+	@OneToOne(cascade = CascadeType.ALL)
 	private StaffEntity staff;
 
 	@ManyToOne
 	@JoinColumn(name = "ORGANISATION_ID")
 	private OrganisationEntity organisation;
 
-	@OneToMany(fetch = EAGER)
+	@ManyToMany(fetch = EAGER)
 	@JoinTable(name = "PROBATION_AREA_USER",
 			   joinColumns = @JoinColumn(name = "USER_ID"),
 			   inverseJoinColumns = @JoinColumn(name = "PROBATION_AREA_ID"))

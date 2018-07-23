@@ -6,10 +6,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import uk.co.bconline.ndelius.model.ldap.ADUser;
+import uk.co.bconline.ndelius.repository.ad.ADUserRepository;
 
 public abstract class ADUserDetailsService implements UserDetailsService
 {
-	public abstract Optional<ADUser> getUser(String username);
+	public abstract ADUserRepository getRepository();
 
 	@Override
 	public UserDetails loadUserByUsername(String username)
@@ -20,6 +21,16 @@ public abstract class ADUserDetailsService implements UserDetailsService
 	private static String stripDomain(String username)
 	{
 		return username.replaceAll("^(.*)@.*$", "$1");
+	}
+
+	public Optional<ADUser> getUser(String username)
+	{
+		return getRepository().findByUsername(username);
+	}
+
+	public void save(ADUser adUser)
+	{
+		getRepository().save(adUser);
 	}
 
 }

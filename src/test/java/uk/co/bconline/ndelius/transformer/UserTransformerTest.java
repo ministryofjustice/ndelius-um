@@ -4,23 +4,31 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 
+@SpringBootTest
+@ActiveProfiles("test")
+@RunWith(SpringRunner.class)
 public class UserTransformerTest
 {
+	@Autowired
+	private UserTransformer transformer;
 
 	@Test
 	public void mapUserToSearchResult()
 	{
-		UserEntity user = new UserEntity();
-		user.setUsername("username");
-		user.setForename("forename");
-		user.setForename2("forename2");
-		user.setSurname("surname");
-
-		SearchResult result = new UserTransformer(new DatasetTransformer()).map(user);
+		SearchResult result = transformer.map(UserEntity.builder()
+				.username("username")
+				.forename("forename")
+				.forename2("forename2")
+				.surname("surname").build());
 
 		assertEquals("username", result.getUsername());
 		assertEquals("forename forename2", result.getForenames());

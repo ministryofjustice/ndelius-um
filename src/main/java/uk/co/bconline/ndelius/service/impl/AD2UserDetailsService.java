@@ -1,13 +1,11 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import uk.co.bconline.ndelius.model.ldap.ADUser;
-import uk.co.bconline.ndelius.repository.ad2.AD2UserRepository;
+import uk.co.bconline.ndelius.repository.ad.ADUserRepository;
+import uk.co.bconline.ndelius.repository.ad.ad2.AD2UserRepository;
 import uk.co.bconline.ndelius.service.ADUserDetailsService;
 
 @Service
@@ -23,8 +21,8 @@ public class AD2UserDetailsService extends ADUserDetailsService
 	}
 
 	@Override
-	public Optional<ADUser> getUser(String username)
+	public ADUserRepository getRepository()
 	{
-		return repository.findByUsername(username);
+		return repository;
 	}
 }

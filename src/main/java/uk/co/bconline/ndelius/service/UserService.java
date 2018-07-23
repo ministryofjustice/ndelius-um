@@ -10,4 +10,6 @@ public interface UserService
 {
 	List<SearchResult> search(String query, int page, int pageSize);
 	Optional<User> getUser(String username);
+	void addUser(User user);
+	void updateUser(User user);
 }

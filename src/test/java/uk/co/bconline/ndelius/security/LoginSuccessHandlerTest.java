@@ -10,18 +10,15 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.util.JwtHelper;
 
 @SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
-@TestPropertySource(properties = {
-		"jwt.cookie=my-cookie",
-		"jwt.secret=secret"
-})
+@ActiveProfiles("test")
+@RunWith(SpringRunner.class)
 public class LoginSuccessHandlerTest
 {
 	@Autowired

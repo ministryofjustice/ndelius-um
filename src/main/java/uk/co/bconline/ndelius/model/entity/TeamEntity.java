@@ -1,24 +1,31 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.Field;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.*;
+
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+
+import lombok.*;
+
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "TEAM")
 @ToString(exclude = "staff")
 @EqualsAndHashCode(exclude = "staff")
 public class TeamEntity implements Serializable
 {
+	public TeamEntity(Long id)
+	{
+		this.id = id;
+	}
+
 	@Id
 	@Column(name = "TEAM_ID")
 	@GeneratedValue(generator = "TEAM_ID_SEQ")
@@ -34,7 +41,7 @@ public class TeamEntity implements Serializable
 	private String description;
 
 	@ContainedIn
-	@ManyToMany(mappedBy = "team")
+	@ManyToMany(mappedBy = "teams")
 	private List<StaffEntity> staff;
 
 	@Column(name = "START_DATE")

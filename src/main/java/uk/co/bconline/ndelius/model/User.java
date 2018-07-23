@@ -4,25 +4,26 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * This will eventually become the compound user object with data from all sources
- */
 @Data
-@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public final class User implements Serializable
 {
-	private String username;
+	@NotNull private String username;
 	private String forenames;
 	private String surname;
 	private String staffCode;
+	private String staffGrade;
 	private String homeArea;
+	private LocalDate startDate;
 	private LocalDate endDate;
 	private Organisation organisation;
 	private List<Team> teams;

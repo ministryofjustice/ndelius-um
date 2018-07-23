@@ -14,9 +14,11 @@ import uk.co.bconline.ndelius.model.entity.OrganisationEntity;
 import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
 
 @Component
-public class DatasetTransformer {
+public class DatasetTransformer
+{
 
-	public Organisation map(OrganisationEntity organisationEntity) {
+	public Organisation map(OrganisationEntity organisationEntity)
+	{
 		return ofNullable(organisationEntity)
 				.map(oe -> Organisation.builder()
 						.code(oe.getCode())
@@ -25,13 +27,25 @@ public class DatasetTransformer {
 				.orElse(null);
 	}
 
-	public List<Dataset> map(Collection<ProbationAreaEntity> entities) {
+	public OrganisationEntity map(Organisation organisation)
+	{
+		return ofNullable(organisation)
+				.map(oe -> OrganisationEntity.builder()
+						.code(oe.getCode())
+						.description(oe.getDescription())
+						.build())
+				.orElse(null);
+	}
+
+	public List<Dataset> map(Collection<ProbationAreaEntity> entities)
+	{
 		return entities.stream()
 				.map(this::map)
 				.collect(toList());
 	}
 
-	public Dataset map(ProbationAreaEntity entity) {
+	public Dataset map(ProbationAreaEntity entity)
+	{
 		return Dataset.builder()
 				.code(entity.getCode())
 				.description(entity.getDescription())

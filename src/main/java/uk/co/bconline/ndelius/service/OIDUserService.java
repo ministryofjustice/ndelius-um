@@ -13,4 +13,5 @@ public interface OIDUserService
 	List<OIDUser> search(String query, int page, int pageSize);
 	Optional<OIDUser> getUser(String username);
 	String getUserHomeArea(String username);
+	void save(OIDUser user);
 }
