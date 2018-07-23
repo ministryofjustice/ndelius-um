@@ -1,14 +1,6 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
-import static org.springframework.ldap.query.SearchScope.ONELEVEL;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.Filter;
@@ -17,27 +9,32 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
-import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
-import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 import uk.co.bconline.ndelius.service.OIDUserService;
+import uk.co.bconline.ndelius.service.RoleService;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 @Slf4j
 @Service
 public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 {
 	private final OIDUserRepository userRepository;
-	private final OIDRoleRepository roleRepository;
+	private final RoleService roleService;
 
 	@Autowired
-	public OIDUserDetailsService(OIDUserRepository userRepository, OIDRoleRepository roleRepository)
+	public OIDUserDetailsService(OIDUserRepository userRepository, RoleService roleService)
 	{
 		this.userRepository = userRepository;
-		this.roleRepository = roleRepository;
+		this.roleService = roleService;
 	}
 
 	@Override
@@ -78,22 +75,12 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public List<String> getUserRoles(String username)
 	{
-		return getUserTransactions(username).stream()
+		return roleService.getTransactionsByParent(username, OIDUser.class).stream()
 				.flatMap(bt -> bt.getRoles().stream())
 				.collect(toList());
 	}
 
-	@Override
-	public List<OIDBusinessTransaction> getUserTransactions(String username)
-	{
-		return stream(roleRepository
-				.findAll(query()
-						.searchScope(ONELEVEL)
-						.base(String.format("cn=%s,%s", username, OIDUser.class.getAnnotation(Entry.class).base()))
-						.where("objectclass").like("NDRole*"))
-				.spliterator(), false)
-				.collect(toList());
-	}
+
 
 	/**
 	 * Search for a list of users with a single text query.
@@ -140,7 +127,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	{
 		Optional<OIDUser> user = userRepository.findByUsername(username);
 		return user.map(u -> {
-			u.setTransactions(getUserTransactions(username));
+			u.setTransactions(roleService.getTransactionsByParent(username, OIDUser.class));
 			return u;
 		});
 	}
