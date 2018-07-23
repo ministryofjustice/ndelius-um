@@ -1,12 +1,12 @@
 package uk.co.bconline.ndelius.model;
 
-import java.io.Serializable;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+import java.io.Serializable;
+
+@Getter
 @Builder
 @AllArgsConstructor
 public final class SearchResult implements Serializable

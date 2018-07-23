@@ -1,15 +1,14 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Getter
 @Entity
 @Builder
 @NoArgsConstructor

@@ -1,14 +1,14 @@
 package uk.co.bconline.ndelius.model;
 
-import java.io.Serializable;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
-@Builder(toBuilder = true)
+import java.io.Serializable;
+
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public final class Team implements Serializable

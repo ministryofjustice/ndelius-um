@@ -1,29 +1,25 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import static javax.persistence.FetchType.EAGER;
-
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Set;
-
-import javax.persistence.*;
-
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
-import lombok.*;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Set;
 
-@Data
+import static javax.persistence.FetchType.EAGER;
+
+@Getter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "STAFF")
 @Builder(toBuilder = true)
-@ToString(exclude = "user")
-@EqualsAndHashCode(exclude = "user")
 public class StaffEntity implements Serializable
 {
 	@Id
@@ -64,6 +60,7 @@ public class StaffEntity implements Serializable
 			   inverseJoinColumns = @JoinColumn(name = "TEAM_ID"))
 	private Set<TeamEntity> teams;
 
+	@Setter
 	@ContainedIn
 	@OneToOne(mappedBy = "staff")
 	private UserEntity user;
