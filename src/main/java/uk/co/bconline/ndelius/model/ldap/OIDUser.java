@@ -1,19 +1,17 @@
 package uk.co.bconline.ndelius.model.ldap;
 
+import lombok.*;
+import org.springframework.ldap.odm.annotations.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
+
+import javax.naming.Name;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-import javax.naming.Name;
-
-import org.springframework.ldap.odm.annotations.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import lombok.*;
-import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
-
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
@@ -24,6 +22,7 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails, Serializable
 	@Id
 	private Name dn;
 
+	@Setter
 	@Attribute(name="cn")
 	@DnAttribute(value="cn", index=1)
 	private String username;
@@ -40,6 +39,7 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails, Serializable
 	@Attribute(name="userPassword")
 	private String password;
 
+	@Setter
 	@Transient
 	private List<OIDBusinessTransaction> transactions;
 

@@ -1,10 +1,10 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import lombok.Data;
+import lombok.Getter;
 
 import javax.persistence.*;
 
-@Data
+@Getter
 @Entity
 @Table(name = "R_REFERENCE_DATA_MASTER")
 @SequenceGenerator(name = "REFERENCE_DATA_MASTER_ID_SEQ", sequenceName = "REFERENCE_DATA_MASTER_ID_SEQ", allocationSize = 1)

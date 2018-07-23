@@ -1,24 +1,22 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import static javax.persistence.FetchType.EAGER;
-
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Set;
-
-import javax.persistence.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Set;
 
-@Data
+import static javax.persistence.FetchType.EAGER;
+
+@Getter
 @Entity
 @Indexed
 @NoArgsConstructor

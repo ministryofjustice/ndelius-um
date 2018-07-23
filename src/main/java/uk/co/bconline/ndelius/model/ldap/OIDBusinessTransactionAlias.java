@@ -1,17 +1,15 @@
 package uk.co.bconline.ndelius.model.ldap;
 
-import java.io.Serializable;
-
-import javax.naming.Name;
-
-import org.springframework.ldap.odm.annotations.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.ldap.odm.annotations.*;
 
-@Data
+import javax.naming.Name;
+import java.io.Serializable;
+
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
