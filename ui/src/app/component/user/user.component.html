@@ -3,50 +3,97 @@
 <ng-container *ngIf="loaded; else loading">
 <ng-container *ngIf="auth.canGetUser(); else unauthorised">
   <div class="container">
-    <div class="pb-2 mt-4 mb-2 border-bottom">
+    <div class="pb-2 mt-4 mb-2">
       <h1>{{mode}} user</h1>
-      <p>User help text</p>
     </div>
     <form #form="ngForm">
+      <h4>User Details</h4>
+      <hr>
       <div class="form-group row">
         <label for="username" class="col-sm-2 col-form-label">Username</label>
-        <div class="col-sm-4">
+        <div class="col-sm-10">
           <input id="username" name="username" [(ngModel)]="user.username"
-                 class="form-control" readonly/>
-        </div>
-        <label for="staff-code" class="col-sm-2 col-form-label">Staff Code</label>
-        <div class="col-sm-4">
-          <input id="staff-code" name="staff-code" [(ngModel)]="user.staffCode"
-                 class="form-control" readonly/>
+                 class="form-control" [readonly]="mode === 'View'"/>
         </div>
       </div>
       <div class="form-group row">
         <label for="forenames" class="col-sm-2 col-form-label">Forename(s)</label>
         <div class="col-sm-4">
-          <input id="forenames" name="forenames" [(ngModel)]="user.forenames"
-                 class="form-control" readonly>
+          <input id="forenames" name="forenames" [(ngModel)]="user.forenames" autocomplete="given-name"
+                 class="form-control" [readonly]="mode === 'View'">
         </div>
         <label for="surname" class="col-sm-2 col-form-label">Surname</label>
         <div class="col-sm-4">
-          <input id="surname" name="surname" [(ngModel)]="user.surname"
-                 class="form-control" readonly>
+          <input id="surname" name="surname" [(ngModel)]="user.surname" autocomplete="family-name"
+                 class="form-control" [readonly]="mode === 'View'">
         </div>
       </div>
       <div class="form-group row">
-        <label for="roles" class="col-sm-2 col-form-label">Role(s)</label>
+        <label for="teams" class="col-sm-2 col-form-label">Team(s)</label>
         <div class="col-sm-4">
-          <roleselector
-            [userTransactions]="user.transactions"
-            [availableTransactions]="transactions"
-            [readOnly]="true"
-            componentHeight="100%" componentWidth="100%" id="roles">
-          </roleselector>
+          <item-selector id="teams"
+                         [selected]="user.teams"
+                         [available]="teams"
+                         [readonly]="mode === 'View'"
+                         [labelMapper]="teamToLabel"
+                         maxHeight="300px"></item-selector>
         </div>
+        <label for="staff-code" class="col-sm-2 col-form-label">Staff Code</label>
         <div class="col-sm-4">
+          <input id="staff-code" name="staff-code" [(ngModel)]="user.staffCode"
+                 class="form-control" [readonly]="mode === 'View'"/>
         </div>
       </div>
+      <h4>Authorisation</h4>
+      <hr>
+      <div class="form-group row">
+        <label for="datasets" class="col-sm-2 col-form-label">Datasets</label>
+        <div class="col-sm-4">
+          <item-selector id="datasets"
+                         [selected]="user.datasets"
+                         [available]="datasets"
+                         [readonly]="mode === 'View'"
+                         [labelMapper]="datasetToLabel"
+                         maxHeight="300px"></item-selector>
+        </div>
+        <label for="home-area" class="col-sm-2 col-form-label">Home Area</label>
+        <div class="col-sm-4">
+          <item-selector-single id="home-area"
+                                [selected]="user.homeArea"
+                                [available]="datasetCodes"
+                                [readonly]="mode === 'View'"
+                                maxHeight="300px"></item-selector-single>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Role Groups</label>
+        <div class="col-sm-3">
+          <item-selector-single id="role-groups"
+                         [available]="transactions"
+                         [readonly]="mode === 'View'"
+                         [labelMapper]="transactionToLabel"
+                         maxHeight="300px"></item-selector-single>
+        </div>
+        <div class="col-sm-1">
+          <button class="btn btn-dark w-100" [disabled]="mode === 'View'">Add</button>
+        </div>
+        <label for="roles" class="col-sm-2 col-form-label">Roles</label>
+        <div class="col-sm-4">
+          <item-selector id="roles"
+                         [selected]="user.transactions"
+                         [available]="transactions"
+                         [readonly]="mode === 'View'"
+                         [labelMapper]="transactionToLabel"
+                         maxHeight="300px"></item-selector>
+        </div>
+      </div>
+      <hr/>
+      <div class="btn-toolbar" role="toolbar">
+        <button *ngIf="mode === 'Add'" (click)="add()" class="btn btn-primary" type="submit">Save</button>
+        <button *ngIf="mode !== 'Add' && auth.canAddUser()" (click)="createSimilar()" class="btn btn-primary" type="submit">Create another...</button>
+      </div>
     </form>
-    <p>{{json}}</p>
+    <!--<p>{{json}}</p>-->
   </div>
 </ng-container>
 </ng-container>

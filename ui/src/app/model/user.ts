@@ -1,9 +1,14 @@
 import {Transaction} from "./transaction";
+import {Dataset} from "./dataset";
+import {Team} from "./team";
 
 export class User {
   username: string;
   forenames: string;
   surname: string;
   staffCode: string;
-  transactions: Transaction[];
+  homeArea: string;
+  teams: Team[] = [];
+  datasets: Dataset[] = [];
+  transactions: Transaction[] = [];
 }

@@ -3,6 +3,7 @@ import {Observable} from "rxjs/Observable";
 
 export abstract class UserService {
   abstract whoami(): Observable<User>;
-  abstract users(query: string, page: number): Observable<User[]>;
-  abstract user(username: string): Observable<User>;
+  abstract search(query: string, page: number): Observable<User[]>;
+  abstract create(user: User): Observable<User>;
+  abstract read(username: string): Observable<User>;
 }

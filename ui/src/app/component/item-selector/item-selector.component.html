@@ -1,0 +1,35 @@
+<div class="dropdown">
+  <button [id]="id+'-toggle-btn'" type="button"
+          class="form-control text-left" [ngClass]="{readonly: readonly}"
+          (click)="optionsDisplayed = !optionsDisplayed"
+          aria-haspopup="true" [attr.aria-expanded]="optionsDisplayed">
+    <span *ngIf="selected.length === 1">{{mapToLabel(selected[0])}}</span>
+    <span *ngIf="selected.length !== 1">{{selected.length}} selected</span>
+    <span class="oi oi-chevron-top float-right" *ngIf="optionsDisplayed"></span>
+    <span class="oi oi-chevron-bottom float-right" *ngIf="!optionsDisplayed"></span>
+  </button>
+  <div *ngIf="optionsDisplayed" class="dropdown-menu bg-light show p-3 w-100"
+       [ngStyle]="{maxHeight: maxHeight}" style="overflow-y: auto"
+       [attr.aria-labelledby]="id+'-toggle-btn'">
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text bg-white"><i class="oi oi-magnifying-glass"></i></div>
+        </div>
+        <input type="search" [(ngModel)]="filter"
+               class="form-control py-2 border-left-0 border"
+               aria-label="Filter">
+      </div>
+    </div>
+    <div class="form-check text-truncate"
+         *ngFor="let item of filtered; let i = index">
+      <input [id]="id+'-opt-'+i" type="checkbox" class="form-check-input"
+             (change)="toggle(item)"
+             [checked]="isSelected(item)"
+             [disabled]="readonly"/>
+      <label [for]="id+'-opt-'+i"
+             [title]="mapToLabel(item)"
+             class="form-check-label text-truncate mb-0">{{mapToLabel(item)}}</label>
+    </div>
+  </div>
+</div>

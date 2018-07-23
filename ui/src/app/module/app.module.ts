@@ -13,16 +13,23 @@ import {RestUserService} from "../service/impl/rest.user.service";
 import {UserService} from "../service/user.service";
 import {ErrorInterceptor} from "../interceptor/error.interceptor";
 import {MessageComponent} from "../component/message/message.component";
-import {RoleSelectorComponent} from "../component/role/roleselector.component";
+import {ItemSelectorComponent} from "../component/item-selector/item-selector.component";
 import {RestRoleService} from "../service/impl/rest.role.service";
 import {RoleService} from "../service/role.service";
+import {DatasetService} from "../service/dataset.service";
+import {RestDatasetService} from "../service/impl/rest.dataset.service";
+import {RestTeamService} from "../service/impl/rest.team.service";
+import {TeamService} from "../service/team.service";
+import {ItemSelectorSingleComponent} from "../component/item-selector-single/item-selector-single.component";
 
 @NgModule({
-  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, RoleSelectorComponent],
+  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, ItemSelectorComponent, ItemSelectorSingleComponent],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [
     {provide: UserService, useClass: RestUserService},
     {provide: RoleService, useClass: RestRoleService},
+    {provide: DatasetService, useClass: RestDatasetService},
+    {provide: TeamService, useClass: RestTeamService},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     ...(environment.production? []: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}])
   ],

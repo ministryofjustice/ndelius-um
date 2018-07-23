@@ -22,7 +22,7 @@ export class SearchComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.pipe(
       filter(params => params.q != null),
-      flatMap(params => this.service.users(
+      flatMap(params => this.service.search(
         this.query = params.q,
         this.page = +params.page || 1
       ))

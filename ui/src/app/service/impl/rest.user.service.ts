@@ -14,7 +14,7 @@ export class RestUserService implements UserService {
     return this.http.get<User>(environment.api.baseurl + "whoami")
   }
 
-  users(query: string, page: number): Observable<User[]> {
+  search(query: string, page: number): Observable<User[]> {
     return this.http.get<User[]>(environment.api.baseurl + "users", {
       params: {
         q: query,
@@ -23,7 +23,11 @@ export class RestUserService implements UserService {
     });
   }
 
-  user(username: string): Observable<User> {
+  create(user: User): Observable<User> {
+    return this.http.post<User>(environment.api.baseurl + "user", user);
+  }
+
+  read(username: string): Observable<User> {
     return this.http.get<User>(environment.api.baseurl + "user/" + username);
   }
 }
