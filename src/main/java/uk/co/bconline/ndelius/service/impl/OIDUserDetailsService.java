@@ -1,6 +1,13 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.filter.AndFilter;
@@ -18,18 +25,9 @@ import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransactionAlias;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
 import uk.co.bconline.ndelius.repository.oid.OIDRoleAliasRepository;
-import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 import uk.co.bconline.ndelius.service.OIDUserService;
 import uk.co.bconline.ndelius.service.RoleService;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 @Slf4j
 @Service
@@ -45,13 +43,12 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Autowired
 	public OIDUserDetailsService(
 			OIDUserRepository userRepository,
-			OIDRoleRepository roleRepository,
-			OIDRoleAliasRepository roleAliasRepository)
-	public OIDUserDetailsService(OIDUserRepository userRepository, RoleService roleService)
+			OIDRoleAliasRepository roleAliasRepository,
+			RoleService roleService)
 	{
 		this.userRepository = userRepository;
-		this.roleService = roleService;
 		this.roleAliasRepository = roleAliasRepository;
+		this.roleService = roleService;
 	}
 
 	@Override
