@@ -69,6 +69,10 @@ export class UserComponent implements OnInit {
     });
   }
 
+  get datasetCodes(): string[] {
+    return this.datasets.map(dataset => dataset.code);
+  }
+
   teamToLabel(item: Team): string {
     return item.description + ' - ' + item.code;
   }

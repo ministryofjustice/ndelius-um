@@ -7,6 +7,7 @@ export class User {
   forenames: string;
   surname: string;
   staffCode: string;
+  homeArea: string;
   teams: Team[] = [];
   datasets: Dataset[] = [];
   transactions: Transaction[] = [];

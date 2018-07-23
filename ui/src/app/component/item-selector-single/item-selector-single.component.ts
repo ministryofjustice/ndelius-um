@@ -1,12 +1,12 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'item-selector',
-  templateUrl: './item-selector.component.html'
+  selector: 'item-selector-single',
+  templateUrl: './item-selector-single.component.html'
 })
-export class ItemSelectorComponent {
+export class ItemSelectorSingleComponent {
   @Input() id: string;
-  @Input() selected: any[];
+  @Input() selected: any;
   @Input() available: any[];
   @Input() labelMapper: Function = (item: any) => item;
   @Input() maxHeight: string = "auto";
@@ -15,13 +15,8 @@ export class ItemSelectorComponent {
   optionsDisplayed: boolean;
   filter: string = "";
 
-  toggle(item): void {
-    let index = this.selected.indexOf(item);
-    if (index === -1) {
-      this.selected.push(item);
-    } else {
-      this.selected.splice(index, 1);
-    }
+  toggle(item: any): void {
+    this.selected = item;
   }
 
   mapToLabel(item: any): string {
@@ -29,8 +24,7 @@ export class ItemSelectorComponent {
   }
 
   isSelected(item: any): boolean {
-    let label: string = this.mapToLabel(item);
-    return this.selected.map(item => this.mapToLabel(item)).indexOf(label) !== -1;
+    return this.selected === item;
   }
 
   get filtered(): any[] {
