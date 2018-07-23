@@ -1,14 +1,18 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import static java.util.Optional.ofNullable;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import uk.co.bconline.ndelius.model.Team;
 import uk.co.bconline.ndelius.model.entity.TeamEntity;
 import uk.co.bconline.ndelius.repository.db.TeamRepository;
 import uk.co.bconline.ndelius.service.TeamService;
 import uk.co.bconline.ndelius.transformer.TeamTransformer;
-
-import java.util.List;
 
 @Service
 public class TeamServiceImpl implements TeamService
@@ -28,15 +32,16 @@ public class TeamServiceImpl implements TeamService
 	@Override
 	public List<Team> getTeams(String probationArea)
 	{
-		List<TeamEntity> teams = null;
+		List<TeamEntity> teams = ofNullable(probationArea)
+				.map(repository::findAllByEndDateIsNullAndProbationAreaCode)
+				.orElse(repository.findAllByEndDateIsNull());
 
-		if (probationArea == null) {
-			teams = repository.findAllByEndDateIsNull();
-		}
-		else
-		{
-			teams = repository.findAllByEndDateIsNullAndProbationAreaCode(probationArea);
-		}
 		return transformer.map(teams);
+	}
+
+	@Override
+	public Optional<Long> getTeamId(String code)
+	{
+		return repository.findByCode(code).map(TeamEntity::getId);
 	}
 }

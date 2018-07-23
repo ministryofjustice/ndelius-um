@@ -1,11 +1,16 @@
 package uk.co.bconline.ndelius.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-public class Organisation {
-    private String code;
-    private String description;
+@NoArgsConstructor
+@AllArgsConstructor
+public class Organisation
+{
+	private String code;
+	private String description;
 }

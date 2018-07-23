@@ -12,7 +12,7 @@ import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 
-import uk.co.bconline.ndelius.repository.ad2.AD2UserRepository;
+import uk.co.bconline.ndelius.repository.ad.ad2.AD2UserRepository;
 
 @Configuration
 @EnableLdapRepositories(basePackageClasses = AD2UserRepository.class, ldapTemplateRef = "ad2")

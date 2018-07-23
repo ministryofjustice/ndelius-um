@@ -1,17 +1,22 @@
 package uk.co.bconline.ndelius.controller;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
+
+import java.time.LocalDate;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -19,6 +24,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import uk.co.bconline.ndelius.model.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -166,8 +175,96 @@ public class UserControllerTest
 	@Test
 	public void usersAreFilteredOnDatasets() throws Exception
 	{
-		mvc.perform(get("/api/user/Jim.Bloggs")
+		mvc.perform(get("/api/user/Jim.Blogs")
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void nonExistentUserReturns404() throws Exception
+	{
+		mvc.perform(get("/api/user/nonexistent-user")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void addUserWithNoUsername() throws Exception
+	{
+		String token = token(mvc);
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
+						.forenames("Test")
+						.surname("User1")
+						.build())))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error[0]", is("username: must not be null")));
+	}
+
+	@Test
+	public void addUserWithExistingUsername() throws Exception
+	{
+		String token = token(mvc);
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
+						.username("test.user")
+						.forenames("Test")
+						.surname("User1")
+						.build())))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error[0]", is("username: already exists")));
+	}
+
+	@Test
+	public void addUser() throws Exception
+	{
+		String token = token(mvc);
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
+						.username("test.user1")
+						.forenames("Test")
+						.surname("User1")
+						.staffCode("N99A999")
+						.staffGrade("GRADE2")
+						.homeArea("N01")
+						.startDate(LocalDate.of(2000, 1, 1))
+						.organisation(Organisation.builder()
+								.code("NPS")
+								.build())
+						.teams(singletonList(Team.builder()
+								.code("N01TST")
+								.build()))
+						.datasets(asList(
+								Dataset.builder()
+										.code("N01").build(),
+								Dataset.builder()
+										.code("N02").build()))
+						.transactions(singletonList(Transaction.builder()
+								.name("UMBT001")
+								.build()))
+						.build())))
+				.andExpect(status().isCreated())
+				.andExpect(redirectedUrl("/user/test.user1"));
+
+		mvc.perform(get("/api/user/test.user1")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.username", is("test.user1")))
+				.andExpect(jsonPath("$.staffCode", is("N99A999")))
+				.andExpect(jsonPath("$.staffGrade", is("GRADE2")))
+				.andExpect(jsonPath("$.startDate", is("2000-01-01")))
+				.andExpect(jsonPath("$.organisation.code", is("NPS")))
+				.andExpect(jsonPath("$.datasets[*].code", hasItems("N01", "N02")))
+				.andExpect(jsonPath("$.teams[0].code", is("N01TST")))
+				.andExpect(jsonPath("$.homeArea", is("N01")))
+				.andExpect(jsonPath("$.transactions", hasSize(1)))
+				.andExpect(jsonPath("$.transactions[0].name", is("UMBT001")))
+				.andExpect(jsonPath("$.transactions[0].roles", hasItem("UMBI001")));
 	}
 }

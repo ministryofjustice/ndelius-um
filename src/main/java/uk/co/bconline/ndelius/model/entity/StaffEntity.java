@@ -14,13 +14,14 @@ import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "STAFF")
+@Builder(toBuilder = true)
 @ToString(exclude = "user")
 @EqualsAndHashCode(exclude = "user")
 public class StaffEntity implements Serializable
@@ -53,15 +54,15 @@ public class StaffEntity implements Serializable
 	private LocalDate endDate;
 
 	@ManyToOne
-	@JoinColumn(name = "STAFF_GRADE_ID", insertable = false, updatable = false)
-	private ReferenceDataEntity staffGrade;
+	@JoinColumn(name = "STAFF_GRADE_ID")
+	private ReferenceDataEntity grade;
 
 	@IndexedEmbedded
 	@ManyToMany(fetch = EAGER)
 	@JoinTable(name = "STAFF_TEAM",
 			   joinColumns = @JoinColumn(name = "STAFF_ID"),
 			   inverseJoinColumns = @JoinColumn(name = "TEAM_ID"))
-	private Set<TeamEntity> team;
+	private Set<TeamEntity> teams;
 
 	@ContainedIn
 	@OneToOne(mappedBy = "staff")

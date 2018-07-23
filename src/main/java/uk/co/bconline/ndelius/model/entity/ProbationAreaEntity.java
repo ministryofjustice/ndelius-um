@@ -5,17 +5,22 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "PROBATION_AREA")
 @ToString(exclude = "usersWithDataset")
 @EqualsAndHashCode(exclude = "usersWithDataset")
 public class ProbationAreaEntity  implements Serializable 
 {
+	public ProbationAreaEntity(Long id)
+	{
+		this.id = id;
+	}
+
 	@Id
 	@GeneratedValue(generator = "PROBATION_AREA_ID_SEQ")
 	@SequenceGenerator(name = "PROBATION_AREA_ID_SEQ", sequenceName = "PROBATION_AREA_ID_SEQ", allocationSize = 1)

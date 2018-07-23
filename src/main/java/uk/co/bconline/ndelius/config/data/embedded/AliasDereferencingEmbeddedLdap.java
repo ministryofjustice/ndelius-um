@@ -7,11 +7,9 @@ import java.util.Map;
 
 import javax.annotation.PreDestroy;
 
-import org.springframework.boot.autoconfigure.ldap.LdapProperties;
 import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
@@ -37,23 +35,16 @@ public abstract class AliasDereferencingEmbeddedLdap
 	private static final String PROPERTY_SOURCE_NAME = "ldap.ports";
 
 	private final EmbeddedLdapProperties embeddedProperties;
-
-	private final LdapProperties properties;
-
 	private final ConfigurableApplicationContext applicationContext;
-
-	private final Environment environment;
 
 	protected InMemoryDirectoryServer server;
 
 	public AliasDereferencingEmbeddedLdap(
-			EmbeddedLdapProperties embeddedProperties, LdapProperties properties,
-			ConfigurableApplicationContext applicationContext, Environment environment)
+			EmbeddedLdapProperties embeddedProperties,
+			ConfigurableApplicationContext applicationContext)
 	{
 		this.embeddedProperties = embeddedProperties;
-		this.properties = properties;
 		this.applicationContext = applicationContext;
-		this.environment = environment;
 	}
 
 	public InMemoryDirectoryServer directoryServer() throws LDAPException, IOException

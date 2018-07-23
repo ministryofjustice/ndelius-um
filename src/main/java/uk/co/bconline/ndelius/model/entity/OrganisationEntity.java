@@ -4,22 +4,33 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "ORGANISATION")
 @Data
-public class OrganisationEntity  implements Serializable {
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "ORGANISATION")
+public class OrganisationEntity implements Serializable
+{
+	public OrganisationEntity(Long id)
+	{
+		this.id = id;
+	}
 
-    @Id
-    @GeneratedValue(generator = "organisation_seq")
-    @SequenceGenerator(name = "organisation_seq", sequenceName = "ORGANISATION_ID_SEQ", allocationSize = 1)
-    @Column(name = "ORGANISATION_ID")
-    private Long organisationID;
+	@Id
+	@Column(name = "ORGANISATION_ID")
+	@GeneratedValue(generator = "ORGANISATION_ID_SEQ")
+	@SequenceGenerator(name = "ORGANISATION_ID_SEQ", sequenceName = "ORGANISATION_ID_SEQ", allocationSize = 1)
+	private Long id;
 
-    @Column(name = "CODE")
-    private String code;
+	@Column(name = "CODE")
+	private String code;
 
-    @Column(name = "DESCRIPTION")
-    private String description;
+	@Column(name = "DESCRIPTION")
+	private String description;
 }

@@ -1,15 +1,18 @@
 package uk.co.bconline.ndelius.controller;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
+import static org.springframework.http.ResponseEntity.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -42,15 +45,34 @@ public class UserController
 			@Min(1) @RequestParam(value = "page", defaultValue = "1") Integer page,
 			@Min(1) @Max(100) @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize)
 	{
-		return new ResponseEntity<>(userService.search(query, page, pageSize), HttpStatus.OK);
+		return ok(userService.search(query, page, pageSize));
 	}
 
 	@Interaction("UMBI002")
 	@GetMapping(path="/user/{username}")
-	public ResponseEntity<User> getUser(final @PathVariable("username") String username)
+	public ResponseEntity<User> getUser(@PathVariable("username") String username)
 	{
 		return userService.getUser(username)
-				.map(u -> new ResponseEntity<>(u, OK))
-				.orElse(new ResponseEntity<>(NOT_FOUND));
+				.map(ResponseEntity::ok)
+				.orElse(notFound().build());
+	}
+
+	@Interaction("UMBI003")
+	@PostMapping(path="/user")
+	public ResponseEntity addUser(@RequestBody @Valid User user) throws URISyntaxException
+	{
+		if (userService.getUser(user.getUsername()).isPresent()) {
+			return badRequest().body(singletonMap("error", singletonList("username: already exists")));
+		}
+		userService.addUser(user);
+		return created(new URI(String.format("/user/%s", user.getUsername()))).build();
+	}
+
+	@Interaction("UMBI004")
+	@PutMapping(path="/user/{username}")
+	public ResponseEntity updateUser(@RequestBody @Valid User user)
+	{
+		userService.updateUser(user);
+		return noContent().build();
 	}
 }

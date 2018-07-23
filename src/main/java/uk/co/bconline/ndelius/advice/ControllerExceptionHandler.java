@@ -9,7 +9,6 @@ import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import lombok.extern.slf4j.Slf4j;
 import uk.co.bconline.ndelius.exception.AppException;
+import uk.co.bconline.ndelius.exception.NotFoundException;
 
 @Slf4j
 @Component
@@ -32,7 +32,7 @@ public class ControllerExceptionHandler
 		return singletonMap("error", exception
 				.getBindingResult()
 				.getFieldErrors().stream()
-				.map(FieldError::getDefaultMessage)
+				.map(e -> e.getField() + ": " + e.getDefaultMessage())
 				.collect(toList()));
 	}
 
@@ -51,7 +51,16 @@ public class ControllerExceptionHandler
 	@ResponseBody
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public Map handle(AppException exception) {
-		log.error("Application exception occurred. Returning 500 response", exception);
+		log.error("AppException occurred. Returning 500 response", exception);
+		if (exception.getMessage() == null) return null;
+		return singletonMap("error", exception.getMessage());
+	}
+
+	@ExceptionHandler
+	@ResponseBody
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public Map handle(NotFoundException exception) {
+		log.error("NotFoundException occurred. Returning 404 response", exception);
 		if (exception.getMessage() == null) return null;
 		return singletonMap("error", exception.getMessage());
 	}
