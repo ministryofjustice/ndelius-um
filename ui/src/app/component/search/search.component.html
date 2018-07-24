@@ -23,18 +23,42 @@
     </div>
   </div>
   <div class="container" *ngIf="users.length > 0">
-    <div class="list-group" *ngIf="auth.canGetUser()">
-      <a *ngFor="let user of users" routerLink="/user/{{user.username}}"
-         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-        {{user.forenames}} {{user.surname}}
-        <span class="oi oi-chevron-right"></span>
-      </a>
-    </div>
-    <div class="list-group" *ngIf="!auth.canGetUser()">
-      <a *ngFor="let user of users"
-         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-        {{user.forenames}} {{user.surname}}
-      </a>
+    <div class="card border-top-0">
+    <table class="table table-hover mb-0">
+      <thead class="thead-light">
+        <tr>
+          <th>Name</th>
+          <th>Username</th>
+          <th>Staff Code</th>
+          <th>Team(s)</th>
+          <th class="text-right">Sources</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users" routerLink="/user/{{user.username}}" style="cursor: pointer">
+          <td class="font-weight-bold">{{user.forenames}} {{user.surname}}</td>
+          <td>{{user.username}}</td>
+          <td>{{user.staffCode}}</td>
+          <td>
+            <span *ngFor="let team of user.teams; let isLast = last">
+              {{team.description}}{{isLast? '': ','}}
+            </span>
+          </td>
+          <td class="text-right">
+            <span class="badge badge-pill ml-1 badge-{{user.inNationalDelius? 'success': 'danger'}}"
+                  title="National Delius">ND</span>
+            <span class="badge badge-pill ml-1 badge-{{user.inPrimaryAD? 'success': 'danger'}}"
+                  title="TTP Active Directory">DOM1</span>
+            <span class="badge badge-pill ml-1 badge-{{user.inSecondaryAD? 'success': 'danger'}}"
+                  title="Steria Active Directory">OMNI</span>
+          </td>
+          <td class="text-right">
+            <span class="oi oi-chevron-right"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
     </div>
     <hr/>
     <div class="btn-toolbar justify-content-center">

@@ -11,4 +11,7 @@ export class User {
   teams: Team[] = [];
   datasets: Dataset[] = [];
   transactions: Transaction[] = [];
+  inNationalDelius: boolean;
+  inPrimaryAD: boolean;
+  inSecondaryAD: boolean;
 }
