@@ -26,6 +26,8 @@ import uk.co.bconline.ndelius.service.DatasetService;
 import uk.co.bconline.ndelius.service.OrganisationService;
 import uk.co.bconline.ndelius.service.ReferenceDataService;
 import uk.co.bconline.ndelius.service.TeamService;
+import uk.co.bconline.ndelius.service.impl.AD1UserDetailsService;
+import uk.co.bconline.ndelius.service.impl.AD2UserDetailsService;
 
 @Component
 public class UserTransformer
@@ -34,6 +36,8 @@ public class UserTransformer
 	private final ReferenceDataService referenceDataService;
 	private final DatasetService datasetService;
 	private final OrganisationService organisationService;
+	private final Optional<AD1UserDetailsService> ad1UserDetailsService;
+	private final Optional<AD2UserDetailsService> ad2UserDetailsService;
 	private final DatasetTransformer datasetTransformer;
 
 	@Autowired
@@ -42,12 +46,16 @@ public class UserTransformer
 			ReferenceDataService referenceDataService,
 			DatasetService datasetService,
 			OrganisationService organisationService,
+			Optional<AD1UserDetailsService> ad1UserDetailsService,
+			Optional<AD2UserDetailsService> ad2UserDetailsService,
 			DatasetTransformer datasetTransformer)
 	{
 		this.teamService = teamService;
 		this.referenceDataService = referenceDataService;
 		this.datasetService = datasetService;
 		this.organisationService = organisationService;
+		this.ad1UserDetailsService = ad1UserDetailsService;
+		this.ad2UserDetailsService = ad2UserDetailsService;
 		this.datasetTransformer = datasetTransformer;
 	}
 
@@ -57,7 +65,14 @@ public class UserTransformer
 				.username(user.getUsername())
 				.forenames(combineForenames(user.getForename(), user.getForename2()))
 				.surname(user.getSurname())
+				.teams(ofNullable(user.getStaff())
+						.map(StaffEntity::getTeams)
+						.map(this::map)
+						.orElse(null))
 				.staffCode(ofNullable(user.getStaff()).map(StaffEntity::getCode).orElse(null))
+				.inNationalDelius(true)
+				.inPrimaryAD(ad1UserDetailsService.flatMap(service -> service.getUser(user.getUsername())).isPresent())
+				.inSecondaryAD(ad2UserDetailsService.flatMap(service -> service.getUser(user.getUsername())).isPresent())
 				.build();
 	}
 
