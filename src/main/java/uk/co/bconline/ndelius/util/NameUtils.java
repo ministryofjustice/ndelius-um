@@ -4,6 +4,9 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 import static org.springframework.util.StringUtils.isEmpty;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class NameUtils
 {
 	public static String combineForenames(String forename, String forename2)

@@ -1,5 +1,7 @@
 package uk.co.bconline.ndelius.model.ldap;
 
+import static java.util.Collections.emptyList;
+
 import java.util.Collection;
 
 import javax.naming.Name;
@@ -35,7 +37,7 @@ public final class ADUser implements UserDetails
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities()
 	{
-		return null;
+		return emptyList();
 	}
 
 	@Override

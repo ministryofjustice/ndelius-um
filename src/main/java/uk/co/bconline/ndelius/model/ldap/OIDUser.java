@@ -1,5 +1,7 @@
 package uk.co.bconline.ndelius.model.ldap;
 
+import static java.util.Collections.emptyList;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -49,7 +51,7 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities()
 	{
-		return null;
+		return emptyList();
 	}
 
 	@Override

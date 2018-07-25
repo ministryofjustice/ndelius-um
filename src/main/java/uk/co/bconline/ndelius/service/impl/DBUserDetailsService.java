@@ -48,9 +48,9 @@ public class DBUserDetailsService
 
 		try
 		{
-			val entityManager = getFullTextEntityManager(this.entityManager);
-			val builder = entityManager.getSearchFactory().buildQueryBuilder().forEntity(UserEntity.class).get();
-			List<?> results = entityManager.createFullTextQuery(builder
+			val fullText = getFullTextEntityManager(this.entityManager);
+			val builder = fullText.getSearchFactory().buildQueryBuilder().forEntity(UserEntity.class).get();
+			List<?> results = fullText.createFullTextQuery(builder
 					.keyword()
 					.fuzzy()
 					.withPrefixLength(1)

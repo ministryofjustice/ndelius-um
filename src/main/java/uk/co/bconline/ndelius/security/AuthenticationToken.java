@@ -3,9 +3,11 @@ package uk.co.bconline.ndelius.security;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode
 public class AuthenticationToken extends AbstractAuthenticationToken
 {
 	private final Object principal;

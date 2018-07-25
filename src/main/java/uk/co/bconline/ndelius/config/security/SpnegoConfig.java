@@ -131,17 +131,17 @@ public class SpnegoConfig extends WebSecurityConfigurerAdapter
 					}
 				}
 			}
-
-			private boolean shouldNotFilter(HttpServletRequest request)
-			{
-				val auth = SecurityContextHolder.getContext().getAuthentication();
-				return !loginRequestMatcher.matches(request) ||
-						(auth != null && !(auth instanceof AnonymousAuthenticationToken) && auth.isAuthenticated());
-			}
 		};
 		filter.setAuthenticationManager(authenticationManagerBean());
 		filter.setSuccessHandler(loginSuccessHandler);
 		return filter;
+	}
+
+	private boolean shouldNotFilter(HttpServletRequest request)
+	{
+		val auth = SecurityContextHolder.getContext().getAuthentication();
+		return !loginRequestMatcher.matches(request) ||
+				(auth != null && !(auth instanceof AnonymousAuthenticationToken) && auth.isAuthenticated());
 	}
 
 	@Bean
