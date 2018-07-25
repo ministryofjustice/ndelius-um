@@ -137,7 +137,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 						.countLimit(pageSize * page)
 						.filter(filter))
 				.spliterator(), false)
-				.skip(pageSize * (page-1))
+				.skip((long) pageSize * (page-1))
 				.collect(toList());
 	}
 
