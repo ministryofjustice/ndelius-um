@@ -11,16 +11,21 @@ export class ItemSelectorComponent {
   @Input() labelMapper: Function = (item: any) => item;
   @Input() maxHeight: string = "auto";
   @Input() readonly: boolean;
+  @Input() multiple: boolean;
 
   optionsDisplayed: boolean;
   filter: string = "";
 
   toggle(item): void {
-    let index = this.selected.indexOf(item);
-    if (index === -1) {
-      this.selected.push(item);
+    if (this.multiple) {
+      let index = this.selected.indexOf(item);
+      if (index === -1) {
+        this.selected.push(item);
+      } else {
+        this.selected.splice(index, 1);
+      }
     } else {
-      this.selected.splice(index, 1);
+      this.selected[0] = item;
     }
   }
 

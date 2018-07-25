@@ -20,10 +20,9 @@ import {DatasetService} from "../service/dataset.service";
 import {RestDatasetService} from "../service/impl/rest.dataset.service";
 import {RestTeamService} from "../service/impl/rest.team.service";
 import {TeamService} from "../service/team.service";
-import {ItemSelectorSingleComponent} from "../component/item-selector-single/item-selector-single.component";
 
 @NgModule({
-  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, ItemSelectorComponent, ItemSelectorSingleComponent],
+  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, ItemSelectorComponent],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [
     {provide: UserService, useClass: RestUserService},
