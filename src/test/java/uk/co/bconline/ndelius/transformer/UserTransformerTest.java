@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import uk.co.bconline.ndelius.model.SearchResult;
-import uk.co.bconline.ndelius.model.entity.UserEntity;
+import uk.co.bconline.ndelius.model.User;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -24,10 +24,9 @@ public class UserTransformerTest
 	@Test
 	public void mapUserToSearchResult()
 	{
-		SearchResult result = transformer.map(UserEntity.builder()
+		SearchResult result = transformer.map(User.builder()
 				.username("username")
-				.forename("forename")
-				.forename2("forename2")
+				.forenames("forename forename2")
 				.surname("surname").build());
 
 		assertEquals("username", result.getUsername());

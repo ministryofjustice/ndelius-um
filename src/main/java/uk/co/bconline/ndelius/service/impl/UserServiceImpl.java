@@ -65,6 +65,10 @@ public class UserServiceImpl implements UserService
 				})
 				.skip((long) (page-1) * pageSize)
 				.limit(pageSize)
+				.map(UserEntity::getUsername)
+				.map(this::getUser)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
 				.map(transformer::map)
 				.collect(toList());
 	}

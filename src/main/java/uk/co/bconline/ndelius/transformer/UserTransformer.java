@@ -5,7 +5,8 @@ import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
-import static uk.co.bconline.ndelius.util.NameUtils.*;
+import static uk.co.bconline.ndelius.util.NameUtils.firstForename;
+import static uk.co.bconline.ndelius.util.NameUtils.subsequentForenames;
 
 import java.util.Collection;
 import java.util.List;
@@ -59,19 +60,18 @@ public class UserTransformer
 		this.datasetTransformer = datasetTransformer;
 	}
 
-	public SearchResult map(UserEntity user)
+	public SearchResult map(User user)
 	{
 		return SearchResult.builder()
 				.username(user.getUsername())
-				.forenames(combineForenames(user.getForename(), user.getForename2()))
+				.aliasUsername(user.getAliasUsername())
+				.forenames(user.getForenames())
 				.surname(user.getSurname())
-				.teams(ofNullable(user.getStaff())
-						.map(StaffEntity::getTeams)
-						.map(this::map)
-						.orElse(null))
-				.staffCode(ofNullable(user.getStaff()).map(StaffEntity::getCode).orElse(null))
+				.teams(user.getTeams())
+				.staffCode(user.getStaffCode())
 				.inNationalDelius(true)
-				.inPrimaryAD(ad1UserDetailsService.flatMap(service -> service.getUser(user.getUsername())).isPresent())
+				.inPrimaryAD(ad1UserDetailsService.flatMap(service -> service.getUser(user.getUsername())).isPresent() ||
+						ad1UserDetailsService.flatMap(service -> service.getUser(user.getAliasUsername())).isPresent())
 				.inSecondaryAD(ad2UserDetailsService.flatMap(service -> service.getUser(user.getUsername())).isPresent())
 				.build();
 	}
