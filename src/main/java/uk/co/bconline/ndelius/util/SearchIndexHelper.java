@@ -1,25 +1,25 @@
 package uk.co.bconline.ndelius.util;
 
-import static java.time.LocalDateTime.now;
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static org.hibernate.search.jpa.Search.getFullTextEntityManager;
-
-import java.time.LocalDateTime;
-
-import javax.persistence.EntityManager;
-
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import uk.co.bconline.ndelius.exception.AppException;
+
+import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.now;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static org.hibernate.search.jpa.Search.getFullTextEntityManager;
 
 @Slf4j
 @Component
 public class SearchIndexHelper
 {
+	@Setter
 	private static LocalDateTime lastIndexed;
 
 	@Value("${spring.jpa.properties.hibernate.search.default.expiry}")
