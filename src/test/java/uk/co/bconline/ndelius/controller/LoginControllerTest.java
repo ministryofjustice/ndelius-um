@@ -56,7 +56,7 @@ public class LoginControllerTest
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.username", is("test.user")))
-				.andExpect(jsonPath("$.transactions", not(empty())));
+				.andExpect(jsonPath("$.roles", not(empty())));
 	}
 
 }
