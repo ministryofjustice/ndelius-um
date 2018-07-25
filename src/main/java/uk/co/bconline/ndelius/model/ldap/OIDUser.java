@@ -41,7 +41,9 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails, Serializable
 	@Attribute(name="userPassword")
 	private String password;
 
-	@Setter
+	@Transient
+	private String aliasUsername;
+
 	@Transient
 	private List<OIDRole> roles;
 

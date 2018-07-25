@@ -23,9 +23,11 @@ import lombok.val;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
 import uk.co.bconline.ndelius.model.ldap.OIDRoleAssociation;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.model.ldap.OIDUserAlias;
 import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
-import uk.co.bconline.ndelius.repository.oid.OIDRoleAssociationRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
+import uk.co.bconline.ndelius.repository.oidalias.OIDRoleAssociationRepository;
+import uk.co.bconline.ndelius.repository.oidalias.OIDUserAliasRepository;
 import uk.co.bconline.ndelius.service.OIDUserService;
 import uk.co.bconline.ndelius.service.RoleService;
 
@@ -37,16 +39,19 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	private String oidBase;
 
 	private final OIDUserRepository userRepository;
-	private final RoleService roleService;
+	private final OIDUserAliasRepository userAliasRepository;
 	private final OIDRoleAssociationRepository roleAssociationRepository;
+	private final RoleService roleService;
 
 	@Autowired
 	public OIDUserDetailsService(
 			OIDUserRepository userRepository,
+			OIDUserAliasRepository userAliasRepository,
 			OIDRoleAssociationRepository roleAssociationRepository,
 			RoleService roleService)
 	{
 		this.userRepository = userRepository;
+		this.userAliasRepository = userAliasRepository;
 		this.roleAssociationRepository = roleAssociationRepository;
 		this.roleService = roleService;
 	}
@@ -140,10 +145,11 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	public Optional<OIDUser> getUser(String username)
 	{
 		Optional<OIDUser> user = userRepository.findByUsername(username);
-		return user.map(u -> {
-			u.setRoles(roleService.getRolesByParent(username, OIDUser.class));
-			return u;
-		});
+		return user.map(u -> u.toBuilder()
+				.roles(roleService.getRolesByParent(username, OIDUser.class))
+				.aliasUsername(userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
+						.map(OIDUserAlias::getUsername).orElse(null))
+				.build());
 	}
 
 	@Override
@@ -156,6 +162,14 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	public void save(OIDUser user)
 	{
 		userRepository.save(user);
+
+		if (user.getAliasUsername() != null && !user.getAliasUsername().equals(user.getUsername()))
+		{
+			userAliasRepository.save(OIDUserAlias.builder()
+					.username(user.getAliasUsername())
+					.aliasedUserDn(user.getDn().toString() + "," + oidBase)
+					.build());
+		}
 
 		// TODO for update - remove existing role aliases
 //		roleAliasRepository.deleteAll(roleAliasRepository.findAll(query()

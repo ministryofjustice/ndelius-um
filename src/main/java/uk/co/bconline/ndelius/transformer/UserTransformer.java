@@ -102,6 +102,7 @@ public class UserTransformer
 		return Stream.of(
 				ofNullable(oidUser).map(v -> User.builder()
 						.username(v.getUsername())
+						.aliasUsername(v.getAliasUsername())
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
 						.homeArea(v.getHomeArea())
@@ -216,6 +217,7 @@ public class UserTransformer
 	{
 		return existingUser.toBuilder()
 				.username(user.getUsername())
+				.aliasUsername(user.getAliasUsername())
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
 				.homeArea(user.getHomeArea())
@@ -226,10 +228,17 @@ public class UserTransformer
 				.build();
 	}
 
-	public ADUser mapToADUser(User user, ADUser existingUser)
+	public ADUser mapToAD2User(User user, ADUser existingUser)
 	{
 		return existingUser.toBuilder()
 				.username(user.getUsername())
+				.build();
+	}
+
+	public ADUser mapToAD1User(User user, ADUser existingUser)
+	{
+		return existingUser.toBuilder()
+				.username(ofNullable(user.getAliasUsername()).orElse(user.getUsername()))
 				.build();
 	}
 }

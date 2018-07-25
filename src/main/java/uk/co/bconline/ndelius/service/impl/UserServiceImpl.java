@@ -95,8 +95,8 @@ public class UserServiceImpl implements UserService
 	{
 		val dbFuture = runAsync(() -> dbService.save(transformer.mapToUserEntity(user, new UserEntity())));
 		val oidFuture = runAsync(() -> oidService.save(transformer.mapToOIDUser(user, new OIDUser())));
-		val ad1Future = runAsync(() -> ad1Service.ifPresent(service -> service.save(transformer.mapToADUser(user, new ADUser()))));
-		val ad2Future = runAsync(() -> ad2Service.ifPresent(service -> service.save(transformer.mapToADUser(user, new ADUser()))));
+		val ad1Future = runAsync(() -> ad1Service.ifPresent(service -> service.save(transformer.mapToAD1User(user, new ADUser()))));
+		val ad2Future = runAsync(() -> ad2Service.ifPresent(service -> service.save(transformer.mapToAD2User(user, new ADUser()))));
 
 		try
 		{

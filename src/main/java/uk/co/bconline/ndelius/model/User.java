@@ -16,6 +16,7 @@ import lombok.*;
 public final class User implements Serializable
 {
 	@NotNull private String username;
+	private String aliasUsername;
 	private String forenames;
 	private String surname;
 	private String staffCode;
