@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Transaction} from "../../model/transaction";
+import {Role} from "../../model/role";
 import {AppComponent} from "../../component/app/app.component";
 
 @Injectable({
@@ -13,8 +13,8 @@ export class AuthorisationService {
   static DELETE_USER_ROLE: string = 'UMBI005';
 
   hasRole(role: string): boolean {
-    return AppComponent.me.transactions
-      .filter((t: Transaction) => t.roles.indexOf(role) !== -1)
+    return AppComponent.me.roles
+      .filter((t: Role) => t.interactions.indexOf(role) !== -1)
       .length > 0;
   }
 

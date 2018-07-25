@@ -1,7 +1,8 @@
 package uk.co.bconline.ndelius.controller;
 
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,12 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.co.bconline.ndelius.advice.annotation.Interaction;
-import uk.co.bconline.ndelius.model.TransactionGroup;
-import uk.co.bconline.ndelius.service.RoleGroupService;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import uk.co.bconline.ndelius.advice.annotation.Interaction;
+import uk.co.bconline.ndelius.model.RoleGroup;
+import uk.co.bconline.ndelius.service.RoleGroupService;
 
 @Slf4j
 @Validated
@@ -33,17 +34,17 @@ public class RoleGroupController
 
 	@Interaction("UMBI007")
 	@GetMapping(path="/rolegroups")
-	public ResponseEntity<Iterable<TransactionGroup>> getRoleGroups()
+	public ResponseEntity<Iterable<RoleGroup>> getRoleGroups()
 	{
-		val roleGroups = roleGroupService.getTransactionGroups();
+		val roleGroups = roleGroupService.getRoleGroups();
 		return roleGroups.iterator().hasNext() ? new ResponseEntity<>(roleGroups, OK) : new ResponseEntity<>(NOT_FOUND);
 	}
 
 	@Interaction("UMBI007")
 	@GetMapping(path="/rolegroup/{rolegroupname}")
-	public ResponseEntity<TransactionGroup> getRoleGroup(final @PathVariable("rolegroupname") String roleGroupName)
+	public ResponseEntity<RoleGroup> getRoleGroup(final @PathVariable("rolegroupname") String roleGroupName)
 	{
-		return roleGroupService.getTransactionGroup(roleGroupName)
+		return roleGroupService.getRoleGroup(roleGroupName)
 				.map(rg -> new ResponseEntity<>(rg, OK))
 				.orElse(new ResponseEntity<>(NOT_FOUND));
 	}

@@ -245,7 +245,7 @@ public class UserControllerTest
 										.code("N01").build(),
 								Dataset.builder()
 										.code("N02").build()))
-						.transactions(singletonList(Transaction.builder()
+						.roles(singletonList(Role.builder()
 								.name("UMBT001")
 								.build()))
 						.build())))
@@ -263,8 +263,8 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.datasets[*].code", hasItems("N01", "N02")))
 				.andExpect(jsonPath("$.teams[0].code", is("N01TST")))
 				.andExpect(jsonPath("$.homeArea", is("N01")))
-				.andExpect(jsonPath("$.transactions", hasSize(1)))
-				.andExpect(jsonPath("$.transactions[0].name", is("UMBT001")))
-				.andExpect(jsonPath("$.transactions[0].roles", hasItem("UMBI001")));
+				.andExpect(jsonPath("$.roles", hasSize(1)))
+				.andExpect(jsonPath("$.roles[0].name", is("UMBT001")))
+				.andExpect(jsonPath("$.roles[0].interactions", hasItem("UMBI001")));
 	}
 }

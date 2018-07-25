@@ -3,22 +3,19 @@ package uk.co.bconline.ndelius.controller;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
-import uk.co.bconline.ndelius.model.Transaction;
-import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
+import uk.co.bconline.ndelius.model.Role;
 import uk.co.bconline.ndelius.service.RoleService;
-import uk.co.bconline.ndelius.service.impl.DBUserDetailsService;
-import uk.co.bconline.ndelius.service.impl.RoleServiceImpl;
 
 @Slf4j
 @Validated
@@ -36,7 +33,7 @@ public class RoleController
 
 	@Interaction("UMBI007")
 	@GetMapping(path="/roles")
-	public ResponseEntity<Iterable<Transaction>> getRoles()
+	public ResponseEntity<Iterable<Role>> getRoles()
 	{
 		val roles = roleService.getRoles();
 

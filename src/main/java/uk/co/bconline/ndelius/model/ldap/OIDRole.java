@@ -1,23 +1,25 @@
 package uk.co.bconline.ndelius.model.ldap;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.io.Serializable;
+import java.util.List;
+
+import javax.naming.Name;
+
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 
-import javax.naming.Name;
-import java.io.Serializable;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entry(objectClasses = "top", base = "cn=ndRoleCatalogue,cn=Users")
-public final class OIDBusinessTransaction implements Serializable
+public final class OIDRole implements Serializable
 {
 	@Id
 	private Name dn;
@@ -29,7 +31,7 @@ public final class OIDBusinessTransaction implements Serializable
 	private String aliasedObjectName;
 
 	@Attribute(name="UIBusinessInteractionCollection")
-	private List<String> roles;
+	private List<String> interactions;
 
 	@Attribute(name="description")
 	private String description;

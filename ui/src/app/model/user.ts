@@ -1,4 +1,4 @@
-import {Transaction} from "./transaction";
+import {Role} from "./role";
 import {Dataset} from "./dataset";
 import {Team} from "./team";
 
@@ -10,7 +10,7 @@ export class User {
   homeArea: string;
   teams: Team[] = [];
   datasets: Dataset[] = [];
-  transactions: Transaction[] = [];
+  roles: Role[] = [];
   inNationalDelius: boolean;
   inPrimaryAD: boolean;
   inSecondaryAD: boolean;

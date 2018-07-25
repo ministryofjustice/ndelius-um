@@ -1,11 +1,12 @@
 package uk.co.bconline.ndelius.model;
 
-import lombok.*;
-
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
+import lombok.*;
 
 @Getter
 @ToString
@@ -25,5 +26,5 @@ public final class User implements Serializable
 	private Organisation organisation;
 	private List<Team> teams;
 	private List<Dataset> datasets;
-	private List<Transaction> transactions;
+	private List<Role> roles;
 }

@@ -6,7 +6,7 @@
     <div class="pb-2 mt-4 mb-2">
       <h1>{{mode}} user</h1>
     </div>
-    <form #form="ngForm">
+    <form #form="ngForm" (submit)="submit()">
       <h4>User Details</h4>
       <hr>
       <div class="form-group row">
@@ -31,17 +31,16 @@
       <div class="form-group row">
         <label for="teams" class="col-sm-2 col-form-label">Team(s)</label>
         <div class="col-sm-4">
-          <item-selector id="teams"
+          <item-selector id="teams" multiple="true" maxHeight="300px"
                          [selected]="user.teams"
                          [available]="teams"
                          [readonly]="mode === 'View'"
-                         [labelMapper]="teamToLabel"
-                         maxHeight="300px"></item-selector>
+                         [labelMapper]="teamToLabel"></item-selector>
         </div>
         <label for="staff-code" class="col-sm-2 col-form-label">Staff Code</label>
         <div class="col-sm-4">
           <input id="staff-code" name="staff-code" [(ngModel)]="user.staffCode"
-                 class="form-control" [readonly]="mode === 'View'"/>
+                 class="form-control" [readonly]="mode === 'View'" autocomplete="off"/>
         </div>
       </div>
       <h4>Authorisation</h4>
@@ -49,48 +48,49 @@
       <div class="form-group row">
         <label for="datasets" class="col-sm-2 col-form-label">Datasets</label>
         <div class="col-sm-4">
-          <item-selector id="datasets"
+          <item-selector id="datasets" multiple="true" maxHeight="300px"
                          [selected]="user.datasets"
                          [available]="datasets"
                          [readonly]="mode === 'View'"
-                         [labelMapper]="datasetToLabel"
-                         maxHeight="300px"></item-selector>
+                         [labelMapper]="datasetToLabel"></item-selector>
         </div>
-        <label for="home-area" class="col-sm-2 col-form-label">Home Area</label>
-        <div class="col-sm-4">
-          <item-selector-single id="home-area"
-                                [selected]="user.homeArea"
-                                [available]="datasetCodes"
-                                [readonly]="mode === 'View'"
-                                maxHeight="300px"></item-selector-single>
-        </div>
+        <!--<label for="home-area" class="col-sm-2 col-form-label">Home Area</label>-->
+        <!--<div class="col-sm-4">-->
+          <!--<item-selector-single id="home-area"-->
+                                <!--[selected]="user.homeArea"-->
+                                <!--[available]="datasetCodes"-->
+                                <!--[readonly]="mode === 'View'"-->
+                                <!--maxHeight="300px"></item-selector-single>-->
+        <!--</div>-->
       </div>
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Role Groups</label>
-        <div class="col-sm-3">
-          <item-selector-single id="role-groups"
-                         [available]="transactions"
+        <div class="col-sm-3 pr-sm-0">
+          <item-selector id="role-groups" #roleGroupField maxHeight="300px"
+                         [selected]="selectedGroup"
+                         [available]="roleGroups"
                          [readonly]="mode === 'View'"
-                         [labelMapper]="transactionToLabel"
-                         maxHeight="300px"></item-selector-single>
+                         [labelMapper]="roleGroupToLabel"></item-selector>
         </div>
-        <div class="col-sm-1">
-          <button class="btn btn-dark w-100" [disabled]="mode === 'View'">Add</button>
+        <div class="col-sm-1 pl-sm-1">
+          <button class="btn btn-outline-secondary w-100" (click)="addGroup(); roleGroupField.optionsDisplayed = false"
+                  [disabled]="selectedGroup[0] == null || mode === 'View'" type="button">
+            Add &raquo;
+          </button>
         </div>
         <label for="roles" class="col-sm-2 col-form-label">Roles</label>
         <div class="col-sm-4">
-          <item-selector id="roles"
-                         [selected]="user.transactions"
-                         [available]="transactions"
+          <item-selector id="roles" multiple="true" maxHeight="300px"
+                         [selected]="user.roles"
+                         [available]="roles"
                          [readonly]="mode === 'View'"
-                         [labelMapper]="transactionToLabel"
-                         maxHeight="300px"></item-selector>
+                         [labelMapper]="roleToLabel"></item-selector>
         </div>
       </div>
       <hr/>
       <div class="btn-toolbar" role="toolbar">
-        <button *ngIf="mode === 'Add'" (click)="add()" class="btn btn-primary" type="submit">Save</button>
-        <button *ngIf="mode !== 'Add' && auth.canAddUser()" (click)="createSimilar()" class="btn btn-primary" type="submit">Create another...</button>
+        <button *ngIf="mode !== 'View'" class="btn btn-primary" type="submit">Save</button>
+        <button *ngIf="mode !== 'Add' && auth.canAddUser()" routerLink="/user" class="btn btn-primary" type="button">Create another&hellip;</button>
       </div>
     </form>
     <!--<p>{{json}}</p>-->

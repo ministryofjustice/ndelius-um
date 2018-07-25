@@ -6,11 +6,12 @@ import {UserService} from "../../service/user.service";
 import {Observable} from "rxjs/Observable";
 import {AuthorisationService} from "../../service/impl/authorisation.service";
 import {RoleService} from "../../service/role.service";
-import {Transaction} from "../../model/transaction";
+import {Role} from "../../model/role";
 import {Dataset} from "../../model/dataset";
 import {DatasetService} from "../../service/dataset.service";
 import {Team} from "../../model/team";
 import {TeamService} from "../../service/team.service";
+import {RoleGroup} from "../../model/role-group";
 
 @Component({
   selector: 'user',
@@ -23,7 +24,9 @@ export class UserComponent implements OnInit {
   user: User;
   teams: Team[];
   datasets: Dataset[];
-  transactions: Transaction[];
+  roles: Role[];
+  roleGroups: RoleGroup[];
+  selectedGroup: RoleGroup[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -50,8 +53,12 @@ export class UserComponent implements OnInit {
         this.loaded = true;
       });
 
-    this.roleService.roles().subscribe((transactions: Transaction[]) => {
-      this.transactions = transactions;
+    this.roleService.groups().subscribe((roleGroups: RoleGroup[]) => {
+      this.roleGroups = roleGroups;
+    });
+
+    this.roleService.roles().subscribe((roles: Role[]) => {
+      this.roles = roles;
     });
 
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {
@@ -63,14 +70,21 @@ export class UserComponent implements OnInit {
     });
   }
 
-  add() {
-    this.userService.create(this.user).subscribe(() => {
-      this.router.navigate(["/user/" + this.user.username]);
-    });
+  addGroup(): void {
+    if (this.selectedGroup[0] != null) {
+      this.roleService.group(this.selectedGroup[0].name).subscribe((group: RoleGroup) => {
+        let userRoleNames = this.user.roles.map(r => r.name);
+        this.user.roles.push(...group.roles.filter(role => userRoleNames.indexOf(role.name) === -1));
+      });
+    }
   }
 
-  get datasetCodes(): string[] {
-    return this.datasets.map(dataset => dataset.code);
+  submit(): void {
+    if (this.mode === 'Add') {
+      this.userService.create(this.user).subscribe(() => {
+        this.router.navigate(["/user/" + this.user.username]);
+      });
+    }
   }
 
   teamToLabel(item: Team): string {
@@ -81,8 +95,12 @@ export class UserComponent implements OnInit {
     return item.description + ' - ' + item.code;
   }
 
-  transactionToLabel(item: Transaction): string {
+  roleToLabel(item: Role): string {
     return item.description + ' - ' + item.name;
+  }
+
+  roleGroupToLabel(item: RoleGroup): string {
+    return item.name;
   }
 
   get json() {

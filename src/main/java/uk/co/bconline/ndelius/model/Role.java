@@ -12,9 +12,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public final class Transaction implements Serializable
+public final class Role implements Serializable
 {
 	private String name;
 	private String description;
-	private List<String> roles;
+	private List<String> interactions;
 }

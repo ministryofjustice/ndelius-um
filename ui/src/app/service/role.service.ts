@@ -1,6 +1,9 @@
 import {Observable} from "rxjs/Observable";
-import {Transaction} from "../model/transaction";
+import {Role} from "../model/role";
+import {RoleGroup} from "../model/role-group";
 
 export abstract class RoleService {
-  abstract roles(): Observable<Transaction[]>;
+  abstract roles(): Observable<Role[]>;
+  abstract groups(): Observable<RoleGroup[]>;
+  abstract group(name: string): Observable<RoleGroup>;
 }
