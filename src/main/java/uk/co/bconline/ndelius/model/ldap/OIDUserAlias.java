@@ -1,7 +1,5 @@
 package uk.co.bconline.ndelius.model.ldap;
 
-import java.io.Serializable;
-
 import javax.naming.Name;
 
 import org.springframework.ldap.odm.annotations.Attribute;
@@ -19,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Entry(objectClasses = {"top"}, base="cn=Users")
-public final class OIDUserAlias implements Serializable
+public final class OIDUserAlias
 {
 	@Id
 	private Name dn;

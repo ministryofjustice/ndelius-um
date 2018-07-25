@@ -1,17 +1,17 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.util.Set;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Set;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @NoArgsConstructor
 @Table(name = "PROBATION_AREA")
-public class ProbationAreaEntity  implements Serializable 
+public class ProbationAreaEntity
 {
 	public ProbationAreaEntity(Long id)
 	{

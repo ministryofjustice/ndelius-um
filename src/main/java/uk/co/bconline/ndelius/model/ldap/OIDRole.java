@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.model.ldap;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.naming.Name;
@@ -19,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entry(objectClasses = "top", base = "cn=ndRoleCatalogue,cn=Users")
-public final class OIDRole implements Serializable
+public final class OIDRole
 {
 	@Id
 	private Name dn;

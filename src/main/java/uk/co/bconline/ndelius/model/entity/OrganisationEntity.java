@@ -1,12 +1,11 @@
 package uk.co.bconline.ndelius.model.entity;
 
+import javax.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.io.Serializable;
 
 @Getter
 @Entity
@@ -14,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "ORGANISATION")
-public class OrganisationEntity implements Serializable
+public class OrganisationEntity
 {
 	public OrganisationEntity(Long id)
 	{

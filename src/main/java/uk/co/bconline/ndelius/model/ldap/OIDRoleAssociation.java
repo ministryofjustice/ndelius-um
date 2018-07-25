@@ -1,7 +1,5 @@
 package uk.co.bconline.ndelius.model.ldap;
 
-import java.io.Serializable;
-
 import javax.naming.Name;
 
 import org.springframework.ldap.odm.annotations.*;
@@ -16,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entry(objectClasses = {"NDRoleAssociation", "alias", "top"}, base = "cn=Users")
-public final class OIDRoleAssociation implements Serializable
+public final class OIDRoleAssociation
 {
 	@Id
 	private Name dn;

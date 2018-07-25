@@ -1,7 +1,5 @@
 package uk.co.bconline.ndelius.model;
 
-import java.io.Serializable;
-
 import lombok.*;
 
 @Getter
@@ -9,7 +7,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public final class Team implements Serializable
+public final class Team
 {
 	private String code;
 	private String description;

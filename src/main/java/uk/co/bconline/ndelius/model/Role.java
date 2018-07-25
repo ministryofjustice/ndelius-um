@@ -1,18 +1,17 @@
 package uk.co.bconline.ndelius.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.util.List;
-
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public final class Role implements Serializable
+public final class Role
 {
 	private String name;
 	private String description;

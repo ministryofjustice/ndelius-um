@@ -1,12 +1,11 @@
 package uk.co.bconline.ndelius.model.entity;
 
+import javax.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.io.Serializable;
 
 @Getter
 @Entity
@@ -14,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "R_STANDARD_REFERENCE_LIST")
-public class ReferenceDataEntity implements Serializable
+public class ReferenceDataEntity
 {
 	public ReferenceDataEntity(Long id)
 	{

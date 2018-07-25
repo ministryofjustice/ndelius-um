@@ -1,6 +1,9 @@
 package uk.co.bconline.ndelius.model.ldap;
 
-import lombok.*;
+import java.util.Collection;
+
+import javax.naming.Name;
+
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
@@ -8,9 +11,7 @@ import org.springframework.ldap.odm.annotations.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.naming.Name;
-import java.io.Serializable;
-import java.util.Collection;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
@@ -18,7 +19,7 @@ import java.util.Collection;
 @Builder(toBuilder = true)
 @ToString(exclude = "password")
 @Entry(objectClasses = "person", base = "cn=Users")
-public final class ADUser implements UserDetails, Serializable
+public final class ADUser implements UserDetails
 {
 	@Id
 	private Name dn;
