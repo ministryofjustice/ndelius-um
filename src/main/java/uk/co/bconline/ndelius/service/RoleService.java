@@ -1,13 +1,13 @@
 package uk.co.bconline.ndelius.service;
 
-import uk.co.bconline.ndelius.model.Transaction;
-import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
-
 import java.util.List;
+
+import uk.co.bconline.ndelius.model.Role;
+import uk.co.bconline.ndelius.model.ldap.OIDRole;
 
 public interface RoleService
 {
-	Iterable<Transaction> getRoles();
+	Iterable<Role> getRoles();
 
-    List<OIDBusinessTransaction> getTransactionsByParent(String parent, Class<?> parentClass);
+    List<OIDRole> getRolesByParent(String parent, Class<?> parentClass);
 }

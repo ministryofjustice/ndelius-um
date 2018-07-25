@@ -20,7 +20,7 @@ import lombok.val;
 import uk.co.bconline.ndelius.model.*;
 import uk.co.bconline.ndelius.model.entity.*;
 import uk.co.bconline.ndelius.model.ldap.ADUser;
-import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
+import uk.co.bconline.ndelius.model.ldap.OIDRole;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.service.DatasetService;
 import uk.co.bconline.ndelius.service.OrganisationService;
@@ -76,19 +76,19 @@ public class UserTransformer
 				.build();
 	}
 
-	public Transaction map(OIDBusinessTransaction transaction){
-		return Transaction.builder()
+	public Role map(OIDRole transaction){
+		return Role.builder()
 				.name(transaction.getName())
-				.roles(transaction.getRoles())
 				.description(transaction.getDescription())
+				.interactions(transaction.getInteractions())
 				.build();
 	}
 
-	public OIDBusinessTransaction map(Transaction transaction){
-		return OIDBusinessTransaction.builder()
-				.name(transaction.getName())
-				.roles(transaction.getRoles())
-				.description(transaction.getDescription())
+	public OIDRole map(Role role){
+		return OIDRole.builder()
+				.name(role.getName())
+				.description(role.getDescription())
+				.interactions(role.getInteractions())
 				.build();
 	}
 
@@ -105,7 +105,7 @@ public class UserTransformer
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
 						.homeArea(v.getHomeArea())
-						.transactions(ofNullable(v.getTransactions())
+						.roles(ofNullable(v.getRoles())
 								.map(transactions -> transactions.stream()
 										.map(this::map)
 										.collect(toList()))
@@ -149,7 +149,7 @@ public class UserTransformer
 				.organisation(ofNullable(a.getOrganisation()).orElse(b.getOrganisation()))
 				.teams(ofNullable(a.getTeams()).orElse(b.getTeams()))
 				.datasets(ofNullable(a.getDatasets()).orElse(b.getDatasets()))
-				.transactions(ofNullable(a.getTransactions()).orElse(b.getTransactions()))
+				.roles(ofNullable(a.getRoles()).orElse(b.getRoles()))
 				.build();
 	}
 
@@ -219,7 +219,7 @@ public class UserTransformer
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
 				.homeArea(user.getHomeArea())
-				.transactions(ofNullable(user.getTransactions()).map(list -> list.stream()
+				.roles(ofNullable(user.getRoles()).map(list -> list.stream()
 						.map(this::map)
 						.collect(toList()))
 						.orElse(emptyList()))

@@ -1,13 +1,14 @@
 package uk.co.bconline.ndelius.model;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 @Builder
-public class TransactionGroup {
+public class RoleGroup
+{
     private String name;
-    private List<Transaction> transactions;
+    private List<Role> roles;
 }

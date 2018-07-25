@@ -245,7 +245,7 @@ public class UserControllerTest
 										.code("N01").build(),
 								Dataset.builder()
 										.code("N02").build()))
-						.transactions(singletonList(Transaction.builder()
+						.roles(singletonList(Role.builder()
 								.name("UMBT001")
 								.build()))
 						.build())))

@@ -20,11 +20,11 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransaction;
-import uk.co.bconline.ndelius.model.ldap.OIDBusinessTransactionAlias;
+import uk.co.bconline.ndelius.model.ldap.OIDRole;
+import uk.co.bconline.ndelius.model.ldap.OIDRoleAssociation;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
-import uk.co.bconline.ndelius.repository.oid.OIDRoleAliasRepository;
+import uk.co.bconline.ndelius.repository.oid.OIDRoleAssociationRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 import uk.co.bconline.ndelius.service.OIDUserService;
 import uk.co.bconline.ndelius.service.RoleService;
@@ -38,16 +38,16 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 	private final OIDUserRepository userRepository;
 	private final RoleService roleService;
-	private final OIDRoleAliasRepository roleAliasRepository;
+	private final OIDRoleAssociationRepository roleAssociationRepository;
 
 	@Autowired
 	public OIDUserDetailsService(
 			OIDUserRepository userRepository,
-			OIDRoleAliasRepository roleAliasRepository,
+			OIDRoleAssociationRepository roleAssociationRepository,
 			RoleService roleService)
 	{
 		this.userRepository = userRepository;
-		this.roleAliasRepository = roleAliasRepository;
+		this.roleAssociationRepository = roleAssociationRepository;
 		this.roleService = roleService;
 	}
 
@@ -89,8 +89,8 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public List<String> getUserRoles(String username)
 	{
-		return roleService.getTransactionsByParent(username, OIDUser.class).stream()
-				.flatMap(bt -> bt.getRoles().stream())
+		return roleService.getRolesByParent(username, OIDUser.class).stream()
+				.flatMap(bt -> bt.getInteractions().stream())
 				.collect(toList());
 	}
 
@@ -141,7 +141,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	{
 		Optional<OIDUser> user = userRepository.findByUsername(username);
 		return user.map(u -> {
-			u.setTransactions(roleService.getTransactionsByParent(username, OIDUser.class));
+			u.setRoles(roleService.getRolesByParent(username, OIDUser.class));
 			return u;
 		});
 	}
@@ -163,15 +163,15 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 //				.base(String.format("cn=%s,%s", user.getUsername(), OIDUser.class.getAnnotation(Entry.class).base()))
 //				.where("objectclass").is("alias")));
 
-		val roleAliases = user.getTransactions().stream()
-				.map(OIDBusinessTransaction::getName)
-				.map(name -> OIDBusinessTransactionAlias.builder()
+		val roleAliases = user.getRoles().stream()
+				.map(OIDRole::getName)
+				.map(name -> OIDRoleAssociation.builder()
 						.name(name)
 						.username(user.getUsername())
 						.aliasedObjectName(String.format("cn=%s,%s,%s", name,
-								OIDBusinessTransaction.class.getAnnotation(Entry.class).base(), oidBase))
+								OIDRole.class.getAnnotation(Entry.class).base(), oidBase))
 						.build())
 				.collect(toList());
-		roleAliasRepository.saveAll(roleAliases);
+		roleAssociationRepository.saveAll(roleAliases);
 	}
 }
