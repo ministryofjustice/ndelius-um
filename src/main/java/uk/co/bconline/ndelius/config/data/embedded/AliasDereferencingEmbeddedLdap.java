@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.config.data.embedded;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PreDestroy;
@@ -9,7 +10,9 @@ import javax.annotation.PreDestroy;
 import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
@@ -114,12 +117,19 @@ public abstract class AliasDereferencingEmbeddedLdap
 					.getEnvironment().getPropertySources();
 			getLdapPorts(sources).put("local.ldap.port", port);
 		}
-		setPortProperty(context.getParent(), port);
+		if (context.getParent() != null) {
+			setPortProperty(context.getParent(), port);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	private Map<String, Object> getLdapPorts(MutablePropertySources sources) {
-		return (Map<String, Object>) sources.get(PROPERTY_SOURCE_NAME).getSource();
+		PropertySource<?> propertySource = sources.get(PROPERTY_SOURCE_NAME);
+		if (propertySource == null) {
+			propertySource = new MapPropertySource(PROPERTY_SOURCE_NAME, new HashMap<>());
+			sources.addFirst(propertySource);
+		}
+		return (Map<String, Object>) propertySource.getSource();
 	}
 
 	@PreDestroy
