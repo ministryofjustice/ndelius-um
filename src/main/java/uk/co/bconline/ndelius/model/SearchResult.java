@@ -13,6 +13,7 @@ import lombok.Getter;
 public final class SearchResult implements Serializable
 {
 	private String username;
+	private String aliasUsername;
 	private String forenames;
 	private String surname;
 	private List<Team> teams;
