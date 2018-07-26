@@ -31,6 +31,7 @@ UIBusinessInteractionCollection: UMBI007
 UIBusinessInteractionCollection: UMBI008
 UIBusinessInteractionCollection: UMBI009
 UIBusinessInteractionCollection: UMBI010
+UIBusinessInteractionCollection: UMBI011
 
 dn: cn=UMBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
 objectclass: top
