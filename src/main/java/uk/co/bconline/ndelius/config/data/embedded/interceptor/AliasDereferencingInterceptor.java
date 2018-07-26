@@ -4,6 +4,7 @@ import static java.util.Arrays.stream;
 
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchEntry;
 import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
+import com.unboundid.ldap.sdk.DereferencePolicy;
 import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.LDAPInterface;
 
@@ -18,6 +19,8 @@ public class AliasDereferencingInterceptor extends InMemoryOperationInterceptor
 	@Override
 	public void processSearchEntry(final InMemoryInterceptedSearchEntry entry)
 	{
+		if (entry.getRequest().getDereferencePolicy() == DereferencePolicy.NEVER) return;
+
 		val searchEntry = entry.getSearchEntry();
 		val isAlias = stream(searchEntry.getAttributeValues("objectclass")).anyMatch("alias"::equalsIgnoreCase);
 

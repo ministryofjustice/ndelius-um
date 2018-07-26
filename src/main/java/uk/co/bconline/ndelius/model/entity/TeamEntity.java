@@ -1,23 +1,24 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.*;
+
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "TEAM")
-public class TeamEntity implements Serializable
+public class TeamEntity
 {
 	public TeamEntity(Long id)
 	{

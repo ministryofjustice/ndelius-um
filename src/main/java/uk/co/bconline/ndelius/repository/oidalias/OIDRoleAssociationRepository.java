@@ -1,4 +1,4 @@
-package uk.co.bconline.ndelius.repository.oid;
+package uk.co.bconline.ndelius.repository.oidalias;
 
 import org.springframework.data.ldap.repository.LdapRepository;
 

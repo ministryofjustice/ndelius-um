@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.model;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,9 +12,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public final class User implements Serializable
+public final class User
 {
 	@NotNull private String username;
+	private String aliasUsername;
 	private String forenames;
 	private String surname;
 	private String staffCode;

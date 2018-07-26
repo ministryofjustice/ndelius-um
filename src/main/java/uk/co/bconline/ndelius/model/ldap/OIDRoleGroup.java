@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.model.ldap;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.naming.Name;
@@ -15,7 +14,7 @@ import lombok.Setter;
 
 @Getter
 @Entry(objectClasses = "top", base = "cn=ndRoleGroups,cn=Users")
-public final class OIDRoleGroup implements Serializable
+public final class OIDRoleGroup
 {
     @Id
     private Name dn;

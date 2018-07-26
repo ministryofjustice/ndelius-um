@@ -1,18 +1,19 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import lombok.*;
+import static javax.persistence.FetchType.EAGER;
+
+import java.time.LocalDate;
+import java.util.Set;
+
+import javax.persistence.*;
+
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Set;
-
-import static javax.persistence.FetchType.EAGER;
+import lombok.*;
 
 @Getter
 @Entity
@@ -20,7 +21,7 @@ import static javax.persistence.FetchType.EAGER;
 @AllArgsConstructor
 @Table(name = "STAFF")
 @Builder(toBuilder = true)
-public class StaffEntity implements Serializable
+public class StaffEntity
 {
 	@Id
 	@Column(name = "STAFF_ID")

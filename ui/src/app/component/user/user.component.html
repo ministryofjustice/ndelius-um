@@ -13,7 +13,24 @@
         <label for="username" class="col-sm-2 col-form-label">Username</label>
         <div class="col-sm-10">
           <input id="username" name="username" [(ngModel)]="user.username"
-                 class="form-control" [readonly]="mode === 'View'"/>
+                 class="form-control" [readonly]="mode === 'View'" autocomplete="off"/>
+        </div>
+      </div>
+      <div class="form-group row" *ngIf="user.aliasUsername != null || mode !== 'View'">
+        <label for="alias-username" class="col-sm-2 col-form-label">DOM1 Username</label>
+        <div class="col-sm-4">
+          <input id="alias-username" name="alias-username" [(ngModel)]="user.aliasUsername"
+                 class="form-control" [readonly]="mode === 'View'" autocomplete="off">
+        </div>
+        <div class="col-sm-4">
+          <div class="form-check-inline pt-2">
+            <input id="same-username" name="same-username"
+                   type="checkbox" class="form-check-input"
+                   [disabled]="user.aliasUsername === user.username || mode === 'View'"
+                   [checked]="user.aliasUsername === user.username"
+                   (input)="user.aliasUsername = user.username">
+            <label for="same-username" class="form-check-label">Same as OMNI username?</label>
+          </div>
         </div>
       </div>
       <div class="form-group row">

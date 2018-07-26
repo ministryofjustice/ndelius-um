@@ -65,6 +65,10 @@ public class UserServiceImpl implements UserService
 				})
 				.skip((long) (page-1) * pageSize)
 				.limit(pageSize)
+				.map(UserEntity::getUsername)
+				.map(this::getUser)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
 				.map(transformer::map)
 				.collect(toList());
 	}
@@ -95,8 +99,8 @@ public class UserServiceImpl implements UserService
 	{
 		val dbFuture = runAsync(() -> dbService.save(transformer.mapToUserEntity(user, new UserEntity())));
 		val oidFuture = runAsync(() -> oidService.save(transformer.mapToOIDUser(user, new OIDUser())));
-		val ad1Future = runAsync(() -> ad1Service.ifPresent(service -> service.save(transformer.mapToADUser(user, new ADUser()))));
-		val ad2Future = runAsync(() -> ad2Service.ifPresent(service -> service.save(transformer.mapToADUser(user, new ADUser()))));
+		val ad1Future = runAsync(() -> ad1Service.ifPresent(service -> service.save(transformer.mapToAD1User(user, new ADUser()))));
+		val ad2Future = runAsync(() -> ad2Service.ifPresent(service -> service.save(transformer.mapToAD2User(user, new ADUser()))));
 
 		try
 		{

@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.model;
 
-import java.io.Serializable;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -10,9 +9,10 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public final class SearchResult implements Serializable
+public final class SearchResult
 {
 	private String username;
+	private String aliasUsername;
 	private String forenames;
 	private String surname;
 	private List<Team> teams;

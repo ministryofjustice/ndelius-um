@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.model.ldap;
 
-import java.io.Serializable;
+import static java.util.Collections.emptyList;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
 @Builder(toBuilder = true)
 @ToString(exclude = "password")
 @Entry(objectClasses = {"NDUser", "person", "top"}, base="cn=Users")
-public final class OIDUser implements OIDUserHomeArea, UserDetails, Serializable
+public final class OIDUser implements OIDUserHomeArea, UserDetails
 {
 	@Id
 	private Name dn;
@@ -41,14 +42,16 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails, Serializable
 	@Attribute(name="userPassword")
 	private String password;
 
-	@Setter
+	@Transient
+	private String aliasUsername;
+
 	@Transient
 	private List<OIDRole> roles;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities()
 	{
-		return null;
+		return emptyList();
 	}
 
 	@Override

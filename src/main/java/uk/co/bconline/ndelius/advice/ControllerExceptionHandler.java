@@ -1,9 +1,6 @@
 package uk.co.bconline.ndelius.advice;
 
-import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.toList;
-
-import java.util.Map;
 
 import javax.validation.ConstraintViolationException;
 
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.exception.NotFoundException;
+import uk.co.bconline.ndelius.model.ErrorResponse;
 
 @Slf4j
 @Component
@@ -27,9 +25,9 @@ public class ControllerExceptionHandler
 	@ExceptionHandler
 	@ResponseBody
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public Map handle(MethodArgumentNotValidException exception) {
-		log.debug("Request validation failure. Returning 401 response", exception);
-		return singletonMap("error", exception
+	public ErrorResponse handle(MethodArgumentNotValidException exception) {
+		log.debug("Returning 401 response", exception);
+		return new ErrorResponse(exception
 				.getBindingResult()
 				.getFieldErrors().stream()
 				.map(e -> e.getField() + ": " + e.getDefaultMessage())
@@ -39,9 +37,9 @@ public class ControllerExceptionHandler
 	@ExceptionHandler
 	@ResponseBody
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public Map handle(ConstraintViolationException exception) {
-		log.debug("Request validation failure. Returning 401 response", exception);
-		return singletonMap("error", exception
+	public ErrorResponse handle(ConstraintViolationException exception) {
+		log.debug("Returning 401 response", exception);
+		return new ErrorResponse(exception
 				.getConstraintViolations().stream()
 				.map(cv -> cv.getPropertyPath() + ": " + cv.getMessage())
 				.collect(toList()));
@@ -49,19 +47,19 @@ public class ControllerExceptionHandler
 
 	@ExceptionHandler
 	@ResponseBody
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public Map handle(AppException exception) {
-		log.error("AppException occurred. Returning 500 response", exception);
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ErrorResponse handle(NotFoundException exception) {
+		log.debug("Returning 404 response", exception);
 		if (exception.getMessage() == null) return null;
-		return singletonMap("error", exception.getMessage());
+		return new ErrorResponse(exception.getMessage());
 	}
 
 	@ExceptionHandler
 	@ResponseBody
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public Map handle(NotFoundException exception) {
-		log.error("NotFoundException occurred. Returning 404 response", exception);
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ErrorResponse handle(AppException exception) {
+		log.error("Returning 500 response", exception);
 		if (exception.getMessage() == null) return null;
-		return singletonMap("error", exception.getMessage());
+		return new ErrorResponse(exception.getMessage());
 	}
 }

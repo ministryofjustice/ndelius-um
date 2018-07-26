@@ -4,6 +4,7 @@ import {Team} from "./team";
 
 export class User {
   username: string;
+  aliasUsername: string;
   forenames: string;
   surname: string;
   staffCode: string;

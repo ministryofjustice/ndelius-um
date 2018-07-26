@@ -55,14 +55,18 @@ userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test user for basic authentication (password=secret)
 
+dn: cn=test.user.alias,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+cn: test.user.alias
+aliasedObjectName: cn=test.user,cn=Users,dc=bcl,dc=local
+
 dn: cn=UMBT001,cn=test.user,cn=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: alias
 objectclass: NDRoleAssociation
 cn: UMBT001
 aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
-
-
 
 dn: cn=TestUser1,cn=Users,dc=bcl,dc=local
 objectclass: top

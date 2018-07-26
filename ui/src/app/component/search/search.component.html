@@ -38,7 +38,10 @@
       <tbody>
         <tr *ngFor="let user of users" routerLink="/user/{{user.username}}" style="cursor: pointer">
           <td class="font-weight-bold">{{user.forenames}} {{user.surname}}</td>
-          <td>{{user.username}}</td>
+          <td>
+            <span title="Username">{{user.username}}</span>
+            <span title="DOM1 Alias" *ngIf="user.aliasUsername != null">, {{user.aliasUsername}}</span>
+          </td>
           <td>{{user.staffCode}}</td>
           <td>
             <span *ngFor="let team of user.teams; let isLast = last">

@@ -8,10 +8,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchEntry;
-import com.unboundid.ldap.sdk.Attribute;
-import com.unboundid.ldap.sdk.LDAPException;
-import com.unboundid.ldap.sdk.LDAPInterface;
-import com.unboundid.ldap.sdk.SearchResultEntry;
+import com.unboundid.ldap.sdk.*;
 
 public class AliasDereferencingInterceptorTest
 {
@@ -28,6 +25,7 @@ public class AliasDereferencingInterceptorTest
 	public void aliasesAreRetrieved() throws LDAPException
 	{
 		InMemoryInterceptedSearchEntry entry = mock(InMemoryInterceptedSearchEntry.class);
+		when(entry.getRequest()).thenReturn(mock(ReadOnlySearchRequest.class));
 		when(entry.getSearchEntry()).thenReturn(new SearchResultEntry("cn=alias", new Attribute[]{
 				new Attribute("objectclass", "alias"),
 				new Attribute("aliasedObjectName", "cn=different")
@@ -45,6 +43,7 @@ public class AliasDereferencingInterceptorTest
 	public void nonAliasEntriesAreLeftAlone()
 	{
 		InMemoryInterceptedSearchEntry entry = mock(InMemoryInterceptedSearchEntry.class);
+		when(entry.getRequest()).thenReturn(mock(ReadOnlySearchRequest.class));
 		when(entry.getSearchEntry()).thenReturn(new SearchResultEntry("cn=not-alias", new Attribute[]{
 				new Attribute("objectclass", "not-alias")
 		}));

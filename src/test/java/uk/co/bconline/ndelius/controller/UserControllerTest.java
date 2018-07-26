@@ -267,4 +267,25 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT001")))
 				.andExpect(jsonPath("$.roles[0].interactions", hasItem("UMBI001")));
 	}
+
+	@Test
+	public void addUserWithAliasUsername() throws Exception
+	{
+		String token = token(mvc);
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
+						.username("test.user2")
+						.aliasUsername("test.user2-alias")
+						.forenames("Test")
+						.surname("User2")
+						.build())))
+				.andExpect(status().isCreated());
+
+		mvc.perform(get("/api/user/test.user2")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.aliasUsername", is("test.user2-alias")));
+	}
 }
