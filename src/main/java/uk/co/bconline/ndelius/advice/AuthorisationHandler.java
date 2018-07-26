@@ -8,6 +8,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +26,9 @@ import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
 @Component
 public class AuthorisationHandler
 {
+	@Value("${authorisation.disabled:false}")
+	private boolean disabled;
+
 	private final OIDUserDetailsService service;
 
 	@Autowired
@@ -36,7 +40,7 @@ public class AuthorisationHandler
 	@Around("@annotation(interaction)")
 	public Object authorise(ProceedingJoinPoint joinPoint, Interaction interaction) throws Throwable
 	{
-		if (interaction.secured())
+		if (interaction.secured() && !disabled)
 		{
 			val username = ((UserDetails) getContext().getAuthentication().getPrincipal()).getUsername();
 			val allowed = service.getUserRoles(username).containsAll(asList(interaction.value()));
