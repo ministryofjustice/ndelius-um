@@ -20,10 +20,10 @@ public final class User
 	private String surname;
 	private String staffCode;
 	private String staffGrade;
-	private String homeArea;
+	private Dataset homeArea;
+	private Organisation organisation;
 	private LocalDate startDate;
 	private LocalDate endDate;
-	private Organisation organisation;
 	private List<Team> teams;
 	private List<Dataset> datasets;
 	private List<Role> roles;

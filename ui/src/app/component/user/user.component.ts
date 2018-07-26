@@ -12,6 +12,7 @@ import {DatasetService} from "../../service/dataset.service";
 import {Team} from "../../model/team";
 import {TeamService} from "../../service/team.service";
 import {RoleGroup} from "../../model/role-group";
+import {Organisation} from "../../model/organisation";
 
 @Component({
   selector: 'user',
@@ -26,7 +27,8 @@ export class UserComponent implements OnInit {
   datasets: Dataset[];
   roles: Role[];
   roleGroups: RoleGroup[];
-  selectedGroup: RoleGroup[] = [];
+  selectedGroup: RoleGroup;
+  organisations: Organisation[];
 
   constructor(
     private route: ActivatedRoute,
@@ -71,8 +73,9 @@ export class UserComponent implements OnInit {
   }
 
   addGroup(): void {
-    if (this.selectedGroup[0] != null) {
-      this.roleService.group(this.selectedGroup[0].name).subscribe((group: RoleGroup) => {
+    if (this.selectedGroup != null) {
+      if (this.user.roles == null) this.user.roles = [];
+      this.roleService.group(this.selectedGroup.name).subscribe((group: RoleGroup) => {
         let userRoleNames = this.user.roles.map(r => r.name);
         this.user.roles.push(...group.roles.filter(role => userRoleNames.indexOf(role.name) === -1));
       });
@@ -92,7 +95,7 @@ export class UserComponent implements OnInit {
   }
 
   datasetToLabel(item: Dataset): string {
-    return item.description + ' - ' + item.code;
+    return (item.description != null? item.description + ' - ': '') + item.code;
   }
 
   roleToLabel(item: Role): string {

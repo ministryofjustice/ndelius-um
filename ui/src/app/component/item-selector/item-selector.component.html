@@ -3,9 +3,11 @@
           class="form-control text-left" [ngClass]="{readonly: readonly}"
           (click)="optionsDisplayed = !optionsDisplayed"
           aria-haspopup="true" [attr.aria-expanded]="optionsDisplayed">
-    <span *ngIf="selected.length === 0 || selected[0] == null">0 selected</span>
-    <span *ngIf="selected.length === 1 && selected[0] != null">{{mapToLabel(selected[0])}}</span>
-    <span *ngIf="selected.length > 1">{{selected.length}} selected</span>
+    <span *ngIf="multiple && selected == null">0 selected</span>
+    <span *ngIf="multiple && selected != null && selected.length !== 1">{{selected.length}} selected</span>
+    <span *ngIf="multiple && selected != null && selected.length === 1">{{mapToLabel(selected[0])}}</span>
+    <span *ngIf="!multiple && selected != null">{{mapToLabel(selected)}}</span>
+    <span *ngIf="!multiple && selected == null">Please select&hellip;</span>
     <span class="oi oi-chevron-top float-right" *ngIf="optionsDisplayed"></span>
     <span class="oi oi-chevron-bottom float-right" *ngIf="!optionsDisplayed"></span>
   </button>
