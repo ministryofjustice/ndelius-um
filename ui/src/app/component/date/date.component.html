@@ -1,0 +1,8 @@
+<div class="input-group">
+  <input type="number" class="form-control" [class.is-invalid]="!valid" placeholder="DD" maxlength="2" [readonly]="readonly"
+         [(ngModel)]="date" (change)="change()"/>
+  <input type="number" class="form-control" [class.is-invalid]="!valid" placeholder="MM" maxlength="2" [readonly]="readonly"
+         [(ngModel)]="month" (change)="change()"/>
+  <input type="number" class="form-control" [class.is-invalid]="!valid" placeholder="YYYY" maxlength="4" [readonly]="readonly"
+         [(ngModel)]="year" (change)="change()"/>
+</div>

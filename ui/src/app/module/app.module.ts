@@ -20,9 +20,10 @@ import {DatasetService} from "../service/dataset.service";
 import {RestDatasetService} from "../service/impl/rest.dataset.service";
 import {RestTeamService} from "../service/impl/rest.team.service";
 import {TeamService} from "../service/team.service";
+import {DateComponent} from "../component/date/date.component";
 
 @NgModule({
-  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, ItemSelectorComponent],
+  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, ItemSelectorComponent, DateComponent],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [
     {provide: UserService, useClass: RestUserService},
