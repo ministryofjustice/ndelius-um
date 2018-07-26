@@ -232,7 +232,7 @@ public class UserControllerTest
 						.surname("User1")
 						.staffCode("N99A999")
 						.staffGrade("GRADE2")
-						.homeArea("N01")
+						.homeArea(Dataset.builder().code("N01").build())
 						.startDate(LocalDate.of(2000, 1, 1))
 						.organisation(Organisation.builder()
 								.code("NPS")
@@ -262,7 +262,7 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.organisation.code", is("NPS")))
 				.andExpect(jsonPath("$.datasets[*].code", hasItems("N01", "N02")))
 				.andExpect(jsonPath("$.teams[0].code", is("N01TST")))
-				.andExpect(jsonPath("$.homeArea", is("N01")))
+				.andExpect(jsonPath("$.homeArea.code", is("N01")))
 				.andExpect(jsonPath("$.roles", hasSize(1)))
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT001")))
 				.andExpect(jsonPath("$.roles[0].interactions", hasItem("UMBI001")));
@@ -277,7 +277,8 @@ public class UserControllerTest
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
 						.username("test.user2")
-						.aliasUsername("test.user2-alias")
+						.aliasUsername("test.user2.alias")
+						.homeArea(Dataset.builder().code("N01").build())
 						.forenames("Test")
 						.surname("User2")
 						.build())))
@@ -286,6 +287,6 @@ public class UserControllerTest
 		mvc.perform(get("/api/user/test.user2")
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.aliasUsername", is("test.user2-alias")));
+				.andExpect(jsonPath("$.aliasUsername", is("test.user2.alias")));
 	}
 }
