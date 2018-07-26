@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService
 		{
 			return allOf(dbFuture, oidFuture, ad1Future, ad2Future)
 					.thenApply(v -> transformer.combine(dbFuture.join(), oidFuture.join(), ad1Future.join(), ad2Future.join())).get()
-					.filter(user -> user.getHomeArea() == null || datasetService.getDatasetCodes(me).contains(user.getHomeArea()));
+					.filter(user -> user.getHomeArea() == null || datasetService.getDatasetCodes(me).contains(user.getHomeArea().getCode()));
 		}
 		catch (InterruptedException | ExecutionException e)
 		{

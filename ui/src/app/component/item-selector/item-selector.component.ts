@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'item-selector',
@@ -6,18 +6,20 @@ import {Component, Input} from '@angular/core';
 })
 export class ItemSelectorComponent {
   @Input() id: string;
-  @Input() selected: any[];
+  @Input() selected: any;
   @Input() available: any[];
   @Input() labelMapper: Function = (item: any) => item;
   @Input() maxHeight: string = "auto";
   @Input() readonly: boolean;
   @Input() multiple: boolean;
+  @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
 
   optionsDisplayed: boolean;
   filter: string = "";
 
   toggle(item): void {
     if (this.multiple) {
+      if (this.selected == null) this.selected = [];
       let index = this.selected.indexOf(item);
       if (index === -1) {
         this.selected.push(item);
@@ -25,8 +27,9 @@ export class ItemSelectorComponent {
         this.selected.splice(index, 1);
       }
     } else {
-      this.selected[0] = item;
+      this.selected = item;
     }
+    this.selectedChange.emit(this.selected);
   }
 
   mapToLabel(item: any): string {
@@ -34,8 +37,13 @@ export class ItemSelectorComponent {
   }
 
   isSelected(item: any): boolean {
+    if (this.selected == null) return false;
     let label: string = this.mapToLabel(item);
-    return this.selected.map(item => this.mapToLabel(item)).indexOf(label) !== -1;
+    if (this.multiple) {
+      return this.selected.map(item => this.mapToLabel(item)).indexOf(label) !== -1;
+    } else {
+      return this.mapToLabel(this.selected) === label;
+    }
   }
 
   get filtered(): any[] {
