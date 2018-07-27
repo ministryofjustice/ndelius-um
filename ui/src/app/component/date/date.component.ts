@@ -30,7 +30,7 @@ export class DateComponent implements OnInit {
   }
 
   change(): void {
-    if (this.valid) {
+    if (this.valid && this.year != null && this.month != null && this.date != null) {
       this.value = moment([this.year, this.month - 1, this.date]).toDate();
       this.valueChange.emit(this.value);
     }
