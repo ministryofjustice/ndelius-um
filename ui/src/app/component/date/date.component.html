@@ -1,8 +1,17 @@
-<div class="input-group">
-  <input type="number" class="form-control" [class.is-invalid]="!valid" placeholder="DD" maxlength="2" [readonly]="readonly"
-         [(ngModel)]="date" (change)="change()"/>
-  <input type="number" class="form-control" [class.is-invalid]="!valid" placeholder="MM" maxlength="2" [readonly]="readonly"
-         [(ngModel)]="month" (change)="change()"/>
-  <input type="number" class="form-control" [class.is-invalid]="!valid" placeholder="YYYY" maxlength="4" [readonly]="readonly"
-         [(ngModel)]="year" (change)="change()"/>
+<div class="input-group"
+     (keydown.n)="setDaysFromToday(0)"
+     (keydown.t)="setDaysFromToday(1)"
+     (keydown.y)="setDaysFromToday(-1)"
+     (keydown.w)="setDaysFromToday(7)"
+     (keydown.l)="setDaysFromToday(-7)"
+     (keydown.f)="setDaysFromToday(14)">
+  <input id="{{id}}-d" type="number" class="form-control" placeholder="DD" maxlength="2" max="99"
+         [class.is-invalid]="!valid" [readonly]="readonly"
+         [(ngModel)]="date" (input)="change()"/>
+  <input id="{{id}}-m" type="number" class="form-control" placeholder="MM" maxlength="2" max="99"
+         [class.is-invalid]="!valid" [readonly]="readonly"
+         [(ngModel)]="month" (input)="change()"/>
+  <input id="{{id}}-y" type="number" class="form-control" placeholder="YYYY" maxlength="4" max="9999"
+         [class.is-invalid]="!valid" [readonly]="readonly"
+         [(ngModel)]="year" (input)="change()"/>
 </div>

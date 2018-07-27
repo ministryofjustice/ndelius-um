@@ -50,13 +50,13 @@
         </div>
       </div>
       <div class="form-group row">
-        <label for="forenames" class="col-sm-2 col-form-label">Start Date</label>
+        <label [for]="'start-date-d'" class="col-sm-2 col-form-label">Start Date</label>
         <div class="col-sm-4">
-          <date [(value)]="user.startDate" [readonly]="mode === 'View'"></date>
+          <date id="start-date" [(value)]="user.startDate" [max]="user.endDate" [readonly]="mode === 'View'"></date>
         </div>
-        <label for="surname" class="col-sm-2 col-form-label">End Date</label>
+        <label [for]="'end-date-d'" class="col-sm-2 col-form-label">End Date</label>
         <div class="col-sm-4">
-          <date [(value)]="user.endDate" [readonly]="mode === 'View'"></date>
+          <date id="end-date" [(value)]="user.endDate" [min]="user.startDate" [readonly]="mode === 'View'"></date>
         </div>
       </div>
       <h4>Allocation</h4>
