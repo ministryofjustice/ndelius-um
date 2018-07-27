@@ -21,6 +21,8 @@ import {RestDatasetService} from "../service/impl/rest.dataset.service";
 import {RestTeamService} from "../service/impl/rest.team.service";
 import {TeamService} from "../service/team.service";
 import {DateComponent} from "../component/date/date.component";
+import {OrganisationService} from "../service/organisation.service";
+import {RestOrganisationService} from "../service/impl/rest.organisation.service";
 
 @NgModule({
   declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, ItemSelectorComponent, DateComponent],
@@ -30,6 +32,7 @@ import {DateComponent} from "../component/date/date.component";
     {provide: RoleService, useClass: RestRoleService},
     {provide: DatasetService, useClass: RestDatasetService},
     {provide: TeamService, useClass: RestTeamService},
+    {provide: OrganisationService, useClass: RestOrganisationService},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     ...(environment.production? []: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}])
   ],
