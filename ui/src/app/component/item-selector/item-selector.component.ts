@@ -28,6 +28,7 @@ export class ItemSelectorComponent {
       }
     } else {
       this.selected = item;
+      this.optionsDisplayed = false;
     }
     this.selectedChange.emit(this.selected);
   }
