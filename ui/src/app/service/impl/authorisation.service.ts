@@ -14,7 +14,7 @@ export class AuthorisationService {
 
   hasRole(role: string): boolean {
     return AppComponent.me.roles
-      .filter((t: Role) => t.interactions.indexOf(role) !== -1)
+      .filter((t: Role) => (t.interactions || []).indexOf(role) !== -1)
       .length > 0;
   }
 
