@@ -38,7 +38,7 @@ public class OIDUserDetailsServiceTest
 	@Test
 	public void retrieveRoles()
 	{
-		List<String> roles = service.getUserRoles("test.user");
+		List<String> roles = service.getUserInteractions("test.user");
 
 		assertFalse(roles.isEmpty());
 		assertThat(roles, hasItem("UMBI001"));

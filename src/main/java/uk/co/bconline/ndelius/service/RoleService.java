@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import uk.co.bconline.ndelius.model.Role;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
@@ -8,6 +9,6 @@ import uk.co.bconline.ndelius.model.ldap.OIDRole;
 public interface RoleService
 {
 	Iterable<Role> getRoles();
-
-    List<OIDRole> getRolesByParent(String parent, Class<?> parentClass);
+	Optional<OIDRole> getOIDRole(String role);
+	List<OIDRole> getRolesByParent(String parent, Class<?> parentClass);
 }

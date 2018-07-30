@@ -25,9 +25,9 @@ import uk.co.bconline.ndelius.model.ldap.OIDRoleAssociation;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.model.ldap.OIDUserAlias;
 import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
+import uk.co.bconline.ndelius.repository.oid.OIDRoleAssociationRepository;
+import uk.co.bconline.ndelius.repository.oid.OIDUserAliasRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
-import uk.co.bconline.ndelius.repository.oidalias.OIDRoleAssociationRepository;
-import uk.co.bconline.ndelius.repository.oidalias.OIDUserAliasRepository;
 import uk.co.bconline.ndelius.service.OIDUserService;
 import uk.co.bconline.ndelius.service.RoleService;
 
@@ -92,14 +92,13 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	 * @return A list of roles eg. [XXBI001, XXBI002]
 	 */
 	@Override
-	public List<String> getUserRoles(String username)
+	public List<String> getUserInteractions(String username)
 	{
 		return roleService.getRolesByParent(username, OIDUser.class).stream()
-				.flatMap(bt -> bt.getInteractions().stream())
+				.map(OIDRole::getInteractions)
+				.flatMap(List::stream)
 				.collect(toList());
 	}
-
-
 
 	/**
 	 * Search for a list of users with a single text query.

@@ -29,9 +29,9 @@ public final class OIDRole
 	@Attribute(name="aliasedObjectName")
 	private String aliasedObjectName;
 
-	@Attribute(name="UIBusinessInteractionCollection")
-	private List<String> interactions;
-
 	@Attribute(name="description")
 	private String description;
+
+	@Attribute(name="UIBusinessInteractionCollection")
+	private List<String> interactions;
 }

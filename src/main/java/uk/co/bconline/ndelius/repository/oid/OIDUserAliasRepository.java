@@ -1,4 +1,4 @@
-package uk.co.bconline.ndelius.repository.oidalias;
+package uk.co.bconline.ndelius.repository.oid;
 
 import java.util.Optional;
 

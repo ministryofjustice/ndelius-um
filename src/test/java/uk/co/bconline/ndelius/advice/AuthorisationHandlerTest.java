@@ -30,7 +30,7 @@ public class AuthorisationHandlerTest
 	@WithMockUser
 	public void authorisationFailsIfRoleIsMissing() throws Throwable
 	{
-		when(service.getUserRoles("user")).thenReturn(singletonList("ROLE_USER"));
+		when(service.getUserInteractions("user")).thenReturn(singletonList("ROLE_USER"));
 
 		ResponseEntity response = (ResponseEntity) handler.authorise(joinPoint, interaction("SOME_OTHER_ROLE"));
 
@@ -48,7 +48,7 @@ public class AuthorisationHandlerTest
 	@WithMockUser
 	public void authorisationSucceedsIfUserHasRole() throws Throwable
 	{
-		when(service.getUserRoles("user")).thenReturn(singletonList("ROLE_USER"));
+		when(service.getUserInteractions("user")).thenReturn(singletonList("ROLE_USER"));
 
 		handler.authorise(joinPoint, interaction("ROLE_USER"));
 

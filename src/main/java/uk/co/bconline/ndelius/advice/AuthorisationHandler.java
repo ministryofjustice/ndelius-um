@@ -43,7 +43,7 @@ public class AuthorisationHandler
 		if (interaction.secured() && !disabled)
 		{
 			val username = ((UserDetails) getContext().getAuthentication().getPrincipal()).getUsername();
-			val allowed = service.getUserRoles(username).containsAll(asList(interaction.value()));
+			val allowed = service.getUserInteractions(username).containsAll(asList(interaction.value()));
 			if (!allowed)
 			{
 				if (interaction.audited()) log.error("{} {} {}", username, interaction.value(), joinPoint.getArgs());
