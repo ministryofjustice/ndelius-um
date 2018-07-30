@@ -13,6 +13,7 @@ import {Team} from "../../model/team";
 import {TeamService} from "../../service/team.service";
 import {RoleGroup} from "../../model/role-group";
 import {Organisation} from "../../model/organisation";
+import {OrganisationService} from "../../service/organisation.service";
 
 @Component({
   selector: 'user',
@@ -37,6 +38,8 @@ export class UserComponent implements OnInit {
     private roleService: RoleService,
     private datasetService: DatasetService,
     private teamService: TeamService,
+    private organisationService: OrganisationService,
+
     public auth: AuthorisationService) {}
 
   ngOnInit(): void {
@@ -69,6 +72,10 @@ export class UserComponent implements OnInit {
 
     this.teamService.teams().subscribe((teams: Team[]) => {
       this.teams = teams;
+    });
+
+    this.organisationService.organisations().subscribe((organisations: Organisation[]) => {
+      this.organisations = organisations;
     });
   }
 
@@ -106,6 +113,9 @@ export class UserComponent implements OnInit {
     return item.name;
   }
 
+  organisationToLabel(item: Organisation): string{
+    return item.description + ' - ' + item.code;
+  }
   get json() {
     return JSON.stringify(this.user);
   }
