@@ -76,19 +76,20 @@ public class UserTransformer
 				.build();
 	}
 
-	public Role map(OIDRole transaction){
+	public Role map(OIDRole oidRole)
+	{
 		return Role.builder()
-				.name(transaction.getName())
-				.description(transaction.getDescription())
-				.interactions(transaction.getInteractions())
+				.name(oidRole.getName())
+				.description(oidRole.getDescription())
+				.interactions(oidRole.getName().startsWith("UMBT")? oidRole.getInteractions(): null)
 				.build();
 	}
 
-	public OIDRole map(Role role){
+	public OIDRole map(Role role)
+	{
 		return OIDRole.builder()
 				.name(role.getName())
 				.description(role.getDescription())
-				.interactions(role.getInteractions())
 				.build();
 	}
 
@@ -121,9 +122,8 @@ public class UserTransformer
 								.map(StaffEntity::getGrade)
 								.map(ReferenceDataEntity::getCode).orElse(null))
 						.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
-						.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).orElse(null))
+						.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).orElse(v.getEndDate()))
 						.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(this::map).orElse(null))
-						.endDate(v.getEndDate())
 						.build()),
 				ofNullable(ad1User).map(v -> User.builder()
 						.username(v.getUsername())
