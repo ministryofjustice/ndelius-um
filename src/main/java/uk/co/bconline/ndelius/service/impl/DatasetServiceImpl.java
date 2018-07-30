@@ -57,4 +57,10 @@ public class DatasetServiceImpl implements DatasetService
 		return repository.findByCode(code).map(ProbationAreaEntity::getId);
 	}
 
+	@Override
+	public Optional<Dataset> getDatasetByCode(String code)
+	{
+		return repository.findByCode(code).map(transformer::map);
+	}
+
 }
