@@ -124,7 +124,7 @@ public class UserTransformer
 								.map(StaffEntity::getGrade)
 								.map(ReferenceDataEntity::getCode).orElse(null))
 						.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
-						.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).orElse(v.getEndDate()))
+						.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElse(v.getEndDate()))
 						.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(this::map).orElse(null))
 						.build()),
 				ofNullable(ad1User).map(v -> User.builder()
