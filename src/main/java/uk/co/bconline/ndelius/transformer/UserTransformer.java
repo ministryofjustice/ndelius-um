@@ -5,8 +5,7 @@ import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
-import static uk.co.bconline.ndelius.util.NameUtils.firstForename;
-import static uk.co.bconline.ndelius.util.NameUtils.subsequentForenames;
+import static uk.co.bconline.ndelius.util.NameUtils.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -115,6 +114,8 @@ public class UserTransformer
 						.build()),
 				ofNullable(dbUser).map(v -> User.builder()
 						.username(v.getUsername())
+						.forenames(combineForenames(v.getForename(), v.getForename2()))
+						.surname(v.getSurname())
 						.datasets(datasetTransformer.map(v.getDatasets()))
 						.organisation(datasetTransformer.map(v.getOrganisation()))
 						.staffCode(ofNullable(v.getStaff()).map(StaffEntity::getCode).orElse(null))
