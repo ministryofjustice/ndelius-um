@@ -59,6 +59,6 @@ public class LoginHandler implements AuthenticationSuccessHandler, Authenticatio
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
 	{
-		log.error("??? [UMLOGIN] [{}, {}]", request.getHeader(AUTHORIZATION), exception.getMessage());
+		log.error("??? [UMLOGIN] [{}, {}, {}]", request.getRequestURI(), request.getHeader(AUTHORIZATION), exception.getMessage());
 	}
 }
