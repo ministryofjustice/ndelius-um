@@ -231,7 +231,7 @@ public class UserControllerTest
 						.forenames("Test")
 						.surname("User1")
 						.staffCode("N99A999")
-						.staffGrade("GRADE2")
+						.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 						.homeArea(Dataset.builder().code("N01").build())
 						.startDate(LocalDate.of(2000, 1, 1))
 						.organisation(Organisation.builder()
@@ -241,10 +241,8 @@ public class UserControllerTest
 								.code("N01TST")
 								.build()))
 						.datasets(asList(
-								Dataset.builder()
-										.code("N01").build(),
-								Dataset.builder()
-										.code("N02").build()))
+								Dataset.builder().code("N01").build(),
+								Dataset.builder().code("N02").build()))
 						.roles(singletonList(Role.builder()
 								.name("UMBT001")
 								.build()))
@@ -257,7 +255,7 @@ public class UserControllerTest
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.username", is("test.user1")))
 				.andExpect(jsonPath("$.staffCode", is("N99A999")))
-				.andExpect(jsonPath("$.staffGrade", is("GRADE2")))
+				.andExpect(jsonPath("$.staffGrade.code", is("GRADE2")))
 				.andExpect(jsonPath("$.startDate", is("2000-01-01")))
 				.andExpect(jsonPath("$.organisation.code", is("NPS")))
 				.andExpect(jsonPath("$.datasets[*].code", hasItems("N01", "N02")))

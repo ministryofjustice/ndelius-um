@@ -23,6 +23,8 @@ import {TeamService} from "../service/team.service";
 import {DateComponent} from "../component/date/date.component";
 import {OrganisationService} from "../service/organisation.service";
 import {RestOrganisationService} from "../service/impl/rest.organisation.service";
+import {StaffGradeService} from "../service/staff-grade.service";
+import {RestStaffGradeService} from "../service/impl/rest.staff-grade.service";
 
 @NgModule({
   declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, ItemSelectorComponent, DateComponent],
@@ -33,6 +35,7 @@ import {RestOrganisationService} from "../service/impl/rest.organisation.service
     {provide: DatasetService, useClass: RestDatasetService},
     {provide: TeamService, useClass: RestTeamService},
     {provide: OrganisationService, useClass: RestOrganisationService},
+    {provide: StaffGradeService, useClass: RestStaffGradeService},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     ...(environment.production? []: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}])
   ],

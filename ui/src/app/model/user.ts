@@ -2,6 +2,7 @@ import {Role} from "./role";
 import {Dataset} from "./dataset";
 import {Team} from "./team";
 import {Organisation} from "./organisation";
+import {StaffGrade} from "./staff-grade";
 
 export class User {
   username: string;
@@ -9,6 +10,7 @@ export class User {
   forenames: string;
   surname: string;
   staffCode: string;
+  staffGrade: StaffGrade;
   homeArea: Dataset;
   organisation: Organisation;
   teams: Team[];
