@@ -173,14 +173,6 @@ public class UserControllerTest
 	}
 
 	@Test
-	public void usersAreFilteredOnDatasets() throws Exception
-	{
-		mvc.perform(get("/api/user/Jim.Blogs")
-				.header("Authorization", "Bearer " + token(mvc)))
-				.andExpect(status().isNotFound());
-	}
-
-	@Test
 	public void nonExistentUserReturns404() throws Exception
 	{
 		mvc.perform(get("/api/user/nonexistent-user")
@@ -286,5 +278,28 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.aliasUsername", is("test.user2.alias")));
+	}
+
+	@Test
+	public void usersAreFilteredOnDatasets() throws Exception
+	{
+		String token = token(mvc);
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
+						.username("test.user3")
+						.homeArea(Dataset.builder().code("C01").build())
+						.datasets(asList(
+								Dataset.builder().code("C02").build(),
+								Dataset.builder().code("C03").build()))
+						.forenames("Test")
+						.surname("User3")
+						.build())))
+				.andExpect(status().isCreated());
+
+		mvc.perform(get("/api/user/test.user3")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isNotFound());
 	}
 }

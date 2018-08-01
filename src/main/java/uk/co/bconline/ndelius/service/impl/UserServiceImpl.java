@@ -2,11 +2,11 @@ package uk.co.bconline.ndelius.service.impl;
 
 import static java.util.concurrent.CompletableFuture.*;
 import static java.util.stream.Collectors.toList;
-import static org.springframework.util.StringUtils.isEmpty;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,14 +55,9 @@ public class UserServiceImpl implements UserService
 	@Override
 	public List<SearchResult> search(String query, int page, int pageSize)
 	{
-		val me = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-		val myDatasets = datasetService.getDatasetCodes(me);
-
+		val datasetsFilter = datasetsFilter();
 		return dbService.search(query).stream()
-				.filter(user -> {
-					val homeArea = oidService.getUserHomeArea(user.getUsername());
-					return isEmpty(homeArea) || myDatasets.contains(homeArea);
-				})
+				.filter(userEntity -> datasetsFilter.test(userEntity.getUsername()))
 				.skip((long) (page-1) * pageSize)
 				.limit(pageSize)
 				.map(UserEntity::getUsername)
@@ -76,7 +71,6 @@ public class UserServiceImpl implements UserService
 	@Override
 	public Optional<User> getUser(String username)
 	{
-		val me = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 		val dbFuture = supplyAsync(() -> dbService.getUser(username).orElse(null));
 		val oidFuture = supplyAsync(() -> oidService.getUser(username).orElse(null));
 		val ad1Future = supplyAsync(() -> ad1Service.flatMap(service -> service.getUser(username)).orElse(null));
@@ -84,9 +78,10 @@ public class UserServiceImpl implements UserService
 
 		try
 		{
+			val datasetsFilter = datasetsFilter();
 			return allOf(dbFuture, oidFuture, ad1Future, ad2Future)
 					.thenApply(v -> transformer.combine(dbFuture.join(), oidFuture.join(), ad1Future.join(), ad2Future.join())).get()
-					.filter(user -> user.getHomeArea() == null || datasetService.getDatasetCodes(me).contains(user.getHomeArea().getCode()));
+					.filter(user -> datasetsFilter.test(user.getUsername()));
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
@@ -118,5 +113,18 @@ public class UserServiceImpl implements UserService
 		// not tested yet - currently just DB
 		val existingUser = dbService.getUser(user.getUsername()).orElseThrow(NotFoundException::new);
 		dbService.save(transformer.mapToUserEntity(user, existingUser));
+	}
+
+	private Predicate<String> datasetsFilter()
+	{
+		val me = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+		val myDatasets = datasetService.getDatasetCodes(me);
+		myDatasets.add(oidService.getUserHomeArea(me));
+
+		return (String username) -> {
+			val theirDatasets = datasetService.getDatasetCodes(username);
+			theirDatasets.add(oidService.getUserHomeArea(username));
+			return myDatasets.stream().anyMatch(theirDatasets::contains);
+		};
 	}
 }
