@@ -39,6 +39,7 @@ public class UserTransformer
 	private final Optional<AD1UserDetailsService> ad1UserDetailsService;
 	private final Optional<AD2UserDetailsService> ad2UserDetailsService;
 	private final DatasetTransformer datasetTransformer;
+	private final ReferenceDataTransformer referenceDataTransformer;
 
 	@Autowired
 	public UserTransformer(
@@ -48,7 +49,8 @@ public class UserTransformer
 			OrganisationService organisationService,
 			Optional<AD1UserDetailsService> ad1UserDetailsService,
 			Optional<AD2UserDetailsService> ad2UserDetailsService,
-			DatasetTransformer datasetTransformer)
+			DatasetTransformer datasetTransformer,
+			ReferenceDataTransformer referenceDataTransformer)
 	{
 		this.teamService = teamService;
 		this.referenceDataService = referenceDataService;
@@ -57,6 +59,7 @@ public class UserTransformer
 		this.ad1UserDetailsService = ad1UserDetailsService;
 		this.ad2UserDetailsService = ad2UserDetailsService;
 		this.datasetTransformer = datasetTransformer;
+		this.referenceDataTransformer = referenceDataTransformer;
 	}
 
 	public SearchResult map(User user)
@@ -122,7 +125,8 @@ public class UserTransformer
 						.staffCode(ofNullable(v.getStaff()).map(StaffEntity::getCode).orElse(null))
 						.staffGrade(ofNullable(v.getStaff())
 								.map(StaffEntity::getGrade)
-								.map(ReferenceDataEntity::getCode).orElse(null))
+								.map(referenceDataTransformer::map)
+								.orElse(null))
 						.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
 						.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElse(v.getEndDate()))
 						.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(this::map).orElse(null))
@@ -197,7 +201,9 @@ public class UserTransformer
 	{
 		return existingStaff.toBuilder()
 				.code(user.getStaffCode())
-				.grade(referenceDataService.getStaffGradeId(user.getStaffGrade())
+				.grade(ofNullable(user.getStaffGrade())
+						.map(ReferenceData::getCode)
+						.flatMap(referenceDataService::getStaffGradeId)
 						.map(ReferenceDataEntity::new)
 						.orElse(null))
 				.forename(firstForename(user.getForenames()))

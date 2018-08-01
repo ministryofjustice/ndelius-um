@@ -33,6 +33,11 @@ export class ItemSelectorComponent {
     this.selectedChange.emit(this.selected);
   }
 
+  toggleOptionsDisplayed() {
+    if ((this.available == null || this.available.length === 0) && !this.optionsDisplayed) return;
+    this.optionsDisplayed = !this.optionsDisplayed
+  }
+
   mapToLabel(item: any): string {
     return this.labelMapper(item);
   }

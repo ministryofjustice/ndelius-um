@@ -14,6 +14,8 @@ import {TeamService} from "../../service/team.service";
 import {RoleGroup} from "../../model/role-group";
 import {Organisation} from "../../model/organisation";
 import {OrganisationService} from "../../service/organisation.service";
+import {StaffGrade} from "../../model/staff-grade";
+import {StaffGradeService} from "../../service/staff-grade.service";
 
 @Component({
   selector: 'user',
@@ -30,6 +32,7 @@ export class UserComponent implements OnInit {
   roleGroups: RoleGroup[];
   selectedGroup: RoleGroup;
   organisations: Organisation[];
+  staffGrades: StaffGrade[];
 
   constructor(
     private route: ActivatedRoute,
@@ -39,7 +42,7 @@ export class UserComponent implements OnInit {
     private datasetService: DatasetService,
     private teamService: TeamService,
     private organisationService: OrganisationService,
-
+    private staffGradeService: StaffGradeService,
     public auth: AuthorisationService) {}
 
   ngOnInit(): void {
@@ -56,6 +59,7 @@ export class UserComponent implements OnInit {
       .subscribe((user: User) => {
         this.user = user;
         this.loaded = true;
+        if (this.user.homeArea != null) this.homeAreaChanged();
       });
 
     this.roleService.groups().subscribe((roleGroups: RoleGroup[]) => {
@@ -70,12 +74,12 @@ export class UserComponent implements OnInit {
       this.datasets = datasets;
     });
 
-    this.teamService.teams().subscribe((teams: Team[]) => {
-      this.teams = teams;
-    });
-
     this.organisationService.organisations().subscribe((organisations: Organisation[]) => {
       this.organisations = organisations;
+    });
+
+    this.staffGradeService.staffGrades().subscribe((staffGrades: StaffGrade[]) => {
+      this.staffGrades = staffGrades;
     });
   }
 
@@ -89,6 +93,21 @@ export class UserComponent implements OnInit {
     }
   }
 
+  homeAreaChanged() {
+    if (!this.user.homeArea != null) {
+      this.user.organisation = this.user.homeArea.organisation;
+      this.teamService.providerTeams(this.user.homeArea.code).subscribe((teams: Team[]) => {
+        this.teams = teams;
+        if (this.user.teams != null) {
+          this.user.teams = this.user.teams.filter(team => teams.map(team => team.code).indexOf(team.code) !== -1);
+        }
+      });
+    } else {
+      this.user.organisation = null;
+      this.teams = [];
+    }
+  }
+
   submit(): void {
     if (this.mode === 'Add') {
       this.userService.create(this.user).subscribe(() => {
@@ -97,25 +116,36 @@ export class UserComponent implements OnInit {
     }
   }
 
-  teamToLabel(item: Team): string {
-    return item.description + ' - ' + item.code;
-  }
-
-  datasetToLabel(item: Dataset): string {
+  codeDescriptionToLabel(item: {code: string, description: string}): string {
     return (item.description != null? item.description + ' - ': '') + item.code;
   }
 
-  roleToLabel(item: Role): string {
-    return item.description + ' - ' + item.name;
+  nameDescriptionToLabel(item: {name: string, description: string}): string {
+    return (item.description != null? item.description + ' - ': '') + item.name;
   }
 
-  roleGroupToLabel(item: RoleGroup): string {
+  nameToLabel(item: {name: string}): string {
     return item.name;
   }
 
-  organisationToLabel(item: Organisation): string{
-    return item.description + ' - ' + item.code;
+  get staffCodeSuffix(): string {
+    let staffCode = this.user.staffCode;
+    let homeArea = this.user.homeArea;
+    if (staffCode == null || homeArea == null || !staffCode.startsWith(homeArea.code)) {
+      return staffCode;
+    } else {
+      return staffCode.substring(homeArea.code.length);
+    }
   }
+
+  set staffCodeSuffix(staffCodeSuffix: string) {
+    if (staffCodeSuffix == null || staffCodeSuffix === "") {
+      this.user.staffCode = null;
+    } else {
+      this.user.staffCode = this.user.homeArea.code + staffCodeSuffix;
+    }
+  }
+
   get json() {
     return JSON.stringify(this.user);
   }

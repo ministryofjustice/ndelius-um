@@ -1,7 +1,7 @@
 <div class="dropdown">
   <button [id]="id+'-toggle-btn'" type="button"
           class="form-control text-left" [ngClass]="{readonly: readonly}"
-          (click)="optionsDisplayed = !optionsDisplayed"
+          (click)="toggleOptionsDisplayed()"
           aria-haspopup="true" [attr.aria-expanded]="optionsDisplayed">
     <span *ngIf="multiple && selected == null">0 selected</span>
     <span *ngIf="multiple && selected != null && selected.length !== 1">{{selected.length}} selected</span>

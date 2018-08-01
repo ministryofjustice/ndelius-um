@@ -59,55 +59,20 @@
           <date id="end-date" [(value)]="user.endDate" [min]="user.startDate" [readonly]="mode === 'View'"></date>
         </div>
       </div>
-      <h4>Allocation</h4>
-      <hr>
-      <div class="form-group row">
-        <label for="home-area" class="col-sm-2 col-form-label">Home Area</label>
-        <div class="col-sm-4">
-          <item-selector id="home-area" #homeArea maxHeight="300px"
-                         [(selected)]="user.homeArea"
-                         [available]="datasets"
-                         [readonly]="mode === 'View'"
-                         [labelMapper]="datasetToLabel"></item-selector>
-        </div>
-        <label for="organisation" class="col-sm-2 col-form-label">Organisation</label>
-        <div class="col-sm-4">
-          <item-selector id="organisation" maxHeight="300px"
-                         [(selected)]="user.organisation"
-                         [available]="organisations"
-                         [readonly]="mode === 'View'"
-                         [labelMapper]="organisationToLabel"></item-selector>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="teams" class="col-sm-2 col-form-label">Team(s)</label>
-        <div class="col-sm-4">
-          <item-selector id="teams" multiple="true" maxHeight="300px"
-                         [(selected)]="user.teams"
-                         [available]="teams"
-                         [readonly]="mode === 'View'"
-                         [labelMapper]="teamToLabel"></item-selector>
-        </div>
-        <label for="staff-code" class="col-sm-2 col-form-label">Staff Code</label>
-        <div class="col-sm-4">
-          <input id="staff-code" name="staff-code" [(ngModel)]="user.staffCode"
-                 class="form-control" [readonly]="mode === 'View'" autocomplete="off"/>
-        </div>
-      </div>
       <h4>Authorisation</h4>
       <hr>
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Role Groups</label>
-        <div class="col-sm-3 pr-sm-0">
+        <div class="col-sm-{{selectedGroup != null && mode !== 'View'? '3  pr-sm-0': 4}}">
           <item-selector id="role-groups" #roleGroupField maxHeight="300px"
                          [(selected)]="selectedGroup"
                          [available]="roleGroups"
                          [readonly]="mode === 'View'"
-                         [labelMapper]="roleGroupToLabel"></item-selector>
+                         [labelMapper]="nameToLabel"></item-selector>
         </div>
-        <div class="col-sm-1 pl-sm-1">
+        <div class="col-sm-1 pl-sm-1" *ngIf="selectedGroup != null && mode !== 'View'">
           <button class="btn btn-outline-secondary w-100" (click)="addGroup(); roleGroupField.optionsDisplayed = false"
-                  [disabled]="selectedGroup == null || mode === 'View'" type="button">
+                  type="button">
             Add &raquo;
           </button>
         </div>
@@ -117,7 +82,7 @@
                          [(selected)]="user.roles"
                          [available]="roles"
                          [readonly]="mode === 'View'"
-                         [labelMapper]="roleToLabel"></item-selector>
+                         [labelMapper]="nameDescriptionToLabel"></item-selector>
         </div>
       </div>
       <div class="form-group row">
@@ -127,7 +92,59 @@
                          [(selected)]="user.datasets"
                          [available]="datasets"
                          [readonly]="mode === 'View'"
-                         [labelMapper]="datasetToLabel"></item-selector>
+                         [labelMapper]="codeDescriptionToLabel"
+                         aria-describedby="datasets-help-text"></item-selector>
+        </div>
+      </div>
+      <h4>Staff Details</h4>
+      <p *ngIf="mode !== 'View' && (user.datasets == null || user.datasets.length === 0)">
+        User datasets are required above before entering staff details.
+      </p>
+      <hr>
+      <div class="form-group row">
+        <label for="home-area" class="col-sm-2 col-form-label">Home Area</label>
+        <div class="col-sm-4">
+          <item-selector id="home-area" #homeArea maxHeight="300px"
+                         [(selected)]="user.homeArea" (selectedChange)="homeAreaChanged()"
+                         [available]="user.datasets"
+                         [readonly]="mode === 'View' || user.datasets == null || user.datasets.length === 0"
+                         [labelMapper]="codeDescriptionToLabel"></item-selector>
+        </div>
+        <label for="organisation" class="col-sm-2 col-form-label"
+               *ngIf="user.homeArea?.organisation?.description">Organisation</label>
+        <div class="col-sm-4">
+          <input id="organisation" name="organisation" [value]="user.homeArea?.organisation?.description"
+                 class="form-control-plaintext" readonly="readonly">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="staff-code" class="col-sm-2 col-form-label">Staff Code</label>
+        <div class="col-sm-4">
+          <div class="input-group">
+            <div class="input-group-prepend" *ngIf="user.homeArea != null">
+              <span class="input-group-text">{{user.homeArea?.code}}</span>
+            </div>
+            <input id="staff-code" name="staff-code" [(ngModel)]="staffCodeSuffix"
+                   class="form-control" [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"/>
+          </div>
+        </div>
+        <label for="teams" class="col-sm-2 col-form-label">Team(s)</label>
+        <div class="col-sm-4">
+          <item-selector id="teams" multiple="true" maxHeight="300px"
+                         [(selected)]="user.teams"
+                         [available]="teams"
+                         [readonly]="mode === 'View' || user.staffCode == null"
+                         [labelMapper]="codeDescriptionToLabel"></item-selector>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="staff-grade" class="col-sm-2 col-form-label">Staff Grade</label>
+        <div class="col-sm-4">
+          <item-selector id="staff-grade" maxHeight="300px"
+                         [(selected)]="user.staffGrade"
+                         [available]="staffGrades"
+                         [readonly]="mode === 'View' || user.staffCode == null"
+                         [labelMapper]="codeDescriptionToLabel"></item-selector>
         </div>
       </div>
       <hr/>

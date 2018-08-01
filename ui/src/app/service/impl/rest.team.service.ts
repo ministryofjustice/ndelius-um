@@ -11,6 +11,10 @@ export class RestTeamService implements TeamService {
   constructor(private http: HttpClient) {}
 
   teams(): Observable<Team[]> {
-    return this.http.get<Team[]>(environment.api.baseurl + "teams")
+    return this.http.get<Team[]>(environment.api.baseurl + "teams");
+  }
+
+  providerTeams(provider: string): Observable<Team[]> {
+    return this.http.get<Team[]>(environment.api.baseurl + "teams?provider=" + provider);
   }
 }

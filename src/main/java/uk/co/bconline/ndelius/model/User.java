@@ -19,7 +19,7 @@ public final class User
 	private String forenames;
 	private String surname;
 	private String staffCode;
-	private String staffGrade;
+	private ReferenceData staffGrade;
 	private Dataset homeArea;
 	private Organisation organisation;
 	private LocalDate startDate;
