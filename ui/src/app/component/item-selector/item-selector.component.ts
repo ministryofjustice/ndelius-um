@@ -53,9 +53,18 @@ export class ItemSelectorComponent {
   }
 
   get filtered(): any[] {
-    if (this.filter.length === 0) return this.available;
-    return this.available.filter(item => {
-      return this.mapToLabel(item).toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
+    let items;
+    if (this.filter.length === 0) {
+      items = this.available;
+    } else {
+      items = this.available.filter(item => {
+        return this.mapToLabel(item).toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
+      });
+    }
+    return items.sort((a, b) => {
+      let labelA = this.mapToLabel(a);
+      let labelB = this.mapToLabel(b);
+      return labelA == labelB? 0: labelA < labelB? -1: 1;
     });
   }
 }
