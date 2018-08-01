@@ -19,10 +19,10 @@ import uk.co.bconline.ndelius.util.JwtHelper;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class LoginSuccessHandlerTest
+public class LoginHandlerTest
 {
 	@Autowired
-	private LoginSuccessHandler handler;
+	private LoginHandler handler;
 
 	@Autowired
 	private JwtHelper jwtHelper;

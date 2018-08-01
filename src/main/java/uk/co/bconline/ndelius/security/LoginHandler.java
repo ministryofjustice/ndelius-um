@@ -1,5 +1,7 @@
 package uk.co.bconline.ndelius.security;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -7,8 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +22,7 @@ import uk.co.bconline.ndelius.util.JwtHelper;
 
 @Component
 @Slf4j(topic = "audit")
-public class LoginSuccessHandler implements AuthenticationSuccessHandler
+public class LoginHandler implements AuthenticationSuccessHandler, AuthenticationFailureHandler
 {
 	@Value("${jwt.expiry}")
 	private int expiry;
@@ -29,7 +33,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler
 	private final JwtHelper jwtHelper;
 
 	@Autowired
-	public LoginSuccessHandler(JwtHelper jwtHelper)
+	public LoginHandler(JwtHelper jwtHelper)
 	{
 		this.jwtHelper = jwtHelper;
 	}
@@ -49,6 +53,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler
 		cookie.setPath("/");
 		response.addCookie(cookie);
 
-		log.info("{} {}", user.getUsername(), "[UMLOGIN] []");
+		log.info("{} [UMLOGIN] []", user.getUsername());
+	}
+
+	@Override
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+	{
+		log.error("??? [UMLOGIN] [{}, {}]", request.getHeader(AUTHORIZATION), exception.getMessage());
 	}
 }

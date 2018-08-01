@@ -35,7 +35,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import lombok.val;
-import uk.co.bconline.ndelius.security.LoginSuccessHandler;
+import uk.co.bconline.ndelius.security.LoginHandler;
 import uk.co.bconline.ndelius.service.impl.AD1UserDetailsService;
 
 @Configuration
@@ -54,15 +54,15 @@ public class SpnegoConfig extends WebSecurityConfigurerAdapter
 
 	private final AD1UserDetailsService userDetailsService;
 	private final RequestMatcher loginRequestMatcher;
-	private final LoginSuccessHandler loginSuccessHandler;
+	private final LoginHandler loginHandler;
 
 	@Autowired
 	public SpnegoConfig(AD1UserDetailsService userDetailsService, RequestMatcher loginRequestMatcher,
-			LoginSuccessHandler loginSuccessHandler)
+			LoginHandler loginHandler)
 	{
 		this.userDetailsService = userDetailsService;
 		this.loginRequestMatcher = loginRequestMatcher;
-		this.loginSuccessHandler = loginSuccessHandler;
+		this.loginHandler = loginHandler;
 	}
 
 	@Override
@@ -133,7 +133,8 @@ public class SpnegoConfig extends WebSecurityConfigurerAdapter
 			}
 		};
 		filter.setAuthenticationManager(authenticationManagerBean());
-		filter.setSuccessHandler(loginSuccessHandler);
+		filter.setSuccessHandler(loginHandler);
+		filter.setFailureHandler(loginHandler);
 		return filter;
 	}
 

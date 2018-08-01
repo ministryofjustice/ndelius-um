@@ -19,13 +19,14 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import lombok.val;
-import uk.co.bconline.ndelius.security.LoginSuccessHandler;
+import uk.co.bconline.ndelius.security.LoginHandler;
 
 @Configuration
 @Order(2)
@@ -64,7 +65,7 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter
 		return new BasicAuthenticationFilter(authenticationManager(), basicEntryPoint())
 		{
 			@Autowired
-			private LoginSuccessHandler loginSuccessHandler;
+			private LoginHandler loginHandler;
 
 			@Override
 			protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -83,7 +84,13 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter
 			protected void onSuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 					Authentication authentication)
 			{
-				loginSuccessHandler.onAuthenticationSuccess(request, response, authentication);
+				loginHandler.onAuthenticationSuccess(request, response, authentication);
+			}
+
+			@Override
+			protected void onUnsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+					AuthenticationException failed) {
+				loginHandler.onAuthenticationFailure(request, response, failed);
 			}
 
 			@Override
