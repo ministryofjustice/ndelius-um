@@ -33,6 +33,7 @@ import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import uk.co.bconline.ndelius.security.AuthenticationToken;
+import uk.co.bconline.ndelius.security.LoginHandler;
 import uk.co.bconline.ndelius.util.JwtHelper;
 
 @Slf4j
@@ -42,12 +43,14 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 {
 	private final JwtHelper jwtHelper;
 	private final RequestMatcher loginRequestMatcher;
+	private final LoginHandler loginHandler;
 
 	@Autowired
-	public JwtConfig(JwtHelper jwtHelper, RequestMatcher loginRequestMatcher)
+	public JwtConfig(JwtHelper jwtHelper, RequestMatcher loginRequestMatcher, LoginHandler loginHandler)
 	{
 		this.jwtHelper = jwtHelper;
 		this.loginRequestMatcher = loginRequestMatcher;
+		this.loginHandler = loginHandler;
 	}
 
 	@Override
@@ -92,15 +95,19 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 					catch (JwtException e)
 					{
 						log.error("Error parsing JWT token", e);
+						val failed = new InsufficientAuthenticationException("Invalid token", e);
+						loginHandler.onAuthenticationFailure(request, response, failed);
 						if (!loginRequestMatcher.matches(request))
 						{
-							jwtEntryPoint().commence(request, response, new InsufficientAuthenticationException("Invalid token", e));
+							jwtEntryPoint().commence(request, response, failed);
 							return;
 						}
 					}
 				}
 				else if (!loginRequestMatcher.matches(request) && !"OPTIONS".equals(request.getMethod()))
 				{
+					val failed = new InsufficientAuthenticationException("Missing token");
+					loginHandler.onAuthenticationFailure(request, response, failed);
 					jwtEntryPoint().commence(request, response, new InsufficientAuthenticationException("Missing token"));
 					return;
 				}
