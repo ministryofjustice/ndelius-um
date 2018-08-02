@@ -22,7 +22,6 @@ export class AppComponent implements OnInit {
       this.loaded = true;
     });
 
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         AppComponent.globalMessage = null;
