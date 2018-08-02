@@ -36,12 +36,13 @@ export class DateComponent implements OnInit {
     }
   }
 
-  setDaysFromToday(days: number): void {
+  setDaysFromToday(days: number): boolean {
     if (!this.readonly) {
       this.value = moment(now()).add(days, "days").toDate();
       this.ngOnInit();
       this.change();
     }
+    return false;
   }
 
   get valid(): boolean {

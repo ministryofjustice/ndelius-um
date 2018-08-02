@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {User} from "../../model/user";
 import {ActivatedRoute, Router} from "@angular/router";
-import {flatMap} from "rxjs/operators";
+import {flatMap, map} from "rxjs/operators";
 import {UserService} from "../../service/user.service";
 import {Observable} from "rxjs/Observable";
 import {AuthorisationService} from "../../service/impl/authorisation.service";
@@ -16,6 +16,7 @@ import {Organisation} from "../../model/organisation";
 import {OrganisationService} from "../../service/organisation.service";
 import {StaffGrade} from "../../model/staff-grade";
 import {StaffGradeService} from "../../service/staff-grade.service";
+import {AppComponent} from "../app/app.component";
 
 @Component({
   selector: 'user',
@@ -50,10 +51,24 @@ export class UserComponent implements OnInit {
       .pipe(flatMap(params => {
         if (params.id != null) {
           this.mode = this.auth.canUpdateUser()? 'Update': 'View';
-          return this.userService.read(params.id)
+          return this.userService.read(params.id);
         } else {
-          this.mode = 'Add';
-          return Observable.of(new User());
+          return this.route.queryParams.pipe(flatMap(query => {
+            if (query.copy != null) {
+              this.mode = 'Add';
+              return this.userService.read(query.copy).pipe(map(user => {
+                user.username = null;
+                user.aliasUsername = null;
+                user.staffCode = null;
+                user.staffGrade = null;
+                user.teams = [];
+                return user;
+              }));
+            } else {
+              this.mode = 'Add';
+              return Observable.of(new User());
+            }
+          }));
         }
       }))
       .subscribe((user: User) => {
@@ -111,8 +126,20 @@ export class UserComponent implements OnInit {
   submit(): void {
     if (this.mode === 'Add') {
       this.userService.create(this.user).subscribe(() => {
-        this.router.navigate(["/user/" + this.user.username]);
+        this.router.navigate(["/user/" + this.user.username]).then(() => {
+          AppComponent.globalMessage = "Created " + this.user.username + " successfully.";
+          AppComponent.globalMessageSeverity = "info";
+        });
       });
+    } else if (this.mode === 'Update') {
+      this.userService.update(this.user).subscribe(() => {
+        this.router.navigate(["/user/" + this.user.username]).then(() => {
+          AppComponent.globalMessage = "Updated " + this.user.username + " successfully.";
+          AppComponent.globalMessageSeverity = "info";
+        });
+      });
+    } else {
+      console.error('Unsupported mode', this.mode);
     }
   }
 

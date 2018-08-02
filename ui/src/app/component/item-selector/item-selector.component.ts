@@ -20,7 +20,7 @@ export class ItemSelectorComponent {
   toggle(item): void {
     if (this.multiple) {
       if (this.selected == null) this.selected = [];
-      let index = this.selected.indexOf(item);
+      let index = this.selected.map(item => this.mapToLabel(item)).indexOf(this.mapToLabel(item));
       if (index === -1) {
         this.selected.push(item);
       } else {

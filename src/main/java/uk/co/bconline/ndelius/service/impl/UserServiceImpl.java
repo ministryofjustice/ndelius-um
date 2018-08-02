@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.val;
 import uk.co.bconline.ndelius.exception.AppException;
-import uk.co.bconline.ndelius.exception.NotFoundException;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
@@ -110,9 +109,22 @@ public class UserServiceImpl implements UserService
 	@Override
 	public void updateUser(User user)
 	{
-		// not tested yet - currently just DB
-		val existingUser = dbService.getUser(user.getUsername()).orElseThrow(NotFoundException::new);
-		dbService.save(transformer.mapToUserEntity(user, existingUser));
+		// TODO update AD
+		val dbFuture = runAsync(() -> dbService.save(transformer.mapToUserEntity(user,
+				dbService.getUser(user.getUsername()).orElse(new UserEntity()))));
+		val oidFuture = runAsync(() -> oidService.save(transformer.mapToOIDUser(user,
+				oidService.getUser(user.getUsername()).orElse(new OIDUser()))));
+//		val ad1Future = runAsync(() -> ad1Service.ifPresent(service -> service.save(transformer.mapToAD1User(user, new ADUser()))));
+//		val ad2Future = runAsync(() -> ad2Service.ifPresent(service -> service.save(transformer.mapToAD2User(user, new ADUser()))));
+
+		try
+		{
+			allOf(dbFuture, oidFuture).get();
+		}
+		catch (InterruptedException | ExecutionException e)
+		{
+			throw new AppException(String.format("Unable to save user %s", user), e);
+		}
 	}
 
 	private Predicate<String> datasetsFilter()

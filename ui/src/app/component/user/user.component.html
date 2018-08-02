@@ -7,150 +7,159 @@
       <h1>{{mode}} user</h1>
     </div>
     <form #form="ngForm" (submit)="submit()">
-      <h4>User Details</h4>
-      <hr>
-      <div class="form-group row">
-        <label for="username" class="col-sm-2 col-form-label">Username</label>
-        <div class="col-sm-4">
-          <input id="username" name="username" [(ngModel)]="user.username"
-                 class="form-control" [readonly]="mode === 'View'" autocomplete="off"
-                 aria-describedby="username-help-text"/>
-        </div>
-        <span id="username-help-text" class="form-text col-sm-6 text-muted" *ngIf="mode !== 'View'">
-          Username should be unique and contain only alphanumeric characters.
-        </span>
-      </div>
-      <div class="form-group row" *ngIf="user.aliasUsername != null || mode !== 'View'">
-        <label for="alias-username" class="col-sm-2 col-form-label">DOM1 Username</label>
-        <div class="col-sm-4">
-          <input id="alias-username" name="alias-username" [(ngModel)]="user.aliasUsername"
-                 class="form-control" [readonly]="mode === 'View'" autocomplete="off">
-        </div>
-        <div class="col-sm-4">
-          <div class="form-check-inline pt-2">
-            <input id="same-username" name="same-username"
-                   type="checkbox" class="form-check-input"
-                   [disabled]="user.aliasUsername === user.username || mode === 'View'"
-                   [checked]="user.aliasUsername === user.username"
-                   (input)="user.aliasUsername = user.username">
-            <label for="same-username" class="form-check-label">Same as OMNI username?</label>
+      <section class="mb-5">
+        <h4>User Details</h4>
+        <hr>
+        <div class="form-group row">
+          <label for="username" class="col-sm-2 col-form-label">Username</label>
+          <div class="col-sm-4">
+            <input id="username" name="username" [(ngModel)]="user.username"
+                   class="form-control" [readonly]="mode !== 'Add'"
+                   aria-describedby="username-help-text" autocomplete="off" required/>
           </div>
+          <span id="username-help-text" class="form-text col-sm-6 text-muted" *ngIf="mode === 'Add'">
+            Username should be unique and contain only alphanumeric characters.
+          </span>
         </div>
-      </div>
-      <div class="form-group row">
-        <label for="forenames" class="col-sm-2 col-form-label">Forename(s)</label>
-        <div class="col-sm-4">
-          <input id="forenames" name="forenames" [(ngModel)]="user.forenames" autocomplete="given-name"
-                 class="form-control" [readonly]="mode === 'View'">
-        </div>
-        <label for="surname" class="col-sm-2 col-form-label">Surname</label>
-        <div class="col-sm-4">
-          <input id="surname" name="surname" [(ngModel)]="user.surname" autocomplete="family-name"
-                 class="form-control" [readonly]="mode === 'View'">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label [for]="'start-date-d'" class="col-sm-2 col-form-label">Start Date</label>
-        <div class="col-sm-4">
-          <date id="start-date" [(value)]="user.startDate" [max]="user.endDate" [readonly]="mode === 'View'"></date>
-        </div>
-        <label [for]="'end-date-d'" class="col-sm-2 col-form-label">End Date</label>
-        <div class="col-sm-4">
-          <date id="end-date" [(value)]="user.endDate" [min]="user.startDate" [readonly]="mode === 'View'"></date>
-        </div>
-      </div>
-      <h4>Authorisation</h4>
-      <hr>
-      <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Role Groups</label>
-        <div class="col-sm-{{selectedGroup != null && mode !== 'View'? '3  pr-sm-0': 4}}">
-          <item-selector id="role-groups" #roleGroupField maxHeight="300px"
-                         [(selected)]="selectedGroup"
-                         [available]="roleGroups"
-                         [readonly]="mode === 'View'"
-                         [labelMapper]="nameToLabel"></item-selector>
-        </div>
-        <div class="col-sm-1 pl-sm-1" *ngIf="selectedGroup != null && mode !== 'View'">
-          <button class="btn btn-outline-secondary w-100" (click)="addGroup(); roleGroupField.optionsDisplayed = false"
-                  type="button">
-            Add &raquo;
-          </button>
-        </div>
-        <label for="roles" class="col-sm-2 col-form-label">Roles</label>
-        <div class="col-sm-4">
-          <item-selector id="roles" multiple="true" maxHeight="300px"
-                         [(selected)]="user.roles"
-                         [available]="roles"
-                         [readonly]="mode === 'View'"
-                         [labelMapper]="nameDescriptionToLabel"></item-selector>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="datasets" class="col-sm-2 col-form-label">Datasets</label>
-        <div class="col-sm-4">
-          <item-selector id="datasets" multiple="true" maxHeight="300px"
-                         [(selected)]="user.datasets"
-                         [available]="datasets"
-                         [readonly]="mode === 'View'"
-                         [labelMapper]="codeDescriptionToLabel"
-                         aria-describedby="datasets-help-text"></item-selector>
-        </div>
-      </div>
-      <h4>Staff Details</h4>
-      <p *ngIf="mode !== 'View' && (user.datasets == null || user.datasets.length === 0)">
-        User datasets are required above before entering staff details.
-      </p>
-      <hr>
-      <div class="form-group row">
-        <label for="home-area" class="col-sm-2 col-form-label">Home Area</label>
-        <div class="col-sm-4">
-          <item-selector id="home-area" #homeArea maxHeight="300px"
-                         [(selected)]="user.homeArea" (selectedChange)="homeAreaChanged()"
-                         [available]="user.datasets"
-                         [readonly]="mode === 'View' || user.datasets == null || user.datasets.length === 0"
-                         [labelMapper]="codeDescriptionToLabel"></item-selector>
-        </div>
-        <label for="organisation" class="col-sm-2 col-form-label"
-               *ngIf="user.homeArea?.organisation?.description">Organisation</label>
-        <div class="col-sm-4">
-          <input id="organisation" name="organisation" [value]="user.homeArea?.organisation?.description"
-                 class="form-control-plaintext" readonly="readonly">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="staff-code" class="col-sm-2 col-form-label">Staff Code</label>
-        <div class="col-sm-4">
-          <div class="input-group">
-            <div class="input-group-prepend" *ngIf="user.homeArea != null">
-              <span class="input-group-text">{{user.homeArea?.code}}</span>
+        <div class="form-group row" *ngIf="user.aliasUsername != null || mode !== 'View'">
+          <label for="alias-username" class="col-sm-2 col-form-label">Alias</label>
+          <div class="col-sm-4">
+            <input id="alias-username" name="alias-username" [(ngModel)]="user.aliasUsername"
+                   class="form-control" [readonly]="mode === 'View'" autocomplete="off" required>
+          </div>
+          <div class="col-sm-6">
+            <div class="custom-control custom-checkbox pt-2">
+              <input id="same-username" name="same-username"
+                     type="checkbox" class="custom-control-input"
+                     [disabled]="user.aliasUsername === user.username || mode === 'View'"
+                     [checked]="user.aliasUsername === user.username"
+                     (input)="user.aliasUsername = user.username">
+              <label for="same-username" class="custom-control-label">Same as username?</label>
             </div>
-            <input id="staff-code" name="staff-code" [(ngModel)]="staffCodeSuffix"
-                   class="form-control" [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"/>
           </div>
         </div>
-        <label for="teams" class="col-sm-2 col-form-label">Team(s)</label>
-        <div class="col-sm-4">
-          <item-selector id="teams" multiple="true" maxHeight="300px"
-                         [(selected)]="user.teams"
-                         [available]="teams"
-                         [readonly]="mode === 'View' || user.staffCode == null"
-                         [labelMapper]="codeDescriptionToLabel"></item-selector>
+        <div class="form-group row">
+          <label for="forenames" class="col-sm-2 col-form-label">Forename(s)</label>
+          <div class="col-sm-4">
+            <input id="forenames" name="forenames" [(ngModel)]="user.forenames" autocomplete="given-name"
+                   class="form-control" [readonly]="mode === 'View'" required>
+          </div>
+          <label for="surname" class="col-sm-2 col-form-label">Surname</label>
+          <div class="col-sm-4">
+            <input id="surname" name="surname" [(ngModel)]="user.surname" autocomplete="family-name"
+                   class="form-control" [readonly]="mode === 'View'" required>
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <label for="staff-grade" class="col-sm-2 col-form-label">Staff Grade</label>
-        <div class="col-sm-4">
-          <item-selector id="staff-grade" maxHeight="300px"
-                         [(selected)]="user.staffGrade"
-                         [available]="staffGrades"
-                         [readonly]="mode === 'View' || user.staffCode == null"
-                         [labelMapper]="codeDescriptionToLabel"></item-selector>
+        <div class="form-group row">
+          <label [for]="'start-date-d'" class="col-sm-2 col-form-label">Start Date</label>
+          <div class="col-sm-4">
+            <date id="start-date" [(value)]="user.startDate" [max]="user.endDate" [readonly]="mode === 'View'"></date>
+          </div>
+          <label [for]="'end-date-d'" class="col-sm-2 col-form-label">End Date</label>
+          <div class="col-sm-4">
+            <date id="end-date" [(value)]="user.endDate" [min]="user.startDate" [readonly]="mode === 'View'"></date>
+          </div>
         </div>
-      </div>
+      </section>
+      <section class="mb-5">
+        <h4>Authorisation</h4>
+        <hr>
+        <div class="form-group row">
+          <label [for]="'role-groups-toggle-btn'" class="col-sm-2 col-form-label">Role Groups</label>
+          <div class="col-sm-{{selectedGroup != null && mode !== 'View'? '3  pr-sm-0': 4}}">
+            <item-selector id="role-groups" #roleGroupField maxHeight="300px"
+                           [(selected)]="selectedGroup"
+                           [available]="roleGroups"
+                           [readonly]="mode === 'View'"
+                           [labelMapper]="nameToLabel"></item-selector>
+          </div>
+          <div class="col-sm-1 pl-sm-1" *ngIf="selectedGroup != null && mode !== 'View'">
+            <button class="btn btn-outline-secondary w-100" (click)="addGroup(); roleGroupField.optionsDisplayed = false"
+                    type="button">
+              Add &raquo;
+            </button>
+          </div>
+          <label [for]="'roles-toggle-btn'" class="col-sm-2 col-form-label">Roles</label>
+          <div class="col-sm-4">
+            <item-selector id="roles" multiple="true" maxHeight="300px"
+                           [(selected)]="user.roles"
+                           [available]="roles"
+                           [readonly]="mode === 'View'"
+                           [labelMapper]="nameDescriptionToLabel"></item-selector>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label [for]="'datasets-toggle-btn'" class="col-sm-2 col-form-label">Datasets</label>
+          <div class="col-sm-4">
+            <item-selector id="datasets" multiple="true" maxHeight="300px"
+                           [(selected)]="user.datasets"
+                           [available]="datasets"
+                           [readonly]="mode === 'View'"
+                           [labelMapper]="codeDescriptionToLabel"
+                           aria-describedby="datasets-help-text"></item-selector>
+          </div>
+        </div>
+      </section>
+      <section class="mb-5">
+        <h4>Staff Details</h4>
+        <hr>
+        <div class="alert alert-warning" *ngIf="mode !== 'View' && (user.datasets == null || user.datasets.length === 0)">
+          <label class="m-0" style="cursor: pointer"
+                 [for]="'datasets-toggle-btn'">User datasets are required before entering staff details.</label>
+        </div>
+        <div class="form-group row">
+          <label [for]="'home-area-toggle-btn'" class="col-sm-2 col-form-label">Home Area</label>
+          <div class="col-sm-4">
+            <item-selector id="home-area" #homeArea maxHeight="300px"
+                           [(selected)]="user.homeArea" (selectedChange)="homeAreaChanged()"
+                           [available]="user.datasets"
+                           [readonly]="mode === 'View' || user.datasets == null || user.datasets.length === 0"
+                           [labelMapper]="codeDescriptionToLabel"></item-selector>
+          </div>
+          <label for="organisation" class="col-sm-2 col-form-label"
+                 *ngIf="user.homeArea?.organisation?.description">Organisation</label>
+          <div class="col-sm-4">
+            <input id="organisation" name="organisation" [value]="user.homeArea?.organisation?.description"
+                   class="form-control-plaintext" readonly="readonly">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="staff-code" class="col-sm-2 col-form-label">Staff Code</label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <div class="input-group-prepend" *ngIf="user.homeArea != null">
+                <span class="input-group-text">{{user.homeArea?.code}}</span>
+              </div>
+              <input id="staff-code" name="staff-code" [(ngModel)]="staffCodeSuffix"
+                     class="form-control" [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"/>
+            </div>
+          </div>
+          <label [for]="'staff-grade-toggle-btn'" class="col-sm-2 col-form-label">Staff Grade</label>
+          <div class="col-sm-4">
+            <item-selector id="staff-grade" maxHeight="300px"
+                           [(selected)]="user.staffGrade"
+                           [available]="staffGrades"
+                           [readonly]="mode === 'View' || user.staffCode == null"
+                           [labelMapper]="codeDescriptionToLabel"></item-selector>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label [for]="'teams-toggle-btn'" class="col-sm-2 col-form-label">Team(s)</label>
+          <div class="col-sm-4">
+            <item-selector id="teams" multiple="true" maxHeight="300px"
+                           [(selected)]="user.teams"
+                           [available]="teams"
+                           [readonly]="mode === 'View' || user.staffCode == null"
+                           [labelMapper]="codeDescriptionToLabel"></item-selector>
+          </div>
+        </div>
+      </section>
       <hr/>
-      <div class="btn-toolbar" role="toolbar">
-        <button *ngIf="mode !== 'View'" class="btn btn-primary" type="submit">Save</button>
-        <button *ngIf="mode !== 'Add' && auth.canAddUser()" routerLink="/user" class="btn btn-primary" type="button">Create another&hellip;</button>
+      <div class="btn-toolbar">
+        <button *ngIf="mode !== 'View'" class="btn btn-primary mr-2" type="submit">Save</button>
+        <button *ngIf="mode !== 'Add' && auth.canAddUser()"
+                class="btn btn-secondary mr-2" type="button"
+                routerLink="/user" [queryParams]="{copy: user.username}">Create another&hellip;</button>
       </div>
     </form>
     <p>{{json}}</p>
