@@ -17,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
+import uk.co.bconline.ndelius.util.LdapPasswordUtils;
 
 @Configuration
 @EnableWebSecurity
@@ -39,19 +40,7 @@ public class WebSecurityGlobalConfig extends WebSecurityConfigurerAdapter
 			@Override
 			public boolean matches(CharSequence rawPassword, String encodedPassword)
 			{
-				if (!encodedPassword.startsWith("{"))
-				{
-					// OID passes back the password as a stringify'd byte array, so we manually unpick it and turn it
-					// back into a hashed string for verification here.
-					String[] split = encodedPassword.split(",");
-					byte[] bytes = new byte[split.length];
-					for (int i = 0; i < split.length; i++)
-					{
-						bytes[i] = Byte.valueOf(split[i]);
-					}
-					encodedPassword = new String(bytes);
-				}
-				return super.matches(rawPassword, encodedPassword);
+				return super.matches(rawPassword, LdapPasswordUtils.fixPassword(encodedPassword));
 			}
 		};
 	}
