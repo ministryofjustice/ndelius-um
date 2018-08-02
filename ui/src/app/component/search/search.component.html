@@ -6,7 +6,7 @@
         <div class="form-group">
           <label for="query">
               Use this screen to search for an existing user<ng-container *ngIf="auth.canAddUser()" >, or
-              <a routerLink="/user">click here to add a new user</a> </ng-container>.
+              <a id="add-user-link" routerLink="/user">click here to add a new user</a> </ng-container>.
           </label>
           <div class="input-group">
             <input id="query" name="query" type="search" class="form-control" [(ngModel)]="query"
@@ -66,11 +66,11 @@
     <hr/>
     <div class="btn-toolbar justify-content-center">
       <div class="btn-group">
-        <button class="btn btn-outline-secondary" [disabled]="page <= 1" (click)="prevPage()">
+        <button id="search-results-prev" class="btn btn-outline-secondary" [disabled]="page <= 1" (click)="prevPage()">
           <span class="oi oi-arrow-left"></span>
           Previous
         </button>
-        <button class="btn btn-outline-secondary" [disabled]="!hasMoreResults" (click)="nextPage()">
+        <button id="search-results-next" class="btn btn-outline-secondary" [disabled]="!hasMoreResults" (click)="nextPage()">
           Next
           <span class="oi oi-arrow-right"></span>
         </button>
