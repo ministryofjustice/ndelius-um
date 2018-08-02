@@ -19,7 +19,7 @@
         <div class="input-group-prepend">
           <div class="input-group-text bg-white"><i class="oi oi-magnifying-glass"></i></div>
         </div>
-        <input type="search" [(ngModel)]="filter"
+        <input [id]="id+'-filter'" type="search" [(ngModel)]="filter"
                class="form-control py-2 border-left-0 border"
                aria-label="Filter">
       </div>

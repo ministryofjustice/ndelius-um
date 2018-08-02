@@ -156,10 +156,11 @@
       </section>
       <hr/>
       <div class="btn-toolbar">
-        <button *ngIf="mode !== 'View'" class="btn btn-primary mr-2" type="submit">Save</button>
-        <button *ngIf="mode !== 'Add' && auth.canAddUser()"
-                class="btn btn-secondary mr-2" type="button"
-                routerLink="/user" [queryParams]="{copy: user.username}">Create another&hellip;</button>
+        <button id="save-btn" type="submit" class="btn btn-primary mr-2"
+                *ngIf="mode !== 'View'">Save</button>
+        <button id="copy-btn" type="button" class="btn btn-secondary mr-2"
+                routerLink="/user" [queryParams]="{copy: user.username}"
+                *ngIf="mode !== 'Add' && auth.canAddUser()">Create another&hellip;</button>
       </div>
     </form>
     <p>{{json}}</p>
