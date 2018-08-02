@@ -1,4 +1,7 @@
 <ng-container *ngIf="auth.canSearch(); else unauthorised">
+  <div class="progress rounded-0 position-absolute h-1 w-100" *ngIf="searching">
+    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info w-100"></div>
+  </div>
   <div class="jumbotron animate-padding" [ngClass]="{'jumbotron-compact': users.length > 0}">
     <div class="container">
       <h1>Search</h1>
@@ -9,7 +12,7 @@
               <a routerLink="/user">click here to add a new user</a> </ng-container>.
           </label>
           <div class="input-group">
-            <input id="query" name="query" type="search" class="form-control" [(ngModel)]="query"
+            <input #queryInput="ngModel" id="query" name="query" type="search" class="form-control" [(ngModel)]="query"
                    placeholder="Search using name, username, team, staff code..."
                    autocomplete="off">
             <div class="input-group-append">
@@ -21,6 +24,9 @@
         </div>
       </form>
     </div>
+  </div>
+  <div class="container" *ngIf="!searching && noResults && query != ''">
+    <div class="card card-body bg-light">No results&hellip;</div>
   </div>
   <div class="container" *ngIf="users.length > 0">
     <div class="card border-top-0">
