@@ -10,6 +10,7 @@ const routes: Routes = [
   {path: 'search', component: SearchComponent},
   {path: 'search?q=:query', component: SearchComponent},
   {path: 'user', component: UserComponent},
+  {path: 'user?copy=:copy', component: UserComponent},
   {path: 'user/:id', component: UserComponent}
 ];
 

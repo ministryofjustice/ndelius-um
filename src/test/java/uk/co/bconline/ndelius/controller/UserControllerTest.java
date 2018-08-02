@@ -3,8 +3,7 @@ package uk.co.bconline.ndelius.controller;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
@@ -301,5 +300,67 @@ public class UserControllerTest
 		mvc.perform(get("/api/user/test.user3")
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void updateUser() throws Exception
+	{
+		String token = token(mvc);
+		User user = User.builder()
+				.username("test.user4")
+				.aliasUsername("test.user4.alias")
+				.forenames("Test")
+				.surname("User4")
+				.staffCode("N99A999")
+				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
+				.homeArea(Dataset.builder().code("N01").build())
+				.startDate(LocalDate.of(2000, 1, 1))
+				.organisation(Organisation.builder().code("NPS").build())
+				.teams(singletonList(Team.builder().code("N01TST").build()))
+				.datasets(asList(
+						Dataset.builder().code("N01").build(),
+						Dataset.builder().code("N02").build()))
+				.roles(singletonList(Role.builder()
+						.name("UMBT001")
+						.build()))
+				.build();
+
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+				.andExpect(status().isCreated())
+				.andExpect(redirectedUrl("/user/test.user4"));
+
+		mvc.perform(put("/api/user/test.user4")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+						.aliasUsername("ABC")
+						.forenames("A B C")
+						.surname("ABC")
+						.staffCode("N02A999")
+						.startDate(LocalDate.of(2001, 2, 3))
+						.datasets(asList(
+								Dataset.builder().code("N01").build(),
+								Dataset.builder().code("C01").build(),
+								Dataset.builder().code("C02").build()))
+						.homeArea(Dataset.builder().code("C01").build())
+						.organisation(Organisation.builder().code("PO1").build())
+						.roles(singletonList(Role.builder().name("UMBT002").build()))
+						.build())))
+				.andExpect(status().isNoContent());
+
+		mvc.perform(get("/api/user/test.user4")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.aliasUsername", is("ABC")))
+				.andExpect(jsonPath("$.forenames", is("A B C")))
+				.andExpect(jsonPath("$.surname", is("ABC")))
+				.andExpect(jsonPath("$.staffCode", is("N02A999")))
+				.andExpect(jsonPath("$.startDate", is("2001-02-03")))
+				.andExpect(jsonPath("$.organisation.code", is("PO1")))
+				.andExpect(jsonPath("$.roles", hasSize(1)))
+				.andExpect(jsonPath("$.roles[0].name", is("UMBT002")));
 	}
 }

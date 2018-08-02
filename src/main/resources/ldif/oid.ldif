@@ -37,12 +37,14 @@ dn: cn=UMBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: NDRole
 cn: UMBT002
-description: Test Role
+description: User Administrator (read only)
+UIBusinessInteractionCollection: UMBI001
+UIBusinessInteractionCollection: UMBI002
 UIBusinessInteractionCollection: UMBI006
 UIBusinessInteractionCollection: UMBI007
 UIBusinessInteractionCollection: UMBI008
 UIBusinessInteractionCollection: UMBI009
-UIBusinessInteractionCollection: UMBI010
+UIBusinessInteractionCollection: UMBI011
 
 dn: cn=test.user,cn=Users,dc=bcl,dc=local
 objectclass: top
@@ -88,6 +90,13 @@ givenName: Joe
 sn: Bloggs
 userHomeArea: N02
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+
+dn: cn=UMBT002,cn=Joe.Bloggs,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UMBT002
+aliasedObjectName: cn=UMBT002,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
 
 dn: cn=Jane.Bloggs,cn=Users,dc=bcl,dc=local
 objectclass: top

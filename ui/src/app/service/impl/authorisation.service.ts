@@ -31,6 +31,6 @@ export class AuthorisationService {
   }
 
   canUpdateUser(): boolean {
-    return false;
+    return this.hasRole(AuthorisationService.UPDATE_USER_ROLE);
   }
 }

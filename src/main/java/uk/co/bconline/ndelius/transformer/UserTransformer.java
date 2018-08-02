@@ -28,6 +28,7 @@ import uk.co.bconline.ndelius.service.ReferenceDataService;
 import uk.co.bconline.ndelius.service.TeamService;
 import uk.co.bconline.ndelius.service.impl.AD1UserDetailsService;
 import uk.co.bconline.ndelius.service.impl.AD2UserDetailsService;
+import uk.co.bconline.ndelius.util.LdapPasswordUtils;
 
 @Component
 public class UserTransformer
@@ -108,8 +109,7 @@ public class UserTransformer
 						.aliasUsername(v.getAliasUsername())
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
-						.homeArea(datasetService.getDatasetByCode(v.getHomeArea())
-								.orElse(Dataset.builder().code(v.getHomeArea()).build()))
+						.homeArea(datasetService.getDatasetByCode(v.getHomeArea()).orElse(null))
 						.roles(ofNullable(v.getRoles())
 								.map(transactions -> transactions.stream()
 										.map(this::map)
@@ -225,6 +225,7 @@ public class UserTransformer
 	{
 		return existingUser.toBuilder()
 				.username(user.getUsername())
+				.password(LdapPasswordUtils.fixPassword(existingUser.getPassword()))	// no facility to set password yet
 				.aliasUsername(user.getAliasUsername())
 				.forenames(user.getForenames())
 				.surname(user.getSurname())

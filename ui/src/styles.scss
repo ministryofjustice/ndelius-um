@@ -17,3 +17,7 @@
   background-color: $input-disabled-bg;
   opacity: 1;
 }
+
+.ng-invalid.ng-dirty {
+  @extend .is-invalid;
+}

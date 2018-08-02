@@ -13,13 +13,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.query.SearchScope;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
 import uk.co.bconline.ndelius.model.ldap.OIDRoleAssociation;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
@@ -35,6 +35,8 @@ import uk.co.bconline.ndelius.service.RoleService;
 @Service
 public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 {
+	private static final String USER_BASE = OIDUser.class.getAnnotation(Entry.class).base();
+
 	@Value("${oid.base}")
 	private String oidBase;
 
@@ -132,7 +134,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 		return stream(userRepository
 				.findAll(query()
-						.base(OIDUser.class.getAnnotation(Entry.class).base())
+						.base(USER_BASE)
 						.countLimit(pageSize * page)
 						.filter(filter))
 				.spliterator(), false)
@@ -147,7 +149,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		return user.map(u -> u.toBuilder()
 				.roles(roleService.getRolesByParent(username, OIDUser.class))
 				.aliasUsername(userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
-						.map(OIDUserAlias::getUsername).orElse(null))
+						.map(OIDUserAlias::getUsername).orElse(username))
 				.build());
 	}
 
@@ -160,8 +162,12 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public void save(OIDUser user)
 	{
+		// Save user
 		userRepository.save(user);
 
+		// User alias
+		userAliasRepository.findByAliasedUserDn(String.format("cn=%s,%s,%s", user.getUsername(), USER_BASE, oidBase))
+				.ifPresent(userAliasRepository::delete);
 		if (user.getAliasUsername() != null && !user.getAliasUsername().equals(user.getUsername()))
 		{
 			userAliasRepository.save(OIDUserAlias.builder()
@@ -170,13 +176,12 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 					.build());
 		}
 
-		// TODO for update - remove existing role aliases
-//		roleAliasRepository.deleteAll(roleAliasRepository.findAll(query()
-//				.searchScope(SearchScope.ONELEVEL)
-//				.base(String.format("cn=%s,%s", user.getUsername(), OIDUser.class.getAnnotation(Entry.class).base()))
-//				.where("objectclass").is("alias")));
-
-		val roleAliases = user.getRoles().stream()
+		// Role associations
+		roleAssociationRepository.deleteAll(roleAssociationRepository.findAll(query()
+				.searchScope(SearchScope.ONELEVEL)
+				.base(String.format("cn=%s,%s", user.getUsername(), USER_BASE))
+				.where("objectclass").is("alias")));
+		roleAssociationRepository.saveAll(user.getRoles().stream()
 				.map(OIDRole::getName)
 				.map(name -> OIDRoleAssociation.builder()
 						.name(name)
@@ -184,7 +189,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 						.aliasedObjectName(String.format("cn=%s,%s,%s", name,
 								OIDRole.class.getAnnotation(Entry.class).base(), oidBase))
 						.build())
-				.collect(toList());
-		roleAssociationRepository.saveAll(roleAliases);
+				.collect(toList()));
 	}
 }

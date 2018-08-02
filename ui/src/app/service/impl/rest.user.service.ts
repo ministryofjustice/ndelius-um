@@ -23,11 +23,15 @@ export class RestUserService implements UserService {
     });
   }
 
-  create(user: User): Observable<User> {
-    return this.http.post<User>(environment.api.baseurl + "user", user);
+  create(user: User): Observable<void> {
+    return this.http.post<void>(environment.api.baseurl + "user", user);
   }
 
   read(username: string): Observable<User> {
     return this.http.get<User>(environment.api.baseurl + "user/" + username);
+  }
+
+  update(user: User): Observable<void> {
+    return this.http.put<void>(environment.api.baseurl + "user/" + user.username, user);
   }
 }
