@@ -37,7 +37,7 @@ public class RoleGroupServiceImpl implements RoleGroupService
 
     public Iterable<RoleGroup> getRoleGroups()
     {
-		val rolesICanAssign = stream(roleService.getRoles().spliterator(), false).map(Role::getName).collect(toSet());
+		val rolesICanAssign = roleService.getRoles().stream().map(Role::getName).collect(toSet());
         return stream(oidRoleGroupRepository
                 .findAll(query()
                         .searchScope(ONELEVEL)
@@ -53,7 +53,7 @@ public class RoleGroupServiceImpl implements RoleGroupService
     @Override
     public Optional<RoleGroup> getRoleGroup(String name)
 	{
-		val rolesICanAssign = stream(roleService.getRoles().spliterator(), false).map(Role::getName).collect(toSet());
+		val rolesICanAssign = roleService.getRoles().stream().map(Role::getName).collect(toSet());
         return oidRoleGroupRepository.findByName(name)
 				.map(g -> {
 					g.setRoles(roleService

@@ -48,7 +48,7 @@ public class RoleServiceImpl implements RoleService
 	}
 
 	@Override
-	public Iterable<Role> getRoles()
+	public List<Role> getRoles()
 	{
 		val me = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 		val myInteractions = getUserInteractions(me);

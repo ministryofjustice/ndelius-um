@@ -1,57 +1,41 @@
 package uk.co.bconline.ndelius.model;
 
+import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 
-import org.hibernate.validator.HibernateValidator;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.OncePerRequestFilter;
+
+import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.security.AuthenticationToken;
+import uk.co.bconline.ndelius.service.RoleService;
+import uk.co.bconline.ndelius.service.UserService;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 public class UserValidationTest
 {
+	@Autowired
+	private RoleService roleService;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
 	private LocalValidatorFactoryBean localValidatorFactory;
-	@Autowired
-	private WebApplicationContext context;
-
-	@Autowired
-	private BasicAuthenticationFilter basicAuthenticationFilter;
-
-	@Autowired
-	private OncePerRequestFilter jwtAuthenticationFilter;
-
-	private MockMvc mvc;
-
-	@Before
-	public void setup()
-	{
-		mvc = MockMvcBuilders.webAppContextSetup(context).addFilter(jwtAuthenticationFilter)
-				.addFilter(basicAuthenticationFilter).alwaysDo(print()).build();
-
-		localValidatorFactory = new LocalValidatorFactoryBean();
-		localValidatorFactory.setProviderClass(HibernateValidator.class);
-		localValidatorFactory.afterPropertiesSet();
-
-	}
 
 	@Test
 	public void testUsernameBlank()
@@ -80,7 +64,7 @@ public class UserValidationTest
 		User user = User.builder().username("john.bob!").aliasUsername("a").forenames("a").surname("a").build();
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertEquals("testInvalidUsernamePattern error - expected 1 violation", 1, constraintViolations.size());
-		assertEquals("username invalid format", constraintViolations.iterator().next().getMessage());
+		assertEquals("invalid format", constraintViolations.iterator().next().getMessage());
 	}
 
 	@Test
@@ -104,7 +88,7 @@ public class UserValidationTest
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertEquals("testInvalidAliasPattern error - expected 1 violation", 1, constraintViolations.size());
-		assertEquals("aliasUsername invalid format", constraintViolations.iterator().next().getMessage());
+		assertEquals("invalid format", constraintViolations.iterator().next().getMessage());
 
 	}
 
@@ -129,6 +113,7 @@ public class UserValidationTest
 		assertEquals("testInvalidSurname error - expected 1 violation", 1, constraintViolations.size());
 		assertEquals("must not be blank", constraintViolations.iterator().next().getMessage());
 	}
+
 	@Test
 	public void testInvalidStaffCodePattern()
 	{
@@ -138,20 +123,20 @@ public class UserValidationTest
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertEquals("staffCode validation error found", 1, constraintViolations.size());
-		assertEquals("staff code invalid format", constraintViolations.iterator().next().getMessage());
+		assertEquals("invalid format", constraintViolations.iterator().next().getMessage());
 	}
 
 	@Test
-	public void testInvalidStaffCodeSize()
+	public void invalidRoles()
 	{
-		User user = User.builder().username("john.smith123").aliasUsername("jsmith1").forenames("john").surname
-				("smith")
-				.staffCode("123").build();
+		SecurityContextHolder.getContext().setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
+		User user = User.builder()
+				.roles(singletonList(Role.builder()
+						.name("not-real")
+						.build()))
+				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("staffCode validation error found", 2, constraintViolations.size());
-		assertThat(constraintViolations, hasItems(hasProperty("message", is("size must be between 7 and 7")),
-				hasProperty("message", is("staff code invalid format"))));
-
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("attempting to assign invalid roles"))));
 	}
 }
