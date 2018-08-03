@@ -111,7 +111,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	{
 		Optional<OIDUser> user = userRepository.findByUsername(username);
 		return user.map(u -> u.toBuilder()
-				.roles(roleService.getRolesByParent(username, OIDUser.class))
+				.roles(roleService.getRolesByParent(username, OIDUser.class).collect(toList()))
 				.aliasUsername(userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
 						.map(OIDUserAlias::getUsername).orElse(username))
 				.build());

@@ -43,11 +43,9 @@ public class RoleGroupServiceImpl implements RoleGroupService
                         .searchScope(ONELEVEL)
                         .base(OIDRoleGroup.class.getAnnotation(Entry.class).base())
                         .where("objectclass").like("*")).spliterator(), false)
-				.peek(g -> g.setRoles(roleService
-						.getRolesByParent(g.getName(), OIDRoleGroup.class).stream()
-						.filter(role -> rolesICanAssign.contains(role.getName()))
-						.collect(toList())))
-				.filter(g -> !g.getRoles().isEmpty())
+				.filter(g -> roleService
+						.getRolesByParent(g.getName(), OIDRoleGroup.class)
+						.anyMatch(role -> rolesICanAssign.contains(role.getName())))
                 .map(roleGroupTransformer::map)
                 .collect(toList());
     }
@@ -59,7 +57,7 @@ public class RoleGroupServiceImpl implements RoleGroupService
         return oidRoleGroupRepository.findByName(name)
 				.map(g -> {
 					g.setRoles(roleService
-							.getRolesByParent(name, OIDRoleGroup.class).stream()
+							.getRolesByParent(name, OIDRoleGroup.class)
 							.filter(role -> rolesICanAssign.contains(role.getName()))
 							.collect(toList()));
 					return g;

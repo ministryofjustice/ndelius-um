@@ -79,11 +79,10 @@ public class RoleServiceImpl implements RoleService
 	}
 
 	@Override
-	public List<OIDRole> getRolesByParent(String parent, Class<?> parentClass)
+	public Stream<OIDRole> getRolesByParent(String parent, Class<?> parentClass)
 	{
 		return getRolesByBase(String.format("cn=%s,%s", parent, parentClass.getAnnotation(Entry.class).base()))
-				.map(role -> getOIDRole(role.getName()).orElse(role))
-				.collect(toList());
+				.map(role -> getOIDRole(role.getName()).orElse(role));
 	}
 
 	/**
@@ -116,7 +115,7 @@ public class RoleServiceImpl implements RoleService
 	@Override
 	public List<String> getUserInteractions(String username)
 	{
-		return getRolesByParent(username, OIDUser.class).stream()
+		return getRolesByParent(username, OIDUser.class)
 				.map(OIDRole::getInteractions)
 				.flatMap(List::stream)
 				.collect(toList());

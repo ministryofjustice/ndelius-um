@@ -13,6 +13,7 @@ spring.jpa.properties.hibernate.search.default:
   expiry: 600 # 10 minutes
 
 oid.base-environment.java.naming.ldap.derefAliases: never
+oid.base-environment.com.sun.jndi.ldap.connect.pool: false
 
 logging.level:
   org.springframework.web: ERROR
