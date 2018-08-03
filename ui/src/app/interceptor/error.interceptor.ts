@@ -26,6 +26,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
         AppComponent.globalMessage = "Error " + res.status + " | " + error;
         AppComponent.globalMessageSeverity = "danger";
+        window.scrollTo(0, 0);
       }
     }));
   }

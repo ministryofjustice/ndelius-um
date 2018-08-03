@@ -22,6 +22,10 @@ export class AppComponent implements OnInit {
       this.loaded = true;
     });
 
+    this.router.routeReuseStrategy.shouldReuseRoute = (future, curr) => {
+      return future.routeConfig == curr.routeConfig
+        && (future.routeConfig == null || future.routeConfig.path != "user/:id");
+    };
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         AppComponent.globalMessage = null;
