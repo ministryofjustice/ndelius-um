@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
-			throw new AppException(String.format("Unable to save user %s", user), e);
+			throw new AppException("Unable to save user", e);
 		}
 	}
 
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
-			throw new AppException(String.format("Unable to save user %s", user), e);
+			throw new AppException("Unable to save user", e);
 		}
 	}
 
