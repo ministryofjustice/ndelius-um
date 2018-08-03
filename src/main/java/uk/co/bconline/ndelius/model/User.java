@@ -8,21 +8,23 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.*;
+import uk.co.bconline.ndelius.validator.AssignableRoles;
 
 @Getter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
+@AssignableRoles
 public class User
 {
 	@NotBlank
 	@Size(max = 60)
-	@Pattern(regexp = "^[a-zA-Z0-9\\_\\-\\.]*$", message = "username invalid format")
+	@Pattern(regexp = "^[a-zA-Z0-9_\\-.]*$", message = "invalid format")
 	private String username;
 
 	@Size(max = 60)
-	@Pattern(regexp = "^[a-zA-Z0-9\\_\\-\\.]*$", message = "aliasUsername invalid format")
+	@Pattern(regexp = "^[a-zA-Z0-9_\\-.]*$", message = "invalid format")
 	private String aliasUsername;
 
 	@NotBlank
@@ -33,18 +35,14 @@ public class User
 	@Size(max = 35)
 	private String surname;
 
-	@Size(min = 7, max = 7)
-	@Pattern(regexp = "^[A-Z0-9]{3}[A-Z][0-9]{3}$", message = "staff code invalid format")
+	@Pattern(regexp = "^[A-Z0-9]{3}[A-Z][0-9]{3}$", message = "invalid format")
 	private String staffCode;
 
 	private ReferenceData staffGrade;
 	private Dataset homeArea;
-
 	private Organisation organisation;
-
 	private LocalDate startDate;
 	private LocalDate endDate;
-
 	private List<Team> teams;
 	private List<Dataset> datasets;
 	private List<Role> roles;

@@ -2,13 +2,15 @@ package uk.co.bconline.ndelius.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import uk.co.bconline.ndelius.model.Role;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
 
 public interface RoleService
 {
-	Iterable<Role> getRoles();
+	List<Role> getRoles();
 	Optional<OIDRole> getOIDRole(String role);
-	List<OIDRole> getRolesByParent(String parent, Class<?> parentClass);
+	Stream<OIDRole> getRolesByParent(String parent, Class<?> parentClass);
+	List<String> getUserInteractions(String username);
 }

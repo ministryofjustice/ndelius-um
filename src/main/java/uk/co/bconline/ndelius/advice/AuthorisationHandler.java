@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
 import uk.co.bconline.ndelius.model.ForbiddenResponse;
-import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
+import uk.co.bconline.ndelius.service.RoleService;
 
 @Slf4j(topic = "audit")
 @Order(1)
@@ -29,10 +29,10 @@ public class AuthorisationHandler
 	@Value("${authorisation.disabled:false}")
 	private boolean disabled;
 
-	private final OIDUserDetailsService service;
+	private final RoleService service;
 
 	@Autowired
-	public AuthorisationHandler(OIDUserDetailsService service)
+	public AuthorisationHandler(RoleService service)
 	{
 		this.service = service;
 	}

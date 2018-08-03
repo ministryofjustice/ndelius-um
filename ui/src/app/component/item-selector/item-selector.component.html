@@ -3,11 +3,18 @@
           class="form-control text-left" [ngClass]="{readonly: readonly}"
           (click)="toggleOptionsDisplayed()"
           aria-haspopup="true" [attr.aria-expanded]="optionsDisplayed">
-    <span *ngIf="multiple && selected == null">0 selected</span>
-    <span *ngIf="multiple && selected != null && selected.length !== 1">{{selected.length}} selected</span>
-    <span *ngIf="multiple && selected != null && selected.length === 1">{{mapToLabel(selected[0])}}</span>
-    <span *ngIf="!multiple && selected != null">{{mapToLabel(selected)}}</span>
-    <span *ngIf="!multiple && selected == null">Please select&hellip;</span>
+    <span *ngIf="available == null">Loading...</span>
+    <ng-container *ngIf="available != null">
+      <ng-container *ngIf="multiple">
+        <span *ngIf="selected == null">0 selected</span>
+        <span *ngIf="selected != null && selected.length !== 1">{{selected.length}} selected</span>
+        <span *ngIf="selected != null && selected.length === 1">{{mapToLabel(selected[0])}}</span>
+      </ng-container>
+      <ng-container *ngIf="!multiple">
+        <span *ngIf="selected != null">{{mapToLabel(selected)}}</span>
+        <span *ngIf="selected == null">Please select&hellip;</span>
+      </ng-container>
+    </ng-container>
     <span class="oi oi-chevron-top float-right" *ngIf="optionsDisplayed"></span>
     <span class="oi oi-chevron-bottom float-right" *ngIf="!optionsDisplayed"></span>
   </button>

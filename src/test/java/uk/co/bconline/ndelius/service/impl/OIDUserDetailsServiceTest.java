@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.service.RoleService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -23,6 +24,9 @@ public class OIDUserDetailsServiceTest
 {
 	@Autowired
 	private OIDUserDetailsService service;
+
+	@Autowired
+	private RoleService roleService;
 
 	@Test
 	public void searchUsingInitial()
@@ -38,7 +42,7 @@ public class OIDUserDetailsServiceTest
 	@Test
 	public void retrieveRoles()
 	{
-		List<String> roles = service.getUserInteractions("test.user");
+		List<String> roles = roleService.getUserInteractions("test.user");
 
 		assertFalse(roles.isEmpty());
 		assertThat(roles, hasItem("UMBI001"));

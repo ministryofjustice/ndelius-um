@@ -23,7 +23,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class RoleGroupControllerTest {
+public class RoleGroupControllerTest
+{
     @Autowired
     private WebApplicationContext context;
 
@@ -64,8 +65,8 @@ public class RoleGroupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", not(empty())))
                 .andExpect(jsonPath("$.name", is("AP Manager")))
-                .andExpect(jsonPath("$.roles", hasSize(4)))
-                .andExpect(jsonPath("$.roles[*].name", hasItems("APBT002","APBT005","APBT050","CABT011")));
+                .andExpect(jsonPath("$.roles", not(empty())))
+                .andExpect(jsonPath("$.roles[*].name", hasItem("CABT011")));
     }
 
 }

@@ -84,7 +84,8 @@ public class UserTransformer
 		return Role.builder()
 				.name(oidRole.getName())
 				.description(oidRole.getDescription())
-				.interactions(oidRole.getName().startsWith("UMBT")? oidRole.getInteractions(): null)
+				.interactions(oidRole.getName().startsWith("UMBT") || oidRole.getName().startsWith("UABT")?
+						oidRole.getInteractions(): null)
 				.build();
 	}
 

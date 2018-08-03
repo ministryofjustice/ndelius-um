@@ -48,7 +48,7 @@ public class RoleControllerTest
 	}
 
 	@Test
-	public void datasetsAreReturned() throws Exception
+	public void rolesAreReturned() throws Exception
 	{
 		mvc.perform(get("/api/roles")
 				.header("Authorization", "Bearer " + token(mvc)))
@@ -56,5 +56,15 @@ public class RoleControllerTest
 				.andExpect(jsonPath("$", not(empty())))
 				.andExpect(jsonPath("$[*].name", hasItem("UMBT001")))
 				.andExpect(jsonPath("$[*].name", hasItem("UMBT002")));
+	}
+
+	@Test
+	public void rolesAreFilteredBasedOnAttributes() throws Exception
+	{
+		// UABT001 has adminlevel set to local, test.user is not allowed access to local-level roles so should't see it
+		mvc.perform(get("/api/roles")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].name", not(hasItem("UABT001"))));
 	}
 }

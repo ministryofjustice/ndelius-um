@@ -1,7 +1,7 @@
 package uk.co.bconline.ndelius.controller;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.ResponseEntity.notFound;
+import static org.springframework.http.ResponseEntity.ok;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -37,6 +37,6 @@ public class RoleController
 	{
 		val roles = roleService.getRoles();
 
-		return roles.iterator().hasNext() ? new ResponseEntity<>(roles, OK) : new ResponseEntity<>(NOT_FOUND);
+		return !roles.isEmpty()? ok(roles): notFound().build();
 	}
 }

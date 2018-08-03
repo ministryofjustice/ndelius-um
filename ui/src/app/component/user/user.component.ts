@@ -73,8 +73,9 @@ export class UserComponent implements OnInit {
       }))
       .subscribe((user: User) => {
         this.user = user;
+        this.roles = (this.roles || []).concat(...user.roles);
         this.loaded = true;
-        if (this.user.homeArea != null) this.homeAreaChanged();
+        this.homeAreaChanged();
       });
 
     this.roleService.groups().subscribe((roleGroups: RoleGroup[]) => {
@@ -82,11 +83,12 @@ export class UserComponent implements OnInit {
     });
 
     this.roleService.roles().subscribe((roles: Role[]) => {
-      this.roles = roles;
+      this.roles = (this.roles || []).concat(...roles);
     });
 
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {
       this.datasets = datasets;
+      this.user.datasets = [];
     });
 
     this.organisationService.organisations().subscribe((organisations: Organisation[]) => {
@@ -109,8 +111,9 @@ export class UserComponent implements OnInit {
   }
 
   homeAreaChanged() {
-    if (!this.user.homeArea != null) {
+    if (this.user.homeArea != null) {
       this.user.organisation = this.user.homeArea.organisation;
+      this.teams = null;
       this.teamService.providerTeams(this.user.homeArea.code).subscribe((teams: Team[]) => {
         this.teams = teams;
         if (this.user.teams != null) {

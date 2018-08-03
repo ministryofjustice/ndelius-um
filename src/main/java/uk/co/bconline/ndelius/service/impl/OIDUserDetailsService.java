@@ -67,42 +67,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	}
 
 	/**
-	 * Return a list of business interactions for a given user.
-	 *
-	 *
-	 * In NDelius, the interactions/roles are stored as uibusinessinteraction attributes on NDRole objects within the
-	 * ndRoleCatalogue. These are then aliased as sub-entries for each user to assign a set of allowed interactions.
-	 *
-	 * Note: The directory structure for NDelius in OID is (see schema.ldif for example):
-	 * dc=...
-	 * 	cn=Users
-	 * 		cn=ndRoleCatalogue
-	 * 			cn=XXBT001
-	 * 			objectclass: NDRole
-	 * 			uibusinessinteraction: XXBI001
-	 * 			uibusinessinteraction: XXBI002
-	 * 			...
-	 * 		cn=user1
-	 * 			cn=XXBT001
-	 * 			objectclass: alias
-	 * 			aliasedObjectName: cn=XXBT001,cn=ndRoleCatalogue,cn=Users,dc=...
-	 * 			...
-	 * 		cn=user2
-	 * 			...
-	 *
-	 * @param username The cn of the user to retrieve the roles for
-	 * @return A list of roles eg. [XXBI001, XXBI002]
-	 */
-	@Override
-	public List<String> getUserInteractions(String username)
-	{
-		return roleService.getRolesByParent(username, OIDUser.class).stream()
-				.map(OIDRole::getInteractions)
-				.flatMap(List::stream)
-				.collect(toList());
-	}
-
-	/**
 	 * Search for a list of users with a single text query.
 	 *
 	 * The search query will be tokenized on space, then each token will be AND matched with wildcards. If any token
@@ -147,7 +111,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	{
 		Optional<OIDUser> user = userRepository.findByUsername(username);
 		return user.map(u -> u.toBuilder()
-				.roles(roleService.getRolesByParent(username, OIDUser.class))
+				.roles(roleService.getRolesByParent(username, OIDUser.class).collect(toList()))
 				.aliasUsername(userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
 						.map(OIDUserAlias::getUsername).orElse(username))
 				.build());
