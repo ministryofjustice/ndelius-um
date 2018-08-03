@@ -29,7 +29,7 @@ export class UserComponent implements OnInit {
   user: User;
   teams: Team[];
   datasets: Dataset[];
-  roles: Role[];
+  roles: Role[] = [];
   roleGroups: RoleGroup[];
   selectedGroup: RoleGroup;
   organisations: Organisation[];
@@ -73,6 +73,7 @@ export class UserComponent implements OnInit {
       }))
       .subscribe((user: User) => {
         this.user = user;
+        this.roles.push(...user.roles);
         this.loaded = true;
         if (this.user.homeArea != null) this.homeAreaChanged();
       });
@@ -82,7 +83,7 @@ export class UserComponent implements OnInit {
     });
 
     this.roleService.roles().subscribe((roles: Role[]) => {
-      this.roles = roles;
+      this.roles.push(...roles);
     });
 
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {

@@ -11,4 +11,5 @@ public interface RoleService
 	Iterable<Role> getRoles();
 	Optional<OIDRole> getOIDRole(String role);
 	List<OIDRole> getRolesByParent(String parent, Class<?> parentClass);
+	List<String> getUserInteractions(String username);
 }

@@ -7,7 +7,6 @@ import uk.co.bconline.ndelius.model.ldap.OIDUser;
 
 public interface OIDUserService
 {
-	List<String> getUserInteractions(String username);
 	List<OIDUser> search(String query, int page, int pageSize);
 	Optional<OIDUser> getUser(String username);
 	String getUserHomeArea(String username);

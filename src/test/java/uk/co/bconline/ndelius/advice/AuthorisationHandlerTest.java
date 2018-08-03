@@ -16,13 +16,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
 import uk.co.bconline.ndelius.model.ForbiddenResponse;
-import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
+import uk.co.bconline.ndelius.service.RoleService;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration
 public class AuthorisationHandlerTest
 {
-	private OIDUserDetailsService service = mock(OIDUserDetailsService.class);
+	private RoleService service = mock(RoleService.class);
 	private ProceedingJoinPoint joinPoint = mock(ProceedingJoinPoint.class);
 	private AuthorisationHandler handler = new AuthorisationHandler(service);
 
