@@ -1,4 +1,4 @@
-package uk.co.bconline.ndelius.security;
+package uk.co.bconline.ndelius.security.handler;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import uk.co.bconline.ndelius.security.AuthenticationToken;
 import uk.co.bconline.ndelius.util.JwtHelper;
 
 @Component

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.repository.ad.ADUserRepository;
@@ -15,7 +16,8 @@ public abstract class ADUserDetailsService implements UserDetailsService
 	@Override
 	public UserDetails loadUserByUsername(String username)
 	{
-		return getUser(stripDomain(username)).orElse(null);
+		return getUser(stripDomain(username))
+				.orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
 	}
 
 	private static String stripDomain(String username)
