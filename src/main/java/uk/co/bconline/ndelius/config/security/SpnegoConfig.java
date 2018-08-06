@@ -3,15 +3,6 @@ package uk.co.bconline.ndelius.config.security;
 import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -19,27 +10,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.kerberos.authentication.KerberosAuthenticationProvider;
 import org.springframework.security.kerberos.authentication.KerberosServiceAuthenticationProvider;
 import org.springframework.security.kerberos.authentication.sun.SunJaasKerberosClient;
 import org.springframework.security.kerberos.authentication.sun.SunJaasKerberosTicketValidator;
-import org.springframework.security.kerberos.web.authentication.SpnegoAuthenticationProcessingFilter;
 import org.springframework.security.kerberos.web.authentication.SpnegoEntryPoint;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import lombok.val;
-import uk.co.bconline.ndelius.security.LoginHandler;
+import uk.co.bconline.ndelius.security.filter.BasicAuthFilter;
+import uk.co.bconline.ndelius.security.filter.SpnegoWithFallbackFilter;
+import uk.co.bconline.ndelius.security.handler.LoginHandler;
 import uk.co.bconline.ndelius.service.impl.AD1UserDetailsService;
 
-@Configuration
 @Order(2)
+@Configuration
 @ConditionalOnProperty("spnego.enabled")
 public class SpnegoConfig extends WebSecurityConfigurerAdapter
 {
@@ -55,14 +43,19 @@ public class SpnegoConfig extends WebSecurityConfigurerAdapter
 	private final AD1UserDetailsService userDetailsService;
 	private final RequestMatcher loginRequestMatcher;
 	private final LoginHandler loginHandler;
+	private final BasicAuthFilter basicAuthFilter;
 
 	@Autowired
-	public SpnegoConfig(AD1UserDetailsService userDetailsService, RequestMatcher loginRequestMatcher,
-			LoginHandler loginHandler)
+	public SpnegoConfig(
+			AD1UserDetailsService userDetailsService,
+			RequestMatcher loginRequestMatcher,
+			LoginHandler loginHandler,
+			BasicAuthFilter basicAuthFilter)
 	{
 		this.userDetailsService = userDetailsService;
 		this.loginRequestMatcher = loginRequestMatcher;
 		this.loginHandler = loginHandler;
+		this.basicAuthFilter = basicAuthFilter;
 	}
 
 	@Override
@@ -75,7 +68,8 @@ public class SpnegoConfig extends WebSecurityConfigurerAdapter
 				.exceptionHandling()
 					.authenticationEntryPoint(spnegoEntryPoint())
 					.and()
-				.addFilterBefore(spnegoAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
+				.addFilterBefore(spnegoFilter(), BasicAuthenticationFilter.class)
+				.addFilter(basicAuthFilter)
 				.authenticationProvider(kerberosAuthenticationProvider())
 				.authenticationProvider(kerberosServiceAuthenticationProvider())
 				.authorizeRequests()
@@ -103,46 +97,12 @@ public class SpnegoConfig extends WebSecurityConfigurerAdapter
 	}
 
 	@Bean
-	public SpnegoAuthenticationProcessingFilter spnegoAuthenticationProcessingFilter() throws Exception
+	public SpnegoWithFallbackFilter spnegoFilter() throws Exception
 	{
-		SpnegoAuthenticationProcessingFilter filter = new SpnegoAuthenticationProcessingFilter()
-		{
-			@Override
-			public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
-					throws IOException, ServletException
-			{
-				HttpServletRequest request = (HttpServletRequest) req;
-				HttpServletResponse response = (HttpServletResponse) res;
-				if ("OPTIONS".equals(request.getMethod()) || shouldNotFilter(request)) {
-					filterChain.doFilter(request, response);
-				} else {
-					Authentication existingAuth = SecurityContextHolder.getContext().getAuthentication();
-					if (existingAuth != null && !existingAuth.isAuthenticated()) {
-						filterChain.doFilter(request, response);
-						return;
-					}
-
-					String header = request.getHeader("Authorization");
-					if (header != null && (header.startsWith("Negotiate ") || header.startsWith("Kerberos ")))
-					{
-						super.doFilter(request, response, filterChain);
-					} else {
-						spnegoEntryPoint().commence(request, response, null);
-					}
-				}
-			}
-		};
+		SpnegoWithFallbackFilter filter = new SpnegoWithFallbackFilter(spnegoEntryPoint(), loginRequestMatcher);
 		filter.setAuthenticationManager(authenticationManagerBean());
 		filter.setSuccessHandler(loginHandler);
-		filter.setFailureHandler(loginHandler);
 		return filter;
-	}
-
-	private boolean shouldNotFilter(HttpServletRequest request)
-	{
-		val auth = SecurityContextHolder.getContext().getAuthentication();
-		return !loginRequestMatcher.matches(request) ||
-				(auth != null && !(auth instanceof AnonymousAuthenticationToken) && auth.isAuthenticated());
 	}
 
 	@Bean
@@ -160,7 +120,7 @@ public class SpnegoConfig extends WebSecurityConfigurerAdapter
 		SunJaasKerberosTicketValidator ticketValidator = new SunJaasKerberosTicketValidator();
 		ticketValidator.setServicePrincipal(servicePrincipal);
 		ticketValidator.setKeyTabLocation(new FileSystemResource(keytab));
-		ticketValidator.setDebug(true);
+		ticketValidator.setDebug(debug);
 		return ticketValidator;
 	}
 }

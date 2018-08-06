@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
@@ -16,6 +17,8 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import uk.co.bconline.ndelius.security.filter.BasicAuthFilter;
+import uk.co.bconline.ndelius.security.handler.LoginHandler;
 import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
 import uk.co.bconline.ndelius.util.LdapPasswordUtils;
 
@@ -40,7 +43,7 @@ public class WebSecurityGlobalConfig extends WebSecurityConfigurerAdapter
 			@Override
 			public boolean matches(CharSequence rawPassword, String encodedPassword)
 			{
-				return super.matches(rawPassword, LdapPasswordUtils.fixPassword(encodedPassword));
+				return encodedPassword != null && super.matches(rawPassword, LdapPasswordUtils.fixPassword(encodedPassword));
 			}
 		};
 	}
@@ -70,5 +73,19 @@ public class WebSecurityGlobalConfig extends WebSecurityConfigurerAdapter
 						.allowCredentials(true);
 			}
 		};
+	}
+
+	@Bean
+	public BasicAuthFilter basicAuthenticationFilter(LoginHandler loginHandler) throws Exception
+	{
+		return new BasicAuthFilter(loginHandler, loginRequestMatcher(), authenticationManager(), basicEntryPoint());
+	}
+
+	@Bean
+	public BasicAuthenticationEntryPoint basicEntryPoint()
+	{
+		BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
+		entryPoint.setRealmName("ndelius-um");
+		return entryPoint;
 	}
 }
