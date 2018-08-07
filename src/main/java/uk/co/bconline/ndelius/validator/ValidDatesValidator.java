@@ -22,7 +22,7 @@ public class ValidDatesValidator implements ConstraintValidator<ValidDates, User
 		}
 		else
 		{
-			return startDate == null && endDate == null;
+			return true;
 		}
 	}
 }

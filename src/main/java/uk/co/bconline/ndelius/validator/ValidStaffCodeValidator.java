@@ -1,10 +1,13 @@
 package uk.co.bconline.ndelius.validator;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.List;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.ReferenceData;
 import uk.co.bconline.ndelius.model.Team;
 import uk.co.bconline.ndelius.model.User;
@@ -18,19 +21,21 @@ public class ValidStaffCodeValidator implements ConstraintValidator<ValidStaffCo
 		String staffCode = user.getStaffCode();
 		List<Team> teams = user.getTeams();
 		ReferenceData staffGrade = user.getStaffGrade();
+		Dataset homeArea = user.getHomeArea();
 
 		if (staffCode == null)
 		{
-			return true;
+			return (teams == null || teams.isEmpty()) &&
+					(staffGrade == null || isEmpty(staffGrade.getCode()));
 		}
 		else
 		{
-			if(teams != null && staffGrade != null)
+			if (staffGrade != null && !isEmpty(staffGrade.getCode()) &&
+					homeArea != null && !isEmpty(homeArea.getCode()))
 			{
-				return !teams.isEmpty() && !staffGrade.getCode().isEmpty() && !staffGrade.getDescription()
-						.isEmpty();
+				return staffCode.startsWith(homeArea.getCode());
 			}
+			return false;
 		}
-		return false;
 	}
 }
