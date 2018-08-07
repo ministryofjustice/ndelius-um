@@ -225,6 +225,7 @@ public class UserControllerTest
 						.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 						.homeArea(Dataset.builder().code("N01").build())
 						.startDate(LocalDate.of(2000, 1, 1))
+						.endDate(LocalDate.of(2001, 2, 2))
 						.organisation(Organisation.builder()
 								.code("NPS")
 								.build())
@@ -315,6 +316,7 @@ public class UserControllerTest
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.homeArea(Dataset.builder().code("N01").build())
 				.startDate(LocalDate.of(2000, 1, 1))
+				.endDate(LocalDate.of(2001, 2, 2))
 				.organisation(Organisation.builder().code("NPS").build())
 				.teams(singletonList(Team.builder().code("N01TST").build()))
 				.datasets(asList(
@@ -341,6 +343,7 @@ public class UserControllerTest
 						.surname("ABC")
 						.staffCode("N02A999")
 						.startDate(LocalDate.of(2001, 2, 3))
+						.endDate(LocalDate.of(2001, 4, 4))
 						.datasets(asList(
 								Dataset.builder().code("N01").build(),
 								Dataset.builder().code("C01").build(),

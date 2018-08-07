@@ -9,6 +9,8 @@ import javax.validation.constraints.Size;
 
 import lombok.*;
 import uk.co.bconline.ndelius.validator.AssignableRoles;
+import uk.co.bconline.ndelius.validator.ValidDates;
+import uk.co.bconline.ndelius.validator.ValidStaffCode;
 
 @Getter
 @ToString
@@ -16,6 +18,8 @@ import uk.co.bconline.ndelius.validator.AssignableRoles;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @AssignableRoles
+@ValidDates
+@ValidStaffCode
 public class User
 {
 	@NotBlank

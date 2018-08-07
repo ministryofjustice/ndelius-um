@@ -5,6 +5,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -115,15 +117,35 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testInvalidStaffCodePattern()
+	public void testStaffCodeCrossValidation() // give me a team and a staff grade to pass
 	{
+
+		ReferenceData rd = new ReferenceData();
+		ArrayList<Team> team1 = new ArrayList<>();
+
 		User user = User.builder().username("john.smith123").aliasUsername("jsmith1").forenames("john").surname
 				("smith")
-				.staffCode("123A12#").build();
+				.staffCode("C01A123").staffGrade(rd).teams(team1).build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("staffCode validation error found", 1, constraintViolations.size());
-		assertEquals("invalid format", constraintViolations.iterator().next().getMessage());
+		assertEquals("testStaffCodeCrossValidation - Expected 1 Violation", 1, constraintViolations.size());
+		assertEquals("attempting to submit invalid staff details", constraintViolations.iterator().next().getMessage());
+	}
+
+	@Test
+	public void testInvalidStaffCodePattern() // give me a team and a staff grade to pass
+	{
+		User user = User.builder().username("john.smith123")
+					.aliasUsername("jsmith1")
+					.forenames("john")
+					.surname("smith")
+					.staffCode("1231231")
+					.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
+					.teams(singletonList(Team.builder().code("N01TST").build()))
+					.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertEquals("testInvalidStaffCodePattern - Expected 1 violation ", 1, constraintViolations.size());
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("invalid format"))));
 	}
 
 	@Test
@@ -138,5 +160,62 @@ public class UserValidationTest
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, hasItem(hasProperty("message", is("attempting to assign invalid roles"))));
+	}
+
+	@Test
+	public void testOneDateNull()
+	{
+
+		LocalDate startDate = LocalDate.of(2017, 5, 15);
+
+		SecurityContextHolder.getContext()
+				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
+		User user = User.builder().username("test.user").forenames("1").surname("1").startDate(startDate).endDate(null)
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("attempting to submit invalid dates"))));
+	}
+
+	@Test
+	public void testBothDatesNull()
+	{
+		SecurityContextHolder.getContext()
+				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
+		User user = User.builder().username("test.user").forenames("1").surname("1").startDate(null).endDate(null)
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertEquals("testBothDatesNull returned a violation", 0, constraintViolations.size());
+	}
+
+	@Test
+	public void startDateAfterEndDate()
+	{
+		LocalDate startDate = LocalDate.of(2019, 6, 17);
+		LocalDate endDate = LocalDate.of(2017, 5, 15);
+
+		SecurityContextHolder.getContext()
+				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
+		User user = User.builder().username("test.user").forenames("1").surname("1").startDate(startDate)
+				.endDate(endDate).build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("attempting to submit invalid dates"))));
+	}
+
+	@Test
+	public void startDateBeforeEndDate()
+	{
+		LocalDate startDate = LocalDate.of(2017, 4, 14);
+		LocalDate endDate = LocalDate.of(2019, 5, 15);
+
+		SecurityContextHolder.getContext()
+				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
+		User user = User.builder().username("test.user").forenames("1").surname("1").startDate(startDate)
+				.endDate(endDate).build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertEquals("startDateBeforeEndDate returned a violation", 0, constraintViolations.size());
 	}
 }
