@@ -3,12 +3,12 @@ package uk.co.bconline.ndelius.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import lombok.*;
 import uk.co.bconline.ndelius.validator.AssignableRoles;
+import uk.co.bconline.ndelius.validator.ValidDates;
+import uk.co.bconline.ndelius.validator.ValidStaffCode;
 
 @Getter
 @ToString
@@ -16,6 +16,8 @@ import uk.co.bconline.ndelius.validator.AssignableRoles;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @AssignableRoles
+@ValidDates
+@ValidStaffCode
 public class User
 {
 	@NotBlank
@@ -39,11 +41,14 @@ public class User
 	private String staffCode;
 
 	private ReferenceData staffGrade;
+
+	@NotNull
 	private Dataset homeArea;
 	private Organisation organisation;
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private List<Team> teams;
+	@NotEmpty
 	private List<Dataset> datasets;
 	private List<Role> roles;
 }
