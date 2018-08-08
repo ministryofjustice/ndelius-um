@@ -39,6 +39,9 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails
 	@Attribute(name="userHomeArea")
 	private String homeArea;
 
+	@Attribute(name="userSector")
+	private String sector;
+
 	@Attribute(name="userPassword")
 	private String password;
 

@@ -39,10 +39,6 @@ public class TeamEntity
 	@Column(name = "DESCRIPTION")
 	private String description;
 
-	@ContainedIn
-	@ManyToMany(mappedBy = "teams")
-	private List<StaffEntity> staff;
-
 	@Column(name = "START_DATE")
 	@Temporal(TemporalType.DATE)
 	private Date startDate;
@@ -54,4 +50,8 @@ public class TeamEntity
 	@ManyToOne
 	@JoinColumn(name = "PROBATION_AREA_ID", insertable = false, updatable = false)
 	private ProbationAreaEntity probationArea;
+
+	@ContainedIn
+	@OneToMany(mappedBy = "team")
+	private List<StaffTeamEntity> staffLinks;
 }

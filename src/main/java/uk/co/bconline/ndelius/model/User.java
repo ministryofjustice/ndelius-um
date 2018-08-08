@@ -37,6 +37,9 @@ public class User
 	@Size(max = 35)
 	private String surname;
 
+	@NotNull
+	private Boolean privateSector;
+
 	@Pattern(regexp = "^[A-Z0-9]{3}[A-Z][0-9]{3}$", message = "invalid format")
 	private String staffCode;
 

@@ -11,6 +11,7 @@ export class User {
   surname: string;
   staffCode: string;
   staffGrade: StaffGrade;
+  privateSector: boolean;
   homeArea: Dataset;
   organisation: Organisation;
   teams: Team[];
