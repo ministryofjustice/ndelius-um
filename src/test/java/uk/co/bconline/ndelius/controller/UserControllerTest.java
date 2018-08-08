@@ -168,7 +168,7 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.username", equalTo("test.user")))
 				.andExpect(jsonPath("$.forenames", equalTo("Test")))			// From OID
 				.andExpect(jsonPath("$.surname", equalTo("User")))				// From OID
-				.andExpect(jsonPath("$.organisation.code", equalTo("NPS")));	// From DB
+				.andExpect(jsonPath("$.homeArea.organisation.code", equalTo("NPS")));	// From DB
 	}
 
 	@Test
@@ -232,9 +232,6 @@ public class UserControllerTest
 						.homeArea(Dataset.builder().code("N01").build())
 						.startDate(LocalDate.of(2000, 1, 1))
 						.endDate(LocalDate.of(2001, 2, 2))
-						.organisation(Organisation.builder()
-								.code("NPS")
-								.build())
 						.teams(singletonList(Team.builder()
 								.code("N01TST")
 								.build()))
@@ -255,7 +252,6 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.staffCode", is("N01A999")))
 				.andExpect(jsonPath("$.staffGrade.code", is("GRADE2")))
 				.andExpect(jsonPath("$.startDate", is("2000-01-01")))
-				.andExpect(jsonPath("$.organisation.code", is("NPS")))
 				.andExpect(jsonPath("$.datasets[*].code", hasItems("N01", "N02")))
 				.andExpect(jsonPath("$.teams[0].code", is("N01TST")))
 				.andExpect(jsonPath("$.homeArea.code", is("N01")))
@@ -327,7 +323,6 @@ public class UserControllerTest
 				.homeArea(Dataset.builder().code("N01").build())
 				.startDate(LocalDate.of(2001, 2, 3))
 				.endDate(LocalDate.of(2001, 4, 4))
-				.organisation(Organisation.builder().code("NPS").build())
 				.teams(singletonList(Team.builder().code("N01TST").build()))
 				.datasets(asList(
 						Dataset.builder().code("N01").build(),
@@ -361,7 +356,6 @@ public class UserControllerTest
 						.teams(singletonList(Team.builder().code("N02TST").build()))
 						.homeArea(Dataset.builder().code("N01").build())
 						.privateSector(false)
-						.organisation(Organisation.builder().code("PO1").build())
 						.roles(singletonList(Role.builder().name("UMBT002").build()))
 						.build())))
 				.andExpect(status().isNoContent());
@@ -378,7 +372,6 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.datasets[*].code", hasItems("N01", "C02", "C03")))
 				.andExpect(jsonPath("$.teams", hasSize(1)))
 				.andExpect(jsonPath("$.teams[*].code", hasItem("N02TST")))
-				.andExpect(jsonPath("$.organisation.code", is("PO1")))
 				.andExpect(jsonPath("$.roles", hasSize(1)))
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT002")));
 	}

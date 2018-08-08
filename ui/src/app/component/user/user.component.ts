@@ -12,7 +12,6 @@ import {DatasetService} from "../../service/dataset.service";
 import {Team} from "../../model/team";
 import {TeamService} from "../../service/team.service";
 import {RoleGroup} from "../../model/role-group";
-import {Organisation} from "../../model/organisation";
 import {OrganisationService} from "../../service/organisation.service";
 import {StaffGrade} from "../../model/staff-grade";
 import {StaffGradeService} from "../../service/staff-grade.service";
@@ -32,7 +31,6 @@ export class UserComponent implements OnInit {
   roles: Role[];
   roleGroups: RoleGroup[];
   selectedGroup: RoleGroup;
-  organisations: Organisation[];
   staffGrades: StaffGrade[];
 
   constructor(
@@ -91,10 +89,6 @@ export class UserComponent implements OnInit {
       if (this.user != null) this.user.datasets = [];
     });
 
-    this.organisationService.organisations().subscribe((organisations: Organisation[]) => {
-      this.organisations = organisations;
-    });
-
     this.staffGradeService.staffGrades().subscribe((staffGrades: StaffGrade[]) => {
       this.staffGrades = staffGrades;
     });
@@ -112,7 +106,6 @@ export class UserComponent implements OnInit {
 
   homeAreaChanged() {
     if (this.user.homeArea != null) {
-      this.user.organisation = this.user.homeArea.organisation;
       this.teams = null;
       this.teamService.providerTeams(this.user.homeArea.code).subscribe((teams: Team[]) => {
         this.teams = teams;
@@ -121,7 +114,6 @@ export class UserComponent implements OnInit {
         }
       });
     } else {
-      this.user.organisation = null;
       this.teams = [];
     }
   }
