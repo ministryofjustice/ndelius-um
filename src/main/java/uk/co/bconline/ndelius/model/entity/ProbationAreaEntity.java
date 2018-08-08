@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "userLinks")
+@EqualsAndHashCode(exclude = {"userLinks", "division"})
 @Table(name = "PROBATION_AREA")
 public class ProbationAreaEntity
 {
