@@ -40,7 +40,7 @@ public class DatasetServiceImpl implements DatasetService
 	@Override
 	public List<Dataset> getDatasets(String username)
 	{
-		return repository.findAllByUsersWithDatasetUsername(username).stream()
+		return repository.findAllByUserLinks_User_Username(username).stream()
 				.map(transformer::map)
 				.collect(toList());
 	}

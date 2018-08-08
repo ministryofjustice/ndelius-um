@@ -88,7 +88,7 @@ export class UserComponent implements OnInit {
 
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {
       this.datasets = datasets;
-      this.user.datasets = [];
+      if (this.user != null) this.user.datasets = [];
     });
 
     this.organisationService.organisations().subscribe((organisations: Organisation[]) => {
@@ -156,6 +156,10 @@ export class UserComponent implements OnInit {
 
   nameToLabel(item: {name: string}): string {
     return item.name;
+  }
+
+  sectorToLabel(item: boolean): string {
+    return item? 'Private': 'Public';
   }
 
   get staffCodeSuffix(): string {

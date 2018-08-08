@@ -1,16 +1,18 @@
 package uk.co.bconline.ndelius.transformer;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
+import static java.util.Collections.*;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.springframework.util.StringUtils.isEmpty;
 import static uk.co.bconline.ndelius.util.NameUtils.*;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import uk.co.bconline.ndelius.service.ReferenceDataService;
 import uk.co.bconline.ndelius.service.TeamService;
 import uk.co.bconline.ndelius.service.impl.AD1UserDetailsService;
 import uk.co.bconline.ndelius.service.impl.AD2UserDetailsService;
+import uk.co.bconline.ndelius.service.impl.DBUserDetailsService;
 import uk.co.bconline.ndelius.util.LdapPasswordUtils;
 
 @Component
@@ -39,6 +42,7 @@ public class UserTransformer
 	private final OrganisationService organisationService;
 	private final Optional<AD1UserDetailsService> ad1UserDetailsService;
 	private final Optional<AD2UserDetailsService> ad2UserDetailsService;
+	private final DBUserDetailsService dbUserDetailsService;
 	private final DatasetTransformer datasetTransformer;
 	private final ReferenceDataTransformer referenceDataTransformer;
 
@@ -50,6 +54,7 @@ public class UserTransformer
 			OrganisationService organisationService,
 			Optional<AD1UserDetailsService> ad1UserDetailsService,
 			Optional<AD2UserDetailsService> ad2UserDetailsService,
+			DBUserDetailsService dbUserDetailsService,
 			DatasetTransformer datasetTransformer,
 			ReferenceDataTransformer referenceDataTransformer)
 	{
@@ -59,6 +64,7 @@ public class UserTransformer
 		this.organisationService = organisationService;
 		this.ad1UserDetailsService = ad1UserDetailsService;
 		this.ad2UserDetailsService = ad2UserDetailsService;
+		this.dbUserDetailsService = dbUserDetailsService;
 		this.datasetTransformer = datasetTransformer;
 		this.referenceDataTransformer = referenceDataTransformer;
 	}
@@ -110,6 +116,7 @@ public class UserTransformer
 						.aliasUsername(v.getAliasUsername())
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
+						.privateSector("private".equalsIgnoreCase(v.getSector()))
 						.homeArea(datasetService.getDatasetByCode(v.getHomeArea()).orElse(null))
 						.roles(ofNullable(v.getRoles())
 								.map(transactions -> transactions.stream()
@@ -173,34 +180,41 @@ public class UserTransformer
 
 	public UserEntity mapToUserEntity(User user, UserEntity existingUser)
 	{
+		val myUserId = dbUserDetailsService.getMyUserId();
 		val staff = mapToStaffEntity(user, ofNullable(existingUser.getStaff()).orElse(new StaffEntity()));
 		val entity = existingUser.toBuilder()
 				.username(user.getUsername())
 				.forename(staff.getForename())
 				.forename2(staff.getForename2())
 				.surname(user.getSurname())
+				.privateUser(user.getPrivateSector())
 				.endDate(user.getEndDate())
 				.organisation(ofNullable(user.getOrganisation())
 						.map(Organisation::getCode)
 						.flatMap(organisationService::getOrganisationId)
 						.map(OrganisationEntity::new)
 						.orElse(null))
-				.datasets(ofNullable(user.getDatasets()).map(list -> list.stream()
-						.map(dataset -> datasetService.getDatasetId(dataset.getCode())
-								.map(ProbationAreaEntity::new)
-								.orElse(null))
-						.filter(Objects::nonNull)
-						.collect(toSet()))
-						.orElse(emptySet()))
-				.staff(staff)
+				.staff(isEmpty(staff.getCode())? null: staff)
 				.build();
-		staff.setUser(entity);
+		entity.getProbationAreaLinks().clear();
+		entity.getProbationAreaLinks().addAll(user.getDatasets().stream()
+				.map(dataset -> datasetService.getDatasetId(dataset.getCode()).orElse(null))
+				.filter(Objects::nonNull)
+				.map(ProbationAreaEntity::new)
+				.map(dataset -> ProbationAreaUserEntity.builder()
+						.id(new ProbationAreaUserId(dataset, entity))
+						.createdById(myUserId).createdAt(LocalDateTime.now())
+						.updatedById(myUserId).updatedAt(LocalDateTime.now())
+						.build())
+				.collect(Collectors.toSet()));
+		staff.setUser(singleton(entity));
 		return entity;
 	}
 
 	public StaffEntity mapToStaffEntity(User user, StaffEntity existingStaff)
 	{
-		return existingStaff.toBuilder()
+		val myUserId = dbUserDetailsService.getMyUserId();
+		val entity = existingStaff.toBuilder()
 				.code(user.getStaffCode())
 				.grade(ofNullable(user.getStaffGrade())
 						.map(ReferenceData::getCode)
@@ -210,16 +224,30 @@ public class UserTransformer
 				.forename(firstForename(user.getForenames()))
 				.forename2(subsequentForenames(user.getForenames()))
 				.surname(user.getSurname())
+				.privateStaff(user.getPrivateSector())
 				.startDate(user.getStartDate())
 				.endDate(user.getEndDate())
-				.teams(ofNullable(user.getTeams()).map(list -> list.stream()
-						.map(team -> teamService.getTeamId(team.getCode())
-								.map(TeamEntity::new)
-								.orElse(null))
-						.filter(Objects::nonNull)
-						.collect(toSet()))
-						.orElse(emptySet()))
+				.probationAreaId(ofNullable(user.getHomeArea())
+						.map(Dataset::getCode)
+						.flatMap(datasetService::getDatasetId)
+						.orElse(null))
+				.createdAt(ofNullable(existingStaff.getCreatedAt()).orElse(LocalDateTime.now()))
+				.createdById(ofNullable(existingStaff.getCreatedById()).orElse(myUserId))
+				.updatedAt(LocalDateTime.now())
+				.updatedById(myUserId)
 				.build();
+		entity.getTeamLinks().clear();
+		entity.getTeamLinks().addAll(ofNullable(user.getTeams()).map(list -> list.stream()
+				.map(team -> teamService.getTeamId(team.getCode()).orElse(null))
+				.filter(Objects::nonNull)
+				.map(id -> StaffTeamEntity.builder()
+						.id(new StaffTeamId(entity, new TeamEntity(id)))
+						.createdById(myUserId).createdAt(LocalDateTime.now())
+						.updatedById(myUserId).updatedAt(LocalDateTime.now())
+						.build())
+				.collect(toSet()))
+				.orElse(emptySet()));
+		return entity;
 	}
 
 	public OIDUser mapToOIDUser(User user, OIDUser existingUser)
@@ -230,6 +258,7 @@ public class UserTransformer
 				.aliasUsername(user.getAliasUsername())
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
+				.sector(user.getPrivateSector()? "private": "public")
 				.homeArea(ofNullable(user.getHomeArea()).map(Dataset::getCode).orElse(null))
 				.roles(ofNullable(user.getRoles()).map(list -> list.stream()
 						.map(this::map)

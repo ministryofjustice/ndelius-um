@@ -9,6 +9,6 @@ import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
 
 public interface DatasetRepository extends JpaRepository<ProbationAreaEntity, Long> {
 	List<ProbationAreaEntity> findAllBySelectable(String selectable);
-	List<ProbationAreaEntity> findAllByUsersWithDatasetUsername(String username);
+	List<ProbationAreaEntity> findAllByUserLinks_User_Username(String username);
 	Optional<ProbationAreaEntity> findByCode(String code);
 }

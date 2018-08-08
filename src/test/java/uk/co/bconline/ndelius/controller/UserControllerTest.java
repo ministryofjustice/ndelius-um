@@ -189,9 +189,11 @@ public class UserControllerTest
 				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
 						.forenames("Test")
 						.surname("User1")
+						.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
+						.homeArea(Dataset.builder().code("C01").description("CRC London").build())
 						.build())))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.error[0]", is("username: must not be blank")));
+				.andExpect(jsonPath("$.error[*]", hasItem("username: must not be blank")));
 	}
 
 	@Test
@@ -205,9 +207,12 @@ public class UserControllerTest
 						.username("test.user")
 						.forenames("Test")
 						.surname("User1")
+						.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
+						.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+						.privateSector(false)
 						.build())))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.error[0]", is("username: already exists")));
+				.andExpect(jsonPath("$.error[*]", hasItem("username: already exists")));
 	}
 
 	@Test
@@ -221,10 +226,12 @@ public class UserControllerTest
 						.username("test.user1")
 						.forenames("Test")
 						.surname("User1")
-						.staffCode("N99A999")
+						.staffCode("N01A999")
 						.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
+						.privateSector(false)
 						.homeArea(Dataset.builder().code("N01").build())
 						.startDate(LocalDate.of(2000, 1, 1))
+						.endDate(LocalDate.of(2001, 2, 2))
 						.organisation(Organisation.builder()
 								.code("NPS")
 								.build())
@@ -245,7 +252,7 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.username", is("test.user1")))
-				.andExpect(jsonPath("$.staffCode", is("N99A999")))
+				.andExpect(jsonPath("$.staffCode", is("N01A999")))
 				.andExpect(jsonPath("$.staffGrade.code", is("GRADE2")))
 				.andExpect(jsonPath("$.startDate", is("2000-01-01")))
 				.andExpect(jsonPath("$.organisation.code", is("NPS")))
@@ -267,7 +274,9 @@ public class UserControllerTest
 				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
 						.username("test.user2")
 						.aliasUsername("test.user2.alias")
+						.privateSector(false)
 						.homeArea(Dataset.builder().code("N01").build())
+						.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 						.forenames("Test")
 						.surname("User2")
 						.build())))
@@ -289,6 +298,7 @@ public class UserControllerTest
 				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
 						.username("test.user3")
 						.homeArea(Dataset.builder().code("C01").build())
+						.privateSector(true)
 						.datasets(asList(
 								Dataset.builder().code("C02").build(),
 								Dataset.builder().code("C03").build()))
@@ -311,10 +321,12 @@ public class UserControllerTest
 				.aliasUsername("test.user4.alias")
 				.forenames("Test")
 				.surname("User4")
-				.staffCode("N99A999")
+				.staffCode("N01A999")
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
+				.privateSector(false)
 				.homeArea(Dataset.builder().code("N01").build())
-				.startDate(LocalDate.of(2000, 1, 1))
+				.startDate(LocalDate.of(2001, 2, 3))
+				.endDate(LocalDate.of(2001, 4, 4))
 				.organisation(Organisation.builder().code("NPS").build())
 				.teams(singletonList(Team.builder().code("N01TST").build()))
 				.datasets(asList(
@@ -339,13 +351,16 @@ public class UserControllerTest
 						.aliasUsername("ABC")
 						.forenames("A B C")
 						.surname("ABC")
-						.staffCode("N02A999")
+						.staffCode("N01A999")
 						.startDate(LocalDate.of(2001, 2, 3))
+						.endDate(LocalDate.of(2001, 4, 4))
 						.datasets(asList(
 								Dataset.builder().code("N01").build(),
-								Dataset.builder().code("C01").build(),
-								Dataset.builder().code("C02").build()))
-						.homeArea(Dataset.builder().code("C01").build())
+								Dataset.builder().code("C02").build(),
+								Dataset.builder().code("C03").build()))
+						.teams(singletonList(Team.builder().code("N02TST").build()))
+						.homeArea(Dataset.builder().code("N01").build())
+						.privateSector(false)
 						.organisation(Organisation.builder().code("PO1").build())
 						.roles(singletonList(Role.builder().name("UMBT002").build()))
 						.build())))
@@ -357,8 +372,12 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.aliasUsername", is("ABC")))
 				.andExpect(jsonPath("$.forenames", is("A B C")))
 				.andExpect(jsonPath("$.surname", is("ABC")))
-				.andExpect(jsonPath("$.staffCode", is("N02A999")))
+				.andExpect(jsonPath("$.staffCode", is("N01A999")))
 				.andExpect(jsonPath("$.startDate", is("2001-02-03")))
+				.andExpect(jsonPath("$.datasets", hasSize(3)))
+				.andExpect(jsonPath("$.datasets[*].code", hasItems("N01", "C02", "C03")))
+				.andExpect(jsonPath("$.teams", hasSize(1)))
+				.andExpect(jsonPath("$.teams[*].code", hasItem("N02TST")))
 				.andExpect(jsonPath("$.organisation.code", is("PO1")))
 				.andExpect(jsonPath("$.roles", hasSize(1)))
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT002")));

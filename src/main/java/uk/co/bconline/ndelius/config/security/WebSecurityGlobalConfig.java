@@ -1,12 +1,16 @@
 package uk.co.bconline.ndelius.config.security;
 
+import static org.springframework.security.core.context.SecurityContextHolder.MODE_INHERITABLETHREADLOCAL;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
@@ -87,5 +91,16 @@ public class WebSecurityGlobalConfig extends WebSecurityConfigurerAdapter
 		BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
 		entryPoint.setRealmName("ndelius-um");
 		return entryPoint;
+  }
+
+	@Bean
+	public MethodInvokingFactoryBean methodInvokingFactoryBean()
+	{
+		// Set strategy for SecurityContextHolder to 'inheritable', so auth details can be retrieved in async threads
+		MethodInvokingFactoryBean methodInvokingFactoryBean = new MethodInvokingFactoryBean();
+		methodInvokingFactoryBean.setTargetClass(SecurityContextHolder.class);
+		methodInvokingFactoryBean.setTargetMethod("setStrategyName");
+		methodInvokingFactoryBean.setArguments(MODE_INHERITABLETHREADLOCAL);
+		return methodInvokingFactoryBean;
 	}
 }
