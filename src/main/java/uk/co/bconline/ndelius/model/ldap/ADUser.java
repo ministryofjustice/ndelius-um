@@ -20,7 +20,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @ToString(exclude = "password")
-@Entry(objectClasses = "person", base = "cn=Users")
+@Entry(objectClasses = "user", base = "cn=Users")
 public final class ADUser implements UserDetails
 {
 	@Id
@@ -31,7 +31,7 @@ public final class ADUser implements UserDetails
 	@DnAttribute(value="cn", index=1)
 	private String username;
 
-	@Attribute(name="password")
+	@Attribute(name="userpassword")
 	private String password;
 
 	@Override

@@ -33,12 +33,12 @@ import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import uk.co.bconline.ndelius.security.AuthenticationToken;
-import uk.co.bconline.ndelius.security.LoginHandler;
+import uk.co.bconline.ndelius.security.handler.LoginHandler;
 import uk.co.bconline.ndelius.util.JwtHelper;
 
 @Slf4j
-@Configuration
 @Order(1)
+@Configuration
 public class JwtConfig extends WebSecurityConfigurerAdapter
 {
 	private final JwtHelper jwtHelper;

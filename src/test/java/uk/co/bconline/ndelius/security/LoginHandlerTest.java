@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.security.handler.LoginHandler;
 import uk.co.bconline.ndelius.util.JwtHelper;
 
 @SpringBootTest
