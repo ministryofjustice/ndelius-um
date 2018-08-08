@@ -86,7 +86,7 @@ export class UserComponent implements OnInit {
 
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {
       this.datasets = datasets;
-      if (this.user != null) this.user.datasets = [];
+      if (this.user != null && this.user.datasets == null) this.user.datasets = [];
     });
 
     this.staffGradeService.staffGrades().subscribe((staffGrades: StaffGrade[]) => {
