@@ -1,7 +1,6 @@
 import {Role} from "./role";
 import {Dataset} from "./dataset";
 import {Team} from "./team";
-import {Organisation} from "./organisation";
 import {StaffGrade} from "./staff-grade";
 
 export class User {
@@ -13,7 +12,6 @@ export class User {
   staffGrade: StaffGrade;
   privateSector: boolean;
   homeArea: Dataset;
-  organisation: Organisation;
   teams: Team[];
   datasets: Dataset[];
   roles: Role[];

@@ -47,11 +47,15 @@ public class User
 
 	@NotNull
 	private Dataset homeArea;
-	private Organisation organisation;
+
 	private LocalDate startDate;
+
 	private LocalDate endDate;
+
 	private List<Team> teams;
+
 	@NotEmpty
 	private List<Dataset> datasets;
+
 	private List<Role> roles;
 }
