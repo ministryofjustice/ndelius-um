@@ -79,7 +79,6 @@ public class DBUserDetailsService
 			List<?> results = fullText.createFullTextQuery(builder
 					.keyword()
 					.fuzzy()
-					.withPrefixLength(1)
 					.onFields("username", "forename", "forename2", "surname",
 							"staff.code", "staff.teamLinks.team.code", "staff.teamLinks.team.description")
 					.matching(searchTerm)
