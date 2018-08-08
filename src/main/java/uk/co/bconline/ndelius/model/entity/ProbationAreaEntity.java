@@ -4,12 +4,14 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Getter
+@Data
 @Entity
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(exclude = "userLinks")
 @Table(name = "PROBATION_AREA")
 public class ProbationAreaEntity
 {
@@ -41,6 +43,6 @@ public class ProbationAreaEntity
 	@Column(name = "SELECTABLE")
 	private String selectable;
 
-	@ManyToMany(mappedBy = "datasets")
-	private Set<UserEntity> usersWithDataset;
+	@OneToMany(mappedBy = "probationArea")
+	private Set<ProbationAreaUserEntity> userLinks;
 }

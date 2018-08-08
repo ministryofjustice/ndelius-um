@@ -45,6 +45,7 @@ public class UserValidationTest
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
@@ -61,6 +62,7 @@ public class UserValidationTest
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
@@ -75,6 +77,7 @@ public class UserValidationTest
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.build();
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertEquals("testInvalidUsernamePattern error - expected 1 violation", 1, constraintViolations.size());
@@ -90,6 +93,7 @@ public class UserValidationTest
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
@@ -105,6 +109,7 @@ public class UserValidationTest
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
@@ -120,6 +125,7 @@ public class UserValidationTest
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
@@ -135,6 +141,7 @@ public class UserValidationTest
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
@@ -148,6 +155,7 @@ public class UserValidationTest
 				.aliasUsername("123")
 				.forenames("a").surname("a")
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
+				.privateSector(false)
 				.homeArea(null)
 				.build();
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
@@ -162,6 +170,7 @@ public class UserValidationTest
 				.forenames("a").surname("a")
 				.datasets(null)
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.build();
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertEquals("testEmptyDataSets returned a violation", 1, constraintViolations.size());
@@ -177,6 +186,7 @@ public class UserValidationTest
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.homeArea(Dataset.builder().code("C02").description("CRC London").build())
+				.privateSector(false)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
@@ -191,6 +201,7 @@ public class UserValidationTest
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
@@ -205,6 +216,7 @@ public class UserValidationTest
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.teams(singletonList(Team.builder().code("N01TST").build()))
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
@@ -219,6 +231,7 @@ public class UserValidationTest
 					.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 					.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 					.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+					.privateSector(false)
 					.build();
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertEquals("testInvalidStaffCodePattern - Expected 1 violation ", 1, constraintViolations.size());
@@ -250,6 +263,7 @@ public class UserValidationTest
 		User user = User.builder().username("test.user").forenames("1").surname("1")
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.startDate(startDate)
 				.endDate(null)
 				.build();
@@ -266,6 +280,7 @@ public class UserValidationTest
 		User user = User.builder().username("test.user").forenames("1").surname("1")
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.startDate(null).endDate(null)
 				.build();
 
@@ -302,6 +317,7 @@ public class UserValidationTest
 		User user = User.builder().username("test.user").forenames("1").surname("1")
 				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.privateSector(false)
 				.startDate(startDate)
 				.endDate(endDate).build();
 

@@ -98,6 +98,14 @@
                            [labelMapper]="codeDescriptionToLabel"
                            aria-describedby="datasets-help-text"></item-selector>
           </div>
+          <label [for]="'sector-toggle-btn'" class="col-sm-2 col-form-label">Sector</label>
+          <div class="col-sm-4">
+            <item-selector id="sector"
+                           [(selected)]="user.privateSector"
+                           [available]="[true, false]"
+                           [readonly]="mode === 'View'"
+                           [labelMapper]="sectorToLabel"></item-selector>
+          </div>
         </div>
       </section>
       <section class="mb-5">

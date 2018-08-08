@@ -13,14 +13,15 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import uk.co.bconline.ndelius.model.Role;
 import uk.co.bconline.ndelius.model.User;
+import uk.co.bconline.ndelius.model.ldap.OIDRole;
+import uk.co.bconline.ndelius.service.OIDUserService;
 import uk.co.bconline.ndelius.service.RoleService;
-import uk.co.bconline.ndelius.service.UserService;
 
 @Slf4j
 public class AssignableRolesValidator implements ConstraintValidator<AssignableRoles, User>
 {
 	@Autowired
-	private UserService userService;
+	private OIDUserService userService;
 
 	@Autowired
 	private RoleService roleService;
@@ -34,12 +35,10 @@ public class AssignableRolesValidator implements ConstraintValidator<AssignableR
 
 		if (newRoles.isEmpty()) return true;
 
-		val assignableRoles = roleService.getRoles();
-		userService.getUser(user.getUsername()).ifPresent(u -> assignableRoles.addAll(u.getRoles()));
+		val assignableRoles = roleService.getRoles().stream().map(Role::getName).collect(toSet());
+		userService.getUser(user.getUsername()).ifPresent(u -> assignableRoles.addAll(u.getRoles().stream().map(
+				OIDRole::getName).collect(toSet())));
 
-		return assignableRoles.stream()
-				.map(Role::getName)
-				.collect(toSet())
-				.containsAll(newRoles);
+		return assignableRoles.containsAll(newRoles);
 	}
 }
