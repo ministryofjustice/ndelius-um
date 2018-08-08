@@ -31,7 +31,7 @@ public class SearchIndexHelper
 		this.entityManager = entityManager;
 	}
 
-	public boolean indexExpired()
+	public synchronized boolean indexExpired()
 	{
 		return lastIndexed == null || now().minusSeconds(indexExpiry).isAfter(lastIndexed);
 	}
