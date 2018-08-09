@@ -17,7 +17,5 @@ export class User {
   roles: Role[];
   startDate: Date = new Date();
   endDate: Date;
-  inNationalDelius: boolean;
-  inPrimaryAD: boolean;
-  inSecondaryAD: boolean;
+  sources: string[]
 }

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
 import uk.co.bconline.ndelius.validator.AssignableRoles;
 import uk.co.bconline.ndelius.validator.ValidDates;
@@ -58,4 +60,7 @@ public class User
 	private List<Dataset> datasets;
 
 	private List<Role> roles;
+
+	@JsonIgnore
+	private List<String> sources;
 }

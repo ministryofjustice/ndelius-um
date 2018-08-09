@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.service.impl;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
+import static org.hibernate.search.engine.ProjectionConstants.SCORE;
 import static org.hibernate.search.jpa.Search.getFullTextEntityManager;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.repository.db.ProbationAreaUserRepository;
@@ -68,7 +70,7 @@ public class DBUserDetailsService
 	}
 
 	@Transactional
-	public List<UserEntity> search(String searchTerm)
+	public List<SearchResult> search(String searchTerm)
 	{
 		if (searchIndexHelper.indexExpired()) searchIndexHelper.reIndex();
 
@@ -83,10 +85,15 @@ public class DBUserDetailsService
 							"staff.code", "staff.teamLinks.team.code", "staff.teamLinks.team.description")
 					.matching(searchTerm)
 					.createQuery(), UserEntity.class)
+					.setProjection("username", SCORE)
 					.getResultList();
 
 			return results.stream()
-					.map(UserEntity.class::cast)
+					.map(Object[].class::cast)
+					.map(res -> SearchResult.builder()
+							.username((String) res[0])
+							.score((float) res[1])
+							.build())
 					.collect(toList());
 		}
 		catch (EmptyQueryException e)

@@ -78,10 +78,7 @@ public class UserTransformer
 				.surname(user.getSurname())
 				.teams(user.getTeams())
 				.staffCode(user.getStaffCode())
-				.inNationalDelius(true)
-				.inPrimaryAD(ad1UserDetailsService.flatMap(service -> service.getUser(user.getUsername())).isPresent() ||
-						ad1UserDetailsService.flatMap(service -> service.getUser(user.getAliasUsername())).isPresent())
-				.inSecondaryAD(ad2UserDetailsService.flatMap(service -> service.getUser(user.getUsername())).isPresent())
+				.sources(user.getSources())
 				.build();
 	}
 
@@ -123,6 +120,10 @@ public class UserTransformer
 										.map(this::map)
 										.collect(toList()))
 								.orElse(null))
+						.sources(Stream.of("OID",
+								v.getAliasUsername() != null && !v.getAliasUsername().equals(v.getUsername()) ? "AD1": null)
+								.filter(Objects::nonNull)
+								.collect(toList()))
 						.build()),
 				ofNullable(dbUser).map(v -> User.builder()
 						.username(v.getUsername())
@@ -137,12 +138,15 @@ public class UserTransformer
 						.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
 						.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElse(v.getEndDate()))
 						.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(this::map).orElse(null))
+						.sources(singletonList("DB"))
 						.build()),
 				ofNullable(ad1User).map(v -> User.builder()
 						.username(v.getUsername())
+						.sources(singletonList("AD1"))
 						.build()),
 				ofNullable(ad2User).map(v -> User.builder()
 						.username(v.getUsername())
+						.sources(singletonList("AD2"))
 						.build()))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
@@ -163,6 +167,7 @@ public class UserTransformer
 				.teams(ofNullable(a.getTeams()).orElse(b.getTeams()))
 				.datasets(ofNullable(a.getDatasets()).orElse(b.getDatasets()))
 				.roles(ofNullable(a.getRoles()).orElse(b.getRoles()))
+				.sources(Stream.concat(a.getSources().stream(), b.getSources().stream()).collect(toList()))
 				.build();
 	}
 

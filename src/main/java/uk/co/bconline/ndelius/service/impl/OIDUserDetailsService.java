@@ -1,9 +1,12 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import static com.google.common.primitives.Floats.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
+import static org.springframework.util.StringUtils.isEmpty;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -11,7 +14,6 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.filter.AndFilter;
-import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.query.SearchScope;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
 import uk.co.bconline.ndelius.model.ldap.OIDRoleAssociation;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
@@ -69,41 +72,64 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	/**
 	 * Search for a list of users with a single text query.
 	 *
-	 * The search query will be tokenized on space, then each token will be AND matched with wildcards. If any token
-	 * is a single character, it will be treated as an initial on givenName.
+	 * The search query will be tokenized on space, then each token will be AND matched with wildcards.
 	 *
 	 * eg.
 	 *
 	 * "john"		-> (|(givenName=*john*)(sn=*john*)(cn=*john*))
 	 * "john smith"	-> (&(|(givenName=*john*)(sn=*john*)(cn=*john*))(|(givenName=*smith*)(sn=*smith*)(cn=*smith*)))
-	 * "J Bloggs"	-> (&(givenName=J*)(|(givenName=*Bloggs*)(sn=*Bloggs*)(cn=*Bloggs*)))
 	 *
 	 * @param query space-delimited query string
-	 * @param page 1-based index of page to return
-	 * @param pageSize number of results per page to return
 	 * @return a set of matching users from OID
 	 */
 	@Override
-	public List<OIDUser> search(String query, int page, int pageSize)
+	public List<SearchResult> search(String query, List<String> excludedUsernames)
 	{
-		Filter filter = Stream.of(query.split(" "))
-				.map(token -> token.length() > 1?
-						query().where("givenName").whitespaceWildcardsLike(token)
-								.or("sn").whitespaceWildcardsLike(token)
-								.or("cn").whitespaceWildcardsLike(token):
-						query().where("givenName").like(token + "*"))
+		AndFilter filter = Stream.of(query.split(" "))
+				.map(token -> query().where("givenName").whitespaceWildcardsLike(token)
+							.or("sn").whitespaceWildcardsLike(token)
+							.or("cn").whitespaceWildcardsLike(token))
 				.collect(AndFilter::new, (f, q) -> f.and(q.filter()), AndFilter::and);
+
+		for (String excludedUsername: excludedUsernames)
+		{
+			filter = filter.and(query().where("cn").not().is(excludedUsername).filter());
+		}
 
 		log.debug("Searching OID: {}", filter.encode());
 
 		return stream(userRepository
 				.findAll(query()
 						.base(USER_BASE)
-						.countLimit(pageSize * page)
 						.filter(filter))
 				.spliterator(), false)
-				.skip((long) pageSize * (page-1))
+				.map(u -> SearchResult.builder()
+						.username(u.getUsername())
+						.aliasUsername(userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
+								.map(OIDUserAlias::getUsername).orElse(u.getUsername()))
+						.score(deriveScore(query, u))
+						.build())
 				.collect(toList());
+	}
+
+	private float deriveScore(String query, OIDUser u)
+	{
+		return (float) Stream.of(query.split(" "))
+				.map(token -> {
+					float[] tokenScores = {0,0,0};
+					if (!isEmpty(u.getUsername())) tokenScores[0] = (float) token.length() / u.getUsername().length();
+					if (!isEmpty(u.getForenames())) tokenScores[1] = (float) token.length() / u.getForenames().length();
+					if (!isEmpty(u.getSurname())) tokenScores[2] = (float) token.length() / u.getSurname().length();
+					return Collections.max(asList(tokenScores));
+				})
+				.mapToDouble(i -> i)
+				.sum();
+	}
+
+	@Override
+	public List<SearchResult> search(String query)
+	{
+		return search(query, Collections.emptyList());
 	}
 
 	@Override
@@ -115,6 +141,14 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				.aliasUsername(userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
 						.map(OIDUserAlias::getUsername).orElse(username))
 				.build());
+	}
+
+	@Override
+	public Optional<String> getAlias(String username)
+	{
+		Optional<OIDUser> user = userRepository.findByUsername(username);
+		return user.flatMap(u -> userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
+						.map(OIDUserAlias::getUsername));
 	}
 
 	@Override

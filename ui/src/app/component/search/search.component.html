@@ -29,45 +29,53 @@
     <div class="card card-body bg-light">No results&hellip;</div>
   </div>
   <div class="container" *ngIf="users.length > 0">
-    <div class="card border-top-0">
-    <table class="table table-hover mb-0">
-      <thead class="thead-light">
-        <tr>
-          <th>Name</th>
-          <th>Username</th>
-          <th>Staff Code</th>
-          <th>Team(s)</th>
-          <th class="text-right">Sources</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of users" routerLink="/user/{{user.username}}" style="cursor: pointer">
-          <td class="font-weight-bold">{{user.forenames}} {{user.surname}}</td>
-          <td>
-            <span title="Username">{{user.username}}</span>
-            <span title="Alias" *ngIf="user.aliasUsername != user.username">, {{user.aliasUsername}}</span>
-          </td>
-          <td>{{user.staffCode}}</td>
-          <td>
-            <span *ngFor="let team of user.teams; let isLast = last">
-              {{team.description}}{{isLast? '': ','}}
-            </span>
-          </td>
-          <td class="text-right">
-            <span class="badge badge-pill ml-1 badge-{{user.inNationalDelius? 'success': 'danger'}}"
-                  title="National Delius">ND</span>
-            <span class="badge badge-pill ml-1 badge-{{user.inPrimaryAD? 'success': 'danger'}}"
-                  title="TTP Active Directory">DOM1</span>
-            <span class="badge badge-pill ml-1 badge-{{user.inSecondaryAD? 'success': 'danger'}}"
-                  title="Steria Active Directory">OMNI</span>
-          </td>
-          <td class="text-right">
-            <span class="oi oi-chevron-right"></span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="card border-top-0 table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="thead-light">
+          <tr>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Staff Code</th>
+            <th>Team(s)</th>
+            <th colspan="4" class="text-right">Sources</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users" routerLink="/user/{{user.username}}" style="cursor: pointer">
+            <td class="font-weight-bold">{{user.forenames}} {{user.surname}}</td>
+            <td>
+              <span title="Username">{{user.username}}</span>
+              <span title="Alias" *ngIf="user.aliasUsername != user.username">, {{user.aliasUsername}}</span>
+            </td>
+            <td>{{user.staffCode}}</td>
+            <td>
+              <span *ngFor="let team of user.teams; let isLast = last">
+                {{team.description}}{{isLast? '': ','}}
+              </span>
+            </td>
+            <td class="pl-1 pr-0" style="max-width: 40px">
+              <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('AD1') === -1"
+                    title="TTP Active Directory">DOM1</span>
+            </td>
+            <td class="pl-1 pr-0" style="max-width: 40px">
+              <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('AD2') === -1"
+                    title="Steria Active Directory">OMNI</span>
+            </td>
+            <td class="pl-1 pr-0" style="max-width: 30px">
+              <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('DB') === -1"
+                    title="National Delius Database">DB</span>
+            </td>
+            <td class="pl-1 pr-0" style="max-width: 30px">
+              <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('OID') === -1"
+                    title="Oracle Internet Directory">OID</span>
+            </td>
+            <td class="text-right">
+              <span class="oi oi-chevron-right"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <hr/>
     <div class="btn-toolbar justify-content-center">

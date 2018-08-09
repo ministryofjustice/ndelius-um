@@ -1,18 +1,24 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import static java.util.Comparator.comparing;
 import static java.util.concurrent.CompletableFuture.*;
 import static java.util.stream.Collectors.toList;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.model.SearchResult;
@@ -24,6 +30,7 @@ import uk.co.bconline.ndelius.service.DatasetService;
 import uk.co.bconline.ndelius.service.UserService;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService
 {
@@ -54,12 +61,41 @@ public class UserServiceImpl implements UserService
 	@Override
 	public List<SearchResult> search(String query, int page, int pageSize)
 	{
+		if (StringUtils.isEmpty(query) || query.length() < 3) return Collections.emptyList();
+
 		val datasetsFilter = datasetsFilter();
-		return dbService.search(query).stream()
-				.filter(userEntity -> datasetsFilter.test(userEntity.getUsername()))
+		List<SearchResult> foundUsers = dbService.search(query).stream()
+				.map(res -> res.toBuilder()
+						.aliasUsername(oidService.getAlias(res.getUsername()).orElse(null))
+						.build()).collect(toList());
+
+		List<String> foundUsernames = foundUsers.stream().map(SearchResult::getUsername).collect(toList());
+		foundUsers = Stream.concat(foundUsers.stream(), oidService.search(query, foundUsernames).stream())
+				.collect(toList());
+
+		if (ad1Service.isPresent())
+		{
+			foundUsernames = Stream.concat(
+					foundUsers.stream().map(SearchResult::getUsername),
+					foundUsers.stream().map(SearchResult::getAliasUsername).filter(Objects::nonNull)).collect(toList());
+			foundUsers = Stream.concat(foundUsers.stream(), ad1Service.get().search(query, foundUsernames).stream())
+					.collect(toList());
+		}
+
+		if (ad2Service.isPresent())
+		{
+			foundUsernames = foundUsers.stream().map(SearchResult::getUsername).collect(toList());
+			foundUsers = Stream.concat(foundUsers.stream(), ad2Service.get().search(query, foundUsernames).stream())
+					.collect(toList());
+		}
+
+		return foundUsers.stream()
+				.filter(result -> datasetsFilter.test(result.getUsername()))
+				.sorted(comparing(SearchResult::getScore, Float::compare).reversed())
+				.peek(result -> log.debug("{}", result))
 				.skip((long) (page-1) * pageSize)
 				.limit(pageSize)
-				.map(UserEntity::getUsername)
+				.map(SearchResult::getUsername)
 				.map(this::getUser)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
@@ -135,8 +171,9 @@ public class UserServiceImpl implements UserService
 
 		return (String username) -> {
 			val theirDatasets = datasetService.getDatasetCodes(username);
-			theirDatasets.add(oidService.getUserHomeArea(username));
-			return myDatasets.stream().anyMatch(theirDatasets::contains);
+			val theirHomeArea = oidService.getUserHomeArea(username);
+			if (theirHomeArea != null) theirDatasets.add(oidService.getUserHomeArea(username));
+			return theirDatasets.isEmpty() || myDatasets.stream().anyMatch(theirDatasets::contains);
 		};
 	}
 }
