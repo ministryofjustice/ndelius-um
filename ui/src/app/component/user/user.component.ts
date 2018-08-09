@@ -71,7 +71,7 @@ export class UserComponent implements OnInit {
       }))
       .subscribe((user: User) => {
         this.user = user;
-        this.roles = (this.roles || []).concat(...user.roles);
+        this.addSelectableRoles(user.roles);
         this.loaded = true;
         this.homeAreaChanged();
       });
@@ -80,9 +80,7 @@ export class UserComponent implements OnInit {
       this.roleGroups = roleGroups;
     });
 
-    this.roleService.roles().subscribe((roles: Role[]) => {
-      this.roles = (this.roles || []).concat(...roles);
-    });
+    this.roleService.roles().subscribe(roles => this.addSelectableRoles(roles));
 
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {
       this.datasets = datasets;
@@ -92,6 +90,11 @@ export class UserComponent implements OnInit {
     this.staffGradeService.staffGrades().subscribe((staffGrades: StaffGrade[]) => {
       this.staffGrades = staffGrades;
     });
+  }
+
+  private addSelectableRoles(roles: Role[]) {
+    this.roles = this.roles || [];
+    this.roles.push(...roles.filter(role => this.roles.map(r => r.name).indexOf(role.name) === -1));
   }
 
   addGroup(): void {
