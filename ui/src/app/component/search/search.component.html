@@ -49,7 +49,7 @@
               <span title="Alias" *ngIf="user.aliasUsername != null && user.aliasUsername != user.username">, {{user.aliasUsername}}</span>
             </td>
             <td>{{user.staffCode}}</td>
-            <td>
+            <td class="w-25">
               <span *ngFor="let team of user.teams; let isLast = last">
                 {{team.description}}{{isLast? '': ','}}
               </span>
