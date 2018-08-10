@@ -1,10 +1,8 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import static com.google.common.primitives.Floats.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
-import static org.springframework.util.StringUtils.isEmpty;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
 import uk.co.bconline.ndelius.model.SearchResult;
@@ -115,14 +114,12 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	private float deriveScore(String query, OIDUser u)
 	{
 		return (float) Stream.of(query.split(" "))
-				.map(token -> {
-					float[] tokenScores = {0,0,0};
-					if (!isEmpty(u.getUsername())) tokenScores[0] = (float) token.length() / u.getUsername().length();
-					if (!isEmpty(u.getForenames())) tokenScores[1] = (float) token.length() / u.getForenames().length();
-					if (!isEmpty(u.getSurname())) tokenScores[2] = (float) token.length() / u.getSurname().length();
-					return Collections.max(asList(tokenScores));
-				})
-				.mapToDouble(i -> i)
+				.map(String::toLowerCase)
+				.mapToDouble(token -> Stream.of(u.getUsername(), u.getForenames(), u.getSurname())
+						.filter(str -> !StringUtils.isEmpty(str))
+						.filter(str -> str.toLowerCase().contains(token))
+						.mapToDouble(item -> (double) token.length() / item.length())
+						.max().orElse(0.0))
 				.sum();
 	}
 

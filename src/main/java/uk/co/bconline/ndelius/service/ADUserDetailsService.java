@@ -72,13 +72,13 @@ public abstract class ADUserDetailsService implements UserDetailsService
 	private float deriveScore(String query, ADUser u)
 	{
 		return (float) Stream.of(query.split(" "))
-				.map(token -> {
-					if (!isEmpty(u.getUsername())) {
+				.map(String::toLowerCase)
+				.mapToDouble(token -> {
+					if (!isEmpty(u.getUsername()) && u.getUsername().toLowerCase().contains(token)) {
 						return (float) token.length() / u.getUsername().length();
 					}
 					return 0f;
 				})
-				.mapToDouble(i -> i)
 				.sum();
 	}
 

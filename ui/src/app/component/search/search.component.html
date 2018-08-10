@@ -46,7 +46,7 @@
             <td class="font-weight-bold">{{user.forenames}} {{user.surname}}</td>
             <td>
               <span title="Username">{{user.username}}</span>
-              <span title="Alias" *ngIf="user.aliasUsername != user.username">, {{user.aliasUsername}}</span>
+              <span title="Alias" *ngIf="user.aliasUsername != null && user.aliasUsername != user.username">, {{user.aliasUsername}}</span>
             </td>
             <td>{{user.staffCode}}</td>
             <td>
