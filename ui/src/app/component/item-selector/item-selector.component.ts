@@ -1,19 +1,42 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, forwardRef, Input, Output} from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+} from '@angular/forms';
 
 @Component({
   selector: 'item-selector',
-  templateUrl: './item-selector.component.html'
+  templateUrl: './item-selector.component.html',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ItemSelectorComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => ItemSelectorComponent),
+      multi: true,
+    }]
 })
-export class ItemSelectorComponent {
+export class ItemSelectorComponent
+    implements ControlValueAccessor, Validator
+{
   @Input() id: string;
   @Input() selected: any;
   @Input() available: any[];
   @Input() labelMapper: Function = (item: any) => item;
   @Input() maxHeight: string = "auto";
   @Input() readonly: boolean;
+  @Input() required: boolean;
   @Input() multiple: boolean;
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
 
+  dirty: boolean = false;
   optionsDisplayed: boolean;
   filter: string = "";
 
@@ -31,11 +54,14 @@ export class ItemSelectorComponent {
       this.optionsDisplayed = false;
     }
     this.selectedChange.emit(this.selected);
+    this.propagateChange(this.selected);
+    this.dirty = true;
   }
 
   toggleOptionsDisplayed() {
     if ((this.available == null || this.available.length === 0) && !this.optionsDisplayed) return;
-    this.optionsDisplayed = !this.optionsDisplayed
+    this.optionsDisplayed = !this.optionsDisplayed;
+    this.propagateTouchChange(this.selected);
   }
 
   mapToLabel(item: any): string {
@@ -66,5 +92,34 @@ export class ItemSelectorComponent {
       let labelB = this.mapToLabel(b);
       return labelA == labelB? 0: labelA < labelB? -1: 1;
     });
+  }
+
+  private propagateChange = (_: any) => { };
+  private propagateTouchChange = (_: any) => { };
+
+  registerOnChange(fn: any): void {
+    this.propagateChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.propagateTouchChange = fn;
+  }
+
+  public writeValue(obj: any) {
+    if (obj) {
+      this.selected = obj;
+    }
+  }
+
+  public validate(c: FormControl): ValidationErrors {
+    if(this.required == false || this.readonly) return null;
+    if(this.selected == null || (this.selected instanceof Array && this.selected.length == 0)) {
+      return {"list": "cannot be empty"}
+    }
+    return null;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.readonly = isDisabled;
   }
 }
