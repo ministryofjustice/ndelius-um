@@ -58,6 +58,12 @@ public class DBUserDetailsService
 		return repository.getUserEntityByUsernameEqualsIgnoreCase(username);
 	}
 
+	public Optional<UserEntity> getUserByStaffCode(String staffCode)
+	{
+		return repository.getUserEntityByStaffCodeEqualsIgnoreCase(staffCode);
+	}
+
+
 	public Long getUserId(String username)
 	{
 		return getUser(username).map(UserEntity::getId).orElse(null);
