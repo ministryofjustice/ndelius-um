@@ -8,4 +8,5 @@ import uk.co.bconline.ndelius.model.entity.UserEntity;
 
 public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> getUserEntityByUsernameEqualsIgnoreCase(String username);
+    Optional<UserEntity> getUserEntityByStaffCodeEqualsIgnoreCase(String staffCode);
 }

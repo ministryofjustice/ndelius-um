@@ -191,7 +191,7 @@ public class UserValidationTest
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertEquals("testStaffCodeNotMatchingHomeAreaCode - Expected 1 Violation", 1, constraintViolations.size());
-		assertEquals("attempting to submit invalid staff details", constraintViolations.iterator().next().getMessage());
+		assertEquals("Home area code doesn't match staff code prefix", constraintViolations.iterator().next().getMessage());
 	}
 	@Test
 	public void testStaffGradeWithoutStaffCode()
@@ -206,7 +206,7 @@ public class UserValidationTest
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertEquals("testStaffGradeWithoutStaffCode - Expected 1 Violation", 1, constraintViolations.size());
-		assertEquals("attempting to submit invalid staff details", constraintViolations.iterator().next().getMessage());
+		assertEquals("Staff grade required when entering staff code", constraintViolations.iterator().next().getMessage());
 	}
 	@Test
 	public void testTeamWithoutStaffCode()
@@ -221,7 +221,7 @@ public class UserValidationTest
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertEquals("testTeamWithoutStaffCode - Expected 1 Violation", 1, constraintViolations.size());
-		assertEquals("attempting to submit invalid staff details", constraintViolations.iterator().next().getMessage());
+		assertEquals("Teams required when entering staff code", constraintViolations.iterator().next().getMessage());
 	}
 	@Test
 	public void testInvalidStaffCodePattern()

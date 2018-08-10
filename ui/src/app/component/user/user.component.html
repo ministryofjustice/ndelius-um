@@ -96,17 +96,11 @@
               <div *ngIf="startdate.errors.required">
                 *Start date is required
               </div>
-              <div *ngIf="startdate.errors.incomplete">
-                *All fields are required
-              </div>
               <div *ngIf="startdate.errors.max">
-                *Value greater than maximum limit
+                *Start date cannot be after end date
               </div>
-              <div *ngIf="startdate.errors.min">
-                *Value less than minimum limit
-              </div>
-              <div *ngIf="startdate.errors.invalidDate">
-                *Invalid date
+              <div *ngIf="startdate.errors.invalidDate && startdate.errors.incomplete">
+                *Date is invalid
               </div>
             </div>
           </div>
@@ -120,14 +114,11 @@
               <div *ngIf="enddate.errors.incomplete">
                 *Leave empty or enter all fields
               </div>
-              <div *ngIf="enddate.errors.max">
-                *Value greater than maximum limit
-              </div>
               <div *ngIf="enddate.errors.min">
-                *End date is less than start date
+                *End date cannot be before start date
               </div>
               <div *ngIf="enddate.errors.invalidDate">
-                *Invalid date format
+                *Date is invalid
               </div>
             </div>
           </div>
@@ -192,11 +183,8 @@
                            [readonly]="mode === 'View'"
                            [labelMapper]="sectorToLabel"></item-selector>
             <div *ngIf="sectorSelector.dirty && sectorSelector.invalid" class = text-danger>
-              <div *ngIf="sectorSelector.errors.invalid">
-                *Sector is invalid
-              </div>
               <div *ngIf="sectorSelector.errors.list">
-                *At least sector must be chosen
+                *Sector is required
               </div>
             </div>
           </div>
@@ -220,9 +208,6 @@
                            [readonly]="mode === 'View' || user.datasets == null || user.datasets.length === 0"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
             <div *ngIf="homeArea.dirty && homeArea.invalid" class = text-danger>
-              <div *ngIf="homeArea.errors.invalid">
-                *Home area is invalid
-              </div>
               <div *ngIf="homeArea.errors.list">
                 *At least one home area is required
               </div>

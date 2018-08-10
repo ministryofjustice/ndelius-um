@@ -8,9 +8,7 @@ import javax.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.*;
-import uk.co.bconline.ndelius.validator.AssignableRoles;
-import uk.co.bconline.ndelius.validator.ValidDates;
-import uk.co.bconline.ndelius.validator.ValidStaffCode;
+import uk.co.bconline.ndelius.validator.*;
 
 @Getter
 @ToString
@@ -19,7 +17,10 @@ import uk.co.bconline.ndelius.validator.ValidStaffCode;
 @Builder(toBuilder = true)
 @AssignableRoles
 @ValidDates
-@ValidStaffCode
+@HomeAreaNotMatchingStaffCode
+@UniqueStaffCode
+@MissingStaffGrade
+@MissingTeams
 public class User
 {
 	@NotBlank
