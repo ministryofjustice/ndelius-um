@@ -11,6 +11,7 @@ cn: Users
 
 dn: cn=Administrator,cn=Users,dc=ad1,dc=local
 objectclass: top
+objectclass: user
 objectclass: person
 cn: Administrator
 uid: Administrator
@@ -19,6 +20,7 @@ userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=test.user.alias,cn=Users,dc=ad1,dc=local
 objectclass: top
+objectclass: user
 objectclass: person
 cn: test.user.alias
 uid: test.user.alias

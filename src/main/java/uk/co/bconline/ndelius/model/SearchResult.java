@@ -2,13 +2,17 @@ package uk.co.bconline.ndelius.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
-@Builder
+@ToString
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public final class SearchResult
 {
 	private String username;
@@ -17,8 +21,7 @@ public final class SearchResult
 	private String surname;
 	private List<Team> teams;
 	private String staffCode;
-
-	private boolean inNationalDelius;
-	private boolean inPrimaryAD;
-	private boolean inSecondaryAD;
+	private List<String> sources;
+	@JsonIgnore
+	private float score;
 }

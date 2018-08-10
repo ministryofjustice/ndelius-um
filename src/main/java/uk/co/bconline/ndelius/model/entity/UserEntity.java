@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.model.entity;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static org.hibernate.annotations.NotFoundAction.IGNORE;
+import static org.hibernate.search.annotations.Store.YES;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -44,7 +45,7 @@ public class UserEntity
 	@Column(name = "ROW_VERSION")
 	private Long version;
 
-	@Field
+	@Field(store = YES)
 	@Column(name = "DISTINGUISHED_NAME", unique = true)
 	private String username;
 

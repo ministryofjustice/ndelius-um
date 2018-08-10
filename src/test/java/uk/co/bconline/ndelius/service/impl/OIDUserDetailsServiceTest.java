@@ -1,7 +1,8 @@
 package uk.co.bconline.ndelius.service.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -14,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.service.RoleService;
 
 @SpringBootTest
@@ -27,17 +27,6 @@ public class OIDUserDetailsServiceTest
 
 	@Autowired
 	private RoleService roleService;
-
-	@Test
-	public void searchUsingInitial()
-	{
-		List<OIDUser> users = service.search("J Blog", 1, 10);
-
-		assertFalse(users.isEmpty());
-		users.forEach(user ->
-				assertThat(user.getForenames(), startsWith("J"))
-		);
-	}
 
 	@Test
 	public void retrieveRoles()
