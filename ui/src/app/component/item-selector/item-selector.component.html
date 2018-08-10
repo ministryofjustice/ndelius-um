@@ -1,6 +1,6 @@
 <div class="dropdown">
   <button [id]="id+'-toggle-btn'" type="button"
-          class="form-control text-left" [ngClass]="{readonly: readonly}"
+          class="form-control text-left" [class.readonly]="readonly" [class.ng-dirty]="dirty"
           (click)="toggleOptionsDisplayed()"
           aria-haspopup="true" [attr.aria-expanded]="optionsDisplayed">
     <span *ngIf="available == null">Loading...</span>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {User} from "../../model/user";
 import {ActivatedRoute, Router} from "@angular/router";
 import {flatMap, map} from "rxjs/operators";
@@ -16,14 +16,17 @@ import {OrganisationService} from "../../service/organisation.service";
 import {StaffGrade} from "../../model/staff-grade";
 import {StaffGradeService} from "../../service/staff-grade.service";
 import {AppComponent} from "../app/app.component";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'user',
   templateUrl: './user.component.html'
 })
+
 export class UserComponent implements OnInit {
   loaded: boolean;
-
+  @ViewChild("form")
+  form: NgForm;
   mode: string;
   user: User;
   teams: Team[];
@@ -71,7 +74,7 @@ export class UserComponent implements OnInit {
       }))
       .subscribe((user: User) => {
         this.user = user;
-        this.addSelectableRoles(user.roles);
+        this.addSelectableRoles(user.roles || []);
         this.loaded = true;
         this.homeAreaChanged();
       });
@@ -122,6 +125,18 @@ export class UserComponent implements OnInit {
   }
 
   submit(): void {
+    if(!this.form.valid){
+      Object.keys(this.form.controls).forEach(key => {
+        let abstractControl = this.form.controls[key];
+        abstractControl.markAsDirty();
+        abstractControl.updateValueAndValidity();
+        console.log(abstractControl, abstractControl.valid)
+      });
+      AppComponent.globalMessage = "Please complete all fields highlighted before submitting user details.";
+      AppComponent.globalMessageSeverity = "danger";
+      window.scrollTo(0,0);
+      return;
+    }
     if (this.mode === 'Add') {
       this.userService.create(this.user).subscribe(() => {
         this.router.navigate(["/user/" + this.user.username]).then(() => {

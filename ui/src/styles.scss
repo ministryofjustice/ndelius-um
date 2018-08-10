@@ -18,6 +18,15 @@
   opacity: 1;
 }
 
+date.ng-invalid input, item-selector.ng-invalid button{
+  @extend .ng-invalid;
+}
+
+date.ng-dirty input, item-selector.ng-dirty button{
+  @extend .ng-dirty
+}
+
 .ng-invalid.ng-dirty {
   @extend .is-invalid;
 }
+

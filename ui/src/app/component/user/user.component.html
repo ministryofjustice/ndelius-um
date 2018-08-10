@@ -13,9 +13,18 @@
         <div class="form-group row">
           <label for="username" class="col-sm-2 col-form-label">Username</label>
           <div class="col-sm-4">
-            <input id="username" name="username" [(ngModel)]="user.username"
+            <input #username="ngModel" id="username" name="username" [(ngModel)]="user.username"
                    class="form-control" [readonly]="mode !== 'Add'"
-                   aria-describedby="username-help-text" autocomplete="off" required/>
+                   aria-describedby="username-help-text" autocomplete="off" required pattern="^[a-zA-Z0-9_\-.]*$"
+                   maxlength="60"/>
+            <div *ngIf="username.invalid && username.dirty " class="text-danger">
+              <div *ngIf="username.errors.required">
+                *Username is required
+              </div>
+              <div *ngIf="username.errors.pattern">
+                *Username should be unique and contain only alphanumeric characters.
+              </div>
+            </div>
           </div>
           <span id="username-help-text" class="form-text col-sm-6 text-muted" *ngIf="mode === 'Add'">
             Username should be unique and contain only alphanumeric characters.
@@ -24,8 +33,16 @@
         <div class="form-group row" *ngIf="user.aliasUsername != null || mode !== 'View'">
           <label for="alias-username" class="col-sm-2 col-form-label">Alias</label>
           <div class="col-sm-4">
-            <input id="alias-username" name="alias-username" [(ngModel)]="user.aliasUsername"
-                   class="form-control" [readonly]="mode === 'View'" autocomplete="off" required>
+            <input id="alias-username" name="alias-username" #aliasUsername="ngModel" [(ngModel)]="user.aliasUsername"
+                   class="form-control" [readonly]="mode === 'View'" autocomplete="off" required pattern="^[a-zA-Z0-9_\-.]*$" maxlength="60">
+            <div *ngIf="aliasUsername.invalid && aliasUsername.dirty" class="text-danger">
+              <div *ngIf="aliasUsername.errors.required">
+                *Alias username is required
+              </div>
+              <div *ngIf="aliasUsername.errors.pattern">
+                *Alias username should be unique and contain only alphanumeric characters.
+              </div>
+            </div>
           </div>
           <div class="col-sm-6">
             <div class="custom-control custom-checkbox pt-2">
@@ -41,23 +58,78 @@
         <div class="form-group row">
           <label for="forenames" class="col-sm-2 col-form-label">Forename(s)</label>
           <div class="col-sm-4">
-            <input id="forenames" name="forenames" [(ngModel)]="user.forenames" autocomplete="given-name"
-                   class="form-control" [readonly]="mode === 'View'" required>
+            <input id="forenames" name="forenames" #forenames="ngModel" [(ngModel)]="user.forenames"
+                   autocomplete="given-name"
+                   class="form-control" [readonly]="mode === 'View'" required maxlength="71">
+            <div *ngIf="forenames.invalid && forenames.dirty" class = text-danger>
+              <div *ngIf="forenames.errors.required">
+                *Forename(s) is required
+              </div>
+              <div *ngIf="forenames.errors.maxlength">
+                *Forename(s) must be less than 71 characters
+              </div>
+            </div>
           </div>
           <label for="surname" class="col-sm-2 col-form-label">Surname</label>
           <div class="col-sm-4">
-            <input id="surname" name="surname" [(ngModel)]="user.surname" autocomplete="family-name"
-                   class="form-control" [readonly]="mode === 'View'" required>
+            <input id="surname" name="surname" #surname="ngModel" [(ngModel)]="user.surname" autocomplete="family-name"
+                   class="form-control" [readonly]="mode === 'View'" required maxlength="35">
+            <div *ngIf="surname.invalid && surname.dirty" class = text-danger>
+              <div *ngIf="surname.errors.required">
+                *Surname is required
+              </div>
+              <div *ngIf="surname.errors.maxlength">
+                *Surname must be less than 35 characters
+              </div>
+            </div>
           </div>
         </div>
         <div class="form-group row">
           <label [for]="'start-date-d'" class="col-sm-2 col-form-label">Start Date</label>
           <div class="col-sm-4">
-            <date id="start-date" [(value)]="user.startDate" [max]="user.endDate" [readonly]="mode === 'View'"></date>
+            <date id="start-date" name="start-date" #startdate="ngModel"
+                  [(ngModel)]="user.startDate"
+                  required="true"
+                  [max]="user.endDate"
+                  [readonly]="mode === 'View'"></date>
+            <div *ngIf="startdate.invalid && startdate.dirty" class = text-danger>
+              <div *ngIf="startdate.errors.required">
+                *Start date is required
+              </div>
+              <div *ngIf="startdate.errors.incomplete">
+                *All fields are required
+              </div>
+              <div *ngIf="startdate.errors.max">
+                *Value greater than maximum limit
+              </div>
+              <div *ngIf="startdate.errors.min">
+                *Value less than minimum limit
+              </div>
+              <div *ngIf="startdate.errors.invalidDate">
+                *Invalid date
+              </div>
+            </div>
           </div>
           <label [for]="'end-date-d'" class="col-sm-2 col-form-label">End Date</label>
           <div class="col-sm-4">
-            <date id="end-date" [(value)]="user.endDate" [min]="user.startDate" [readonly]="mode === 'View'"></date>
+            <date id="end-date" name="end-date" #enddate="ngModel"
+                  [(ngModel)]="user.endDate"
+                  [min]="user.startDate"
+                  [readonly]="mode === 'View'"></date>
+            <div *ngIf="enddate.dirty && enddate.invalid" class = text-danger>
+              <div *ngIf="enddate.errors.incomplete">
+                *Leave empty or enter all fields
+              </div>
+              <div *ngIf="enddate.errors.max">
+                *Value greater than maximum limit
+              </div>
+              <div *ngIf="enddate.errors.min">
+                *End date is less than start date
+              </div>
+              <div *ngIf="enddate.errors.invalidDate">
+                *Invalid date format
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -81,8 +153,9 @@
           </div>
           <label [for]="'roles-toggle-btn'" class="col-sm-2 col-form-label">Roles</label>
           <div class="col-sm-4">
-            <item-selector id="roles" multiple="true" maxHeight="300px"
-                           [(selected)]="user.roles"
+            <item-selector id="roles" name="roles" multiple="true" maxHeight="300px"
+                           [required]="false"
+                           [(ngModel)]="user.roles"
                            [available]="roles"
                            [readonly]="mode === 'View'"
                            [labelMapper]="nameDescriptionToLabel"></item-selector>
@@ -91,20 +164,41 @@
         <div class="form-group row">
           <label [for]="'datasets-toggle-btn'" class="col-sm-2 col-form-label">Datasets</label>
           <div class="col-sm-4">
-            <item-selector id="datasets" multiple="true" maxHeight="300px"
+            <item-selector id="datasets" name="datasets" multiple="true" #datasetsList="ngModel" maxHeight="300px"
+                           required="true"
+                           [(ngModel)]="user.datasets"
                            [(selected)]="user.datasets"
                            [available]="datasets"
                            [readonly]="mode === 'View'"
                            [labelMapper]="codeDescriptionToLabel"
-                           aria-describedby="datasets-help-text"></item-selector>
+                           aria-describedby="datasets-help-text">
+            </item-selector>
+            <div *ngIf="datasetsList.dirty && datasetsList.invalid" class=text-danger>
+              <div *ngIf="datasetsList.errors.invalid">
+                *Dataset is invalid
+              </div>
+              <div *ngIf="datasetsList.errors.list">
+                <p> *At least one dataset is required</p>
+              </div>
+            </div>
           </div>
           <label [for]="'sector-toggle-btn'" class="col-sm-2 col-form-label">Sector</label>
           <div class="col-sm-4">
-            <item-selector id="sector"
+            <item-selector id="sector" name="sector" #sectorSelector="ngModel"
+                           required="true"
+                           [(ngModel)]="user.privateSector"
                            [(selected)]="user.privateSector"
                            [available]="[true, false]"
                            [readonly]="mode === 'View'"
                            [labelMapper]="sectorToLabel"></item-selector>
+            <div *ngIf="sectorSelector.dirty && sectorSelector.invalid" class = text-danger>
+              <div *ngIf="sectorSelector.errors.invalid">
+                *Sector is invalid
+              </div>
+              <div *ngIf="sectorSelector.errors.list">
+                *At least sector must be chosen
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -118,11 +212,21 @@
         <div class="form-group row">
           <label [for]="'home-area-toggle-btn'" class="col-sm-2 col-form-label">Home Area</label>
           <div class="col-sm-4">
-            <item-selector id="home-area" #homeArea maxHeight="300px"
+            <item-selector id="home-area" name="homearea" #homeArea="ngModel" maxHeight="300px"
+                           required="true"
+                           [(ngModel)]="user.homeArea"
                            [(selected)]="user.homeArea" (selectedChange)="homeAreaChanged()"
                            [available]="user.datasets"
                            [readonly]="mode === 'View' || user.datasets == null || user.datasets.length === 0"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
+            <div *ngIf="homeArea.dirty && homeArea.invalid" class = text-danger>
+              <div *ngIf="homeArea.errors.invalid">
+                *Home area is invalid
+              </div>
+              <div *ngIf="homeArea.errors.list">
+                *At least one home area is required
+              </div>
+            </div>
           </div>
           <label for="organisation" class="col-sm-2 col-form-label"
                  *ngIf="user.homeArea?.organisation?.description">Organisation</label>
@@ -138,33 +242,53 @@
               <div class="input-group-prepend" *ngIf="user.homeArea != null">
                 <span class="input-group-text">{{user.homeArea?.code}}</span>
               </div>
-              <input id="staff-code" name="staff-code" [(ngModel)]="staffCodeSuffix"
-                     class="form-control" [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"/>
+              <input id="staff-code" name="staff-code" #staffcode="ngModel" [(ngModel)]="staffCodeSuffix"
+                     class="form-control" [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"
+                     pattern="[A-Z][0-9]{3}$" minlength="4" maxlength="4"/>
+              <div *ngIf="staffcode.dirty && staffcode.invalid" class = text-danger>
+                <div *ngIf="staffcode.errors.pattern">
+                  *Staff code must be one uppercase character then three numeric characters
+                </div>
+              </div>
             </div>
           </div>
           <label [for]="'staff-grade-toggle-btn'" class="col-sm-2 col-form-label">Staff Grade</label>
           <div class="col-sm-4">
-            <item-selector id="staff-grade" maxHeight="300px"
+            <item-selector id="staff-grade" name="staffGrade" #staffGrade="ngModel" maxHeight="300px"
+                           [required]="user.staffCode != null && staffcode.valid == true"
+                           [(ngModel)]="user.staffGrade"
                            [(selected)]="user.staffGrade"
                            [available]="staffGrades"
                            [readonly]="mode === 'View' || user.staffCode == null"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
+            <div *ngIf="staffGrade.dirty && staffGrade.invalid" class = text-danger>
+              <div *ngIf="staffGrade.errors.required">
+                *Staff grade required when a staff code exists
+              </div>
+            </div>
           </div>
         </div>
         <div class="form-group row">
           <label [for]="'teams-toggle-btn'" class="col-sm-2 col-form-label">Team(s)</label>
           <div class="col-sm-4">
-            <item-selector id="teams" multiple="true" maxHeight="300px"
+            <item-selector id="teams" name="teams" multiple="true" #teamsList="ngModel" maxHeight="300px"
+                           [required]="user.staffCode != null && staffcode.valid == true"
+                           [(ngModel)] = "user.teams"
                            [(selected)]="user.teams"
                            [available]="teams"
                            [readonly]="mode === 'View' || user.staffCode == null"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
+            <div *ngIf="teamsList.dirty && teamsList.invalid && staffcode.valid" class = text-danger>
+              <div *ngIf="teamsList.errors.required">
+                *At least one team required when a staff code exists
+              </div>
+            </div>
           </div>
         </div>
       </section>
       <hr/>
       <div class="btn-toolbar">
-        <button id="save-btn" type="submit" class="btn btn-primary mr-2"
+        <button id="save-btn" type="submit"  class="btn btn-primary mr-2"
                 *ngIf="mode !== 'View'">Save</button>
         <button id="copy-btn" type="button" class="btn btn-secondary mr-2"
                 routerLink="/user" [queryParams]="{copy: user.username}"
