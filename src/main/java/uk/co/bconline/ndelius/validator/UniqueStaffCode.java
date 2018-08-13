@@ -14,7 +14,7 @@ import javax.validation.Payload;
 @Constraint(validatedBy = UniqueStaffCodeValidator.class)
 public @interface UniqueStaffCode
 {
-	String message() default "Staff ID must be unique";
+	String message() default "Staff Code must be unique";
 
 	Class<?>[] groups() default {};
 

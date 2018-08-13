@@ -50,8 +50,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params
-      .pipe(
-        flatMap(params => {
+      .pipe(flatMap(params => {
         if (params.id != null) {
           this.mode = this.auth.canUpdateUser()? 'Update': 'View';
           return this.userService.read(params.id);
@@ -142,24 +141,23 @@ export class UserComponent implements OnInit {
     if (this.mode === 'Add') {
       this.saving = true;
       window.scrollTo(0,0);
-
       this.userService.create(this.user).subscribe(() => {
-        setTimeout(()=> this.router.navigate(["/user/" + this.user.username]).then(() => {
+        this.router.navigate(["/user/" + this.user.username]).then(() => {
           AppComponent.globalMessage = "Created " + this.user.username + " successfully.";
           AppComponent.globalMessageSeverity = "info";
           this.saving = false;
-        }),3000);
-      });
+        });
+      }, () => this.saving = false);
     } else if (this.mode === 'Update') {
       this.saving = true;
       window.scrollTo(0,0);
       this.userService.update(this.user).subscribe(() => {
-        setTimeout(()=> this.router.navigate(["/user/" + this.user.username]).then(() => {
+       this.router.navigate(["/user/" + this.user.username]).then(() => {
           AppComponent.globalMessage = "Updated " + this.user.username + " successfully.";
           AppComponent.globalMessageSeverity = "info";
           this.saving = false;
-        }),3000);
-      });
+        });
+      }, () => this.saving = false);
     } else {
       console.error('Unsupported mode', this.mode);
     }
