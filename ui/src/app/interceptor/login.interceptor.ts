@@ -13,8 +13,8 @@ import {flatMap} from "rxjs/operators";
 export class LoginInterceptor implements HttpInterceptor {
   static token: string;
   user = {
-    name: 'my-test',
-    pass: 'passw0rd1'
+    name: 'test.user',
+    pass: 'secret'
   };
 
   constructor(private http: HttpClient) {
