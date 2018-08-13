@@ -196,4 +196,8 @@ export class UserComponent implements OnInit {
       this.user.staffCode = this.user.homeArea.code + staffCodeSuffix;
     }
   }
+
+  get json() {
+    return JSON.stringify(this.user);
+  }
 }

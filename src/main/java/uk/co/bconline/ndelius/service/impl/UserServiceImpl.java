@@ -145,17 +145,18 @@ public class UserServiceImpl implements UserService
 	@Override
 	public void updateUser(User user)
 	{
-		// TODO update AD
 		val dbFuture = runAsync(() -> dbService.save(transformer.mapToUserEntity(user,
 				dbService.getUser(user.getUsername()).orElse(new UserEntity()))));
 		val oidFuture = runAsync(() -> oidService.save(transformer.mapToOIDUser(user,
 				oidService.getUser(user.getUsername()).orElse(new OIDUser()))));
-//		val ad1Future = runAsync(() -> ad1Service.ifPresent(service -> service.save(transformer.mapToAD1User(user, new ADUser()))));
-//		val ad2Future = runAsync(() -> ad2Service.ifPresent(service -> service.save(transformer.mapToAD2User(user, new ADUser()))));
+		val ad1Future = runAsync(() -> ad1Service.ifPresent(service -> service.save(transformer.mapToAD1User(user,
+				service.getUser(user.getUsername()).orElse(new ADUser())))));
+		val ad2Future = runAsync(() -> ad2Service.ifPresent(service -> service.save(transformer.mapToAD2User(user,
+				service.getUser(user.getUsername()).orElse(new ADUser())))));
 
 		try
 		{
-			allOf(dbFuture, oidFuture).get();
+			allOf(dbFuture, oidFuture, ad1Future, ad2Future).get();
 		}
 		catch (InterruptedException | ExecutionException e)
 		{

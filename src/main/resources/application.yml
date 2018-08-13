@@ -12,6 +12,7 @@ spring.jpa.properties.hibernate.search.default:
   indexBase: ./um-index/
   expiry: 600 # 10 minutes
 
+oid.default-password: '{SSHA}S22CgeZ/VQJHivxBKe0kONRCA1XelJr0'
 oid.base-environment.java.naming.ldap.derefAliases: never
 oid.base-environment.com.sun.jndi.ldap.connect.pool: false
 
