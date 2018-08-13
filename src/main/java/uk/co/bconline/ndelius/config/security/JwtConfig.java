@@ -29,6 +29,7 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -94,8 +95,9 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 					}
 					catch (JwtException e)
 					{
-						log.error("Error parsing JWT token", e);
-						val failed = new InsufficientAuthenticationException("Invalid token", e);
+						log.error("Unable to accept JWT token", e);
+						val failed = new InsufficientAuthenticationException(
+								e instanceof ExpiredJwtException? "Expired token": "Invalid token", e);
 						loginHandler.onAuthenticationFailure(request, response, failed);
 						if (!loginRequestMatcher.matches(request))
 						{

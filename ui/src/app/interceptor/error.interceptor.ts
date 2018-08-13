@@ -17,11 +17,12 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(tap(()=>{},(res: HttpResponseBase) => {
       if (res instanceof HttpErrorResponse) {
         let error: string = JSON.stringify(res.error);
-        if (res.error.error instanceof Array) {
+        if (res.status == 401) {
+          error = 'Session expired. Please refresh the page to login again.'
+        } else if (res.status == 403) {
+          error = 'Access denied.' + (res.error.requiredRoles instanceof Array? ' Missing roles: ' + res.error.requiredRoles.join(', '): '');
+        } else if (res.error.error instanceof Array) {
           error = res.error.error.join(", ");
-        }
-        if(res.error.requiredRoles instanceof Array){
-          error = " Access denied. Roles required: " + res.error.requiredRoles.join(", ")
         }
 
         AppComponent.globalMessage = "Error " + res.status + " | " + error;
