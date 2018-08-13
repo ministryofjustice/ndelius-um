@@ -193,6 +193,8 @@ public class UserTransformer
 				.privateUser(user.getPrivateSector())
 				.endDate(user.getEndDate())
 				.organisation(ofNullable(user.getHomeArea())
+						.map(Dataset::getCode)
+						.flatMap(datasetService::getDatasetByCode)
 						.map(Dataset::getOrganisation)
 						.map(Organisation::getCode)
 						.flatMap(organisationService::getOrganisationId)
