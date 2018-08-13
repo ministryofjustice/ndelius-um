@@ -7,14 +7,15 @@ import javax.validation.ConstraintValidatorContext;
 
 import uk.co.bconline.ndelius.model.User;
 
-public class MissingStaffGradeValidator implements ConstraintValidator<MissingStaffGrade, User>
+public class MissingStaffGradeWithStaffCodeValidator
+		implements ConstraintValidator<MissingStaffGradeWithStaffCode, User>
 {
 	@Override
 	public boolean isValid(User user, ConstraintValidatorContext context)
 	{
-		if (user.getStaffGrade() != null)
+		if (!isEmpty(user.getStaffCode()))
 		{
-			return user.getStaffCode() != null && (user.getStaffGrade() != null || !isEmpty(user.getStaffGrade().getCode()));
+			return user.getStaffGrade() != null && (!isEmpty(user.getStaffGrade().getCode()));
 		}
 		return true;
 	}

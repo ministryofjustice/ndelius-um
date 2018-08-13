@@ -207,6 +207,7 @@ public class UserControllerTest
 						.username("test.user")
 						.forenames("Test")
 						.surname("User1")
+						.startDate(LocalDate.of(2018,8,13))
 						.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
 						.homeArea(Dataset.builder().code("C01").description("CRC London").build())
 						.privateSector(false)
@@ -270,6 +271,7 @@ public class UserControllerTest
 				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
 						.username("test.user2")
 						.aliasUsername("test.user2.alias")
+						.startDate(LocalDate.of(2018,8,13))
 						.privateSector(false)
 						.homeArea(Dataset.builder().code("N01").build())
 						.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
@@ -300,6 +302,7 @@ public class UserControllerTest
 								Dataset.builder().code("C03").build()))
 						.forenames("Test")
 						.surname("User3")
+						.startDate(LocalDate.of(2018,8,13))
 						.build())))
 				.andExpect(status().isCreated());
 
