@@ -11,10 +11,10 @@ import javax.validation.Payload;
 
 @Target(TYPE)
 @Retention(RUNTIME)
-@Constraint(validatedBy = MissingStaffGradeValidator.class)
-public @interface MissingStaffGrade
+@Constraint(validatedBy = MissingStaffCodeWithStaffGradeValidator.class)
+public @interface MissingStaffCodeWithStaffGrade
 {
-	String message() default "Staff grade required when entering staff code";
+	String message() default "Staff code is required when entering staff grade";
 
 	Class<?>[] groups() default {};
 

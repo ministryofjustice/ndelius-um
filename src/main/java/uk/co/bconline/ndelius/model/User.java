@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,8 +20,9 @@ import uk.co.bconline.ndelius.validator.*;
 @ValidDates
 @HomeAreaNotMatchingStaffCode
 @UniqueStaffCode
-@MissingStaffGrade
+@MissingStaffCodeWithStaffGrade
 @MissingTeams
+@MissingStaffGradeWithStaffCode
 public class User
 {
 	@NotBlank
@@ -51,12 +53,15 @@ public class User
 	@NotNull
 	private Dataset homeArea;
 
+	@NotNull
 	private LocalDate startDate;
 
 	private LocalDate endDate;
 
+	@Valid
 	private List<Team> teams;
 
+	@Valid
 	@NotEmpty
 	private List<Dataset> datasets;
 

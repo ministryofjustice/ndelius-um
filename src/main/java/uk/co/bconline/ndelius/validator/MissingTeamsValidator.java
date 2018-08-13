@@ -1,7 +1,11 @@
 package uk.co.bconline.ndelius.validator;
 
+import static org.springframework.util.CollectionUtils.isEmpty;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
+import org.springframework.util.StringUtils;
 
 import uk.co.bconline.ndelius.model.User;
 
@@ -10,9 +14,9 @@ public class MissingTeamsValidator implements ConstraintValidator<MissingTeams, 
 	@Override
 	public boolean isValid(User user, ConstraintValidatorContext context)
 	{
-		if (user.getTeams() != null)
+		if(!isEmpty(user.getTeams()))
 		{
-			return user.getStaffCode() != null && (user.getTeams() != null || !user.getTeams().isEmpty());
+			return !StringUtils.isEmpty(user.getStaffCode());
 		}
 		return true;
 	}
