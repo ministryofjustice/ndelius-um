@@ -1,7 +1,10 @@
-<ng-template #loading>Loading...</ng-template>
+<ng-template #loadingText>Loading...</ng-template>
 <ng-template #unauthorised>You are not authorised to view user details.</ng-template>
-<ng-container *ngIf="loaded; else loading">
+<ng-container *ngIf="loaded; else loadingText">
 <ng-container *ngIf="auth.canGetUser(); else unauthorised">
+  <div class="progress rounded-0 position-absolute h-1 w-100" *ngIf="saving">
+    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info w-100"></div>
+  </div>
   <div class="container">
     <div class="pb-2 mt-4 mb-2">
       <h1>{{mode}} user</h1>
