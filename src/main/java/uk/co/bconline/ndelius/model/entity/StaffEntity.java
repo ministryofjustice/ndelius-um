@@ -11,9 +11,10 @@ import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.Type;
-import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.IndexedEmbedded;
@@ -38,8 +39,8 @@ public class StaffEntity
 	@Column(name = "ROW_VERSION")
 	private Long version;
 
-	@Field(analyze = Analyze.NO)
 	@Column(name = "OFFICER_CODE")
+	@Field(analyzer = @Analyzer(impl = SimpleAnalyzer.class))
 	private String code;
 
 	@Column(name = "FORENAME")
