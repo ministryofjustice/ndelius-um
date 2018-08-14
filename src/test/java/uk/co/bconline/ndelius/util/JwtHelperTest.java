@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,6 +25,9 @@ public class JwtHelperTest
 {
 	@Autowired
 	private JwtHelper jwtHelper;
+
+	@Value("${jwt.secret}")
+	private String secret;
 
 	@Test
 	public void tokenCanBeRetrievedFromHeader()
@@ -61,7 +65,7 @@ public class JwtHelperTest
 	{
 		return Jwts.builder()
 				.setSubject(sub)
-				.signWith(SignatureAlgorithm.HS512, "secret")
+				.signWith(SignatureAlgorithm.HS512, secret)
 				.compact();
 	}
 }
