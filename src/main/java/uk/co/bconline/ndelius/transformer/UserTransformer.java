@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.val;
@@ -28,20 +29,25 @@ import uk.co.bconline.ndelius.service.DatasetService;
 import uk.co.bconline.ndelius.service.OrganisationService;
 import uk.co.bconline.ndelius.service.ReferenceDataService;
 import uk.co.bconline.ndelius.service.TeamService;
-import uk.co.bconline.ndelius.service.impl.AD1UserDetailsService;
-import uk.co.bconline.ndelius.service.impl.AD2UserDetailsService;
 import uk.co.bconline.ndelius.service.impl.DBUserDetailsService;
 import uk.co.bconline.ndelius.util.LdapPasswordUtils;
 
 @Component
 public class UserTransformer
 {
+	@Value("${ad.primary.principal.suffix:}")
+	private String ad1PrincipalSuffix;
+
+	@Value("${ad.secondary.principal.suffix:}")
+	private String ad2PrincipalSuffix;
+
+	@Value("${oid.default-password:}")
+	private String oidDefaultPassword;
+
 	private final TeamService teamService;
 	private final ReferenceDataService referenceDataService;
 	private final DatasetService datasetService;
 	private final OrganisationService organisationService;
-	private final Optional<AD1UserDetailsService> ad1UserDetailsService;
-	private final Optional<AD2UserDetailsService> ad2UserDetailsService;
 	private final DBUserDetailsService dbUserDetailsService;
 	private final DatasetTransformer datasetTransformer;
 	private final ReferenceDataTransformer referenceDataTransformer;
@@ -52,8 +58,6 @@ public class UserTransformer
 			ReferenceDataService referenceDataService,
 			DatasetService datasetService,
 			OrganisationService organisationService,
-			Optional<AD1UserDetailsService> ad1UserDetailsService,
-			Optional<AD2UserDetailsService> ad2UserDetailsService,
 			DBUserDetailsService dbUserDetailsService,
 			DatasetTransformer datasetTransformer,
 			ReferenceDataTransformer referenceDataTransformer)
@@ -62,8 +66,6 @@ public class UserTransformer
 		this.referenceDataService = referenceDataService;
 		this.datasetService = datasetService;
 		this.organisationService = organisationService;
-		this.ad1UserDetailsService = ad1UserDetailsService;
-		this.ad2UserDetailsService = ad2UserDetailsService;
 		this.dbUserDetailsService = dbUserDetailsService;
 		this.datasetTransformer = datasetTransformer;
 		this.referenceDataTransformer = referenceDataTransformer;
@@ -127,7 +129,7 @@ public class UserTransformer
 						.build()),
 				ofNullable(dbUser).map(v -> User.builder()
 						.username(v.getUsername())
-						.forenames(combineForenames(v.getForename(), v.getForename2()))
+						.forenames(combineNames(v.getForename(), v.getForename2()))
 						.surname(v.getSurname())
 						.datasets(datasetTransformer.map(v.getDatasets()))
 						.staffCode(ofNullable(v.getStaff()).map(StaffEntity::getCode).orElse(null))
@@ -142,10 +144,14 @@ public class UserTransformer
 						.build()),
 				ofNullable(ad1User).map(v -> User.builder()
 						.username(v.getUsername())
+						.forenames(v.getForename())
+						.surname(v.getSurname())
 						.sources(singletonList("AD1"))
 						.build()),
 				ofNullable(ad2User).map(v -> User.builder()
 						.username(v.getUsername())
+						.forenames(v.getForename())
+						.surname(v.getSurname())
 						.sources(singletonList("AD2"))
 						.build()))
 				.filter(Optional::isPresent)
@@ -259,7 +265,7 @@ public class UserTransformer
 	{
 		return existingUser.toBuilder()
 				.username(user.getUsername())
-				.password(LdapPasswordUtils.fixPassword(existingUser.getPassword()))	// no facility to set password yet
+				.password(LdapPasswordUtils.fixPassword(ofNullable(existingUser.getPassword()).orElse(oidDefaultPassword)))
 				.aliasUsername(user.getAliasUsername())
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
@@ -276,13 +282,22 @@ public class UserTransformer
 	{
 		return existingUser.toBuilder()
 				.username(user.getUsername())
+				.userPrincipalName(user.getUsername() + ad2PrincipalSuffix)
+				.forename(user.getForenames())
+				.surname(user.getSurname())
+				.displayName(combineNames(user.getForenames(), user.getSurname()))
 				.build();
 	}
 
 	public ADUser mapToAD1User(User user, ADUser existingUser)
 	{
+		val username = ofNullable(user.getAliasUsername()).orElse(user.getUsername());
 		return existingUser.toBuilder()
-				.username(ofNullable(user.getAliasUsername()).orElse(user.getUsername()))
+				.username(username)
+				.userPrincipalName(username + ad1PrincipalSuffix)
+				.forename(user.getForenames())
+				.surname(user.getSurname())
+				.displayName(combineNames(user.getForenames(), user.getSurname()))
 				.build();
 	}
 }

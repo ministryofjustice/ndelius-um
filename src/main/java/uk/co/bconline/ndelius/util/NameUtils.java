@@ -9,11 +9,11 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class NameUtils
 {
-	public static String combineForenames(String forename, String forename2)
+	public static String combineNames(String name1, String name2)
 	{
-		if (forename == null) forename = "";
-		if (isEmpty(forename2)) return forename;
-		return forename + " " + forename2;
+		if (name1 == null) name1 = "";
+		if (isEmpty(name2)) return name1;
+		return name1 + " " + name2;
 	}
 
 	public static String firstForename(String forenames)

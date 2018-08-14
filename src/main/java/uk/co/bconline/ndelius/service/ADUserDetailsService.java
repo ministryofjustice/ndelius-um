@@ -84,6 +84,15 @@ public abstract class ADUserDetailsService implements UserDetailsService
 
 	public void save(ADUser adUser)
 	{
+		if (adUser.getUserAccountControl() == null)
+		{
+			int NORMAL_ACCOUNT = 0x0200;
+			int PASSWD_NOTREQD = 0x0020;
+			int DONT_EXPIRE_PASSWORD = 0x10000;
+			adUser = adUser.toBuilder()
+					.userAccountControl(Integer.toString(NORMAL_ACCOUNT + PASSWD_NOTREQD + DONT_EXPIRE_PASSWORD))
+					.build();
+		}
 		getRepository().save(adUser);
 	}
 

@@ -10,21 +10,21 @@ public class NameUtilsTest
 	@Test
 	public void combineForenames()
 	{
-		String result = NameUtils.combineForenames("a b", "c d");
+		String result = NameUtils.combineNames("a b", "c d");
 		assertEquals("a b c d", result);
 	}
 
 	@Test
 	public void combineForenamesWithNoSecondForename()
 	{
-		String result = NameUtils.combineForenames("a b", null);
+		String result = NameUtils.combineNames("a b", null);
 		assertEquals("a b", result);
 	}
 
 	@Test
 	public void combineForenamesWithNoFirstForename()
 	{
-		String result = NameUtils.combineForenames(null, "a");
+		String result = NameUtils.combineNames(null, "a");
 		assertEquals(" a", result);
 		assertEquals("", NameUtils.firstForename(result));
 		assertEquals("a", NameUtils.subsequentForenames(result));

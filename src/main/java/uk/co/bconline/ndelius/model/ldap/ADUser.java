@@ -6,10 +6,7 @@ import java.util.Collection;
 
 import javax.naming.Name;
 
-import org.springframework.ldap.odm.annotations.Attribute;
-import org.springframework.ldap.odm.annotations.DnAttribute;
-import org.springframework.ldap.odm.annotations.Entry;
-import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.odm.annotations.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,11 +24,26 @@ public final class ADUser implements UserDetails
 	private Name dn;
 
 	@Setter
-	@Attribute(name="samAccountName")
+	@Attribute(name="sAMAccountName")
 	@DnAttribute(value="cn", index=1)
 	private String username;
 
-	@Attribute(name="userpassword")
+	@Attribute(name="userPrincipalName")
+	private String userPrincipalName;
+
+	@Attribute(name="givenName")
+	private String forename;
+
+	@Attribute(name="sn")
+	private String surname;
+
+	@Attribute(name="displayName")
+	private String displayName;
+
+	@Attribute(name="userAccountControl")
+	private String userAccountControl;
+
+	@Transient
 	private String password;
 
 	@Override
