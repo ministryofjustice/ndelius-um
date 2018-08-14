@@ -38,10 +38,12 @@ See [application-dev.yml](src/main/resources/application-dev.yml) for an example
 The below properties are used to configure JWT token generation and verification:
 ```yaml
 jwt:
-  secret: secret      # Secret key used for signing JWT tokens.
-  cookie: AUTH-TOKEN  # Name of the cookie to be used for storing the auth token
-  expiry: 30          # JWT token expiry in minutes.
+  secret: secret      # Secret key used for signing tokens.
+  cookie: AUTH-TOKEN  # Name of the cookie to be used for storing the auth token.
+  expiry: 30          # Token expiry in minutes.
 ```
+If the secret is not specified, a secure key will be generated on startup.
+However this will result in any issued tokens being invalidated after a restart.
 
 ## Running the API
 ### Run with the default profile
