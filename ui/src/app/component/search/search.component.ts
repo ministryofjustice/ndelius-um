@@ -21,7 +21,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   searching: boolean;
   noResults: boolean;
 
-  constructor(private route: ActivatedRoute, private router: Router, private service: UserService, public auth: AuthorisationService) {
+  constructor(private route: ActivatedRoute, public router: Router, private service: UserService, public auth: AuthorisationService) {
   }
 
   ngOnInit(): void {

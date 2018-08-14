@@ -42,7 +42,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of users" routerLink="/user/{{user.username}}" style="cursor: pointer">
+          <tr *ngFor="let user of users" style="cursor: pointer"
+              routerLink="/user/{{user.username}}" (keyup.enter)="router.navigate(['/user/'+user.username])">
             <td class="font-weight-bold">{{user.forenames}} {{user.surname}}</td>
             <td>
               <span title="Username">{{user.username}}</span>
