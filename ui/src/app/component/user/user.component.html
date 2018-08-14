@@ -20,18 +20,18 @@
                    class="form-control" [readonly]="mode !== 'Add'"
                    aria-describedby="username-help-text" autocomplete="off" required pattern="^[a-zA-Z0-9_\-.]*$"
                    maxlength="60"/>
-            <div *ngIf="username.invalid && username.dirty " class="text-danger">
-              <div *ngIf="username.errors.required">
+            <div *ngIf="username.invalid && username.dirty" class="text-danger">
+              <div *ngIf="username.errors['required']">
                 *Username is required
               </div>
-              <div *ngIf="username.errors.pattern">
+              <div *ngIf="username.errors['pattern']">
                 *Username should be unique and contain only alphanumeric characters.
               </div>
             </div>
           </div>
           <span id="username-help-text" class="form-text col-sm-6 text-muted" *ngIf="mode === 'Add'">
-            Username should be unique and contain only alphanumeric characters.
-          </span>
+          Username should be unique and contain only alphanumeric characters.
+        </span>
         </div>
         <div class="form-group row" *ngIf="user.aliasUsername != null || mode !== 'View'">
           <label for="alias-username" class="col-sm-2 col-form-label">Alias</label>
@@ -39,10 +39,10 @@
             <input id="alias-username" name="alias-username" #aliasUsername="ngModel" [(ngModel)]="user.aliasUsername"
                    class="form-control" [readonly]="mode === 'View'" autocomplete="off" required pattern="^[a-zA-Z0-9_\-.]*$" maxlength="60">
             <div *ngIf="aliasUsername.invalid && aliasUsername.dirty" class="text-danger">
-              <div *ngIf="aliasUsername.errors.required">
+              <div *ngIf="aliasUsername.errors['required']">
                 *Alias username is required
               </div>
-              <div *ngIf="aliasUsername.errors.pattern">
+              <div *ngIf="aliasUsername.errors['pattern']">
                 *Alias username should be unique and contain only alphanumeric characters.
               </div>
             </div>
@@ -65,10 +65,10 @@
                    autocomplete="given-name"
                    class="form-control" [readonly]="mode === 'View'" required maxlength="71">
             <div *ngIf="forenames.invalid && forenames.dirty" class = text-danger>
-              <div *ngIf="forenames.errors.required">
+              <div *ngIf="forenames.errors['required']">
                 *Forename(s) is required
               </div>
-              <div *ngIf="forenames.errors.maxlength">
+              <div *ngIf="forenames.errors['maxlength']">
                 *Forename(s) must be less than 71 characters
               </div>
             </div>
@@ -78,10 +78,10 @@
             <input id="surname" name="surname" #surname="ngModel" [(ngModel)]="user.surname" autocomplete="family-name"
                    class="form-control" [readonly]="mode === 'View'" required maxlength="35">
             <div *ngIf="surname.invalid && surname.dirty" class = text-danger>
-              <div *ngIf="surname.errors.required">
+              <div *ngIf="surname.errors['required']">
                 *Surname is required
               </div>
-              <div *ngIf="surname.errors.maxlength">
+              <div *ngIf="surname.errors['maxlength']">
                 *Surname must be less than 35 characters
               </div>
             </div>
@@ -96,13 +96,13 @@
                   [max]="user.endDate"
                   [readonly]="mode === 'View'"></date>
             <div *ngIf="startdate.invalid && startdate.dirty" class = text-danger>
-              <div *ngIf="startdate.errors.required">
+              <div *ngIf="startdate.errors['required']">
                 *Start date is required
               </div>
-              <div *ngIf="startdate.errors.max">
+              <div *ngIf="startdate.errors['max']">
                 *Start date cannot be after end date
               </div>
-              <div *ngIf="startdate.errors.invalidDate && startdate.errors.incomplete">
+              <div *ngIf="startdate.errors['invalidDate'] && startdate.errors['incomplete']">
                 *Date is invalid
               </div>
             </div>
@@ -114,13 +114,13 @@
                   [min]="user.startDate"
                   [readonly]="mode === 'View'"></date>
             <div *ngIf="enddate.dirty && enddate.invalid" class = text-danger>
-              <div *ngIf="enddate.errors.incomplete">
+              <div *ngIf="enddate.errors['incomplete']">
                 *Leave empty or enter all fields
               </div>
-              <div *ngIf="enddate.errors.min">
+              <div *ngIf="enddate.errors['min']">
                 *End date cannot be before start date
               </div>
-              <div *ngIf="enddate.errors.invalidDate">
+              <div *ngIf="enddate.errors['invalidDate']">
                 *Date is invalid
               </div>
             </div>
@@ -168,10 +168,10 @@
                            aria-describedby="datasets-help-text">
             </item-selector>
             <div *ngIf="datasetsList.dirty && datasetsList.invalid" class=text-danger>
-              <div *ngIf="datasetsList.errors.invalid">
+              <div *ngIf="datasetsList.errors['invalid']">
                 *Dataset is invalid
               </div>
-              <div *ngIf="datasetsList.errors.list">
+              <div *ngIf="datasetsList.errors['list']">
                 <p> *At least one dataset is required</p>
               </div>
             </div>
@@ -186,7 +186,7 @@
                            [readonly]="mode === 'View'"
                            [labelMapper]="sectorToLabel"></item-selector>
             <div *ngIf="sectorSelector.dirty && sectorSelector.invalid" class = text-danger>
-              <div *ngIf="sectorSelector.errors.list">
+              <div *ngIf="sectorSelector.errors['list']">
                 *Sector is required
               </div>
             </div>
@@ -211,7 +211,7 @@
                            [readonly]="mode === 'View' || user.datasets == null || user.datasets.length === 0"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
             <div *ngIf="homeArea.dirty && homeArea.invalid" class = text-danger>
-              <div *ngIf="homeArea.errors.list">
+              <div *ngIf="homeArea.errors['list']">
                 *At least one home area is required
               </div>
             </div>
@@ -234,7 +234,7 @@
                      class="form-control" [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"
                      pattern="[A-Z][0-9]{3}$" minlength="4" maxlength="4"/>
               <div *ngIf="staffcode.dirty && staffcode.invalid" class = text-danger>
-                <div *ngIf="staffcode.errors.pattern">
+                <div *ngIf="staffcode.errors['pattern']">
                   *Staff code must be one uppercase character then three numeric characters
                 </div>
               </div>
@@ -250,7 +250,7 @@
                            [readonly]="mode === 'View' || user.staffCode == null"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
             <div *ngIf="staffGrade.dirty && staffGrade.invalid" class = text-danger>
-              <div *ngIf="staffGrade.errors.required">
+              <div *ngIf="staffGrade.errors['required']">
                 *Staff grade required when a staff code exists
               </div>
             </div>
@@ -260,17 +260,11 @@
           <label [for]="'teams-toggle-btn'" class="col-sm-2 col-form-label">Team(s)</label>
           <div class="col-sm-4">
             <item-selector id="teams" name="teams" multiple="true" #teamsList="ngModel" maxHeight="300px"
-                           [required]="user.staffCode != null && staffcode.valid == true"
                            [(ngModel)] = "user.teams"
                            [(selected)]="user.teams"
                            [available]="teams"
                            [readonly]="mode === 'View' || user.staffCode == null"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
-            <div *ngIf="teamsList.dirty && teamsList.invalid && staffcode.valid" class = text-danger>
-              <div *ngIf="teamsList.errors.required">
-                *At least one team required when a staff code exists
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -283,7 +277,6 @@
                 *ngIf="mode !== 'Add' && auth.canAddUser()">Create another&hellip;</button>
       </div>
     </form>
-    <p>{{json}}</p>
   </div>
 </ng-container>
 </ng-container>
