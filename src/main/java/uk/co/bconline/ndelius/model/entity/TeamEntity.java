@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import org.hibernate.search.annotations.Analyze;
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
+import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 
@@ -31,8 +32,8 @@ public class TeamEntity
 	@SequenceGenerator(name = "TEAM_ID_SEQ", sequenceName = "TEAM_ID_SEQ", allocationSize = 1)
 	private Long id;
 
-	@Field(analyze = Analyze.NO)
 	@Column(name = "CODE")
+	@Field(analyzer = @Analyzer(impl = SimpleAnalyzer.class))
 	private String code;
 
 	@Field
