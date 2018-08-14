@@ -16,13 +16,13 @@ import uk.co.bconline.ndelius.validator.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@AssignableRoles
 @ValidDates
-@HomeAreaNotMatchingStaffCode
 @UniqueStaffCode
-@MissingStaffCodeWithStaffGrade
-@MissingTeams
-@MissingStaffGradeWithStaffCode
+@AssignableRoles
+@HomeAreaNotMatchingStaffCode
+@ConditionallyRequired(ifPopulated = "Staff Code:staffCode", required = "Staff Grade:staffGrade")
+@ConditionallyRequired(ifPopulated = "Staff Grade:staffGrade", required = "Staff Code:staffCode")
+@ConditionallyRequired(ifPopulated = "Teams:teams", required = "Staff Code:staffCode")
 public class User
 {
 	@NotBlank
@@ -48,6 +48,7 @@ public class User
 	@Pattern(regexp = "^[A-Z0-9]{3}[A-Z][0-9]{3}$", message = "invalid format")
 	private String staffCode;
 
+	@Valid
 	private ReferenceData staffGrade;
 
 	@NotNull

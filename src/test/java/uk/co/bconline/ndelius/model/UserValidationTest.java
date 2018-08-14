@@ -3,13 +3,13 @@ package uk.co.bconline.ndelius.model;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,263 +38,253 @@ public class UserValidationTest
 	@Autowired
 	private LocalValidatorFactoryBean localValidatorFactory;
 
+	@Before
+	public void user()
+	{
+		SecurityContextHolder.getContext()
+				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
+	}
+
+	private static User aValidUser()
+	{
+		return User.builder()
+				.username("test")
+				.aliasUsername("test")
+				.forenames("forenames")
+				.surname("surname")
+				.datasets(singletonList(Dataset.builder().code("N01").description("NPS London").build()))
+				.homeArea(Dataset.builder().code("N01").description("NPS London").build())
+				.startDate(LocalDate.of(2000, 1, 1))
+				.privateSector(false)
+				.build();
+	}
+
 	@Test
 	public void testUsernameBlank()
 	{
-		User user = User.builder().username("").aliasUsername("a").forenames("a").surname("a").staffCode("C01A123")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
+		User user = aValidUser().toBuilder()
+				.username("")
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testUsernameBlank error - expected 1 violation", 1, constraintViolations.size());
-		assertEquals("must not be blank", constraintViolations.iterator().next().getMessage());
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be blank"))));
 	}
 
 	@Test
 	public void testUsernameSize()
 	{
-		User user = User.builder().username("1234567890123456789012345678901234567890123456789012345678901234567890")
-				.aliasUsername("a").forenames("a").surname("a")
-				.staffCode("C01A123")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
+		User user = aValidUser().toBuilder()
+				.username("1234567890123456789012345678901234567890123456789012345678901234567890")
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testUsernameSize error - expected 1 violation", 1, constraintViolations.size());
-		assertEquals("size must be between 0 and 60", constraintViolations.iterator().next().getMessage());
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("size must be between 0 and 60"))));
 	}
 
 	@Test
 	public void testInvalidUsernamePattern()
 	{
-		User user = User.builder().username("john.bob!").aliasUsername("a").forenames("a").surname("a").staffCode("C01A123")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
+		User user = aValidUser().toBuilder()
+				.username("john.bob!")
 				.build();
+
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testInvalidUsernamePattern error - expected 1 violation", 1, constraintViolations.size());
-		assertEquals("invalid format", constraintViolations.iterator().next().getMessage());
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("invalid format"))));
 	}
 
 	@Test
 	public void testInvalidAliasUsername()
 	{
-		User user = User.builder().username("john.smith123")
+		User user = aValidUser().toBuilder()
 				.aliasUsername("1234567890123456789012345678901234567890123456789012345678901234567890")
-				.forenames("a").surname("a").staffCode("C01A123")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testInvalidAliasUsername error - expected 1 violation", 1, constraintViolations.size());
-		assertEquals("size must be between 0 and 60", constraintViolations.iterator().next().getMessage());
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("size must be between 0 and 60"))));
 	}
 
 	@Test
 	public void testInvalidAliasPattern()
 	{
-		User user = User.builder().username("john.smith123").aliasUsername("aliasinvalid!!#'").forenames("a")
-				.surname("a").staffCode("C01A123")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
+		User user = aValidUser().toBuilder()
+				.aliasUsername("aliasinvalid!!#'")
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testInvalidAliasPattern error - expected 1 violation", 1, constraintViolations.size());
-		assertEquals("invalid format", constraintViolations.iterator().next().getMessage());
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("invalid format"))));
 	}
 
 	@Test
 	public void testInvalidForename()
 	{
-		User user = User.builder().username("john.smith123").aliasUsername("jsmith1").forenames("").surname("a")
-				.staffCode("C01A123")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
+		User user = aValidUser().toBuilder()
+				.forenames("")
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testInvalidForename error - expected 1 violation", 1, constraintViolations.size());
-		assertEquals("must not be blank", constraintViolations.iterator().next().getMessage());
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be blank"))));
 	}
 
 	@Test
 	public void testInvalidSurname()
 	{
-		User user = User.builder().username("john.smith123").aliasUsername("jsmith1").forenames("john").surname("")
-				.staffCode("C01A123")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
+		User user = aValidUser().toBuilder()
+				.surname("")
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testInvalidSurname error - expected 1 violation", 1, constraintViolations.size());
-		assertEquals("must not be blank", constraintViolations.iterator().next().getMessage());
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be blank"))));
 	}
 	@Test
 	public void testNullHomeArea()
 	{
-		User user = User.builder().username("john.smith123")
-				.aliasUsername("123")
-				.forenames("a").surname("a")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.privateSector(false)
-				.homeArea(null).startDate(LocalDate.of(2018,8,13))
+		User user = aValidUser().toBuilder()
+				.homeArea(null)
 				.build();
+
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testNullHomeArea returned a violation", 1, constraintViolations.size());
+
+		assertThat(constraintViolations, hasSize(1));
 		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be null"))));
 	}
 	@Test
 	public void testEmptyDataSets()
 	{
-		User user = User.builder().username("john.smith123")
-				.aliasUsername("123")
-				.forenames("a").surname("a")
+		User user = aValidUser().toBuilder()
 				.datasets(null)
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
 				.build();
+
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testEmptyDataSets returned a violation", 1, constraintViolations.size());
+
+		assertThat(constraintViolations, hasSize(1));
 		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be empty"))));
 	}
 	@Test
 	public void testStaffCodeNotMatchingHomeAreaCode()
 	{
-
-		User user = User.builder().username("john.smith123").aliasUsername("jsmith1").forenames("john").surname
-				("smith")
-				.staffCode("C01A123")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
+		User user = aValidUser().toBuilder()
+				.staffCode("C01A500")
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
-				.homeArea(Dataset.builder().code("C02").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testStaffCodeNotMatchingHomeAreaCode - Expected 1 Violation", 1, constraintViolations.size());
-		assertEquals("Home area code doesn't match staff code prefix", constraintViolations.iterator().next().getMessage());
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Home area code doesn't match staff code prefix"))));
 	}
 	@Test
 	public void testStaffGradeWithoutStaffCode()
 	{
-		User user = User.builder().username("john.smith123").aliasUsername("jsmith1").forenames("john").surname("smith")
-				.staffCode(null)
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
+		User user = aValidUser().toBuilder()
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testStaffGradeWithoutStaffCode - Expected 1 Violation", 1, constraintViolations.size());
-		assertEquals("Staff code is required when entering staff grade", constraintViolations.iterator().next()
-				.getMessage());
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Staff Code is required if Staff Grade is populated"))));
 	}
 
 	@Test
 	public void testStaffCodeWithoutStaffGrade()
 	{
-		User user = User.builder().username("john.smith123").aliasUsername("jsmith1").forenames("john").surname("smith")
-				.staffCode("C01A770")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.staffGrade(ReferenceData.builder().code("").build())
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
+		User user = aValidUser().toBuilder()
+				.staffCode("N01A500")
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testStaffGradeWithoutStaffCode - Expected 1 Violation", 1, constraintViolations.size());
-		assertEquals("Staff grade is required when entering staff code", constraintViolations.iterator().next()
-				.getMessage());
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Staff Grade is required if Staff Code is populated"))));
+	}
+
+	@Test
+	public void testStaffCodeWithEmptyStaffGrade()
+	{
+		User user = aValidUser().toBuilder()
+				.staffCode("N01A500")
+				.staffGrade(ReferenceData.builder().code("").build())
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be blank"))));
 	}
 
 	@Test
 	public void testStaffCodeWithoutTeam()
 	{
-		User user = User.builder().username("john.smith123").aliasUsername("jsmith1").forenames("john").surname("smith")
-				.staffCode("C01A876")
-				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
+		User user = aValidUser().toBuilder()
+				.staffCode("N01A501")
+				.staffGrade(ReferenceData.builder().code("GRADE2").build())
+				.teams(null)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		for(int i = 0; i < constraintViolations.size(); i++){
-			System.out.println(constraintViolations.iterator().next().getMessage());
-		}
-		assertEquals("testStaffCodeWithoutTeam - Expected 0 Violations", 0, constraintViolations.size());
 
+		assertThat(constraintViolations, empty());
 	}
 
 	@Test
 	public void testTeamWithoutStaffCode()
 	{
-		User user = User.builder().username("john.smith123").aliasUsername("jsmith1").forenames("john").surname("smith")
-				.staffCode(null)
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
+		User user = aValidUser().toBuilder()
 				.teams(singletonList(Team.builder().code("N01TST").build()))
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false).startDate(LocalDate.of(2018,8,13))
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testTeamWithoutStaffCode - Expected 1 Violation", 1, constraintViolations.size());
-		assertEquals("Teams should be empty when staff code is not included", constraintViolations.iterator().next().getMessage());
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Staff Code is required if Teams is populated"))));
 	}
 
 	@Test
 	public void testEmptyTeamWithoutStaffCode()
 	{
-		User user = User.builder().username("john.smith123").aliasUsername("jsmith1").forenames("john").surname("smith")
-				.staffCode(null)
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
+		User user = aValidUser().toBuilder()
+				.staffCode("N01A500")
+				.staffGrade(ReferenceData.builder().code("GRADE1").build())
 				.teams(singletonList(Team.builder().code("").build()))
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+
+		assertThat(constraintViolations, hasSize(1));
 		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be blank"))));
 	}
+
 	@Test
 	public void testInvalidStaffCodePattern()
 	{
-		User user = User.builder().username("john.smith123").aliasUsername("jsmith1").forenames("john")
-					.surname("smith").staffCode("C01AAAA")
-					.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-					.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
-					.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-					.privateSector(false).startDate(LocalDate.of(2018,8,13))
-					.build();
+		User user = aValidUser().toBuilder()
+				.staffCode("N01AAAA")
+				.staffGrade(ReferenceData.builder().code("GRADE1").build())
+				.build();
+
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testInvalidStaffCodePattern - Expected 1 violation ", 1, constraintViolations.size());
-		assertEquals("invalid format", constraintViolations.iterator().next().getMessage());
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("invalid format"))));
 	}
 
 	@Test
 	public void invalidRoles()
 	{
-		SecurityContextHolder.getContext().setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
 		User user = User.builder()
 				.roles(singletonList(Role.builder()
 						.name("not-real")
@@ -308,74 +298,48 @@ public class UserValidationTest
 	@Test
 	public void testOneDateNull()
 	{
-
-		LocalDate startDate = LocalDate.of(2017, 5, 15);
-
-		SecurityContextHolder.getContext()
-				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
-		User user = User.builder().username("test.user").forenames("1").surname("1")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false)
-				.startDate(startDate)
+		User user = aValidUser().toBuilder()
+				.startDate(LocalDate.of(2017, 5, 15))
 				.endDate(null)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testOneDateNull - Expected 0 Violations", 0, constraintViolations.size());
+		assertThat(constraintViolations, empty());
 	}
 
 	@Test
 	public void testBothDatesNull()
 	{
-		SecurityContextHolder.getContext()
-				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
-		User user = User.builder().username("test.user").forenames("1").surname("1")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false)
-				.startDate(null).endDate(null)
+		User user = aValidUser().toBuilder()
+				.startDate(null)
+				.endDate(null)
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("testBothDatesNull returned a violation", 1, constraintViolations.size());
 		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be null"))));
 	}
 
 	@Test
 	public void startDateAfterEndDate()
 	{
-		LocalDate startDate = LocalDate.of(2019, 6, 17);
-		LocalDate endDate = LocalDate.of(2017, 5, 15);
-
-		SecurityContextHolder.getContext()
-				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
-		User user = User.builder().username("test.user").forenames("1").surname("1")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.startDate(startDate)
-				.endDate(endDate).build();
+		User user = aValidUser().toBuilder()
+				.startDate(LocalDate.of(2019, 6, 17))
+				.endDate(LocalDate.of(2017, 5, 15))
+				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertThat(constraintViolations, hasItem(hasProperty("message", is("attempting to submit invalid dates"))));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Start Date must not be after End Date"))));
 	}
 
 	@Test
 	public void startDateBeforeEndDate()
 	{
-		LocalDate startDate = LocalDate.of(2017, 4, 14);
-		LocalDate endDate = LocalDate.of(2019, 5, 15);
-
-		SecurityContextHolder.getContext()
-				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
-		User user = User.builder().username("test.user").forenames("1").surname("1")
-				.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-				.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-				.privateSector(false)
-				.startDate(startDate)
-				.endDate(endDate).build();
+		User user = aValidUser().toBuilder()
+				.startDate(LocalDate.of(2017, 5, 15))
+				.endDate(LocalDate.of(2019, 6, 17))
+				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertEquals("startDateBeforeEndDate returned a violation", 0, constraintViolations.size());
+		assertThat(constraintViolations, empty());
 	}
 }
