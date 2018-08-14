@@ -15,6 +15,8 @@ spring.jpa.properties.hibernate.search.default:
 oid.base-environment.java.naming.ldap.derefAliases: never
 oid.base-environment.com.sun.jndi.ldap.connect.pool: false
 
+management.endpoint.health.show-details: always
+
 logging.level:
   org.springframework.web: ERROR
   org.hibernate.search.batchindexing: WARN
