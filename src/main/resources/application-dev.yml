@@ -1,5 +1,7 @@
 spring.profiles.include: default
 
+jwt.secret: changeme
+
 spring:
   datasource:
     url: 'jdbc:h2:mem:testdb;Mode=Oracle'
