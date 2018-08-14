@@ -14,7 +14,7 @@ import javax.validation.Payload;
 @Constraint(validatedBy = ValidDatesValidator.class)
 public @interface ValidDates
 {
-	String message() default "attempting to submit invalid dates";
+	String message() default "Start Date must not be after End Date";
 
 	Class<?>[] groups() default {};
 

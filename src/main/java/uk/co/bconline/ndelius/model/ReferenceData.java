@@ -1,5 +1,7 @@
 package uk.co.bconline.ndelius.model;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.*;
 
 @Getter
@@ -9,6 +11,6 @@ import lombok.*;
 @AllArgsConstructor
 public class ReferenceData
 {
-    private String code;
+    @NotBlank private String code;
     private String description;
 }
