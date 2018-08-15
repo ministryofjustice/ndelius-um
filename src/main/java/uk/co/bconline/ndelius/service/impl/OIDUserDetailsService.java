@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.filter.AndFilter;
@@ -140,6 +143,22 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				.build());
 	}
 
+	public Optional<String> getUsernameByAlias(String aliasUsername){
+
+		return userAliasRepository.getByUsername(aliasUsername).map(OIDUserAlias::getAliasedUserDn)
+				.map(dn -> {
+					try
+					{
+						return new LdapName(dn).get(0);
+					}
+					catch (InvalidNameException e)
+					{
+						log.error("Error parsing alias user dn", e);
+						return null;
+					}
+				});
+
+	}
 	@Override
 	public Optional<String> getAlias(String username)
 	{

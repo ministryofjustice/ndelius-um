@@ -173,6 +173,20 @@ public class UserValidationTest
 		assertThat(constraintViolations, hasSize(1));
 		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be empty"))));
 	}
+
+	@Test
+	public void testBlankDatasets()
+	{
+		User user = aValidUser().toBuilder()
+				.datasets(singletonList(Dataset.builder().code("").build()))
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be blank"))));
+	}
+
 	@Test
 	public void testStaffCodeNotMatchingHomeAreaCode()
 	{
@@ -341,5 +355,13 @@ public class UserValidationTest
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, empty());
+	}
+	@Test
+	public void testDuplicateAliasUsername(){
+		User user = aValidUser().toBuilder()
+				.aliasUsername("test.user.alias")
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Alias username must be unique"))));
 	}
 }
