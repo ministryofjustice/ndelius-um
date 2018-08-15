@@ -24,6 +24,7 @@ import {NgForm} from "@angular/forms";
 })
 
 export class UserComponent implements OnInit {
+  math: Math = Math;
   loaded: boolean;
   saving: boolean;
   @ViewChild("form")
