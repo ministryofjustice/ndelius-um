@@ -21,7 +21,7 @@ import uk.co.bconline.ndelius.model.ldap.OIDRole;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
 import uk.co.bconline.ndelius.service.RoleService;
-import uk.co.bconline.ndelius.transformer.UserTransformer;
+import uk.co.bconline.ndelius.transformer.RoleTransformer;
 
 @Service
 public class RoleServiceImpl implements RoleService
@@ -36,15 +36,15 @@ public class RoleServiceImpl implements RoleService
 	private static final String LOCAL_ACCESS = "UABI026";
 
 	private final OIDRoleRepository oidRoleRepository;
-	private final UserTransformer userTransformer;
+	private final RoleTransformer roleTransformer;
 
 	@Autowired
 	public RoleServiceImpl(
 			OIDRoleRepository oidRoleRepository,
-			UserTransformer userTransformer)
+			RoleTransformer roleTransformer)
 	{
 		this.oidRoleRepository = oidRoleRepository;
-		this.userTransformer = userTransformer;
+		this.roleTransformer = roleTransformer;
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class RoleServiceImpl implements RoleService
 		val level2Access = myInteractions.contains(LEVEL2_ACCESS);
 		val level3Access = myInteractions.contains(LEVEL3_ACCESS);
 
-		return getRolesByBase(ROLE_BASE)
+		return getUnfilteredRoles()
 				.filter(role -> (privateAccess || !"private".equalsIgnoreCase(role.getSector()))
 						&& (publicAccess || !"public".equalsIgnoreCase(role.getSector()))
 						&& (nationalAccess || !"national".equalsIgnoreCase(role.getAdminLevel()))
@@ -68,8 +68,14 @@ public class RoleServiceImpl implements RoleService
 						&& (level1Access || !role.isLevel1())
 						&& (level2Access || !role.isLevel2())
 						&& (level3Access || !role.isLevel2()))
-				.map(userTransformer::map)
+				.map(roleTransformer::map)
 				.collect(toList());
+	}
+
+	@Override
+	public Stream<OIDRole> getUnfilteredRoles()
+	{
+		return getRolesByBase(ROLE_BASE);
 	}
 
 	@Override
@@ -92,7 +98,7 @@ public class RoleServiceImpl implements RoleService
 	 * In NDelius, the interactions/roles are stored as uibusinessinteraction attributes on NDRole objects within the
 	 * ndRoleCatalogue. These are then aliased as sub-entries for each user to assign a set of allowed interactions.
 	 *
-	 * Note: The directory structure for NDelius in OID is (see schema.ldif for example):
+	 * Note: The directory structure for NDelius in OID is (see oid.ldif for example):
 	 * dc=...
 	 * 	cn=Users
 	 * 		cn=ndRoleCatalogue

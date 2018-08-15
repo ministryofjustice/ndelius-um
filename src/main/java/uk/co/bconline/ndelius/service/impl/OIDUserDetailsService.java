@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
 import uk.co.bconline.ndelius.model.ldap.OIDRoleAssociation;
@@ -145,11 +146,13 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 	public Optional<String> getUsernameByAlias(String aliasUsername){
 
-		return userAliasRepository.getByUsername(aliasUsername).map(OIDUserAlias::getAliasedUserDn)
+		return userAliasRepository.getByUsername(aliasUsername)
+				.map(OIDUserAlias::getAliasedUserDn)
 				.map(dn -> {
 					try
 					{
-						return new LdapName(dn).get(0);
+						val name =  new LdapName(dn);
+						return (String) name.getRdn(name.size() - 1).getValue();
 					}
 					catch (InvalidNameException e)
 					{
