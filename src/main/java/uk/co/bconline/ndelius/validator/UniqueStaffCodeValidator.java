@@ -23,7 +23,7 @@ public class UniqueStaffCodeValidator implements ConstraintValidator<UniqueStaff
 
 		if(staffCode != null){
 			val searchedUser = dbUserDetailsService.getUserByStaffCode(staffCode);
-			return searchedUser.map(UserEntity::getUsername).map(username::equalsIgnoreCase).orElse(true);
+			return searchedUser.map(UserEntity::getUsername).map(username::equals).orElse(true);
 		}else{
 			return true;
 		}
