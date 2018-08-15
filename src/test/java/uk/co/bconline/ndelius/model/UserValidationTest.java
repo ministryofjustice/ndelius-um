@@ -356,6 +356,7 @@ public class UserValidationTest
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, empty());
 	}
+
 	@Test
 	public void testDuplicateAliasUsername(){
 		User user = aValidUser().toBuilder()
@@ -363,5 +364,36 @@ public class UserValidationTest
 				.build();
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, hasItem(hasProperty("message", is("Alias username must be unique"))));
+	}
+
+	@Test
+	public void staffCodeShouldBeUnique()
+	{
+		User user = aValidUser().toBuilder()
+				.staffCode("N01A000")
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Staff Code must be unique"))));
+	}
+
+	@Test
+	public void staffCodeShouldBeUniqueToUser()
+	{
+		User user = aValidUser().toBuilder()
+				.staffCode("N01A001")
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Staff Code must be unique"))));
+	}
+
+	@Test
+	public void staffCodeShouldBeUniqueToUserBeingUpdated()
+	{
+		User user = aValidUser().toBuilder()
+				.username("test.user")
+				.staffCode("N01A001")
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, not(hasItem(hasProperty("message", is("Staff Code must be unique")))));
 	}
 }
