@@ -90,36 +90,49 @@
           <div class="col-sm-4">
             <date id="start-date" name="start-date" #startdate="ngModel"
                   [(ngModel)]="user.startDate"
-                  required="true"
+                  [required]="true"
                   [max]="user.endDate"
+                  [min]="'1900-01-01' | date"
                   [readonly]="mode === 'View'"></date>
             <div *ngIf="startdate.invalid && startdate.dirty" class = text-danger>
               <small *ngIf="startdate.errors['required']">
                 *Start date is required
               </small>
+              <small *ngIf="startdate.errors['min']">
+                *Start date must be after 1900-01-01
+              </small>
               <small *ngIf="startdate.errors['max']">
                 *Start date cannot be after end date
               </small>
-              <small *ngIf="startdate.errors['invalidDate'] && startdate.errors['incomplete']">
+              <small *ngIf="startdate.errors['invalidDate']">
                 *Date is invalid
+              </small>
+              <small *ngIf="startdate.errors['incomplete']">
+                *Date is incomplete
               </small>
             </div>
           </div>
           <label [for]="'end-date-d'" class="col-sm-2 col-form-label">End Date</label>
           <div class="col-sm-4">
             <date id="end-date" name="end-date" #enddate="ngModel"
+                  [required]="false"
                   [(ngModel)]="user.endDate"
                   [min]="user.startDate"
+                  [max]="'2099-12-31' | date"
                   [readonly]="mode === 'View'"></date>
             <div *ngIf="enddate.dirty && enddate.invalid" class = text-danger>
-              <small *ngIf="enddate.errors['incomplete']">
-                *Leave empty or enter all fields
+
+              <small *ngIf="enddate.errors['max']">
+                *End date must be less than 2099-12-31
               </small>
               <small *ngIf="enddate.errors['min']">
                 *End date cannot be before start date
               </small>
               <small *ngIf="enddate.errors['invalidDate']">
                 *Date is invalid
+              </small>
+              <small *ngIf="enddate.errors['incomplete']">
+                *Date is incomplete
               </small>
             </div>
           </div>

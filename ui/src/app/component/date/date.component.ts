@@ -28,7 +28,7 @@ import {
 export class DateComponent implements Validator, ControlValueAccessor {
   @Input() id: string;
   @Input() value: Date;
-  @Input() required: boolean;
+  @Input() required: boolean = false;
   @Input() readonly: boolean;
   @Input() min: Date;
   @Input() max: Date;
@@ -39,15 +39,12 @@ export class DateComponent implements Validator, ControlValueAccessor {
 
   change(): void {
 
-    if(this.year == null || this.month == null || this.date == null){
-      this.writeValue(null);
+    if(this.validateNotRequired() == null){
+      this.writeValue(moment([this.year, this.month - 1, this.date]).toDate());
     } else {
-      let m = moment([this.year, this.month - 1, this.date]);
-      if (m.isValid()) {
-        this.writeValue(moment([this.year, this.month - 1, this.date]).toDate());
-      } else this.writeValue(null);
+      this.writeValue(null);
     }
-    this.propagateChange(this.value);
+    this.propagateChange([this.year, this.month, this.date]);
   }
 
   setDaysFromToday(days: number): boolean {
@@ -85,10 +82,17 @@ export class DateComponent implements Validator, ControlValueAccessor {
   }
 
   public validate(c: FormControl): ValidationErrors {
-    if(this.year == null && this.month == null && this.date == null){
-      return this.required ? {"required": "date is required"} : null;
+    if((this.year == null || this.year == 0)
+      && (this.month == null || this.month == 0)
+      && (this.date == null || this.date == 0)){
+      return this.required? {"required": "date is required"}: null;
     }
-    if(this.year == null || this.month == null || this.date == null){
+    return this.validateNotRequired();
+  }
+
+  private validateNotRequired(): ValidationErrors {
+    let emptyItems = [this.year, this.month, this.date].filter(item => item == null || item == 0);
+    if (emptyItems.length >= 1 && emptyItems.length < 3){
       return {"incomplete" : "All date fields are required"}
     }
     let m = moment([this.year, this.month - 1, this.date]);
