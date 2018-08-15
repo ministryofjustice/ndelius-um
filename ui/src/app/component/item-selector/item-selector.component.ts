@@ -51,7 +51,6 @@ export class ItemSelectorComponent
       }
     } else {
       this.selected = item;
-      this.optionsDisplayed = false;
     }
     this.selectedChange.emit(this.selected);
     this.propagateChange(this.selected);
@@ -62,6 +61,11 @@ export class ItemSelectorComponent
     if ((this.available == null || this.available.length === 0) && !this.optionsDisplayed) return;
     this.optionsDisplayed = !this.optionsDisplayed;
     this.propagateTouchChange(this.selected);
+  }
+
+  hideOptionsOnSingleSelect(item): boolean {
+    if (!this.multiple && !this.isSelected(item)) this.optionsDisplayed = false;
+    return true;
   }
 
   mapToLabel(item: any): string {
