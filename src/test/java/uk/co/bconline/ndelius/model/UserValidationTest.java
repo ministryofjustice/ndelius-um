@@ -356,4 +356,12 @@ public class UserValidationTest
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, empty());
 	}
+	@Test
+	public void testDuplicateAliasUsername(){
+		User user = aValidUser().toBuilder()
+				.aliasUsername("test.user.alias")
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Alias username must be unique"))));
+	}
 }
