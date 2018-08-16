@@ -30,6 +30,9 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails
 	@DnAttribute(value="cn", index=1)
 	private String username;
 
+	@Attribute(name="uid")
+	private String uid;
+
 	@Attribute(name="givenName")
 	private String forenames;
 
@@ -41,6 +44,9 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails
 
 	@Attribute(name="userSector")
 	private String sector;
+
+	@Attribute(name="orclActiveEndDate") // format=yyyyMMddHHmmss
+	private String endDate;
 
 	@Attribute(name="userPassword")
 	private String password;

@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.transformer;
 
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.*;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -7,6 +8,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.springframework.util.StringUtils.isEmpty;
 import static uk.co.bconline.ndelius.util.NameUtils.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +34,8 @@ import uk.co.bconline.ndelius.util.LdapPasswordUtils;
 @Component
 public class UserTransformer
 {
+	private static final String OID_DATE_FORMAT = "yyyyMMdd'000000'";
+
 	@Value("${ad.primary.principal.suffix:}")
 	private String ad1PrincipalSuffix;
 
@@ -103,6 +107,8 @@ public class UserTransformer
 						.surname(v.getSurname())
 						.privateSector("private".equalsIgnoreCase(v.getSector()))
 						.homeArea(datasetService.getDatasetByCode(v.getHomeArea()).orElse(null))
+						.endDate(ofNullable(v.getEndDate()).map(s ->
+								LocalDate.parse(s.substring(0, 8), ofPattern(OID_DATE_FORMAT.substring(0, 8)))).orElse(null))
 						.roles(ofNullable(v.getRoles())
 								.map(l -> l.stream().filter(role -> allRoles.contains(role.getName())))
 								.map(transactions -> transactions
@@ -252,10 +258,12 @@ public class UserTransformer
 	{
 		return existingUser.toBuilder()
 				.username(user.getUsername())
+				.uid(user.getUsername())
 				.password(LdapPasswordUtils.fixPassword(ofNullable(existingUser.getPassword()).orElse(oidDefaultPassword)))
 				.aliasUsername(user.getAliasUsername())
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
+				.endDate(ofNullable(user.getEndDate()).map(d -> d.format(ofPattern(OID_DATE_FORMAT))).orElse(null))
 				.sector(user.getPrivateSector()? "private": "public")
 				.homeArea(ofNullable(user.getHomeArea()).map(Dataset::getCode).orElse(null))
 				.roles(ofNullable(user.getRoles()).map(list -> list.stream()
