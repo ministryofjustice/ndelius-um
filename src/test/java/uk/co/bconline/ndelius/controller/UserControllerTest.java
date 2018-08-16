@@ -5,6 +5,7 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -19,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.ldap.query.SearchScope;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -432,7 +434,10 @@ public class UserControllerTest
 						.build())))
 				.andExpect(status().isCreated());
 
-		Optional<OIDUserPreferences> prefs = preferencesRepository.findByUsername("test.user6");
+		Optional<OIDUserPreferences> prefs = preferencesRepository.findOne(query()
+				.searchScope(SearchScope.ONELEVEL)
+				.base("cn=test.user6,cn=Users")
+				.where("cn").is("UserPreferences"));
 		assertTrue(prefs.isPresent());
 		assertEquals("NRO16", prefs.get().getMostRecentlyViewedOffenders());
 	}
