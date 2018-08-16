@@ -39,12 +39,12 @@ export class DateComponent implements Validator, ControlValueAccessor {
 
   change(): void {
 
-    if(this.validateNotRequired() == null){
+    if(this.basicValidation() == null){
       this.writeValue(moment([this.year, this.month - 1, this.date]).toDate());
     } else {
       this.writeValue(null);
     }
-    this.propagateChange([this.year, this.month, this.date]);
+    this.propagateChange(this.value);
   }
 
   setDaysFromToday(days: number): boolean {
@@ -87,10 +87,10 @@ export class DateComponent implements Validator, ControlValueAccessor {
       && (this.date == null || this.date == 0)){
       return this.required? {"required": "date is required"}: null;
     }
-    return this.validateNotRequired();
+    return this.basicValidation();
   }
 
-  private validateNotRequired(): ValidationErrors {
+  private basicValidation(): ValidationErrors {
     let emptyItems = [this.year, this.month, this.date].filter(item => item == null || item == 0);
     if (emptyItems.length >= 1 && emptyItems.length < 3){
       return {"incomplete" : "All date fields are required"}

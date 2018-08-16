@@ -91,18 +91,20 @@
             <date id="start-date" name="start-date" #startdate="ngModel"
                   [(ngModel)]="user.startDate"
                   [required]="true"
-                  [max]="user.endDate"
-                  [min]="'1900-01-01' | date"
+                  [max]="globalMaxDate"
+                  [min]="globalMinDate"
                   [readonly]="mode === 'View'"></date>
             <div *ngIf="startdate.invalid && startdate.dirty" class = text-danger>
-              <small *ngIf="startdate.errors['required']">
-                *Start date is required
+              <small
+                *ngIf="startdate.errors['required'] && !startdate.errors['incomplete'] && !startdate.errors['invalidDate']
+                    && !startdate.errors['min'] && !startdate.errors['max']">
+              *Start date is required
               </small>
               <small *ngIf="startdate.errors['min']">
-                *Start date must be after 1900-01-01
+                *Start date cannot be before 1900-01-01
               </small>
               <small *ngIf="startdate.errors['max']">
-                *Start date cannot be after end date
+                *Start date cannot be after 2099-12-31
               </small>
               <small *ngIf="startdate.errors['invalidDate']">
                 *Date is invalid
@@ -117,16 +119,16 @@
             <date id="end-date" name="end-date" #enddate="ngModel"
                   [required]="false"
                   [(ngModel)]="user.endDate"
-                  [min]="user.startDate"
-                  [max]="'2099-12-31' | date"
+                  [max]="globalMaxDate"
+                  [min]="globalMinDate"
                   [readonly]="mode === 'View'"></date>
             <div *ngIf="enddate.dirty && enddate.invalid" class = text-danger>
 
               <small *ngIf="enddate.errors['max']">
-                *End date must be less than 2099-12-31
+                *End date cannot be after 2099-12-31
               </small>
               <small *ngIf="enddate.errors['min']">
-                *End date cannot be before start date
+                *End date cannot be before 1900-01-01
               </small>
               <small *ngIf="enddate.errors['invalidDate']">
                 *Date is invalid
