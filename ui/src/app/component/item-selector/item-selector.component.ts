@@ -32,7 +32,7 @@ export class ItemSelectorComponent
   @Input() labelMapper: Function = (item: any) => item;
   @Input() maxHeight: string = "auto";
   @Input() readonly: boolean;
-  @Input() required: boolean;
+  @Input() required: boolean = false;
   @Input() multiple: boolean;
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
 

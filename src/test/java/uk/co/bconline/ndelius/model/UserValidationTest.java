@@ -322,18 +322,6 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testBothDatesNull()
-	{
-		User user = aValidUser().toBuilder()
-				.startDate(null)
-				.endDate(null)
-				.build();
-
-		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be null"))));
-	}
-
-	@Test
 	public void startDateAfterEndDate()
 	{
 		User user = aValidUser().toBuilder()

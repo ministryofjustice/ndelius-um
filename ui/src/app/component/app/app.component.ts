@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../service/user.service";
-import {User} from "../../model/user";
 import {NavigationStart, Router} from "@angular/router";
+import {AuthorisationService} from "../../service/impl/authorisation.service";
 
 @Component({
   selector: 'app-root',
@@ -10,15 +10,14 @@ import {NavigationStart, Router} from "@angular/router";
 export class AppComponent implements OnInit {
   title: string = "NDelius User Management";
   loaded: boolean;
-  static me: User;
   static globalMessage: string;
   static globalMessageSeverity: string = "info";
 
-  constructor(private service: UserService, private router: Router) {}
+  constructor(private service: UserService, public auth: AuthorisationService, private router: Router) {}
 
   ngOnInit() {
-    this.service.whoami().subscribe((res: User) => {
-      AppComponent.me = res;
+    this.service.whoami().subscribe(me => {
+      this.auth.me = me;
       this.loaded = true;
     });
 
@@ -41,7 +40,22 @@ export class AppComponent implements OnInit {
     return AppComponent.globalMessageSeverity;
   }
 
-  get me() {
-    return AppComponent.me;
+  static error(message: string) {
+    AppComponent.globalMessage = message;
+    AppComponent.globalMessageSeverity = "danger";
+  }
+
+  static info(message: string) {
+    AppComponent.globalMessage = message;
+    AppComponent.globalMessageSeverity = "info";
+  }
+
+  static success(message: string) {
+    AppComponent.globalMessage = message;
+    AppComponent.globalMessageSeverity = "success";
+  }
+
+  static hideMessage() {
+    AppComponent.globalMessage = null;
   }
 }

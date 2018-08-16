@@ -25,10 +25,19 @@ import {OrganisationService} from "../service/organisation.service";
 import {RestOrganisationService} from "../service/impl/rest.organisation.service";
 import {StaffGradeService} from "../service/staff-grade.service";
 import {RestStaffGradeService} from "../service/impl/rest.staff-grade.service";
+import {UserMigrationComponent} from "../component/user-migration/user-migration.component";
+import {PapaParseModule} from "ngx-papaparse";
 
 @NgModule({
-  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, ItemSelectorComponent, DateComponent],
-  imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
+  declarations: [
+    AppComponent,
+    SearchComponent,
+    UserComponent,
+    UserMigrationComponent,
+    MessageComponent,
+    ItemSelectorComponent,
+    DateComponent],
+  imports: [BrowserModule, FormsModule, HttpClientModule, PapaParseModule, AppRoutingModule],
   providers: [
     {provide: UserService, useClass: RestUserService},
     {provide: RoleService, useClass: RestRoleService},
