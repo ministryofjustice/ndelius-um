@@ -33,14 +33,14 @@
     </div>
     <div class="text-truncate custom-control custom-{{multiple? 'checkbox': 'radio'}}"
          *ngFor="let item of filtered; let i = index">
-      <div class="pl-1">
+      <div class="pl-1" (mouseup)="hideOptionsOnSingleSelect(item)">
         <input [id]="id+'-opt-'+i" [name]="id" [type]="multiple? 'checkbox': 'radio'" class="custom-control-input"
                (change)="toggle(item)"
                [checked]="isSelected(item)"
                [disabled]="readonly"/>
         <label [for]="id+'-opt-'+i"
                [title]="mapToLabel(item)"
-               class="custom-control-label mb-0">{{mapToLabel(item)}}</label>
+               class="custom-control-label mb-0 w-100">{{mapToLabel(item)}}</label>
       </div>
     </div>
   </div>
