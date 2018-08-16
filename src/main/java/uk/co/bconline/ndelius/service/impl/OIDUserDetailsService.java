@@ -195,7 +195,10 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		}
 
 		// Preferences
-		if (!preferencesRepository.findByUsername(user.getUsername()).isPresent())
+		if (!preferencesRepository.findOne(query()
+				.searchScope(SearchScope.ONELEVEL)
+				.base(String.format("cn=%s,%s", user.getUsername(), USER_BASE))
+				.where("cn").is("UserPreferences")).isPresent())
 		{
 			preferencesRepository.save(new OIDUserPreferences(user.getUsername()));
 		}
