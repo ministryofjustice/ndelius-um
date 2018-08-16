@@ -10,6 +10,7 @@ import uk.co.bconline.ndelius.model.ldap.OIDRole;
 public interface RoleService
 {
 	List<Role> getRoles();
+	Stream<OIDRole> getUnfilteredRoles();
 	Optional<OIDRole> getOIDRole(String role);
 	Stream<OIDRole> getRolesByParent(String parent, Class<?> parentClass);
 	List<String> getUserInteractions(String username);

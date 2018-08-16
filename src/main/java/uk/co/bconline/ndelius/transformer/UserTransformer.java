@@ -25,10 +25,7 @@ import uk.co.bconline.ndelius.model.entity.*;
 import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
-import uk.co.bconline.ndelius.service.DatasetService;
-import uk.co.bconline.ndelius.service.OrganisationService;
-import uk.co.bconline.ndelius.service.ReferenceDataService;
-import uk.co.bconline.ndelius.service.TeamService;
+import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.service.impl.DBUserDetailsService;
 import uk.co.bconline.ndelius.util.LdapPasswordUtils;
 
@@ -49,6 +46,8 @@ public class UserTransformer
 	private final DatasetService datasetService;
 	private final OrganisationService organisationService;
 	private final DBUserDetailsService dbUserDetailsService;
+	private final RoleService roleService;
+	private final RoleTransformer roleTransformer;
 	private final DatasetTransformer datasetTransformer;
 	private final ReferenceDataTransformer referenceDataTransformer;
 
@@ -59,6 +58,8 @@ public class UserTransformer
 			DatasetService datasetService,
 			OrganisationService organisationService,
 			DBUserDetailsService dbUserDetailsService,
+			RoleService roleService,
+			RoleTransformer roleTransformer,
 			DatasetTransformer datasetTransformer,
 			ReferenceDataTransformer referenceDataTransformer)
 	{
@@ -67,6 +68,8 @@ public class UserTransformer
 		this.datasetService = datasetService;
 		this.organisationService = organisationService;
 		this.dbUserDetailsService = dbUserDetailsService;
+		this.roleService = roleService;
+		this.roleTransformer = roleTransformer;
 		this.datasetTransformer = datasetTransformer;
 		this.referenceDataTransformer = referenceDataTransformer;
 	}
@@ -84,24 +87,6 @@ public class UserTransformer
 				.build();
 	}
 
-	public Role map(OIDRole oidRole)
-	{
-		return Role.builder()
-				.name(oidRole.getName())
-				.description(oidRole.getDescription())
-				.interactions(oidRole.getName().startsWith("UMBT") || oidRole.getName().startsWith("UABT")?
-						oidRole.getInteractions(): null)
-				.build();
-	}
-
-	public OIDRole map(Role role)
-	{
-		return OIDRole.builder()
-				.name(role.getName())
-				.description(role.getDescription())
-				.build();
-	}
-
 	public Optional<User> map(OIDUser user)
 	{
 		return combine(null, user, null, null);
@@ -109,6 +94,7 @@ public class UserTransformer
 
 	public Optional<User> combine(UserEntity dbUser, OIDUser oidUser, ADUser ad1User, ADUser ad2User)
 	{
+		val allRoles = roleService.getUnfilteredRoles().map(OIDRole::getName).collect(toSet());
 		return Stream.of(
 				ofNullable(oidUser).map(v -> User.builder()
 						.username(v.getUsername())
@@ -118,8 +104,9 @@ public class UserTransformer
 						.privateSector("private".equalsIgnoreCase(v.getSector()))
 						.homeArea(datasetService.getDatasetByCode(v.getHomeArea()).orElse(null))
 						.roles(ofNullable(v.getRoles())
-								.map(transactions -> transactions.stream()
-										.map(this::map)
+								.map(l -> l.stream().filter(role -> allRoles.contains(role.getName())))
+								.map(transactions -> transactions
+										.map(roleTransformer::map)
 										.collect(toList()))
 								.orElse(null))
 						.sources(Stream.of("OID",
@@ -272,7 +259,7 @@ public class UserTransformer
 				.sector(user.getPrivateSector()? "private": "public")
 				.homeArea(ofNullable(user.getHomeArea()).map(Dataset::getCode).orElse(null))
 				.roles(ofNullable(user.getRoles()).map(list -> list.stream()
-						.map(this::map)
+						.map(roleTransformer::map)
 						.collect(toList()))
 						.orElse(emptyList()))
 				.build();

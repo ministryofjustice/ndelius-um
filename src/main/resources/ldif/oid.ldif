@@ -71,6 +71,13 @@ objectclass: NDRoleAssociation
 cn: UMBT001
 aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
 
+dn: cn=UMBT003,cn=test.user,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UMBT003
+aliasedObjectName: cn=UMBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+
 dn: cn=TestUser1,cn=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: person
@@ -79,6 +86,13 @@ cn: TestUser1
 uid: TestUser1
 userHomeArea: N01
 description: Test user for single sign-on (no password)
+
+dn: cn=UMBT001,cn=TestUser1,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UMBT001
+aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
 
 dn: cn=Joe.Bloggs,cn=Users,dc=bcl,dc=local
 objectclass: top
