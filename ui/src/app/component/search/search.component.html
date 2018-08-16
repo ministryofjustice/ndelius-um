@@ -95,13 +95,12 @@
     <hr/>
     <div class="btn-toolbar justify-content-center">
       <div class="btn-group">
-        <button id="search-results-prev" class="btn btn-outline-secondary" [disabled]="page <= 1" (click)="prevPage()">
-          <span class="oi oi-arrow-left"></span>
-          Previous
-        </button>
-        <button id="search-results-next" class="btn btn-outline-secondary" [disabled]="!hasMoreResults" (click)="nextPage()">
-          Next
-          <span class="oi oi-arrow-right"></span>
+        <button id="search-results-next" class="btn btn-outline-secondary"
+                [hidden]="users.length % 10 != 0 || hasMoreResults === false"
+                [disabled] = "searching"
+                (click)="nextPage()">
+          {{searching ? 'Loading': 'Load more'}}
+          <span class="oi oi-arrow-circle-bottom"></span>
         </button>
       </div>
     </div>

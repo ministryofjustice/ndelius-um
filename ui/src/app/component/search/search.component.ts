@@ -17,10 +17,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
   page: number;
 
   users: User[] = [];
-  hasMoreResults: boolean;
   searching: boolean;
   noResults: boolean;
-
+  hasMoreResults: boolean = true;
   constructor(private route: ActivatedRoute, public router: Router, private service: UserService, public auth: AuthorisationService) {
   }
 
@@ -33,9 +32,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.page = +params.page || 1
       ))
     ).subscribe(users => {
-      this.users = users;
-      this.hasMoreResults = users.length >= 10;
-      this.noResults = users.length === 0;
+      this.hasMoreResults = users.length !== 0;
+      this.users.push(...users);
+      this.noResults = this.users.length === 0;
       this.searching = false;
     });
   }
@@ -47,14 +46,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   search() {
-    this.router.navigate(['/search'], { queryParams: { q: this.query } });
+    this.users = [];
+    this.router.navigate(['/search'], {queryParams: {q: this.query}});
   }
 
   nextPage() {
-    this.router.navigate(['/search'], { queryParams: { q: this.query, page: this.page+1 } });
-  }
-
-  prevPage() {
-    this.router.navigate(['/search'], { queryParams: { q: this.query, page: this.page-1 } });
+    this.router.navigate(['/search'], {queryParams: {q: this.query, page: this.page + 1}});
   }
 }
