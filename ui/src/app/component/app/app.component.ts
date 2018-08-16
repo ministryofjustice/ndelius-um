@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../service/user.service";
 import {User} from "../../model/user";
-import {NavigationEnd, NavigationStart, Router} from "@angular/router";
+import {NavigationStart, Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -29,9 +29,6 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         AppComponent.globalMessage = null;
-      }
-      if (event instanceof NavigationEnd) {
-        window.scrollTo(0, 0);
       }
     });
   }
