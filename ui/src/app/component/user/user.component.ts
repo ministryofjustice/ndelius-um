@@ -24,7 +24,6 @@ import {NgForm} from "@angular/forms";
 })
 
 export class UserComponent implements OnInit {
-  math: Math = Math;
   loaded: boolean;
   saving: boolean;
   @ViewChild("form")
@@ -37,6 +36,8 @@ export class UserComponent implements OnInit {
   roleGroups: RoleGroup[];
   selectedGroup: RoleGroup;
   staffGrades: StaffGrade[];
+  globalMinDate: Date = new Date(1900,1,1);
+  globalMaxDate: Date = new Date(2099,12,31);
 
   constructor(
     private route: ActivatedRoute,
@@ -132,7 +133,6 @@ export class UserComponent implements OnInit {
         let abstractControl = this.form.controls[key];
         abstractControl.markAsDirty();
         abstractControl.updateValueAndValidity();
-        console.log(abstractControl, abstractControl.valid)
       });
       AppComponent.globalMessage = "Please complete all fields highlighted before submitting user details.";
       AppComponent.globalMessageSeverity = "danger";
