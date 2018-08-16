@@ -2,10 +2,7 @@ package uk.co.bconline.ndelius.model.ldap;
 
 import javax.naming.Name;
 
-import org.springframework.ldap.odm.annotations.Attribute;
-import org.springframework.ldap.odm.annotations.DnAttribute;
-import org.springframework.ldap.odm.annotations.Entry;
-import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.odm.annotations.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +26,7 @@ public final class OIDUserPreferences
 	@DnAttribute(value="cn", index=2)
 	private String cn = "UserPreferences";
 
+	@Transient
 	@DnAttribute(value="cn", index=1)
 	private String username;
 
