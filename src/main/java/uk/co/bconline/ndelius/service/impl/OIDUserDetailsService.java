@@ -26,13 +26,11 @@ import org.springframework.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import uk.co.bconline.ndelius.model.SearchResult;
-import uk.co.bconline.ndelius.model.ldap.OIDRole;
-import uk.co.bconline.ndelius.model.ldap.OIDRoleAssociation;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
-import uk.co.bconline.ndelius.model.ldap.OIDUserAlias;
+import uk.co.bconline.ndelius.model.ldap.*;
 import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
 import uk.co.bconline.ndelius.repository.oid.OIDRoleAssociationRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserAliasRepository;
+import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 import uk.co.bconline.ndelius.service.OIDUserService;
 import uk.co.bconline.ndelius.service.RoleService;
@@ -49,6 +47,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	private final OIDUserRepository userRepository;
 	private final OIDUserAliasRepository userAliasRepository;
 	private final OIDRoleAssociationRepository roleAssociationRepository;
+	private final OIDUserPreferencesRepository preferencesRepository;
 	private final RoleService roleService;
 
 	@Autowired
@@ -56,11 +55,13 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 			OIDUserRepository userRepository,
 			OIDUserAliasRepository userAliasRepository,
 			OIDRoleAssociationRepository roleAssociationRepository,
+			OIDUserPreferencesRepository preferencesRepository,
 			RoleService roleService)
 	{
 		this.userRepository = userRepository;
 		this.userAliasRepository = userAliasRepository;
 		this.roleAssociationRepository = roleAssociationRepository;
+		this.preferencesRepository = preferencesRepository;
 		this.roleService = roleService;
 	}
 
@@ -191,6 +192,12 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 					.username(user.getAliasUsername())
 					.aliasedUserDn(user.getDn().toString() + "," + oidBase)
 					.build());
+		}
+
+		// Preferences
+		if (!preferencesRepository.findByUsername(user.getUsername()).isPresent())
+		{
+			preferencesRepository.save(new OIDUserPreferences(user.getUsername()));
 		}
 
 		// Role associations
