@@ -64,7 +64,7 @@ export class ItemSelectorComponent
   }
 
   hideOptionsOnSingleSelect(item): boolean {
-    if (!this.multiple && !this.isSelected(item)) this.optionsDisplayed = false;
+    if (!this.multiple && !this.isSelected(item)) setTimeout(() => {this.optionsDisplayed = false}, 0);
     return true;
   }
 
