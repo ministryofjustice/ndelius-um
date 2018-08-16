@@ -3,12 +3,15 @@ package uk.co.bconline.ndelius.controller;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +30,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import uk.co.bconline.ndelius.model.*;
+import uk.co.bconline.ndelius.model.ldap.OIDUserPreferences;
+import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -41,6 +46,9 @@ public class UserControllerTest
 
 	@Autowired
 	private OncePerRequestFilter jwtAuthenticationFilter;
+
+	@Autowired
+	private OIDUserPreferencesRepository preferencesRepository;
 
 	private MockMvc mvc;
 
@@ -405,5 +413,27 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.homeArea.organisation.code", is("NPS")));
+	}
+
+	@Test
+	public void usersAreCreatedWithDefaultPreferences() throws Exception
+	{
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token(mvc))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
+						.username("test.user6")
+						.startDate(LocalDate.of(2018, 8, 13))
+						.privateSector(false)
+						.homeArea(Dataset.builder().code("N01").build())
+						.datasets(singletonList(Dataset.builder().code("N01").build()))
+						.forenames("Test")
+						.surname("User6")
+						.build())))
+				.andExpect(status().isCreated());
+
+		Optional<OIDUserPreferences> prefs = preferencesRepository.findByUsername("test.user6");
+		assertTrue(prefs.isPresent());
+		assertEquals("NRO16", prefs.get().getMostRecentlyViewedOffenders());
 	}
 }
