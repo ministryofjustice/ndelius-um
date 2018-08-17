@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class UIController
 {
-	@GetMapping({"/search", "/user", "/user/**"})
+	@GetMapping({"/search", "/user", "/user/**", "/migrate"})
 	public ModelAndView redirect(ModelMap model)
 	{
 		model.addAttribute("attribute", "forwardWithForwardPrefix");

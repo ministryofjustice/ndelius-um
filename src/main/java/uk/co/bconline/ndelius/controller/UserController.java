@@ -1,7 +1,5 @@
 package uk.co.bconline.ndelius.controller;
 
-import static java.util.Collections.singletonList;
-import static java.util.Collections.singletonMap;
 import static org.springframework.http.ResponseEntity.*;
 
 import java.net.URI;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
+import uk.co.bconline.ndelius.model.ErrorResponse;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.UserService;
@@ -62,7 +61,7 @@ public class UserController
 	public ResponseEntity addUser(@RequestBody @Valid User user) throws URISyntaxException
 	{
 		if (userService.getUser(user.getUsername()).isPresent()) {
-			return badRequest().body(singletonMap("error", singletonList("username: already exists")));
+			return badRequest().body(new ErrorResponse("username: already exists"));
 		}
 		userService.addUser(user);
 		return created(new URI(String.format("/user/%s", user.getUsername()))).build();

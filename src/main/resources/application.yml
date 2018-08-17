@@ -15,6 +15,7 @@ oid.default-password: '{SSHA}S22CgeZ/VQJHivxBKe0kONRCA1XelJr0'
 oid.base-environment.java.naming.ldap.derefAliases: never
 oid.base-environment.com.sun.jndi.ldap.connect.pool: false
 
+management.endpoints.web.exposure.include: ["health", "info", "metrics"]
 management.endpoint.health.show-details: always
 
 logging.level:

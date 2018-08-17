@@ -25,10 +25,21 @@ import {OrganisationService} from "../service/organisation.service";
 import {RestOrganisationService} from "../service/impl/rest.organisation.service";
 import {StaffGradeService} from "../service/staff-grade.service";
 import {RestStaffGradeService} from "../service/impl/rest.staff-grade.service";
+import {UserMigrationComponent} from "../component/user-migration/user-migration.component";
+import {PapaParseModule} from "ngx-papaparse";
+import {AliasService} from "../service/alias.service";
+import {RestAliasService} from "../service/impl/rest.alias.service";
 
 @NgModule({
-  declarations: [AppComponent, SearchComponent, UserComponent, MessageComponent, ItemSelectorComponent, DateComponent],
-  imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
+  declarations: [
+    AppComponent,
+    SearchComponent,
+    UserComponent,
+    UserMigrationComponent,
+    MessageComponent,
+    ItemSelectorComponent,
+    DateComponent],
+  imports: [BrowserModule, FormsModule, HttpClientModule, PapaParseModule, AppRoutingModule],
   providers: [
     {provide: UserService, useClass: RestUserService},
     {provide: RoleService, useClass: RestRoleService},
@@ -36,6 +47,7 @@ import {RestStaffGradeService} from "../service/impl/rest.staff-grade.service";
     {provide: TeamService, useClass: RestTeamService},
     {provide: OrganisationService, useClass: RestOrganisationService},
     {provide: StaffGradeService, useClass: RestStaffGradeService},
+    {provide: AliasService, useClass: RestAliasService},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     ...(environment.production? []: [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}])
   ],

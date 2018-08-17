@@ -19,11 +19,12 @@ import uk.co.bconline.ndelius.validator.*;
 @ValidDates
 @UniqueStaffCode
 @AssignableRoles
+@UniqueAliasUsername
 @HomeAreaNotMatchingStaffCode
 @ConditionallyRequired(ifPopulated = "Staff Code:staffCode", required = "Staff Grade:staffGrade")
 @ConditionallyRequired(ifPopulated = "Staff Grade:staffGrade", required = "Staff Code:staffCode")
 @ConditionallyRequired(ifPopulated = "Teams:teams", required = "Staff Code:staffCode")
-@UniqueAliasUsername
+@ConditionallyRequired(ifPopulated = "Staff Code:staffCode", required = "Start Date:startDate")
 public class User
 {
 	@NotBlank
@@ -55,7 +56,6 @@ public class User
 	@NotNull
 	private Dataset homeArea;
 
-	@NotNull
 	private LocalDate startDate;
 
 	private LocalDate endDate;
