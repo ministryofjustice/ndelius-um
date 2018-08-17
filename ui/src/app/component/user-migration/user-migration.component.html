@@ -6,7 +6,7 @@
   <div class="mt-4">
     <h1 class="pl-3">User migration</h1>
     <p class="pl-3">
-      Use this screen to create a number of aliases for users between OMNI and DOM1.
+      Use this screen to create a number of aliases to link users between OMNI and DOM1.
     </p>
     <hr/>
   </div>
@@ -17,9 +17,10 @@
       <div class="row">
         <div class="col-sm-8 offset-sm-2">
           <div class="custom-file">
-            <input #upload type="file" accept=".csv" class="custom-file-input" id="csv-upload" (change)="readFile($event.target.files[0])">
+            <input #upload type="file" accept=".csv" class="custom-file-input" id="csv-upload"
+                   (change)="readFile(upload.files[0])">
             <label class="custom-file-label" for="csv-upload">
-              {{upload?.files[0]?.name || 'Choose file&hellip;'}}
+              {{upload.files[0]?.name || 'Choose file&hellip;'}}
             </label>
           </div>
           <hr/>
@@ -74,11 +75,14 @@
           <tr *ngFor="let alias of aliases" style="cursor: pointer"
               routerLink="/user/{{alias.username}}" (keyup.enter)="router.navigate(['/user/'+alias.username])">
             <td>{{alias.username}}</td>
-            <td>{{alias.alias}}</td>
+            <td>{{alias.aliasUsername}}</td>
             <td>
-              <span class="oi oi-clock text-warning" *ngIf="alias.processing"></span>
-              <span class="oi oi-circle-x" [class.text-danger]="alias.error != null" *ngIf="!alias.processing && !alias.processed"></span>
-              <span class="oi oi-circle-check text-success" *ngIf="!alias.processing && alias.processed"></span>
+              <span title="Not processed" *ngIf="!alias.processing && !alias.processed"
+                    class="oi oi-circle-x" [class.text-danger]="alias.error != null"></span>
+              <span title="Processing" *ngIf="alias.processing"
+                    class="oi oi-clock text-warning"></span>
+              <span title="Processed" *ngIf="!alias.processing && alias.processed"
+                    class="oi oi-circle-check text-success"></span>
               <span *ngIf="alias.error != null"> {{alias.error}}</span>
             </td>
           </tr>

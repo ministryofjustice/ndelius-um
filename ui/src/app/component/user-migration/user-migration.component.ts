@@ -1,21 +1,23 @@
 import {Component} from '@angular/core';
 import {PapaParseService} from "ngx-papaparse";
 import {AppComponent} from "../app/app.component";
-import {UserService} from "../../service/user.service";
-import {flatMap} from "rxjs/operators";
 import {ErrorInterceptor} from "../../interceptor/error.interceptor";
 import {Router} from "@angular/router";
+import {Alias} from "../../model/alias";
+import {AliasService} from "../../service/alias.service";
 
 @Component({
   selector: 'user-migration',
   templateUrl: './user-migration.component.html'
 })
 export class UserMigrationComponent {
+  private batchInterval: number;
   processing: boolean;
   processedCount: number = 0;
-  aliases: Alias[];
 
-  constructor(private papa: PapaParseService, private userService: UserService, public router: Router) {}
+  aliases: AliasRequest[];
+
+  constructor(private papa: PapaParseService, private aliasService: AliasService, public router: Router) {}
 
   readFile(file: File): void {
     if (file == null) return;
@@ -26,7 +28,8 @@ export class UserMigrationComponent {
     this.papa.parse(file, {
       complete: results => {
         if (results.data.length <= 1) {
-          return this.abort("No rows found. Please check the file " + file.name);
+          console.error("Invalid data", results);
+          return this.abort("No data found. Please check the file " + file.name);
         }
 
         this.aliases = [];
@@ -34,12 +37,13 @@ export class UserMigrationComponent {
           let row = results.data[i];
           if (row.length == 0 || row[0] === "") continue;
           if (row.length != 2) {
+            console.error("Invalid row", row);
             return this.abort("More than 2 columns detected at row " + (i+1) + ". Please correct the file and try again.");
           }
 
           this.aliases.push({
             username: row[0],
-            alias: row[1]
+            aliasUsername: row[1]
           });
         }
 
@@ -54,21 +58,33 @@ export class UserMigrationComponent {
     this.processing = true;
     this.processedCount = 0;
 
-    for (let i = 0; i < this.aliases.length; i++) {
-      this.process(this.aliases[i])
-    }
+    this.processBatch(0);
   }
 
-  process(alias: Alias): void {
+  private processBatch(batchNumber: number): void {
+    if (this.processing == false) return;
+
+    let batchSize: number = 10;
+    let batchStart = batchNumber * batchSize;
+    let batchEnd = (batchNumber + 1) * batchSize;
+    for (let i = batchStart; i < batchEnd; i++) {
+      this.process(this.aliases[i]);
+    }
+
+    this.batchInterval = setInterval(() => {
+      if (this.processedCount >= batchEnd) {
+        clearInterval(this.batchInterval);
+        this.processBatch(batchNumber + 1);
+      }
+    }, 500);
+  }
+
+  private process(alias: AliasRequest): void {
     alias.processing = true;
     alias.processed = false;
     alias.error = null;
 
-    this.userService.read(alias.username)
-      .pipe(flatMap(user => this.userService.update({
-        ...user,
-        aliasUsername: alias.alias
-      })))
+    this.aliasService.update(alias)
       .subscribe(() => {
         alias.processed = true;
         this.done(alias, ++this.processedCount);
@@ -79,7 +95,7 @@ export class UserMigrationComponent {
       });
   }
 
-  done(alias: Alias, count: number): void {
+  private done(alias: AliasRequest, count: number): void {
     alias.processing = false;
     if (count >= this.aliases.length) {
       this.processing = false;
@@ -93,7 +109,7 @@ export class UserMigrationComponent {
     }
   }
 
-  abort(message: string): void {
+  private abort(message: string): void {
     AppComponent.error(message);
     this.aliases = null;
     this.processing = false;
@@ -101,10 +117,7 @@ export class UserMigrationComponent {
   }
 }
 
-
-class Alias {
-  username: string;
-  alias: string;
+class AliasRequest extends Alias {
   processing?: boolean = false;
   processed?: boolean = false;
   error?: string = null;

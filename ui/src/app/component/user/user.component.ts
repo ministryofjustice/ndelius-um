@@ -134,8 +134,7 @@ export class UserComponent implements OnInit {
         abstractControl.markAsDirty();
         abstractControl.updateValueAndValidity();
       });
-      AppComponent.globalMessage = "Please complete all fields highlighted before submitting user details.";
-      AppComponent.globalMessageSeverity = "danger";
+      AppComponent.error("Please correct any highlighted fields before submitting user details.");
       window.scrollTo(0,0);
       return;
     }
@@ -144,8 +143,7 @@ export class UserComponent implements OnInit {
       window.scrollTo(0,0);
       this.userService.create(this.user).subscribe(() => {
         this.router.navigate(["/user/" + this.user.username]).then(() => {
-          AppComponent.globalMessage = "Created " + this.user.username + " successfully.";
-          AppComponent.globalMessageSeverity = "info";
+          AppComponent.success("Created " + this.user.username + " successfully.");
           this.saving = false;
         });
       }, () => this.saving = false);
@@ -154,8 +152,7 @@ export class UserComponent implements OnInit {
       window.scrollTo(0,0);
       this.userService.update(this.user).subscribe(() => {
        this.router.navigate(["/user/" + this.user.username]).then(() => {
-          AppComponent.globalMessage = "Updated " + this.user.username + " successfully.";
-          AppComponent.globalMessageSeverity = "info";
+          AppComponent.success("Updated " + this.user.username + " successfully.");
           this.saving = false;
         });
       }, () => this.saving = false);

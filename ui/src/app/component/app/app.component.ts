@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
     };
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
-        AppComponent.globalMessage = null;
+        AppComponent.hideMessage();
       }
     });
   }
