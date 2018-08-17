@@ -8,13 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import uk.co.bconline.ndelius.validator.UniqueAliasUsername;
+import uk.co.bconline.ndelius.validator.UniqueAlias;
 
 @Getter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@UniqueAliasUsername
+@UniqueAlias
 public class Alias
 {
 	@NotBlank

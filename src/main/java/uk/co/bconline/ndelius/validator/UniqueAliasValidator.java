@@ -8,19 +8,19 @@ import javax.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.val;
-import uk.co.bconline.ndelius.model.User;
+import uk.co.bconline.ndelius.model.Alias;
 import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
 
-public class UniqueAliasUsernameValidator implements ConstraintValidator<UniqueAliasUsername, User>
+public class UniqueAliasValidator implements ConstraintValidator<UniqueAliasUsername, Alias>
 {
 	@Autowired
 	private OIDUserDetailsService oidUserDetailsService;
 
 	@Override
-	public boolean isValid(User user, ConstraintValidatorContext context)
+	public boolean isValid(Alias alias, ConstraintValidatorContext context)
 	{
-		String username = user.getUsername();
-		String aliasUsername = user.getAliasUsername();
+		String username = alias.getUsername();
+		String aliasUsername = alias.getAliasUsername();
 
 		if (isEmpty(aliasUsername) || isEmpty(username) || aliasUsername.equals(username))
 		{
