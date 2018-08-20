@@ -255,11 +255,12 @@
           <label for="staff-code" class="col-sm-2 col-form-label">Staff Code</label>
           <div class="col-sm-4">
             <div class="input-group">
-              <div class="input-group-prepend" *ngIf="user.homeArea != null">
+              <div class="input-group-prepend" *ngIf="mode !== 'View' && user.homeArea != null">
                 <span class="input-group-text">{{user.homeArea?.code}}</span>
               </div>
-              <input id="staff-code" name="staff-code" #staffcode="ngModel" [(ngModel)]="staffCodeSuffix"
-                     class="form-control" [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"
+              <input id="staff-code" name="staff-code" #staffcode="ngModel" class="form-control"
+                     [(ngModel)]="mode === 'View'? user.staffCode: staffCodeSuffix"
+                     [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"
                      pattern="[A-Z][0-9]{3}$" minlength="4" maxlength="4"/>
               <div *ngIf="staffcode.dirty && staffcode.invalid" class = text-danger>
                 <small *ngIf="staffcode.errors['pattern']">
