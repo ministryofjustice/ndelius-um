@@ -244,7 +244,7 @@
       <section class="mb-4 card card-body">
         <h4 class="card-title mb-0">Staff Details</h4>
         <hr>
-        <div class="alert alert-info rounded" *ngIf="mode !== 'View' && (datasetsList.invalid || sectorSelector.invalid || homeArea.invalid)">
+        <div class="alert alert-info rounded" *ngIf="mode !== 'View' && homeArea.invalid">
           <p class="m-0">
             <span class="oi oi-info"></span>
             &nbsp;
@@ -262,6 +262,11 @@
                      [(ngModel)]="mode === 'View'? user.staffCode: staffCodeSuffix"
                      [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"
                      pattern="[A-Z][0-9]{3}$" minlength="4" maxlength="4"/>
+              <div class="input-group-append" *ngIf="mode !== 'View' && user.homeArea != null">
+                <button type="button" class="btn btn-outline-secondary" (click)="generateStaffCode()" title="Generate">
+                  <span class="oi oi-loop-circular"></span>
+                </button>
+              </div>
               <div *ngIf="staffcode.dirty && staffcode.invalid" class = text-danger>
                 <small *ngIf="staffcode.errors['pattern']">
                   *Staff code must be one uppercase character then three numeric characters

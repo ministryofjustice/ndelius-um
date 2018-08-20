@@ -194,4 +194,9 @@ export class UserComponent implements OnInit {
       this.user.staffCode = this.user.homeArea.code + staffCodeSuffix;
     }
   }
+
+  generateStaffCode() {
+    this.datasetService.nextStaffCode(this.user.homeArea.code)
+      .subscribe(staffCode => this.user.staffCode = staffCode);
+  }
 }

@@ -63,4 +63,9 @@ public class DatasetServiceImpl implements DatasetService
 		return repository.findByCode(code).map(transformer::map);
 	}
 
+	@Override
+	public String getNextStaffCode(String datasetCode)
+	{
+		return repository.getNextStaffCode(datasetCode);
+	}
 }
