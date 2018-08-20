@@ -1,40 +1,39 @@
 <div class="dropdown">
   <button [id]="id+'-toggle-btn'" type="button"
-          class="form-control text-left" [class.readonly]="readonly" [class.ng-dirty]="dirty"
-          (click)="toggleOptionsDisplayed()"
-          aria-haspopup="true" [attr.aria-expanded]="optionsDisplayed">
-    <span *ngIf="available == null">Loading...</span>
-    <ng-container *ngIf="available != null">
-      <ng-container *ngIf="multiple">
-        <span *ngIf="selected == null">0 selected</span>
-        <span *ngIf="selected != null && selected.length !== 1">{{selected.length}} selected</span>
-        <span *ngIf="selected != null && selected.length === 1">{{mapToLabel(selected[0])}}</span>
-      </ng-container>
-      <ng-container *ngIf="!multiple">
-        <span *ngIf="selected != null">{{mapToLabel(selected)}}</span>
-        <span *ngIf="selected == null">Please select&hellip;</span>
-      </ng-container>
-    </ng-container>
-    <span class="oi oi-chevron-top float-right" *ngIf="optionsDisplayed"></span>
-    <span class="oi oi-chevron-bottom float-right" *ngIf="!optionsDisplayed"></span>
+          class="form-control text-left d-flex justify-content-between align"
+          data-toggle="dropdown"
+          (click)="focusOnFilter()"
+          [disabled]="readonly || available == null"
+          [class.readonly]="readonly"
+          [class.ng-dirty]="dirty"
+          [title]="displayText"
+          aria-haspopup="true" aria-expanded="false">
+    <span class="text-truncate mr-2">{{displayText}}</span>
+    <span class="oi oi-chevron-bottom float-right"></span>
   </button>
-  <div *ngIf="optionsDisplayed" class="dropdown-menu bg-light show p-3 w-100"
-       [ngStyle]="{maxHeight: maxHeight}" style="overflow-y: auto"
+  <div class="dropdown-menu bg-light px-lg-3 px-sm-2 py-3"
+       style="overflow-y: auto; max-width: 200%"
+       [class.dropdown-menu-right]="alignRight"
+       [ngStyle]="{maxHeight: maxHeight}"
+       (click)="!multiple || $event.stopPropagation()"
        [attr.aria-labelledby]="id+'-toggle-btn'">
     <div class="form-group">
       <div class="input-group">
         <div class="input-group-prepend">
           <div class="input-group-text bg-white"><i class="oi oi-magnifying-glass"></i></div>
         </div>
-        <input [id]="id+'-filter'" type="search" [(ngModel)]="filter"
+        <input #filterControl [id]="id+'-filter'"
+               [(ngModel)]="filter"
+               type="search"
                class="form-control py-2 border-left-0 border"
                aria-label="Filter">
       </div>
     </div>
     <div class="text-truncate custom-control custom-{{multiple? 'checkbox': 'radio'}}"
          *ngFor="let item of filtered; let i = index">
-      <div class="pl-1" (mouseup)="hideOptionsOnSingleSelect(item)">
-        <input [id]="id+'-opt-'+i" [name]="id" [type]="multiple? 'checkbox': 'radio'" class="custom-control-input"
+      <div class="pl-1">
+        <input [id]="id+'-opt-'+i" [name]="id" class="custom-control-input"
+               [type]="multiple? 'checkbox': 'radio'"
                (change)="toggle(item)"
                [checked]="isSelected(item)"
                [disabled]="readonly"/>

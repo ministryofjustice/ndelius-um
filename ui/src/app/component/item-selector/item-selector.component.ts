@@ -1,4 +1,4 @@
-import {Component, EventEmitter, forwardRef, Input, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild} from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -26,6 +26,7 @@ import {
 export class ItemSelectorComponent
     implements ControlValueAccessor, Validator
 {
+  @ViewChild("filterControl") filterControl: ElementRef;
   @Input() id: string;
   @Input() selected: any;
   @Input() available: any[];
@@ -34,11 +35,14 @@ export class ItemSelectorComponent
   @Input() readonly: boolean;
   @Input() required: boolean = false;
   @Input() multiple: boolean;
+  @Input() alignRight: boolean;
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
 
   dirty: boolean = false;
-  optionsDisplayed: boolean;
   filter: string = "";
+
+  private propagateChange = (_: any) => { };
+  private propagateTouchChange = (_: any) => { };
 
   toggle(item): void {
     if (this.multiple) {
@@ -57,15 +61,8 @@ export class ItemSelectorComponent
     this.dirty = true;
   }
 
-  toggleOptionsDisplayed() {
-    if ((this.available == null || this.available.length === 0) && !this.optionsDisplayed) return;
-    this.optionsDisplayed = !this.optionsDisplayed;
-    this.propagateTouchChange(this.selected);
-  }
-
-  hideOptionsOnSingleSelect(item): boolean {
-    if (!this.multiple && !this.isSelected(item)) setTimeout(() => {this.optionsDisplayed = false}, 0);
-    return true;
+  focusOnFilter(): void {
+    setTimeout(() => this.filterControl.nativeElement.focus(), 0);
   }
 
   mapToLabel(item: any): string {
@@ -91,15 +88,25 @@ export class ItemSelectorComponent
         return this.mapToLabel(item).toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
       });
     }
-    return items.sort((a, b) => {
+    return items == null? items: items.sort((a, b) => {
       let labelA = this.mapToLabel(a);
       let labelB = this.mapToLabel(b);
       return labelA == labelB? 0: labelA < labelB? -1: 1;
     });
   }
 
-  private propagateChange = (_: any) => { };
-  private propagateTouchChange = (_: any) => { };
+  get displayText(): string {
+    if (this.available == null) return "Loading...";
+
+    if (this.multiple) {
+      if (this.selected == null || this.selected.length == 0) return "Please select...";
+      if (this.selected.length == 1) return this.mapToLabel(this.selected[0]);
+      return this.selected.length + " selected";
+    } else {
+      if (this.selected == null) return "Please select...";
+      return this.mapToLabel(this.selected);
+    }
+  }
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
@@ -109,13 +116,13 @@ export class ItemSelectorComponent
     this.propagateTouchChange = fn;
   }
 
-  public writeValue(obj: any) {
+  writeValue(obj: any) {
     if (obj) {
       this.selected = obj;
     }
   }
 
-  public validate(c: FormControl): ValidationErrors {
+  validate(c: FormControl): ValidationErrors {
     if(this.required == false || this.readonly) return null;
     if(this.selected == null || (this.selected instanceof Array && this.selected.length == 0)) {
       return {"list": "cannot be empty"}

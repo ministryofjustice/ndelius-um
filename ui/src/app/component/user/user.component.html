@@ -163,9 +163,10 @@
                            [labelMapper]="nameToLabel"></item-selector>
           </div>
           <div class="col-sm-1 pl-sm-1" *ngIf="selectedGroup != null && mode !== 'View'">
-            <button class="btn btn-outline-secondary w-100" (click)="addGroup(); roleGroupField.optionsDisplayed = false"
+            <button class="btn btn-outline-secondary w-100" (click)="addGroup()"
                     type="button">
-              Add &raquo;
+              <span class="d-none d-lg-inline">Add &raquo;</span>
+              <small class="d-sm-inline d-lg-none oi oi-plus"></small>
             </button>
           </div>
           <label [for]="'roles-toggle-btn'" class="col-sm-2 col-form-label">Roles</label>
@@ -175,6 +176,7 @@
                            [(ngModel)]="user.roles"
                            [available]="roles"
                            [readonly]="mode === 'View'"
+                           [alignRight]="true"
                            [labelMapper]="nameDescriptionToLabel"></item-selector>
           </div>
         </div>
@@ -207,6 +209,7 @@
                            [(selected)]="user.privateSector"
                            [available]="[true, false]"
                            [readonly]="mode === 'View'"
+                           [alignRight]="true"
                            [labelMapper]="sectorToLabel"></item-selector>
             <div *ngIf="sectorSelector.dirty && sectorSelector.invalid" class = text-danger>
               <small *ngIf="sectorSelector.errors['list']">
@@ -233,7 +236,7 @@
           </div>
           <label [for]="'datasets-toggle-btn'" class="col-sm-6 col-form-label text-muted"
                  *ngIf="user.homeArea == null && datasetsList.invalid">Datasets must be entered before selecting a Home Area</label>
-          <label for="organisation" class="col-sm-2 col-form-label"
+          <label for="organisation" class="col-sm-2 col-form-label" style="white-space: nowrap"
                  *ngIf="user.homeArea?.organisation?.description">Organisation</label>
           <div id="organisation" class="col-sm-4 col-form-label text-truncate"
                [title]="user.homeArea?.organisation?.description">
@@ -282,6 +285,7 @@
                            [(selected)]="user.staffGrade"
                            [available]="staffGrades"
                            [readonly]="mode === 'View' || user.staffCode == null"
+                           [alignRight]="true"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
             <div *ngIf="staffGrade.dirty && staffGrade.invalid" class = text-danger>
               <small *ngIf="staffGrade.errors['required']">
