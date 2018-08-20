@@ -51,7 +51,7 @@
                      type="checkbox" class="custom-control-input"
                      [disabled]="user.aliasUsername === user.username || mode === 'View'"
                      [checked]="user.aliasUsername === user.username"
-                     (input)="user.aliasUsername = user.username">
+                     (click)="user.aliasUsername = user.username">
               <label for="same-username" class="custom-control-label">Same as username?</label>
             </div>
           </div>
