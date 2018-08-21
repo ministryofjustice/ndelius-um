@@ -13,6 +13,12 @@
     <form #form="ngForm" (submit)="submit()">
       <section class="mb-4 card card-body">
         <h4 class="card-title mb-0">User Details</h4>
+        <small class="text-muted" *ngIf="mode !== 'View' && (
+        username.invalid ||
+        forenames.invalid ||
+        surname.invalid ||
+        startdate.invalid ||
+        enddate.invalid)">Section incomplete</small>
         <hr/>
         <div class="form-group row">
           <label for="username" class="col-sm-2 col-form-label">Username</label>
@@ -31,7 +37,7 @@
             </div>
           </div>
         </div>
-        <div class="form-group row" *ngIf="user.aliasUsername != null || mode !== 'View'">
+        <div class="form-group row" *ngIf="mode !== 'View'">
           <label for="alias-username" class="col-sm-2 col-form-label">Alias</label>
           <div class="col-sm-4">
             <input id="alias-username" name="alias-username" #aliasUsername="ngModel" [(ngModel)]="user.aliasUsername"
@@ -90,7 +96,7 @@
           <div class="col-sm-4">
             <date id="start-date" name="start-date" #startdate="ngModel"
                   [(ngModel)]="user.startDate"
-                  [required]="true"
+                  [required]="user.staffCode != null"
                   [max]="globalMaxDate"
                   [min]="globalMinDate"
                   [readonly]="mode === 'View'"></date>
@@ -98,7 +104,7 @@
               <small
                 *ngIf="startdate.errors['required'] && !startdate.errors['incomplete'] && !startdate.errors['invalidDate']
                     && !startdate.errors['min'] && !startdate.errors['max']">
-              *Start date is required
+              *Start date is required if Staff Code is populated
               </small>
               <small *ngIf="startdate.errors['min']">
                 *Start date cannot be before 1900-01-01
@@ -142,6 +148,10 @@
       </section>
       <section class="mb-4 card card-body">
         <h4 class="card-title mb-0">Authorisation</h4>
+        <small class="text-muted" *ngIf="mode !== 'View' && (
+        datasetsList.invalid ||
+        sectorSelector.invalid ||
+        homeArea.invalid)">Section incomplete</small>
         <hr>
         <div class="form-group row">
           <label [for]="'role-groups-toggle-btn'" class="col-sm-2 col-form-label">Role Groups</label>
@@ -205,18 +215,6 @@
             </div>
           </div>
         </div>
-      </section>
-      <section class="mb-4 card card-body">
-        <h4 class="card-title mb-0">Staff Details</h4>
-        <hr>
-        <div class="alert alert-info rounded" *ngIf="mode !== 'View' && (user.datasets == null || user.datasets.length === 0)">
-          <label class="m-0" style="cursor: pointer"
-                 [for]="'datasets-toggle-btn'">
-            <span class="oi oi-info"></span>
-            &nbsp;
-            Datasets are required before entering staff details.
-          </label>
-        </div>
         <div class="form-group row">
           <label [for]="'home-area-toggle-btn'" class="col-sm-2 col-form-label">Home Area</label>
           <div class="col-sm-4">
@@ -233,6 +231,8 @@
               </small>
             </div>
           </div>
+          <label [for]="'datasets-toggle-btn'" class="col-sm-6 col-form-label text-muted"
+                 *ngIf="user.homeArea == null && datasetsList.invalid">Datasets must be entered before selecting a Home Area</label>
           <label for="organisation" class="col-sm-2 col-form-label"
                  *ngIf="user.homeArea?.organisation?.description">Organisation</label>
           <div id="organisation" class="col-sm-4 col-form-label text-truncate"
@@ -240,16 +240,33 @@
             {{user.homeArea?.organisation?.description}}
           </div>
         </div>
+      </section>
+      <section class="mb-4 card card-body">
+        <h4 class="card-title mb-0">Staff Details</h4>
+        <hr>
+        <div class="alert alert-info rounded" *ngIf="mode !== 'View' && homeArea.invalid">
+          <p class="m-0">
+            <span class="oi oi-info"></span>
+            &nbsp;
+            Authorisation section must be completed before entering staff details.
+          </p>
+        </div>
         <div class="form-group row">
           <label for="staff-code" class="col-sm-2 col-form-label">Staff Code</label>
           <div class="col-sm-4">
             <div class="input-group">
-              <div class="input-group-prepend" *ngIf="user.homeArea != null">
+              <div class="input-group-prepend" *ngIf="mode !== 'View' && user.homeArea != null">
                 <span class="input-group-text">{{user.homeArea?.code}}</span>
               </div>
-              <input id="staff-code" name="staff-code" #staffcode="ngModel" [(ngModel)]="staffCodeSuffix"
-                     class="form-control" [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"
+              <input id="staff-code" name="staff-code" #staffcode="ngModel" class="form-control"
+                     [(ngModel)]="mode === 'View'? user.staffCode: staffCodeSuffix"
+                     [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"
                      pattern="[A-Z][0-9]{3}$" minlength="4" maxlength="4"/>
+              <div class="input-group-append" *ngIf="mode !== 'View' && user.homeArea != null">
+                <button type="button" class="btn btn-outline-secondary" (click)="generateStaffCode()" title="Generate">
+                  <span class="oi oi-loop-circular"></span>
+                </button>
+              </div>
               <div *ngIf="staffcode.dirty && staffcode.invalid" class = text-danger>
                 <small *ngIf="staffcode.errors['pattern']">
                   *Staff code must be one uppercase character then three numeric characters
