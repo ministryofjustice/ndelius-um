@@ -36,8 +36,8 @@ export class UserComponent implements OnInit {
   roleGroups: RoleGroup[];
   selectedGroup: RoleGroup;
   staffGrades: StaffGrade[];
-  globalMinDate: Date = new Date(1900,1,1);
-  globalMaxDate: Date = new Date(2099,12,31);
+  globalMinDate: Date = new Date(1900,0,1);
+  globalMaxDate: Date = new Date(2099,11,31);
 
   constructor(
     private route: ActivatedRoute,
