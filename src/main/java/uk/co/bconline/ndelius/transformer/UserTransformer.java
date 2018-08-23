@@ -34,7 +34,7 @@ import uk.co.bconline.ndelius.util.LdapPasswordUtils;
 @Component
 public class UserTransformer
 {
-	private static final String OID_DATE_FORMAT = "yyyyMMdd'000000'";
+	private static final String OID_DATE_FORMAT = "yyyyMMdd'000000Z'";
 
 	@Value("${ad.primary.principal.suffix:}")
 	private String ad1PrincipalSuffix;
