@@ -25,6 +25,7 @@ import org.springframework.security.config.authentication.AuthenticationManagerB
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -68,6 +69,7 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 				.authenticationProvider(jwtAuthenticationProvider())
 				.authorizeRequests()
 					.antMatchers(OPTIONS).permitAll()
+					.antMatchers("/actuator/**").permitAll()
 					.requestMatchers(new NegatedRequestMatcher(loginRequestMatcher)).authenticated()
 					.and()
 				.csrf().disable();
@@ -106,7 +108,8 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 						}
 					}
 				}
-				else if (!loginRequestMatcher.matches(request) && !"OPTIONS".equals(request.getMethod()))
+				else if (!loginRequestMatcher.matches(request) && !"OPTIONS".equals(request.getMethod())
+						&& !new AntPathRequestMatcher("/actuator/**").matches(request))
 				{
 					val failed = new InsufficientAuthenticationException("Missing token");
 					loginHandler.onAuthenticationFailure(request, response, failed);

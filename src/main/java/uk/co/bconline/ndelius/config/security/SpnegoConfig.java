@@ -74,6 +74,7 @@ public class SpnegoConfig extends WebSecurityConfigurerAdapter
 				.authenticationProvider(kerberosServiceAuthenticationProvider())
 				.authorizeRequests()
 					.antMatchers(OPTIONS).permitAll()
+					.antMatchers("/actuator/**").permitAll()
 					.requestMatchers(loginRequestMatcher).authenticated()
 					.and()
 				.csrf().disable();
