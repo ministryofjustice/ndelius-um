@@ -47,6 +47,7 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter
 				.addFilter(filter)
 				.authorizeRequests()
 					.antMatchers(OPTIONS).permitAll()
+					.antMatchers("/actuator/**").permitAll()
 					.requestMatchers(loginRequestMatcher).authenticated()
 					.and()
 				.csrf().disable();

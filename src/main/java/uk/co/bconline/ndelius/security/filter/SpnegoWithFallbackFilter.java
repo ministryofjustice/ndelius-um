@@ -25,6 +25,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
 
@@ -129,6 +130,7 @@ public class SpnegoWithFallbackFilter extends SpnegoAuthenticationProcessingFilt
 
 	public boolean shouldNotFilter(HttpServletRequest request)
 	{
-		return "OPTIONS".equals(request.getMethod()) || !loginRequestMatcher.matches(request);
+		return "OPTIONS".equals(request.getMethod()) || new AntPathRequestMatcher("/actuator/**").matches(request)
+				|| !loginRequestMatcher.matches(request);
 	}
 }
