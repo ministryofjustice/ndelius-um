@@ -25,6 +25,10 @@ group = 'uk.co.bconline.ndelius'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
+springBoot {
+	buildInfo()
+}
+
 sourceSets {
 	main.resources.srcDirs 'src/main/resources', 'ui/dist'
 }

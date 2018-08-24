@@ -40,7 +40,7 @@ export class DateComponent implements Validator, ControlValueAccessor {
   change(): void {
 
     if(this.basicValidation() == null){
-      this.writeValue(moment([this.year, this.month - 1, this.date]).toDate());
+      this.writeValue(moment.utc([this.year, this.month - 1, this.date]).toDate());
     } else {
       this.writeValue(null);
     }
@@ -49,7 +49,7 @@ export class DateComponent implements Validator, ControlValueAccessor {
 
   setDaysFromToday(days: number): boolean {
     if (!this.readonly) {
-      this.writeValue(moment(now()).add(days, "days").toDate());
+      this.writeValue(moment.utc(now()).add(days, "days").toDate());
       this.change();
     }
     return false;
@@ -73,7 +73,7 @@ export class DateComponent implements Validator, ControlValueAccessor {
   public writeValue(obj: any) {
     this.value = obj;
     if (this.value != null) {
-      let m = moment(this.value);
+      let m = moment.utc(this.value);
       this.value = m.toDate();
       this.date = this.value.getDate();
       this.month = this.value.getMonth() + 1;
@@ -95,7 +95,7 @@ export class DateComponent implements Validator, ControlValueAccessor {
     if (emptyItems.length >= 1 && emptyItems.length < 3){
       return {"incomplete" : "All date fields are required"}
     }
-    let m = moment([this.year, this.month - 1, this.date]);
+    let m = moment.utc([this.year, this.month - 1, this.date]);
     if (!m.isValid())return {"invalidDate": "date is invalid"};
     if (this.max != null && m.isAfter(this.max)) return {"max": "should be before " + this.max};
     if (this.min != null && m.isBefore(this.min)) return {"min": "should be after " + this.min};
