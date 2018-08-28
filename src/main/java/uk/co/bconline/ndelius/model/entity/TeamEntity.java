@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
@@ -13,6 +12,7 @@ import org.hibernate.search.annotations.Field;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import uk.co.bconline.ndelius.analyzer.CaseInsensitiveWhitespaceAnalyzer;
 
 @Getter
 @Entity
@@ -33,7 +33,7 @@ public class TeamEntity
 	private Long id;
 
 	@Column(name = "CODE")
-	@Field(analyzer = @Analyzer(impl = SimpleAnalyzer.class))
+	@Field(analyzer = @Analyzer(impl = CaseInsensitiveWhitespaceAnalyzer.class))
 	private String code;
 
 	@Field

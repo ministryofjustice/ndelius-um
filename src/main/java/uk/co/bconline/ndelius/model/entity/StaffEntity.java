@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
-import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Analyzer;
@@ -20,6 +19,7 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
 import lombok.*;
+import uk.co.bconline.ndelius.analyzer.CaseInsensitiveWhitespaceAnalyzer;
 
 @Getter
 @Entity
@@ -40,7 +40,7 @@ public class StaffEntity
 	private Long version;
 
 	@Column(name = "OFFICER_CODE")
-	@Field(analyzer = @Analyzer(impl = SimpleAnalyzer.class))
+	@Field(analyzer = @Analyzer(impl = CaseInsensitiveWhitespaceAnalyzer.class))
 	private String code;
 
 	@Column(name = "FORENAME")
