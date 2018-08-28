@@ -28,4 +28,10 @@ public final class OIDUserAlias
 
 	@Attribute(name="aliasedObjectName")
 	private String aliasedUserDn;
+
+	@Attribute(name="userSector")
+	private String sector = "public";
+
+	@Attribute(name="sn")
+	private String surname = "alias";
 }
