@@ -191,6 +191,8 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 			userAliasRepository.save(OIDUserAlias.builder()
 					.username(user.getAliasUsername())
 					.aliasedUserDn(user.getDn().toString() + "," + oidBase)
+					.surname(user.getSurname())
+					.sector(user.getSector())
 					.build());
 		}
 
