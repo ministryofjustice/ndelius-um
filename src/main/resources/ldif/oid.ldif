@@ -61,6 +61,7 @@ description: Test user for basic authentication (password=secret)
 dn: cn=test.user.alias,cn=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: alias
+objectclass: NDUser
 cn: test.user.alias
 aliasedObjectName: cn=test.user,cn=Users,dc=bcl,dc=local
 

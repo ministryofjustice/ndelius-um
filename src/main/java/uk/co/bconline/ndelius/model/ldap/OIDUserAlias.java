@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@Entry(objectClasses = {"alias", "top"}, base="cn=Users")
+@Entry(objectClasses = {"NDUser", "alias", "top"}, base="cn=Users")
 public final class OIDUserAlias
 {
 	@Id
