@@ -56,8 +56,10 @@ public class User
 	@NotNull
 	private Dataset homeArea;
 
+	@DateRange
 	private LocalDate startDate;
 
+	@DateRange
 	private LocalDate endDate;
 
 	@Valid

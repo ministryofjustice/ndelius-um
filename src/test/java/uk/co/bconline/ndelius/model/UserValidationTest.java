@@ -384,4 +384,44 @@ public class UserValidationTest
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, not(hasItem(hasProperty("message", is("Staff Code must be unique")))));
 	}
+
+	@Test
+	public void startDateShouldBeBefore2100()
+	{
+		User user = aValidUser().toBuilder()
+				.startDate(LocalDate.of(2100, 1, 1))
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Date must be between 1900-01-01 and 2099-12-31"))));
+	}
+
+	@Test
+	public void startDateShouldBeAfter1899()
+	{
+		User user = aValidUser().toBuilder()
+				.startDate(LocalDate.of(1899, 12, 31))
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Date must be between 1900-01-01 and 2099-12-31"))));
+	}
+
+	@Test
+	public void endDateShouldBeBefore2100()
+	{
+		User user = aValidUser().toBuilder()
+				.endDate(LocalDate.of(2100, 1, 1))
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Date must be between 1900-01-01 and 2099-12-31"))));
+	}
+
+	@Test
+	public void endDateShouldBeAfter1899()
+	{
+		User user = aValidUser().toBuilder()
+				.endDate(LocalDate.of(1899, 12, 31))
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Date must be between 1900-01-01 and 2099-12-31"))));
+	}
 }
