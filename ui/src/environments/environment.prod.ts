@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
   api: {
-    baseurl: '/api/'
+    baseurl: '/umt/api/'
   }
 };
