@@ -36,7 +36,7 @@ public class SearchIndexHelper
 		return lastIndexed == null || now().minusSeconds(indexExpiry).isAfter(lastIndexed);
 	}
 
-	public void reIndex()
+	public synchronized void reIndex()
 	{
 		try
 		{
