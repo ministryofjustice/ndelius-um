@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "build-prod": "ng build --prod",
-    "watch": "ng build --watch",
+    "start": "ng serve --base-href /umt/",
+    "build": "ng build --base-href /umt/",
+    "build-prod": "ng build --prod --base-href /umt/",
+    "watch": "ng build --base-href /umt/ --watch",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
