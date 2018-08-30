@@ -30,3 +30,12 @@ date.ng-dirty input, item-selector.ng-dirty button{
   @extend .is-invalid;
 }
 
+// Workaround for Firefox bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1430196
+.custom-file:focus-within > .custom-file-label {
+  border-color: $custom-file-focus-border-color;
+  box-shadow: $custom-file-focus-box-shadow;
+
+  &::after {
+    border-color: $custom-file-focus-border-color;
+  }
+}
