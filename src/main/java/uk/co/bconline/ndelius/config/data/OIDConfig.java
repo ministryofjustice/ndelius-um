@@ -10,8 +10,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.pool.factory.PoolingContextSource;
-import org.springframework.ldap.pool.validation.DefaultDirContextValidator;
 
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 
@@ -32,17 +30,8 @@ public class OIDConfig extends LdapAutoConfiguration
 		return super.ldapContextSource();
 	}
 
-	@Bean("poolingOidContextSource")
-	public ContextSource poolingLdapContextSource() {
-
-		PoolingContextSource poolingContextSource = new PoolingContextSource();
-		poolingContextSource.setDirContextValidator(new DefaultDirContextValidator());
-		poolingContextSource.setContextSource(ldapContextSource());
-		return poolingContextSource;
-	}
-
 	@Bean("oid")
-	public LdapTemplate ldapTemplate(@Qualifier("poolingOidContextSource") ContextSource contextSource)
+	public LdapTemplate ldapTemplate(@Qualifier("oidContextSource") ContextSource contextSource)
 	{
 		return new LdapTemplate(contextSource);
 	}
