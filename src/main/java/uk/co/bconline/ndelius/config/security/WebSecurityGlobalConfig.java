@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
@@ -21,6 +22,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import lombok.val;
 import uk.co.bconline.ndelius.security.filter.BasicAuthFilter;
 import uk.co.bconline.ndelius.security.handler.LoginHandler;
 import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
@@ -35,6 +37,7 @@ public class WebSecurityGlobalConfig extends WebSecurityConfigurerAdapter
 			AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception
 	{
 		authenticationManagerBuilder
+				.authenticationProvider(preAuthenticatedAuthenticationProvider())
 				.userDetailsService(userDetailsService)
 				.passwordEncoder(passwordEncoder());
 	}
@@ -102,5 +105,14 @@ public class WebSecurityGlobalConfig extends WebSecurityConfigurerAdapter
 		methodInvokingFactoryBean.setTargetMethod("setStrategyName");
 		methodInvokingFactoryBean.setArguments(MODE_INHERITABLETHREADLOCAL);
 		return methodInvokingFactoryBean;
+	}
+
+	@Bean
+	public PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider()
+	{
+		val provider = new PreAuthenticatedAuthenticationProvider();
+		provider.setPreAuthenticatedUserDetailsService(
+				token -> userDetailsService().loadUserByUsername((String) token.getPrincipal()));
+		return provider;
 	}
 }
