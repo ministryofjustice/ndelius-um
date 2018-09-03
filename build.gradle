@@ -10,6 +10,7 @@ buildscript {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("com.moowork.gradle:gradle-node-plugin:1.2.0")
 		classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2")
+		classpath("net.researchgate:gradle-release:2.6.0")
 	}
 }
 
@@ -20,6 +21,7 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.moowork.node'
+apply plugin: 'net.researchgate.release'
 
 group = 'uk.co.bconline.ndelius'
 version = '0.0.1-SNAPSHOT'
