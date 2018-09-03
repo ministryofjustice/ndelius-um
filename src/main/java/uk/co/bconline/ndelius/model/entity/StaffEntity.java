@@ -13,13 +13,8 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.Type;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.IndexedEmbedded;
 
 import lombok.*;
-import uk.co.bconline.ndelius.analyzer.CaseInsensitiveWhitespaceAnalyzer;
 
 @Getter
 @Entity
@@ -40,7 +35,6 @@ public class StaffEntity
 	private Long version;
 
 	@Column(name = "OFFICER_CODE")
-	@Field(analyzer = @Analyzer(impl = CaseInsensitiveWhitespaceAnalyzer.class))
 	private String code;
 
 	@Column(name = "FORENAME")
@@ -71,7 +65,6 @@ public class StaffEntity
 	private ReferenceDataEntity grade;
 
 	@Setter
-	@ContainedIn
 	@OneToMany(mappedBy = "staff")
 	private Set<UserEntity> user;
 
@@ -87,7 +80,6 @@ public class StaffEntity
 	@Column(name = "LAST_UPDATED_DATETIME")
 	private LocalDateTime updatedAt;
 
-	@IndexedEmbedded
 	@NotFound(action = IGNORE)
 	@OneToMany(mappedBy = "staff", fetch = EAGER)
 	private Set<StaffTeamEntity> teamLinks = new HashSet<>();

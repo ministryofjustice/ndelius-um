@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService
 		return foundUsers.stream()
 				.filter(result -> datasetsFilter.test(result.getUsername()))
 				.sorted(comparing(SearchResult::getScore, Float::compare).reversed())
-				.peek(result -> log.debug("{}", result))
+				.peek(result -> log.debug("SearchResult: username={}, score={}", result.getUsername(), result.getScore()))
 				.skip((long) (page-1) * pageSize)
 				.limit(pageSize)
 				.map(SearchResult::getUsername)
