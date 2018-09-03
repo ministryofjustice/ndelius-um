@@ -1,18 +1,15 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static org.hibernate.search.engine.ProjectionConstants.SCORE;
-import static org.hibernate.search.jpa.Search.getFullTextEntityManager;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-
-import org.hibernate.search.exception.EmptyQueryException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -21,36 +18,37 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import uk.co.bconline.ndelius.model.SearchResult;
+import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.repository.db.ProbationAreaUserRepository;
+import uk.co.bconline.ndelius.repository.db.SearchResultRepository;
 import uk.co.bconline.ndelius.repository.db.StaffTeamRepository;
 import uk.co.bconline.ndelius.repository.db.UserEntityRepository;
-import uk.co.bconline.ndelius.util.SearchIndexHelper;
 
 @Slf4j
 @Service
 public class DBUserDetailsService
 {
+	@Value("${spring.datasource.url}")
+	private String datasourceUrl;
+
 	private final UserEntityRepository repository;
+	private final SearchResultRepository searchResultRepository;
 	private final ProbationAreaUserRepository probationAreaUserRepository;
 	private final StaffTeamRepository staffTeamRepository;
-	private final EntityManager entityManager;
-	private final SearchIndexHelper searchIndexHelper;
 
 	@Autowired
 	public DBUserDetailsService(
 			UserEntityRepository repository,
+			SearchResultRepository searchResultRepository,
 			ProbationAreaUserRepository probationAreaUserRepository,
-			StaffTeamRepository staffTeamRepository,
-			EntityManager entityManager,
-			SearchIndexHelper searchIndexHelper)
+			StaffTeamRepository staffTeamRepository)
 	{
 		this.repository = repository;
+		this.searchResultRepository = searchResultRepository;
 		this.probationAreaUserRepository = probationAreaUserRepository;
 		this.staffTeamRepository = staffTeamRepository;
-		this.entityManager = entityManager;
-		this.searchIndexHelper = searchIndexHelper;
 	}
 
 	public Optional<UserEntity> getUser(String username)
@@ -72,35 +70,26 @@ public class DBUserDetailsService
 	@Transactional
 	public List<SearchResult> search(String searchTerm)
 	{
-		if (searchIndexHelper.indexExpired()) searchIndexHelper.reIndex();
+		return Arrays.stream(searchTerm.split("\\s+"))
+				.flatMap(token -> {
+					if (datasourceUrl.startsWith("jdbc:oracle")) return searchResultRepository.search(token).stream();
+					else return searchResultRepository.simpleSearch(token).stream();
+				})
+				.collect(groupingBy(SearchResultEntity::getUsername))
+				.values()
+				.stream()
+				.map(list -> list.stream().reduce((a, b) -> SearchResultEntity.builder()
+						.username(a.getUsername())
+						.score(a.getScore() + b.getScore())
+						.build()))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.map(entity -> SearchResult.builder()
+						.username(entity.getUsername())
+						.score(entity.getScore())
+						.build())
+				.collect(toList());
 
-		try
-		{
-			val fullText = getFullTextEntityManager(this.entityManager);
-			val builder = fullText.getSearchFactory().buildQueryBuilder().forEntity(UserEntity.class).get();
-			List<?> results = fullText.createFullTextQuery(builder
-					.keyword()
-					.fuzzy()
-					.onFields("username", "forename", "forename2", "surname",
-							"staff.code", "staff.teamLinks.team.code", "staff.teamLinks.team.description")
-					.matching(searchTerm)
-					.createQuery(), UserEntity.class)
-					.setProjection("username", SCORE)
-					.getResultList();
-
-			return results.stream()
-					.map(Object[].class::cast)
-					.map(res -> SearchResult.builder()
-							.username((String) res[0])
-							.score((float) res[1])
-							.build())
-					.collect(toList());
-		}
-		catch (EmptyQueryException e)
-		{
-			log.debug("Analyzed query was empty: '{}'", searchTerm);
-			return emptyList();
-		}
 	}
 
 	@Transactional
@@ -118,7 +107,6 @@ public class DBUserDetailsService
 		else
 		{
 			val newUser = repository.saveAndFlush(user);
-			getFullTextEntityManager(entityManager).flushToIndexes();
 			probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
 			ofNullable(user.getStaff()).map(StaffEntity::getTeamLinks).ifPresent(staffTeamRepository::saveAll);
 			return newUser;

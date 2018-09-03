@@ -4,9 +4,6 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.IndexedEmbedded;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,12 +21,10 @@ public class StaffTeamEntity
 	private StaffTeamId id;
 
 	@ManyToOne
-	@ContainedIn
 	@JoinColumn(name = "STAFF_ID", insertable = false, updatable = false)
 	private StaffEntity staff;
 
 	@ManyToOne
-	@IndexedEmbedded
 	@JoinColumn(name = "TEAM_ID", insertable = false, updatable = false)
 	private TeamEntity team;
 

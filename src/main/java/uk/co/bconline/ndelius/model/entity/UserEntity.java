@@ -3,7 +3,6 @@ package uk.co.bconline.ndelius.model.entity;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static org.hibernate.annotations.NotFoundAction.IGNORE;
-import static org.hibernate.search.annotations.Store.YES;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -14,15 +13,11 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.Type;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
 
 import lombok.*;
 
 @Getter
 @Entity
-@Indexed
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "USER_")
@@ -45,19 +40,15 @@ public class UserEntity
 	@Column(name = "ROW_VERSION")
 	private Long version;
 
-	@Field(store = YES)
 	@Column(name = "DISTINGUISHED_NAME", unique = true)
 	private String username;
 
-	@Field
 	@Column(name = "FORENAME")
 	private String forename;
 
-	@Field
 	@Column(name = "FORENAME2")
 	private String forename2;
 
-	@Field
 	@Column(name = "SURNAME")
 	private String surname;
 
@@ -68,7 +59,6 @@ public class UserEntity
 	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
-	@IndexedEmbedded
 	@JoinColumn(name = "STAFF_ID")
 	@ManyToOne(cascade = ALL)
 	private StaffEntity staff;
