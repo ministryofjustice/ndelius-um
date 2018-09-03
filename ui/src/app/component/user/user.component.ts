@@ -65,7 +65,7 @@ export class UserComponent implements OnInit {
                 user.aliasUsername = null;
                 user.staffCode = null;
                 user.staffGrade = null;
-                user.teams = [];
+                user.teams = null;
                 return user;
               }));
             } else {
