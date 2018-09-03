@@ -49,6 +49,11 @@
       "name": "oid.default-password",
       "type": "java.lang.String",
       "description": "Default SHA/SSHA hashed password to be used when creating users in OID."
+    },
+    {
+      "name": "delius.secret",
+      "type": "java.lang.String",
+      "description": "Shared secret key between National Delius and UMT, to support delegated authentication via request parameters."
     }
   ]
 }

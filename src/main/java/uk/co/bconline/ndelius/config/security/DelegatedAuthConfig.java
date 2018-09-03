@@ -5,32 +5,31 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import uk.co.bconline.ndelius.security.filter.BasicAuthFilter;
+import uk.co.bconline.ndelius.security.filter.DelegatedAuthFilter;
+import uk.co.bconline.ndelius.security.handler.LoginHandler;
 
-@Order(3)
+@Order(2)
 @Configuration
-@ConditionalOnProperty(name = "spnego.enabled", havingValue = "false", matchIfMissing = true)
-public class BasicAuthConfig extends WebSecurityConfigurerAdapter
+@ConditionalOnProperty("delius.secret")
+public class DelegatedAuthConfig extends WebSecurityConfigurerAdapter
 {
-	private final BasicAuthFilter filter;
-	private final BasicAuthenticationEntryPoint entryPoint;
+	private final LoginHandler loginHandler;
 	private final RequestMatcher loginRequestMatcher;
 
 	@Autowired
-	public BasicAuthConfig(
-			BasicAuthFilter filter,
-			BasicAuthenticationEntryPoint entryPoint,
+	public DelegatedAuthConfig(
+			LoginHandler loginHandler,
 			RequestMatcher loginRequestMatcher)
 	{
-		this.filter = filter;
-		this.entryPoint = entryPoint;
+		this.loginHandler = loginHandler;
 		this.loginRequestMatcher = loginRequestMatcher;
 	}
 
@@ -41,15 +40,18 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter
 				.sessionManagement()
 					.sessionCreationPolicy(STATELESS)
 					.and()
-				.exceptionHandling()
-					.authenticationEntryPoint(entryPoint)
-					.and()
-				.addFilter(filter)
+				.addFilterBefore(delegatedAuthFilter(), BasicAuthenticationFilter.class)
 				.authorizeRequests()
 					.antMatchers(OPTIONS).permitAll()
 					.antMatchers("/actuator/**").permitAll()
 					.requestMatchers(loginRequestMatcher).authenticated()
 					.and()
 				.csrf().disable();
+	}
+
+	@Bean
+	public DelegatedAuthFilter delegatedAuthFilter() throws Exception
+	{
+		return new DelegatedAuthFilter(loginHandler, loginRequestMatcher, authenticationManager());
 	}
 }

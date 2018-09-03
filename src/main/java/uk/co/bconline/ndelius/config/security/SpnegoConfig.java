@@ -26,7 +26,7 @@ import uk.co.bconline.ndelius.security.filter.SpnegoWithFallbackFilter;
 import uk.co.bconline.ndelius.security.handler.LoginHandler;
 import uk.co.bconline.ndelius.service.impl.AD1UserDetailsService;
 
-@Order(2)
+@Order(3)
 @Configuration
 @ConditionalOnProperty("spnego.enabled")
 public class SpnegoConfig extends WebSecurityConfigurerAdapter
