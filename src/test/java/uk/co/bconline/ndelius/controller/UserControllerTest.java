@@ -100,7 +100,6 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "j blog"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[0].forenames", startsWith("J")))
 				.andExpect(jsonPath("$[1].forenames", startsWith("J")));
 	}
