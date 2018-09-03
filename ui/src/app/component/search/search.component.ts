@@ -20,6 +20,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   searching: boolean;
   noResults: boolean;
   hasMoreResults: boolean = true;
+  previousQuery: string = "";
   constructor(private route: ActivatedRoute, public router: Router, private service: UserService, public auth: AuthorisationService) {
   }
 
@@ -27,6 +28,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.route.queryParams.pipe(
       filter(params => params.q != null && params.q !== ""),
       tap(() => this.searching = true),
+      tap(() => this.previousQuery = this.query),
       flatMap(params => this.service.search(
         this.query = params.q,
         this.page = +params.page || 1
@@ -46,7 +48,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   search() {
-    this.users = [];
+    if(this.previousQuery != this.query) this.users = [];
     this.router.navigate(['/search'], {queryParams: {q: this.query}});
   }
 
