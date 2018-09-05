@@ -47,6 +47,8 @@ public class DelegatedAuthFilter extends OncePerRequestFilter
 		this.loginHandler = loginHandler;
 		this.loginRequestMatcher = loginRequestMatcher;
 		this.authenticationManager = authenticationManager;
+
+		log.debug("Configured DelegatedAuthFilter with secret={}", secret);
 	}
 
 	@Override
@@ -80,10 +82,15 @@ public class DelegatedAuthFilter extends OncePerRequestFilter
 	protected boolean shouldNotFilter(HttpServletRequest request)
 	{
 		val auth = SecurityContextHolder.getContext().getAuthentication();
-		return "OPTIONS".equals(request.getMethod()) || new AntPathRequestMatcher("/actuator/**").matches(request)
+		val shouldNotFilter = "OPTIONS".equals(request.getMethod()) || new AntPathRequestMatcher("/actuator/**").matches(request)
 				|| !loginRequestMatcher.matches(request)
 				|| (auth != null && !(auth instanceof AnonymousAuthenticationToken) && auth.isAuthenticated())
 				|| StringUtils.isEmpty(request.getParameter("u"))
 				|| StringUtils.isEmpty(request.getParameter("t"));
+
+		log.debug("Should perform delegated auth? {}", !shouldNotFilter);
+		log.debug("Request params: u={}, t={}", request.getParameter("u"), request.getParameter("t"));
+		log.debug("Authentication: {}", auth);
+		return shouldNotFilter;
 	}
 }
