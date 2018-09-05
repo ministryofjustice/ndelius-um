@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import uk.co.bconline.ndelius.security.filter.BasicAuthFilter;
 import uk.co.bconline.ndelius.security.filter.DelegatedAuthFilter;
 import uk.co.bconline.ndelius.security.handler.LoginHandler;
 
@@ -40,7 +40,7 @@ public class DelegatedAuthConfig extends WebSecurityConfigurerAdapter
 				.sessionManagement()
 					.sessionCreationPolicy(STATELESS)
 					.and()
-				.addFilterBefore(delegatedAuthFilter(), BasicAuthenticationFilter.class)
+				.addFilterBefore(delegatedAuthFilter(), BasicAuthFilter.class)
 				.authorizeRequests()
 					.antMatchers(OPTIONS).permitAll()
 					.antMatchers("/actuator/**").permitAll()
