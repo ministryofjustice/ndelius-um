@@ -47,8 +47,13 @@ public class DelegatedAuthFilter extends OncePerRequestFilter
 		this.loginHandler = loginHandler;
 		this.loginRequestMatcher = loginRequestMatcher;
 		this.authenticationManager = authenticationManager;
+	}
 
+	@Override
+	public void afterPropertiesSet() throws ServletException
+	{
 		log.debug("Configured DelegatedAuthFilter with secret={}", secret);
+		super.afterPropertiesSet();
 	}
 
 	@Override
