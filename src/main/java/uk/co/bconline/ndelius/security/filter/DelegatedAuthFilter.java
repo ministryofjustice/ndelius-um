@@ -88,7 +88,7 @@ public class DelegatedAuthFilter extends OncePerRequestFilter
 				|| StringUtils.isEmpty(request.getParameter("u"))
 				|| StringUtils.isEmpty(request.getParameter("t"));
 
-		log.debug("Should perform delegated auth? {}", shouldNotFilter);
+		log.debug("Should perform delegated auth? {}", !shouldNotFilter);
 		log.debug("Request params: u={}, t={}", request.getParameter("u"), request.getParameter("t"));
 		log.debug("Authentication: {}", auth);
 		return shouldNotFilter;
