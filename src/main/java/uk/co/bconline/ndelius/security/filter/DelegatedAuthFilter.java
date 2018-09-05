@@ -31,7 +31,7 @@ import uk.co.bconline.ndelius.security.handler.LoginHandler;
 @Slf4j
 public class DelegatedAuthFilter extends OncePerRequestFilter
 {
-	@Value("${delius.secret}")
+	@Value("${delius.secret:#{null}}")
 	private String secret;
 
 	private final LoginHandler loginHandler;
@@ -87,11 +87,12 @@ public class DelegatedAuthFilter extends OncePerRequestFilter
 	protected boolean shouldNotFilter(HttpServletRequest request)
 	{
 		val auth = SecurityContextHolder.getContext().getAuthentication();
-		val shouldNotFilter = "OPTIONS".equals(request.getMethod()) || new AntPathRequestMatcher("/actuator/**").matches(request)
-				|| !loginRequestMatcher.matches(request)
-				|| (auth != null && !(auth instanceof AnonymousAuthenticationToken) && auth.isAuthenticated())
+		val shouldNotFilter = secret == null
 				|| StringUtils.isEmpty(request.getParameter("u"))
-				|| StringUtils.isEmpty(request.getParameter("t"));
+				|| StringUtils.isEmpty(request.getParameter("t"))
+				|| "OPTIONS".equals(request.getMethod()) || new AntPathRequestMatcher("/actuator/**").matches(request)
+				|| !loginRequestMatcher.matches(request)
+				|| (auth != null && !(auth instanceof AnonymousAuthenticationToken) && auth.isAuthenticated());
 
 		log.debug("Should perform delegated auth? {}", !shouldNotFilter);
 		log.debug("Request params: u={}, t={}", request.getParameter("u"), request.getParameter("t"));

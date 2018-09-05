@@ -98,6 +98,7 @@ public class SpnegoConfig extends WebSecurityConfigurerAdapter
 	}
 
 	@Bean
+	@Order(3)
 	public SpnegoWithFallbackFilter spnegoFilter() throws Exception
 	{
 		SpnegoWithFallbackFilter filter = new SpnegoWithFallbackFilter(spnegoEntryPoint(), loginRequestMatcher);
