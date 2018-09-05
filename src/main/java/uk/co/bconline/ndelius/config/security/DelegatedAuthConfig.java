@@ -50,6 +50,7 @@ public class DelegatedAuthConfig extends WebSecurityConfigurerAdapter
 	}
 
 	@Bean
+	@Order(2)
 	public DelegatedAuthFilter delegatedAuthFilter() throws Exception
 	{
 		return new DelegatedAuthFilter(loginHandler, loginRequestMatcher, authenticationManager());

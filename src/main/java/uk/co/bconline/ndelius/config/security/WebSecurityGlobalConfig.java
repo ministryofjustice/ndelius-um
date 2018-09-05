@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -83,6 +84,7 @@ public class WebSecurityGlobalConfig extends WebSecurityConfigurerAdapter
 	}
 
 	@Bean
+	@Order(3)
 	public BasicAuthFilter basicAuthenticationFilter(LoginHandler loginHandler) throws Exception
 	{
 		return new BasicAuthFilter(loginHandler, loginRequestMatcher(), authenticationManager(), basicEntryPoint());
