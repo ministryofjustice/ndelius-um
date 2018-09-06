@@ -50,13 +50,6 @@ public class DelegatedAuthFilter extends OncePerRequestFilter
 	}
 
 	@Override
-	public void afterPropertiesSet() throws ServletException
-	{
-		log.debug("Configured DelegatedAuthFilter with secret={}", secret);
-		super.afterPropertiesSet();
-	}
-
-	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 			FilterChain filterChain) throws IOException, ServletException
 	{
@@ -87,16 +80,11 @@ public class DelegatedAuthFilter extends OncePerRequestFilter
 	protected boolean shouldNotFilter(HttpServletRequest request)
 	{
 		val auth = SecurityContextHolder.getContext().getAuthentication();
-		val shouldNotFilter = secret == null
+		return secret == null
 				|| StringUtils.isEmpty(request.getParameter("u"))
 				|| StringUtils.isEmpty(request.getParameter("t"))
 				|| "OPTIONS".equals(request.getMethod()) || new AntPathRequestMatcher("/actuator/**").matches(request)
 				|| !loginRequestMatcher.matches(request)
 				|| (auth != null && !(auth instanceof AnonymousAuthenticationToken) && auth.isAuthenticated());
-
-		log.debug("Should perform delegated auth? {}", !shouldNotFilter);
-		log.debug("Request params: u={}, t={}", request.getParameter("u"), request.getParameter("t"));
-		log.debug("Authentication: {}", auth);
-		return shouldNotFilter;
 	}
 }
