@@ -440,4 +440,15 @@ public class UserControllerTest
 		assertTrue(prefs.isPresent());
 		assertEquals("NRO16", prefs.get().getMostRecentlyViewedOffenders());
 	}
+
+	@Test
+	public void searchHasNoDuplicateAliasRecords() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc))
+				.param("q", "test"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", hasSize(4)));
+	}
+
 }

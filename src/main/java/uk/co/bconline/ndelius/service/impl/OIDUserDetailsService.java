@@ -100,6 +100,8 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 			filter = filter.and(query().where("cn").not().is(excludedUsername).filter());
 		}
 
+		filter = filter.and(query().where("objectclass").not().is("alias").filter());
+
 		log.debug("Searching OID: {}", filter.encode());
 
 		return stream(userRepository
