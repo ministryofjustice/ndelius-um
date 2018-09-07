@@ -34,4 +34,7 @@ public final class OIDUserAlias
 
 	@Attribute(name="sn")
 	private String surname = "alias";
+
+	@Attribute(name="userPassword")
+	private String password;
 }

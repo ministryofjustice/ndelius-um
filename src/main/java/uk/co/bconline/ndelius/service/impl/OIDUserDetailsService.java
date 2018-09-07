@@ -192,6 +192,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		{
 			userAliasRepository.save(OIDUserAlias.builder()
 					.username(user.getAliasUsername())
+					.password(user.getPassword())
 					.aliasedUserDn(user.getDn().toString() + "," + oidBase)
 					.surname(user.getSurname())
 					.sector(user.getSector())
