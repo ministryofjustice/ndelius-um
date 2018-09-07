@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import static java.lang.Math.min;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -95,20 +96,26 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 							.or("cn").whitespaceWildcardsLike(token))
 				.collect(AndFilter::new, (f, q) -> f.and(q.filter()), AndFilter::and);
 
-		for (String excludedUsername: excludedUsernames)
+		for (String excludedUsername: excludedUsernames.subList(0, min(1, excludedUsernames.size())))
 		{
 			filter = filter.and(query().where("cn").not().is(excludedUsername).filter());
 		}
 
 		filter = filter.and(query().where("objectclass").not().is("alias").filter());
 
-		log.debug("Searching OID: {}", filter.encode());
+		if (log.isDebugEnabled())
+		{
+			val filterString = filter.encode();
+			log.debug("Searching OID: {}", filterString);
+			log.debug("Filter length={}", filterString.length());
+		}
 
 		return stream(userRepository
 				.findAll(query()
 						.base(USER_BASE)
 						.filter(filter))
 				.spliterator(), false)
+				.filter(u -> excludedUsernames.contains(u.getUsername()))
 				.map(u -> SearchResult.builder()
 						.username(u.getUsername())
 						.aliasUsername(userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
