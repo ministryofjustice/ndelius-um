@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.service;
 
+import static java.lang.Math.min;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.repository.ad.ADUserRepository;
@@ -41,6 +43,7 @@ public abstract class ADUserDetailsService implements UserDetailsService
 
 	public Optional<ADUser> getUser(String username)
 	{
+		log.debug("Fetching AD user {}", username);
 		return getRepository().findByUsername(username);
 	}
 
@@ -50,23 +53,32 @@ public abstract class ADUserDetailsService implements UserDetailsService
 				.map(token -> query().where("samAccountName").whitespaceWildcardsLike(token))
 				.collect(AndFilter::new, (f, q) -> f.and(q.filter()), AndFilter::and);
 
-		for (String excludedUsername: excludedUsernames)
+		for (String excludedUsername: excludedUsernames.subList(0, min(50, excludedUsernames.size())))
 		{
 			filter = filter.and(query().where("samAccountName").not().is(excludedUsername).filter());
 		}
 
-		log.debug("Searching AD: {}", filter.encode());
+		if (log.isDebugEnabled())
+		{
+			val filterString = filter.encode();
+			log.debug("Searching AD: {}", filterString);
+			log.debug("Filter length={}", filterString.length());
+			log.debug("Excluded usernames: {}", excludedUsernames);
+		}
 
-		return stream(getRepository()
+		val results = stream(getRepository()
 				.findAll(query()
 						.base(USER_BASE)
 						.filter(filter))
 				.spliterator(), false)
+				.filter(u -> !excludedUsernames.contains(u.getUsername()))
 				.map(u -> SearchResult.builder()
 						.username(u.getUsername())
 						.score(deriveScore(query, u))
 						.build())
 				.collect(toList());
+		log.debug("Found {} AD results", results.size());
+		return results;
 	}
 
 	private float deriveScore(String query, ADUser u)

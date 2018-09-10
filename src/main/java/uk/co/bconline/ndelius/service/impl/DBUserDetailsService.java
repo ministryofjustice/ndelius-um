@@ -53,6 +53,7 @@ public class DBUserDetailsService
 
 	public Optional<UserEntity> getUser(String username)
 	{
+		log.debug("Fetching DB user {}", username);
 		return repository.getUserEntityByUsernameEqualsIgnoreCase(username);
 	}
 
@@ -70,8 +71,9 @@ public class DBUserDetailsService
 	@Transactional
 	public List<SearchResult> search(String searchTerm)
 	{
-		return Arrays.stream(searchTerm.split("\\s+"))
+		val results = Arrays.stream(searchTerm.split("\\s+"))
 				.flatMap(token -> {
+					log.debug("Searching DB: {}", token);
 					if (datasourceUrl.startsWith("jdbc:oracle")) return searchResultRepository.search(token).stream();
 					else return searchResultRepository.simpleSearch(token).stream();
 				})
@@ -89,7 +91,8 @@ public class DBUserDetailsService
 						.score(entity.getScore())
 						.build())
 				.collect(toList());
-
+		log.debug("Found {} DB results", results.size());
+		return results;
 	}
 
 	@Transactional
