@@ -96,7 +96,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 							.or("cn").whitespaceWildcardsLike(token))
 				.collect(AndFilter::new, (f, q) -> f.and(q.filter()), AndFilter::and);
 
-		for (String excludedUsername: excludedUsernames.subList(0, min(1, excludedUsernames.size())))
+		for (String excludedUsername: excludedUsernames.subList(0, min(50, excludedUsernames.size())))
 		{
 			filter = filter.and(query().where("cn").not().is(excludedUsername).filter());
 		}
@@ -108,14 +108,15 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 			val filterString = filter.encode();
 			log.debug("Searching OID: {}", filterString);
 			log.debug("Filter length={}", filterString.length());
+			log.debug("Excluded usernames: {}", excludedUsernames);
 		}
 
-		return stream(userRepository
+		val results = stream(userRepository
 				.findAll(query()
 						.base(USER_BASE)
 						.filter(filter))
 				.spliterator(), false)
-				.filter(u -> excludedUsernames.contains(u.getUsername()))
+				.filter(u -> !excludedUsernames.contains(u.getUsername()))
 				.map(u -> SearchResult.builder()
 						.username(u.getUsername())
 						.aliasUsername(userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
@@ -123,6 +124,8 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 						.score(deriveScore(query, u))
 						.build())
 				.collect(toList());
+		log.debug("Found {} OID results", results.size());
+		return results;
 	}
 
 	private float deriveScore(String query, OIDUser u)
@@ -146,7 +149,9 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public Optional<OIDUser> getUser(String username)
 	{
+		log.debug("Fetching OID user: {}", username);
 		Optional<OIDUser> user = userRepository.findByUsername(username);
+		log.debug("Fetching OID roles + alias: {}", username);
 		return user.map(u -> u.toBuilder()
 				.roles(roleService.getRolesByParent(username, OIDUser.class).collect(toList()))
 				.aliasUsername(userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
@@ -154,8 +159,9 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				.build());
 	}
 
-	public Optional<String> getUsernameByAlias(String aliasUsername){
-
+	public Optional<String> getUsernameByAlias(String aliasUsername)
+	{
+		log.debug("Fetching username from alias: {}", aliasUsername);
 		return userAliasRepository.getByUsername(aliasUsername)
 				.map(OIDUserAlias::getAliasedUserDn)
 				.map(dn -> {
@@ -190,13 +196,16 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	public void save(OIDUser user)
 	{
 		// Save user
+		log.debug("Saving user: {}", user.getUsername());
 		userRepository.save(user);
 
 		// User alias
+		log.debug("Deleting alias record exists");
 		userAliasRepository.findByAliasedUserDn(String.format("cn=%s,%s,%s", user.getUsername(), USER_BASE, oidBase))
 				.ifPresent(userAliasRepository::delete);
 		if (user.getAliasUsername() != null && !user.getAliasUsername().equals(user.getUsername()))
 		{
+			log.debug("Creating alias record: {}", user.getAliasUsername());
 			userAliasRepository.save(OIDUserAlias.builder()
 					.username(user.getAliasUsername())
 					.aliasedUserDn(user.getDn().toString() + "," + oidBase)
@@ -206,19 +215,23 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		}
 
 		// Preferences
+		log.debug("Checking if user preferences exist");
 		if (!preferencesRepository.findOne(query()
 				.searchScope(SearchScope.ONELEVEL)
 				.base(String.format("cn=%s,%s", user.getUsername(), USER_BASE))
 				.where("cn").is("UserPreferences")).isPresent())
 		{
+			log.debug("Creating user preferences");
 			preferencesRepository.save(new OIDUserPreferences(user.getUsername()));
 		}
 
 		// Role associations
+		log.debug("Deleting existing role associations");
 		roleAssociationRepository.deleteAll(roleAssociationRepository.findAll(query()
 				.searchScope(SearchScope.ONELEVEL)
 				.base(String.format("cn=%s,%s", user.getUsername(), USER_BASE))
 				.where("objectclass").is("alias")));
+		log.debug("Saving new role associations");
 		roleAssociationRepository.saveAll(user.getRoles().stream()
 				.map(OIDRole::getName)
 				.map(name -> OIDRoleAssociation.builder()
