@@ -69,9 +69,13 @@ public class UserController
 
 	@Interaction("UMBI004")
 	@PutMapping(path="/user/{username}")
-	public ResponseEntity updateUser(@RequestBody @Valid User user)
+	public ResponseEntity updateUser(@RequestBody @Valid User user, @PathVariable("username") String username)
 	{
-		userService.updateUser(user);
-		return noContent().build();
+		if(!userService.getUser(username).isPresent()){
+			return notFound().build();
+		}else{
+			userService.updateUser(user);
+			return noContent().build();
+		}
 	}
 }
