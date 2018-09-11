@@ -175,9 +175,9 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.username", equalTo("test.user")))
-				.andExpect(jsonPath("$.forenames", equalTo("Test")))			// From OID
-				.andExpect(jsonPath("$.surname", equalTo("User")))				// From OID
-				.andExpect(jsonPath("$.homeArea.organisation.code", equalTo("NPS")));	// From DB
+				.andExpect(jsonPath("$.forenames", equalTo("Test")))		// From OID
+				.andExpect(jsonPath("$.surname", equalTo("User")))			// From OID
+				.andExpect(jsonPath("$.staffCode", equalTo("N01A001")));	// From DB
 	}
 
 	@Test
@@ -386,34 +386,6 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.teams[*].code", hasItem("N02TST")))
 				.andExpect(jsonPath("$.roles", hasSize(1)))
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT002")));
-	}
-
-
-	@Test
-	public void organisationIsDerivedFromHomeArea() throws Exception
-	{
-		String token = token(mvc);
-		mvc.perform(post("/api/user")
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
-						.username("test.user5")
-						.forenames("Test")
-						.surname("User5")
-						.privateSector(false)
-						.startDate(LocalDate.of(2000, 1, 1))
-						.datasets(asList(
-								Dataset.builder().code("N01").build(),
-								Dataset.builder().code("N02").build()))
-						.homeArea(Dataset.builder().code("N01").build())
-						.build())))
-				.andExpect(status().isCreated())
-				.andExpect(redirectedUrl("/user/test.user5"));
-
-		mvc.perform(get("/api/user/test.user5")
-				.header("Authorization", "Bearer " + token))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.homeArea.organisation.code", is("NPS")));
 	}
 
 	@Test
