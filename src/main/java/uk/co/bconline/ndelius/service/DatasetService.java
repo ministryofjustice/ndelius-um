@@ -12,5 +12,6 @@ public interface DatasetService
 	List<String> getDatasetCodes(String username);
 	Optional<Long> getDatasetId(String code);
 	Optional<Dataset> getDatasetByCode(String code);
+	Optional<Long> getOrganisationIdByDatasetCode(String code);
 	String getNextStaffCode(String datasetCode);
 }

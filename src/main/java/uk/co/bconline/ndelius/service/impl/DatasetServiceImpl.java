@@ -68,4 +68,10 @@ public class DatasetServiceImpl implements DatasetService
 	{
 		return repository.getNextStaffCode(datasetCode);
 	}
+
+	@Override
+	public Optional<Long> getOrganisationIdByDatasetCode(String code)
+	{
+		return repository.findByCode(code).map(ProbationAreaEntity::getOrganisationId);
+	}
 }

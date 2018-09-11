@@ -50,7 +50,6 @@ public class DatasetTransformer
 				.code(entity.getCode())
 				.description(entity.getDescription())
 				.active("Y".equalsIgnoreCase(entity.getSelectable()))
-				.organisation(map(entity.getOrganisation()))
 				.build();
 	}
 }

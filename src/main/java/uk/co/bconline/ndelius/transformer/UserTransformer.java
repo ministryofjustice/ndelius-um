@@ -152,6 +152,45 @@ public class UserTransformer
 				.reduce(this::reduceUser);
 	}
 
+	public Optional<SearchResult> mapToSearchResult(UserEntity dbUser, OIDUser oidUser, ADUser ad1User, ADUser ad2User)
+	{
+		return Stream.of(
+				ofNullable(oidUser).map(v -> User.builder()
+						.username(v.getUsername())
+						.aliasUsername(v.getAliasUsername())
+						.forenames(v.getForenames())
+						.surname(v.getSurname())
+						.sources(Stream.of("OID",
+								v.getAliasUsername() != null && !v.getAliasUsername().equals(v.getUsername()) ? "AD1": null)
+								.filter(Objects::nonNull)
+								.collect(toList()))
+						.build()),
+				ofNullable(dbUser).map(v -> User.builder()
+						.username(v.getUsername())
+						.forenames(combineNames(v.getForename(), v.getForename2()))
+						.surname(v.getSurname())
+						.staffCode(ofNullable(v.getStaff()).map(StaffEntity::getCode).orElse(null))
+						.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(this::map).orElse(null))
+						.sources(singletonList("DB"))
+						.build()),
+				ofNullable(ad1User).map(v -> User.builder()
+						.username(v.getUsername())
+						.forenames(v.getForename())
+						.surname(v.getSurname())
+						.sources(singletonList("AD1"))
+						.build()),
+				ofNullable(ad2User).map(v -> User.builder()
+						.username(v.getUsername())
+						.forenames(v.getForename())
+						.surname(v.getSurname())
+						.sources(singletonList("AD2"))
+						.build()))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.reduce(this::reduceUser)
+				.map(this::map);
+	}
+
 	private User reduceUser(User a, User b)
 	{
 		return a.toBuilder()
@@ -193,10 +232,7 @@ public class UserTransformer
 				.endDate(user.getEndDate())
 				.organisation(ofNullable(user.getHomeArea())
 						.map(Dataset::getCode)
-						.flatMap(datasetService::getDatasetByCode)
-						.map(Dataset::getOrganisation)
-						.map(Organisation::getCode)
-						.flatMap(organisationService::getOrganisationId)
+						.flatMap(datasetService::getOrganisationIdByDatasetCode)
 						.map(OrganisationEntity::new).orElse(null))
 				.staff(isEmpty(staff.getCode())? null: staff)
 				.build();

@@ -53,8 +53,10 @@ public class DBUserDetailsService
 
 	public Optional<UserEntity> getUser(String username)
 	{
-		log.debug("Fetching DB user {}", username);
-		return repository.getUserEntityByUsernameEqualsIgnoreCase(username);
+		log.debug("Get DB user: {}", username);
+		val u =  repository.getUserEntityByUsername(username);
+		log.debug("Got DB user: {}", username);
+		return u;
 	}
 
 	public Long getUserId(String username)
