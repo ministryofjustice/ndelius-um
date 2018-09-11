@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.naming.InvalidNameException;
+import javax.naming.Name;
 import javax.naming.ldap.LdapName;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +70,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public UserDetails loadUserByUsername(String username)
 	{
-		return userRepository
-				.findByUsername(username)
+		return getBasicUser(username)
 				.orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
 	}
 
@@ -147,16 +147,22 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	}
 
 	@Override
+	public Optional<OIDUser> getBasicUser(String username)
+	{
+		return userRepository.findByUsername(username);
+	}
+
+	@Override
 	public Optional<OIDUser> getUser(String username)
 	{
-		log.debug("Fetching OID user: {}", username);
-		Optional<OIDUser> user = userRepository.findByUsername(username);
-		log.debug("Fetching OID roles + alias: {}", username);
-		return user.map(u -> u.toBuilder()
-				.roles(roleService.getRolesByParent(username, OIDUser.class).collect(toList()))
-				.aliasUsername(userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
-						.map(OIDUserAlias::getUsername).orElse(username))
-				.build());
+		log.debug("Get OID user: {}", username);
+		val user = getBasicUser(username)
+				.map(u -> u.toBuilder()
+						.roles(roleService.getRolesByParent(username, OIDUser.class).collect(toList()))
+						.aliasUsername(getAlias(u.getDn()).orElse(username))
+						.build());
+		log.debug("Got OID user: {}", username);
+		return user;
 	}
 
 	public Optional<String> getUsernameByAlias(String aliasUsername)
@@ -178,12 +184,19 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				});
 
 	}
+
 	@Override
 	public Optional<String> getAlias(String username)
 	{
-		Optional<OIDUser> user = userRepository.findByUsername(username);
-		return user.flatMap(u -> userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
-						.map(OIDUserAlias::getUsername));
+		return getBasicUser(username)
+				.flatMap(u -> getAlias(u.getDn()));
+	}
+
+	private Optional<String> getAlias(Name userDn)
+	{
+		return userAliasRepository
+				.findByAliasedUserDn(userDn.toString() + "," + oidBase)
+				.map(OIDUserAlias::getUsername);
 	}
 
 	@Override

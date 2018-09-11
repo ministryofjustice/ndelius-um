@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"userLinks", "division"})
+@EqualsAndHashCode(exclude = "userLinks")
 @Table(name = "PROBATION_AREA")
 public class ProbationAreaEntity
 {
@@ -32,13 +32,8 @@ public class ProbationAreaEntity
 	@Column(name = "DESCRIPTION")
 	private String description;
 
-	@ManyToOne
-	@JoinColumn(name = "DIVISION_ID", updatable = false, insertable = false)
-	private ProbationAreaEntity division;
-
-	@ManyToOne
-	@JoinColumn(name = "ORGANISATION_ID", insertable = false, updatable = false)
-	private OrganisationEntity organisation;
+	@Column(name = "ORGANISATION_ID")
+	private Long organisationId;
 
 	@Column(name = "SELECTABLE")
 	private String selectable;

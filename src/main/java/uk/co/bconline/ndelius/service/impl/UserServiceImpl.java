@@ -96,11 +96,31 @@ public class UserServiceImpl implements UserService
 				.skip((long) (page-1) * pageSize)
 				.limit(pageSize)
 				.map(SearchResult::getUsername)
-				.map(this::getUser)
+				.map(this::getSearchResult)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
-				.map(transformer::map)
 				.collect(toList());
+	}
+
+	public Optional<SearchResult> getSearchResult(String username)
+	{
+		val dbFuture = supplyAsync(() -> dbService.getUser(username).orElse(null));
+		val oidFuture = supplyAsync(() -> oidService.getBasicUser(username).orElse(null));
+		val ad1Future = supplyAsync(() -> ad1Service.flatMap(service -> service.getUser(username)).orElse(null));
+		val ad2Future = supplyAsync(() -> ad2Service.flatMap(service -> service.getUser(username)).orElse(null));
+
+		try
+		{
+			val datasetsFilter = datasetsFilter();
+			return allOf(dbFuture, oidFuture, ad1Future, ad2Future)
+					.thenApply(v -> transformer.mapToSearchResult(
+							dbFuture.join(), oidFuture.join(), ad1Future.join(), ad2Future.join())).get()
+					.filter(user -> datasetsFilter.test(user.getUsername()));
+		}
+		catch (InterruptedException | ExecutionException e)
+		{
+			throw new AppException(String.format("Unable to retrieve user details for %s", username), e);
+		}
 	}
 
 	@Override

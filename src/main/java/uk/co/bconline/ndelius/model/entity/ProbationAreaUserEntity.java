@@ -31,7 +31,7 @@ public class ProbationAreaUserEntity
 	@Column(name = "CREATED_BY_USER_ID")
 	private Long createdById;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CREATED_BY_USER_ID", insertable = false, updatable = false)
 	private UserEntity createdBy;
 
@@ -41,7 +41,7 @@ public class ProbationAreaUserEntity
 	@Column(name = "LAST_UPDATED_USER_ID")
 	private Long updatedById;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "LAST_UPDATED_USER_ID", insertable = false, updatable = false)
 	private UserEntity updatedBy;
 
