@@ -220,7 +220,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		userRepository.save(user);
 
 		// User alias
-		log.debug("Deleting alias record exists");
+		log.debug("Deleting alias record if it exists");
 		userAliasRepository.findByAliasedUserDnIgnoreCase(String.format("cn=%s,%s,%s", user.getUsername(), USER_BASE, oidBase))
 				.ifPresent(userAliasRepository::delete);
 		if (user.getAliasUsername() != null && !user.getAliasUsername().equalsIgnoreCase(user.getUsername()))
@@ -239,7 +239,8 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		log.debug("Checking if user preferences exist");
 		if (!preferencesRepository.findOne(query()
 				.searchScope(SearchScope.ONELEVEL)
-				.base(String.format("cn=%s,%s", user.getUsername(), USER_BASE))).isPresent())
+				.base(String.format("cn=%s,%s", user.getUsername(), USER_BASE))
+				.where("objectclass").isPresent()).isPresent())
 		{
 			log.debug("Creating user preferences");
 			preferencesRepository.save(new OIDUserPreferences(user.getUsername()));
