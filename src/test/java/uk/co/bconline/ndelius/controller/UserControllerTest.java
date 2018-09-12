@@ -9,6 +9,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static uk.co.bconline.ndelius.model.UserValidationTest.aValidUser;
 import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
 
 import java.time.LocalDate;
@@ -422,5 +423,30 @@ public class UserControllerTest
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(4)));
 	}
+	@Test
+	public void updateUserWithSameAliasDifferentCase() throws Exception
+	{
+		String token = token(mvc);
 
+		User user = aValidUser().toBuilder().username("test.user7").aliasUsername("test.user7.alias").build();
+
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+				.andExpect(status().isCreated())
+				.andExpect(redirectedUrl("/user/test.user7"));
+
+		mvc.perform(put("/api/user/test.user7")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(
+						user.toBuilder().aliasUsername("TEST.USER7.ALIAS").build())))
+				.andExpect(status().isNoContent());
+
+		mvc.perform(get("/api/user/test.user7")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.aliasUsername", is("TEST.USER7.ALIAS")));
+	}
 }

@@ -45,7 +45,7 @@ public class UserValidationTest
 				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
 	}
 
-	private static User aValidUser()
+	public static User aValidUser()
 	{
 		return User.builder()
 				.username("test")

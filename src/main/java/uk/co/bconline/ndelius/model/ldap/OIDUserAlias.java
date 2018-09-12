@@ -7,16 +7,14 @@ import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Entry(objectClasses = {"NDUser", "alias", "top"}, base="cn=Users")
+@ToString(exclude = "password")
 public final class OIDUserAlias
 {
 	@Id

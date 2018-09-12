@@ -8,6 +8,6 @@ import uk.co.bconline.ndelius.model.ldap.OIDUserAlias;
 
 public interface OIDUserAliasRepository extends LdapRepository<OIDUserAlias>
 {
-	Optional<OIDUserAlias> findByAliasedUserDn(String dn);
+	Optional<OIDUserAlias> findByAliasedUserDnIgnoreCase(String dn);
 	Optional<OIDUserAlias> getByUsername(String aliasUsername);
 }
