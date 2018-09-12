@@ -239,8 +239,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		log.debug("Checking if user preferences exist");
 		if (!preferencesRepository.findOne(query()
 				.searchScope(SearchScope.ONELEVEL)
-				.base(String.format("cn=%s,%s", user.getUsername(), USER_BASE))
-				.where("cn").is("UserPreferences")).isPresent())
+				.base(String.format("cn=%s,%s", user.getUsername(), USER_BASE))).isPresent())
 		{
 			log.debug("Creating user preferences");
 			preferencesRepository.save(new OIDUserPreferences(user.getUsername()));
