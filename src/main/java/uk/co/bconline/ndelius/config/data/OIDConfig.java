@@ -24,7 +24,7 @@ public class OIDConfig extends LdapAutoConfiguration
 	public OIDConfig(@Qualifier("oidProperties") LdapProperties properties, Environment environment)
 	{
 		super(properties, environment);
-		pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("pool", "false"));
+		pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
 	}
 
 	@Override
