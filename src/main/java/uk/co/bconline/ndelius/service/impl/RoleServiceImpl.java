@@ -27,6 +27,7 @@ import uk.co.bconline.ndelius.transformer.RoleTransformer;
 public class RoleServiceImpl implements RoleService
 {
 	private static final String ROLE_BASE = OIDRole.class.getAnnotation(Entry.class).base();
+	private static final String USER_BASE = OIDUser.class.getAnnotation(Entry.class).base();
 	private static final String PUBLIC_ACCESS = "UABI020";
 	private static final String PRIVATE_ACCESS = "UABI021";
 	private static final String LEVEL1_ACCESS = "UABI022";
@@ -121,7 +122,12 @@ public class RoleServiceImpl implements RoleService
 	@Override
 	public List<String> getUserInteractions(String username)
 	{
-		return getRolesByParent(username, OIDUser.class)
+		return getRolesByBase(String.format("cn=%s,%s", username, USER_BASE))
+				.filter(role -> role.getName().startsWith("UMBT") || role.getName().startsWith("UABT"))
+				.map(OIDRole::getName)
+				.map(this::getOIDRole)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
 				.map(OIDRole::getInteractions)
 				.flatMap(List::stream)
 				.collect(toList());
