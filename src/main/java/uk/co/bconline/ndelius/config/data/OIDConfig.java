@@ -10,6 +10,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.LdapContextSource;
 
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 
@@ -17,17 +18,22 @@ import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 @EnableLdapRepositories(basePackageClasses = OIDUserRepository.class, ldapTemplateRef = "oid")
 public class OIDConfig extends LdapAutoConfiguration
 {
+	private final Boolean pooled;
+
 	@Autowired
 	public OIDConfig(@Qualifier("oidProperties") LdapProperties properties, Environment environment)
 	{
 		super(properties, environment);
+		pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
 	}
 
 	@Override
 	@Bean("oidContextSource")
 	public ContextSource ldapContextSource()
 	{
-		return super.ldapContextSource();
+		LdapContextSource ctxSource = (LdapContextSource) super.ldapContextSource();
+		ctxSource.setPooled(pooled);
+		return ctxSource;
 	}
 
 	@Bean("oid")

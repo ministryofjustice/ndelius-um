@@ -149,7 +149,10 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public Optional<OIDUser> getBasicUser(String username)
 	{
-		return userRepository.findByUsername(username);
+		log.debug("Get basic OID user: {}", username);
+		val r = userRepository.findByUsername(username);
+		log.debug("Got basic OID user: {}", username);
+		return r;
 	}
 
 	@Override
@@ -167,8 +170,8 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 	public Optional<String> getUsernameByAlias(String aliasUsername)
 	{
-		log.debug("Fetching username from alias: {}", aliasUsername);
-		return userAliasRepository.getByUsername(aliasUsername)
+		log.debug("Get username from alias: {}", aliasUsername);
+		val r = userAliasRepository.getByUsername(aliasUsername)
 				.map(OIDUserAlias::getAliasedUserDn)
 				.map(dn -> {
 					try
@@ -182,7 +185,8 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 						return null;
 					}
 				});
-
+		log.debug("Got username from alias: {}", aliasUsername);
+		return r;
 	}
 
 	@Override
@@ -194,9 +198,12 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 	private Optional<String> getAlias(Name userDn)
 	{
-		return userAliasRepository
+		log.debug("Get alias: {}", userDn.toString());
+		val r = userAliasRepository
 				.findByAliasedUserDnIgnoreCase(userDn.toString() + "," + oidBase)
 				.map(OIDUserAlias::getUsername);
+		log.debug("Got alias: {}", userDn.toString());
+		return r;
 	}
 
 	@Override
