@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.service.impl;
 
 import static java.util.Comparator.comparing;
+import static java.util.Optional.ofNullable;
 import static java.util.concurrent.CompletableFuture.*;
 import static java.util.stream.Collectors.toList;
 
@@ -170,7 +171,7 @@ public class UserServiceImpl implements UserService
 		val oidFuture = runAsync(() -> oidService.save(transformer.mapToOIDUser(user,
 				oidService.getUser(user.getUsername()).orElse(new OIDUser()))));
 		val ad1Future = runAsync(() -> ad1Service.ifPresent(service -> service.save(transformer.mapToAD1User(user,
-				service.getUser(user.getUsername()).orElse(new ADUser())))));
+				service.getUser(ofNullable(user.getAliasUsername()).orElse(user.getUsername())).orElse(new ADUser())))));
 		val ad2Future = runAsync(() -> ad2Service.ifPresent(service -> service.save(transformer.mapToAD2User(user,
 				service.getUser(user.getUsername()).orElse(new ADUser())))));
 

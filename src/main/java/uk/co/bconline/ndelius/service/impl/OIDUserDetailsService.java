@@ -119,7 +119,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				.filter(u -> !excludedUsernames.contains(u.getUsername()))
 				.map(u -> SearchResult.builder()
 						.username(u.getUsername())
-						.aliasUsername(userAliasRepository.findByAliasedUserDn(u.getDn().toString() + "," + oidBase)
+						.aliasUsername(userAliasRepository.findByAliasedUserDnIgnoreCase(u.getDn().toString() + "," + oidBase)
 								.map(OIDUserAlias::getUsername).orElse(u.getUsername()))
 						.score(deriveScore(query, u))
 						.build())
@@ -195,7 +195,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	private Optional<String> getAlias(Name userDn)
 	{
 		return userAliasRepository
-				.findByAliasedUserDn(userDn.toString() + "," + oidBase)
+				.findByAliasedUserDnIgnoreCase(userDn.toString() + "," + oidBase)
 				.map(OIDUserAlias::getUsername);
 	}
 
@@ -214,9 +214,9 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 		// User alias
 		log.debug("Deleting alias record exists");
-		userAliasRepository.findByAliasedUserDn(String.format("cn=%s,%s,%s", user.getUsername(), USER_BASE, oidBase))
+		userAliasRepository.findByAliasedUserDnIgnoreCase(String.format("cn=%s,%s,%s", user.getUsername(), USER_BASE, oidBase))
 				.ifPresent(userAliasRepository::delete);
-		if (user.getAliasUsername() != null && !user.getAliasUsername().equals(user.getUsername()))
+		if (user.getAliasUsername() != null && !user.getAliasUsername().equalsIgnoreCase(user.getUsername()))
 		{
 			log.debug("Creating alias record: {}", user.getAliasUsername());
 			userAliasRepository.save(OIDUserAlias.builder()
