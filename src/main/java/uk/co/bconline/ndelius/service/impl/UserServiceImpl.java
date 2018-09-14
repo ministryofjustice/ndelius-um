@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,12 @@ import uk.co.bconline.ndelius.transformer.UserTransformer;
 @Service
 public class UserServiceImpl implements UserService
 {
+	@Value("${ad.primary.readonly:false}")
+	private boolean ad1IsReadonly;
+
+	@Value("${ad.secondary.readonly:false}")
+	private boolean ad2IsReadonly;
+
 	private final DBUserDetailsService dbService;
 	private final OIDUserDetailsService oidService;
 	private final Optional<AD1UserDetailsService> ad1Service;
@@ -170,10 +177,18 @@ public class UserServiceImpl implements UserService
 				dbService.getUser(user.getUsername()).orElse(new UserEntity()))));
 		val oidFuture = runAsync(() -> oidService.save(transformer.mapToOIDUser(user,
 				oidService.getUser(user.getUsername()).orElse(new OIDUser()))));
-		val ad1Future = runAsync(() -> ad1Service.ifPresent(service -> service.save(transformer.mapToAD1User(user,
-				service.getUser(ofNullable(user.getAliasUsername()).orElse(user.getUsername())).orElse(new ADUser())))));
-		val ad2Future = runAsync(() -> ad2Service.ifPresent(service -> service.save(transformer.mapToAD2User(user,
-				service.getUser(user.getUsername()).orElse(new ADUser())))));
+		val ad1Future = runAsync(() -> {
+			if (!ad1IsReadonly) ad1Service.ifPresent(service -> {
+				val existingUser = service.getUser(ofNullable(user.getAliasUsername()).orElse(user.getUsername())).orElse(new ADUser());
+				service.save(transformer.mapToAD1User(user, existingUser));
+			});
+		});
+		val ad2Future = runAsync(() -> {
+			if (!ad2IsReadonly) ad2Service.ifPresent(service -> {
+				val existingUser = service.getUser(user.getUsername()).orElse(new ADUser());
+				service.save(transformer.mapToAD2User(user, existingUser));
+			});
+		});
 
 		try
 		{

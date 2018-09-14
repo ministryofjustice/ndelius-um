@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.service.impl;
 
 import static java.lang.Math.min;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -41,6 +42,7 @@ import uk.co.bconline.ndelius.service.RoleService;
 @Service
 public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 {
+	private static final String ROLE_BASE = OIDRole.class.getAnnotation(Entry.class).base();
 	private static final String USER_BASE = OIDUser.class.getAnnotation(Entry.class).base();
 
 	@Value("${oid.base}")
@@ -253,14 +255,14 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				.base(String.format("cn=%s,%s", user.getUsername(), USER_BASE))
 				.where("objectclass").is("alias")));
 		log.debug("Saving new role associations");
-		roleAssociationRepository.saveAll(user.getRoles().stream()
-				.map(OIDRole::getName)
-				.map(name -> OIDRoleAssociation.builder()
-						.name(name)
-						.username(user.getUsername())
-						.aliasedObjectName(String.format("cn=%s,%s,%s", name,
-								OIDRole.class.getAnnotation(Entry.class).base(), oidBase))
+		ofNullable(user.getRoles()).ifPresent(roles ->
+				roleAssociationRepository.saveAll(roles.stream()
+						.map(OIDRole::getName)
+						.map(name -> OIDRoleAssociation.builder()
+								.name(name)
+								.username(user.getUsername())
+								.aliasedObjectName(String.format("cn=%s,%s,%s", name, ROLE_BASE, oidBase))
 						.build())
-				.collect(toList()));
+				.collect(toList())));
 	}
 }

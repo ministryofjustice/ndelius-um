@@ -54,6 +54,16 @@
       "name": "delius.secret",
       "type": "java.lang.String",
       "description": "Shared secret key between National Delius and UMT, to support delegated authentication via request parameters."
+    },
+    {
+      "name": "ad.primary.readonly",
+      "type": "java.lang.String",
+      "description": "Whether the primary Active Directory should be marked as readonly. If so, it won't be possible to update user forename/surname in AD."
+    },
+    {
+      "name": "ad.secondary.readonly",
+      "type": "java.lang.String",
+      "description": "Whether the secondary Active Directory should be marked as readonly. If so, it won't be possible to update user forename/surname in AD."
     }
   ]
 }
