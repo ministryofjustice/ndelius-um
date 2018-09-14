@@ -8,7 +8,7 @@ import {AuthorisationService} from "../../service/impl/authorisation.service";
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
-  title: string = "NDelius User Management";
+  title: string = "User Management";
   loaded: boolean;
   static globalMessage: string;
   static globalMessageSeverity: string = "info";
