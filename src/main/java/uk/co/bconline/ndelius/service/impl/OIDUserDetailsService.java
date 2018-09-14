@@ -151,23 +151,17 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public Optional<OIDUser> getBasicUser(String username)
 	{
-		log.debug("Get basic OID user: {}", username);
-		val r = userRepository.findByUsername(username);
-		log.debug("Got basic OID user: {}", username);
-		return r;
+		return userRepository.findByUsername(username);
 	}
 
 	@Override
 	public Optional<OIDUser> getUser(String username)
 	{
-		log.debug("Get OID user: {}", username);
-		val user = getBasicUser(username)
+		return getBasicUser(username)
 				.map(u -> u.toBuilder()
 						.roles(roleService.getRolesByParent(username, OIDUser.class).collect(toList()))
 						.aliasUsername(getAlias(u.getDn()).orElse(username))
 						.build());
-		log.debug("Got OID user: {}", username);
-		return user;
 	}
 
 	public Optional<String> getUsernameByAlias(String aliasUsername)
