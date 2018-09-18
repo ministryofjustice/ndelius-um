@@ -1,9 +1,11 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -53,9 +55,9 @@ public class DBUserDetailsService
 
 	public Optional<UserEntity> getUser(String username)
 	{
-		log.debug("Get DB user: {}", username);
+		val t = LocalDateTime.now();
 		val u =  repository.getUserEntityByUsername(username);
-		log.debug("Got DB user: {}", username);
+		log.trace("--{}ms	DB lookup", MILLIS.between(t, LocalDateTime.now()));
 		return u;
 	}
 

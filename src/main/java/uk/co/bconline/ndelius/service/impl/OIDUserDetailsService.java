@@ -1,11 +1,13 @@
 package uk.co.bconline.ndelius.service.impl;
 
 import static java.lang.Math.min;
+import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -151,7 +153,10 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public Optional<OIDUser> getBasicUser(String username)
 	{
-		return userRepository.findByUsername(username);
+		val t = LocalDateTime.now();
+		val r = userRepository.findByUsername(username);
+		log.trace("--{}ms	OID lookup", MILLIS.between(t, LocalDateTime.now()));
+		return r;
 	}
 
 	@Override
@@ -166,8 +171,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 	public Optional<String> getUsernameByAlias(String aliasUsername)
 	{
-		log.debug("Get username from alias: {}", aliasUsername);
-		val r = userAliasRepository.getByUsername(aliasUsername)
+		return userAliasRepository.getByUsername(aliasUsername)
 				.map(OIDUserAlias::getAliasedUserDn)
 				.map(dn -> {
 					try
@@ -181,25 +185,26 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 						return null;
 					}
 				});
-		log.debug("Got username from alias: {}", aliasUsername);
-		return r;
 	}
 
 	@Override
 	public Optional<String> getAlias(String username)
 	{
-		return getBasicUser(username)
-				.flatMap(u -> getAlias(u.getDn()));
+		return userAliasRepository
+				.findByAliasedUserDnIgnoreCase(getDn(username) + "," + oidBase)
+				.map(OIDUserAlias::getUsername);
 	}
 
 	private Optional<String> getAlias(Name userDn)
 	{
-		log.debug("Get alias: {}", userDn.toString());
-		val r = userAliasRepository
+		return userAliasRepository
 				.findByAliasedUserDnIgnoreCase(userDn.toString() + "," + oidBase)
 				.map(OIDUserAlias::getUsername);
-		log.debug("Got alias: {}", userDn.toString());
-		return r;
+	}
+
+	private String getDn(String username)
+	{
+		return String.format("cn=%s,%s", username, USER_BASE);
 	}
 
 	@Override

@@ -1,10 +1,12 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.concurrent.CompletableFuture.*;
 import static java.util.stream.Collectors.toList;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -72,14 +74,23 @@ public class UserServiceImpl implements UserService
 		if (StringUtils.isEmpty(query) || query.length() < 3) return Collections.emptyList();
 
 		val datasetsFilter = datasetsFilter();
-		List<SearchResult> foundUsers = dbService.search(query).stream()
+
+		LocalDateTime t = LocalDateTime.now();
+		List<SearchResult> foundUsers = dbService.search(query);
+		log.debug("{}ms	DB Search", MILLIS.between(t, LocalDateTime.now()));
+
+		t = LocalDateTime.now();
+		foundUsers = foundUsers.stream()
 				.map(res -> res.toBuilder()
 						.aliasUsername(oidService.getAlias(res.getUsername()).orElse(null))
 						.build()).collect(toList());
+		log.debug("{}ms	OID lookup each result for alias", MILLIS.between(t, LocalDateTime.now()));
 
+		t = LocalDateTime.now();
 		List<String> foundUsernames = foundUsers.stream().map(SearchResult::getUsername).collect(toList());
 		foundUsers = Stream.concat(foundUsers.stream(), oidService.search(query, foundUsernames).stream())
 				.collect(toList());
+		log.debug("{}ms	OID Search", MILLIS.between(t, LocalDateTime.now()));
 
 		if (ad1Service.isPresent())
 		{
@@ -97,9 +108,10 @@ public class UserServiceImpl implements UserService
 					.collect(toList());
 		}
 
-		return foundUsers.stream()
-				.filter(result -> datasetsFilter.test(result.getUsername()))
+		t = LocalDateTime.now();
+		val r = foundUsers.stream()
 				.sorted(comparing(SearchResult::getScore, Float::compare).reversed())
+				.filter(result -> datasetsFilter.test(result.getUsername()))
 				.peek(result -> log.debug("SearchResult: username={}, score={}", result.getUsername(), result.getScore()))
 				.skip((long) (page-1) * pageSize)
 				.limit(pageSize)
@@ -108,6 +120,8 @@ public class UserServiceImpl implements UserService
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.collect(toList());
+		log.debug("{}ms	Lookup each result", MILLIS.between(t, LocalDateTime.now()));
+		return r;
 	}
 
 	public Optional<SearchResult> getSearchResult(String username)
@@ -119,11 +133,9 @@ public class UserServiceImpl implements UserService
 
 		try
 		{
-			val datasetsFilter = datasetsFilter();
 			return allOf(dbFuture, oidFuture, ad1Future, ad2Future)
 					.thenApply(v -> transformer.mapToSearchResult(
-							dbFuture.join(), oidFuture.join(), ad1Future.join(), ad2Future.join())).get()
-					.filter(user -> datasetsFilter.test(user.getUsername()));
+							dbFuture.join(), oidFuture.join(), ad1Future.join(), ad2Future.join())).get();
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
@@ -207,10 +219,13 @@ public class UserServiceImpl implements UserService
 		myDatasets.add(oidService.getUserHomeArea(me));
 
 		return (String username) -> {
+			val t = LocalDateTime.now();
 			val theirDatasets = datasetService.getDatasetCodes(username);
 			val theirHomeArea = oidService.getUserHomeArea(username);
 			if (theirHomeArea != null) theirDatasets.add(oidService.getUserHomeArea(username));
-			return theirDatasets.isEmpty() || myDatasets.stream().anyMatch(theirDatasets::contains);
+			val r = theirDatasets.isEmpty() || myDatasets.stream().anyMatch(theirDatasets::contains);
+			log.trace("--{}ms	Dataset filter", MILLIS.between(t, LocalDateTime.now()));
+			return r;
 		};
 	}
 }

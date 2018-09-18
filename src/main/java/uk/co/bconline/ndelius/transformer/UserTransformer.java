@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.transformer;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
+import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.*;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import uk.co.bconline.ndelius.model.*;
 import uk.co.bconline.ndelius.model.entity.*;
@@ -31,6 +33,7 @@ import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.service.impl.DBUserDetailsService;
 import uk.co.bconline.ndelius.util.LdapPasswordUtils;
 
+@Slf4j
 @Component
 public class UserTransformer
 {
@@ -154,7 +157,8 @@ public class UserTransformer
 
 	public Optional<SearchResult> mapToSearchResult(UserEntity dbUser, OIDUser oidUser, ADUser ad1User, ADUser ad2User)
 	{
-		return Stream.of(
+		val t = LocalDateTime.now();
+		val r = Stream.of(
 				ofNullable(oidUser).map(v -> User.builder()
 						.username(v.getUsername())
 						.aliasUsername(v.getAliasUsername())
@@ -189,6 +193,8 @@ public class UserTransformer
 				.map(Optional::get)
 				.reduce(this::reduceUser)
 				.map(this::map);
+		log.trace("--{}ms	Map result", MILLIS.between(t, LocalDateTime.now()));
+		return r;
 	}
 
 	private User reduceUser(User a, User b)
