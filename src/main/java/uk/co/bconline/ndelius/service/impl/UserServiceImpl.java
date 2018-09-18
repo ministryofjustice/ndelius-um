@@ -9,7 +9,6 @@ import static java.util.stream.Collectors.toList;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
@@ -80,13 +79,6 @@ public class UserServiceImpl implements UserService
 		log.debug("{}ms	DB Search", MILLIS.between(t, LocalDateTime.now()));
 
 		t = LocalDateTime.now();
-		foundUsers = foundUsers.stream()
-				.map(res -> res.toBuilder()
-						.aliasUsername(oidService.getAlias(res.getUsername()).orElse(null))
-						.build()).collect(toList());
-		log.debug("{}ms	OID lookup each result for alias", MILLIS.between(t, LocalDateTime.now()));
-
-		t = LocalDateTime.now();
 		List<String> foundUsernames = foundUsers.stream().map(SearchResult::getUsername).collect(toList());
 		foundUsers = Stream.concat(foundUsers.stream(), oidService.search(query, foundUsernames).stream())
 				.collect(toList());
@@ -94,11 +86,10 @@ public class UserServiceImpl implements UserService
 
 		if (ad1Service.isPresent())
 		{
-			foundUsernames = Stream.concat(
-					foundUsers.stream().map(SearchResult::getUsername),
-					foundUsers.stream().map(SearchResult::getAliasUsername).filter(Objects::nonNull)).collect(toList());
-			foundUsers = Stream.concat(foundUsers.stream(), ad1Service.get().search(query, foundUsernames).stream())
-					.collect(toList());
+			foundUsernames = foundUsers.stream().map(SearchResult::getUsername).collect(toList());
+			val ad1Users = ad1Service.get().search(query, foundUsernames).stream()
+					.filter(user -> !oidService.getUsernameByAlias(user.getUsername()).isPresent());
+			foundUsers = Stream.concat(foundUsers.stream(), ad1Users).collect(toList());
 		}
 
 		if (ad2Service.isPresent())

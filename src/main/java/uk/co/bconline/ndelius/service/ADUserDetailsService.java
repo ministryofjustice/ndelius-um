@@ -1,11 +1,13 @@
 package uk.co.bconline.ndelius.service;
 
 import static java.lang.Math.min;
+import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.util.StringUtils.isEmpty;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -43,8 +45,10 @@ public abstract class ADUserDetailsService implements UserDetailsService
 
 	public Optional<ADUser> getUser(String username)
 	{
-		log.debug("Fetching AD user {}", username);
-		return getRepository().findByUsername(username);
+		val t = LocalDateTime.now();
+		val r = getRepository().findByUsername(username);
+		log.trace("--{}ms	AD lookup", MILLIS.between(t, LocalDateTime.now()));
+		return r;
 	}
 
 	public List<SearchResult> search(String query, List<String> excludedUsernames)
