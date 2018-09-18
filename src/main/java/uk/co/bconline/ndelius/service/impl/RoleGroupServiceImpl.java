@@ -3,13 +3,10 @@ package uk.co.bconline.ndelius.service.impl;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
-import static org.springframework.ldap.query.SearchScope.ONELEVEL;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.stereotype.Service;
 
 import lombok.val;
@@ -38,11 +35,7 @@ public class RoleGroupServiceImpl implements RoleGroupService
     public Iterable<RoleGroup> getRoleGroups()
     {
 		val rolesICanAssign = roleService.getRoles().stream().map(Role::getName).collect(toSet());
-        return stream(oidRoleGroupRepository
-                .findAll(query()
-                        .searchScope(ONELEVEL)
-                        .base(OIDRoleGroup.class.getAnnotation(Entry.class).base())
-                        .where("objectclass").like("*")).spliterator(), false)
+        return stream(oidRoleGroupRepository.findAll().spliterator(), false)
 				.filter(g -> roleService
 						.getRolesByParent(g.getName(), OIDRoleGroup.class)
 						.anyMatch(role -> rolesICanAssign.contains(role.getName())))
