@@ -76,6 +76,7 @@ public class DBUserDetailsService
 	public List<SearchResult> search(String searchTerm)
 	{
 		val results = Arrays.stream(searchTerm.split("\\s+"))
+				.parallel()
 				.flatMap(token -> {
 					log.debug("Searching DB: {}", token);
 					if (datasourceUrl.startsWith("jdbc:oracle")) return searchResultRepository.search(token).stream();
