@@ -78,6 +78,13 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				.orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
 	}
 
+	@Override
+	public boolean usernameExists(String username)
+	{
+		return userRepository.findByUsername(username).isPresent()
+				|| userAliasRepository.findByUsername(username).isPresent();
+	}
+
 	/**
 	 * Search for a list of users with a single text query.
 	 *
@@ -171,7 +178,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 	public Optional<String> getUsernameByAlias(String aliasUsername)
 	{
-		return userAliasRepository.getByUsername(aliasUsername)
+		return userAliasRepository.findByUsername(aliasUsername)
 				.map(OIDUserAlias::getAliasedUserDn)
 				.map(dn -> {
 					try

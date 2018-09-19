@@ -112,4 +112,8 @@ public abstract class ADUserDetailsService implements UserDetailsService
 		getRepository().save(adUser);
 	}
 
+	public boolean usernameExists(String username)
+	{
+		return getRepository().findByUsername(username).isPresent();
+	}
 }

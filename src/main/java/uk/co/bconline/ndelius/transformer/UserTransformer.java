@@ -30,7 +30,6 @@ import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.service.*;
-import uk.co.bconline.ndelius.service.impl.DBUserDetailsService;
 import uk.co.bconline.ndelius.util.LdapPasswordUtils;
 
 @Slf4j
@@ -51,8 +50,7 @@ public class UserTransformer
 	private final TeamService teamService;
 	private final ReferenceDataService referenceDataService;
 	private final DatasetService datasetService;
-	private final OrganisationService organisationService;
-	private final DBUserDetailsService dbUserDetailsService;
+	private final DBUserService dbUserService;
 	private final RoleService roleService;
 	private final RoleTransformer roleTransformer;
 	private final DatasetTransformer datasetTransformer;
@@ -63,8 +61,7 @@ public class UserTransformer
 			TeamService teamService,
 			ReferenceDataService referenceDataService,
 			DatasetService datasetService,
-			OrganisationService organisationService,
-			DBUserDetailsService dbUserDetailsService,
+			DBUserService dbUserService,
 			RoleService roleService,
 			RoleTransformer roleTransformer,
 			DatasetTransformer datasetTransformer,
@@ -73,8 +70,7 @@ public class UserTransformer
 		this.teamService = teamService;
 		this.referenceDataService = referenceDataService;
 		this.datasetService = datasetService;
-		this.organisationService = organisationService;
-		this.dbUserDetailsService = dbUserDetailsService;
+		this.dbUserService = dbUserService;
 		this.roleService = roleService;
 		this.roleTransformer = roleTransformer;
 		this.datasetTransformer = datasetTransformer;
@@ -227,7 +223,7 @@ public class UserTransformer
 
 	public UserEntity mapToUserEntity(User user, UserEntity existingUser)
 	{
-		val myUserId = dbUserDetailsService.getMyUserId();
+		val myUserId = dbUserService.getMyUserId();
 		val staff = mapToStaffEntity(user, ofNullable(existingUser.getStaff()).orElse(new StaffEntity()));
 		val entity = existingUser.toBuilder()
 				.username(user.getUsername())
@@ -259,7 +255,7 @@ public class UserTransformer
 
 	public StaffEntity mapToStaffEntity(User user, StaffEntity existingStaff)
 	{
-		val myUserId = dbUserDetailsService.getMyUserId();
+		val myUserId = dbUserService.getMyUserId();
 		val entity = existingStaff.toBuilder()
 				.code(user.getStaffCode())
 				.grade(ofNullable(user.getStaffGrade())
