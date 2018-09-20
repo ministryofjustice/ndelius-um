@@ -14,4 +14,5 @@ public interface RoleService
 	Optional<OIDRole> getOIDRole(String role);
 	Stream<OIDRole> getRolesByParent(String parent, Class<?> parentClass);
 	List<String> getUserInteractions(String username);
+	void updateUserRoles(String username, List<OIDRole> roles);
 }
