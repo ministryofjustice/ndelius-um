@@ -8,6 +8,7 @@ import uk.co.bconline.ndelius.model.User;
 
 public interface UserService
 {
+	boolean usernameExists(String username);
 	List<SearchResult> search(String query, int page, int pageSize);
 	Optional<User> getUser(String username);
 	void addUser(User user);

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -27,10 +26,11 @@ import uk.co.bconline.ndelius.repository.db.ProbationAreaUserRepository;
 import uk.co.bconline.ndelius.repository.db.SearchResultRepository;
 import uk.co.bconline.ndelius.repository.db.StaffTeamRepository;
 import uk.co.bconline.ndelius.repository.db.UserEntityRepository;
+import uk.co.bconline.ndelius.service.DBUserService;
 
 @Slf4j
 @Service
-public class DBUserDetailsService
+public class DBUserServiceImpl implements DBUserService
 {
 	@Value("${spring.datasource.url}")
 	private String datasourceUrl;
@@ -41,7 +41,7 @@ public class DBUserDetailsService
 	private final StaffTeamRepository staffTeamRepository;
 
 	@Autowired
-	public DBUserDetailsService(
+	public DBUserServiceImpl(
 			UserEntityRepository repository,
 			SearchResultRepository searchResultRepository,
 			ProbationAreaUserRepository probationAreaUserRepository,
@@ -53,6 +53,13 @@ public class DBUserDetailsService
 		this.staffTeamRepository = staffTeamRepository;
 	}
 
+	@Override
+	public boolean usernameExists(String username)
+	{
+		return repository.existsByUsername(username);
+	}
+
+	@Override
 	public Optional<UserEntity> getUser(String username)
 	{
 		val t = LocalDateTime.now();
@@ -66,13 +73,14 @@ public class DBUserDetailsService
 		return getUser(username).map(UserEntity::getId).orElse(null);
 	}
 
+	@Override
 	public Long getMyUserId()
 	{
 		val username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 		return getUserId(username);
 	}
 
-	@Transactional
+	@Override
 	public List<SearchResult> search(String searchTerm)
 	{
 		val results = Arrays.stream(searchTerm.split("\\s+"))
@@ -100,7 +108,7 @@ public class DBUserDetailsService
 		return results;
 	}
 
-	@Transactional
+	@Override
 	public UserEntity save(UserEntity user)
 	{
 		val existingUser = getUser(user.getUsername());

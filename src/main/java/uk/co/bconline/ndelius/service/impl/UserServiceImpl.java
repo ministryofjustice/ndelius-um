@@ -29,6 +29,7 @@ import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.service.DBUserService;
 import uk.co.bconline.ndelius.service.DatasetService;
 import uk.co.bconline.ndelius.service.UserService;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService
 	@Value("${ad.secondary.readonly:false}")
 	private boolean ad2IsReadonly;
 
-	private final DBUserDetailsService dbService;
+	private final DBUserService dbService;
 	private final OIDUserDetailsService oidService;
 	private final Optional<AD1UserDetailsService> ad1Service;
 	private final Optional<AD2UserDetailsService> ad2Service;
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService
 
 	@Autowired
 	public UserServiceImpl(
-			DBUserDetailsService dbService,
+			DBUserService dbService,
 			OIDUserDetailsService oidService,
 			Optional<AD1UserDetailsService> ad1Service,
 			Optional<AD2UserDetailsService> ad2Service,
@@ -131,6 +132,25 @@ public class UserServiceImpl implements UserService
 		catch (InterruptedException | ExecutionException e)
 		{
 			throw new AppException(String.format("Unable to retrieve user details for %s", username), e);
+		}
+	}
+
+	@Override
+	public boolean usernameExists(String username)
+	{
+		val dbFuture = supplyAsync(() -> dbService.usernameExists(username));
+		val oidFuture = supplyAsync(() -> oidService.usernameExists(username));
+		val ad1Future = supplyAsync(() -> ad1Service.map(service -> service.usernameExists(username)).orElse(false));
+		val ad2Future = supplyAsync(() -> ad2Service.map(service -> service.usernameExists(username)).orElse(false));
+
+		try
+		{
+			return allOf(dbFuture, oidFuture, ad1Future, ad2Future)
+					.thenApply(v -> dbFuture.join() || oidFuture.join() || ad1Future.join() || ad2Future.join()).get();
+		}
+		catch (InterruptedException | ExecutionException e)
+		{
+			throw new AppException(String.format("Unable to check whether user exists with username %s", username), e);
 		}
 	}
 

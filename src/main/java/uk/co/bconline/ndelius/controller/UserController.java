@@ -13,6 +13,7 @@ import javax.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,24 +57,33 @@ public class UserController
 				.orElse(notFound().build());
 	}
 
+	@Transactional
 	@Interaction("UMBI003")
 	@PostMapping(path="/user")
 	public ResponseEntity addUser(@RequestBody @Valid User user) throws URISyntaxException
 	{
-		if (userService.getUser(user.getUsername()).isPresent()) {
+		if (userService.usernameExists(user.getUsername()))
+		{
 			return badRequest().body(new ErrorResponse("username: already exists"));
 		}
-		userService.addUser(user);
-		return created(new URI(String.format("/user/%s", user.getUsername()))).build();
+		else
+		{
+			userService.addUser(user);
+			return created(new URI(String.format("/user/%s", user.getUsername()))).build();
+		}
 	}
 
+	@Transactional
 	@Interaction("UMBI004")
 	@PutMapping(path="/user/{username}")
 	public ResponseEntity updateUser(@RequestBody @Valid User user, @PathVariable("username") String username)
 	{
-		if(!userService.getUser(username).isPresent()){
+		if (!userService.usernameExists(username))
+		{
 			return notFound().build();
-		}else{
+		}
+		else
+		{
 			userService.updateUser(user);
 			return noContent().build();
 		}
