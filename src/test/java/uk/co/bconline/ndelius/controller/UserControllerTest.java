@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.ldap.query.SearchScope;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,6 +38,7 @@ import uk.co.bconline.ndelius.model.ldap.OIDUserPreferences;
 import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
 
 @SpringBootTest
+@DirtiesContext
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 public class UserControllerTest

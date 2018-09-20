@@ -27,11 +27,6 @@ export class UserMigrationComponent {
 
     this.papa.parse(file, {
       complete: results => {
-        if (results.data.length <= 1) {
-          console.error("Invalid data", results);
-          return this.abort("No data found. Please check the file " + file.name);
-        }
-
         this.aliases = [];
         for (let i = 1; i < results.data.length; i++) {
           let row = results.data[i];
@@ -45,6 +40,11 @@ export class UserMigrationComponent {
             username: row[0],
             aliasUsername: row[1]
           });
+        }
+
+        if (this.aliases.length == 0) {
+          console.error("Invalid data", results);
+          return this.abort("No data found. Please check the file \"" + file.name + "\"");
         }
 
         AppComponent.hideMessage();
