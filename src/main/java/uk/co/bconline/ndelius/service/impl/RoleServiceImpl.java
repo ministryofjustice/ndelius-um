@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -10,19 +11,25 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.query.SearchScope;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import uk.co.bconline.ndelius.model.Role;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
+import uk.co.bconline.ndelius.model.ldap.OIDRoleAssociation;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.repository.oid.OIDRoleAssociationRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
 import uk.co.bconline.ndelius.service.RoleService;
 import uk.co.bconline.ndelius.transformer.RoleTransformer;
 
+@Slf4j
 @Service
 public class RoleServiceImpl implements RoleService
 {
@@ -36,15 +43,21 @@ public class RoleServiceImpl implements RoleService
 	private static final String NATIONAL_ACCESS = "UABI025";
 	private static final String LOCAL_ACCESS = "UABI026";
 
-	private final OIDRoleRepository oidRoleRepository;
+	private final OIDRoleRepository roleRepository;
+	private final OIDRoleAssociationRepository roleAssociationRepository;
 	private final RoleTransformer roleTransformer;
+
+	@Value("${oid.base}")
+	private String oidBase;
 
 	@Autowired
 	public RoleServiceImpl(
-			OIDRoleRepository oidRoleRepository,
+			OIDRoleRepository roleRepository,
+			OIDRoleAssociationRepository roleAssociationRepository,
 			RoleTransformer roleTransformer)
 	{
-		this.oidRoleRepository = oidRoleRepository;
+		this.roleRepository = roleRepository;
+		this.roleAssociationRepository = roleAssociationRepository;
 		this.roleTransformer = roleTransformer;
 	}
 
@@ -82,7 +95,7 @@ public class RoleServiceImpl implements RoleService
 	@Override
 	public Optional<OIDRole> getOIDRole(String role)
 	{
-		return oidRoleRepository.findByName(role);
+		return roleRepository.findByName(role);
 	}
 
 	@Override
@@ -133,9 +146,30 @@ public class RoleServiceImpl implements RoleService
 				.collect(toList());
 	}
 
+	@Override
+	public void updateUserRoles(String username, List<OIDRole> roles)
+	{
+		log.debug("Deleting existing role associations");
+		roleRepository.deleteAll(roleRepository.findAll(query()
+				.searchScope(SearchScope.ONELEVEL)
+				.base(String.format("cn=%s,%s", username, USER_BASE))
+				.where("objectClass").like("NDRole*")));
+
+		log.debug("Saving new role associations");
+		ofNullable(roles).ifPresent(r ->
+				roleAssociationRepository.saveAll(r.stream()
+						.map(OIDRole::getName)
+						.map(name -> OIDRoleAssociation.builder()
+								.name(name)
+								.username(username)
+								.aliasedObjectName(String.format("cn=%s,%s,%s", name, ROLE_BASE, oidBase))
+								.build())
+						.collect(toList())));
+	}
+
 	private Stream<OIDRole> getRolesByBase(String base)
 	{
-		return stream(oidRoleRepository.findAll(query()
+		return stream(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
 				.base(base)
 				.where("objectclass").like("NDRole*")).spliterator(), false);

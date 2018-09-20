@@ -2,7 +2,6 @@ package uk.co.bconline.ndelius.service.impl;
 
 import static java.lang.Math.min;
 import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -31,9 +30,10 @@ import org.springframework.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import uk.co.bconline.ndelius.model.SearchResult;
-import uk.co.bconline.ndelius.model.ldap.*;
+import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.model.ldap.OIDUserAlias;
+import uk.co.bconline.ndelius.model.ldap.OIDUserPreferences;
 import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
-import uk.co.bconline.ndelius.repository.oid.OIDRoleAssociationRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserAliasRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
@@ -44,7 +44,6 @@ import uk.co.bconline.ndelius.service.RoleService;
 @Service
 public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 {
-	private static final String ROLE_BASE = OIDRole.class.getAnnotation(Entry.class).base();
 	private static final String USER_BASE = OIDUser.class.getAnnotation(Entry.class).base();
 
 	@Value("${oid.base}")
@@ -52,7 +51,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 	private final OIDUserRepository userRepository;
 	private final OIDUserAliasRepository userAliasRepository;
-	private final OIDRoleAssociationRepository roleAssociationRepository;
 	private final OIDUserPreferencesRepository preferencesRepository;
 	private final RoleService roleService;
 
@@ -60,13 +58,11 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	public OIDUserDetailsService(
 			OIDUserRepository userRepository,
 			OIDUserAliasRepository userAliasRepository,
-			OIDRoleAssociationRepository roleAssociationRepository,
 			OIDUserPreferencesRepository preferencesRepository,
 			RoleService roleService)
 	{
 		this.userRepository = userRepository;
 		this.userAliasRepository = userAliasRepository;
-		this.roleAssociationRepository = roleAssociationRepository;
 		this.preferencesRepository = preferencesRepository;
 		this.roleService = roleService;
 	}
@@ -255,20 +251,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		}
 
 		// Role associations
-		log.debug("Deleting existing role associations");
-		roleAssociationRepository.deleteAll(roleAssociationRepository.findAll(query()
-				.searchScope(SearchScope.ONELEVEL)
-				.base(String.format("cn=%s,%s", user.getUsername(), USER_BASE))
-				.where("objectclass").is("alias")));
-		log.debug("Saving new role associations");
-		ofNullable(user.getRoles()).ifPresent(roles ->
-				roleAssociationRepository.saveAll(roles.stream()
-						.map(OIDRole::getName)
-						.map(name -> OIDRoleAssociation.builder()
-								.name(name)
-								.username(user.getUsername())
-								.aliasedObjectName(String.format("cn=%s,%s,%s", name, ROLE_BASE, oidBase))
-						.build())
-				.collect(toList())));
+		roleService.updateUserRoles(user.getUsername(), user.getRoles());
 	}
 }
