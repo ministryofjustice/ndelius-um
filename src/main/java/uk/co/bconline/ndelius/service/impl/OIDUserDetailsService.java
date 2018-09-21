@@ -5,6 +5,7 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
+import static org.springframework.ldap.query.SearchScope.ONELEVEL;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -20,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.odm.annotations.Entry;
-import org.springframework.ldap.query.SearchScope;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -120,14 +120,13 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 		val results = stream(userRepository
 				.findAll(query()
+						.searchScope(ONELEVEL)
 						.base(USER_BASE)
 						.filter(filter))
 				.spliterator(), false)
 				.filter(u -> !excludedUsernames.contains(u.getUsername()))
 				.map(u -> SearchResult.builder()
 						.username(u.getUsername())
-						.aliasUsername(userAliasRepository.findByAliasedUserDnIgnoreCase(u.getDn().toString() + "," + oidBase)
-								.map(OIDUserAlias::getUsername).orElse(u.getUsername()))
 						.score(deriveScore(query, u))
 						.build())
 				.collect(toList());
@@ -242,7 +241,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		// Preferences
 		log.debug("Checking if user preferences exist");
 		if (!preferencesRepository.findOne(query()
-				.searchScope(SearchScope.ONELEVEL)
+				.searchScope(ONELEVEL)
 				.base(String.format("cn=%s,%s", user.getUsername(), USER_BASE))
 				.where("objectclass").isPresent()).isPresent())
 		{
