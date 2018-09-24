@@ -1,8 +1,12 @@
 package uk.co.bconline.ndelius.model.entity;
 
+import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
+
 import java.util.Set;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.Cache;
 
 import lombok.*;
 
@@ -11,8 +15,10 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "userLinks")
+@Cache(usage = READ_ONLY)
 @Table(name = "PROBATION_AREA")
+@ToString(exclude = "userLinks")
+@EqualsAndHashCode(exclude = "userLinks")
 public class ProbationAreaEntity
 {
 	public ProbationAreaEntity(Long id)
