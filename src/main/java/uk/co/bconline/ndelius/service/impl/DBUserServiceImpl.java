@@ -111,20 +111,32 @@ public class DBUserServiceImpl implements DBUserService
 	@Override
 	public UserEntity save(UserEntity user)
 	{
+		log.debug("Checking for existing user");
 		val existingUser = getUser(user.getUsername());
 		if (existingUser.isPresent())
 		{
+			log.debug("Deleting datasets");
 			probationAreaUserRepository.deleteAll(existingUser.get().getProbationAreaLinks());
+			log.debug("Saving new datasets");
 			probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
+			log.debug("Deleting any existing team links");
 			ofNullable(existingUser.get().getStaff()).map(StaffEntity::getTeamLinks).ifPresent(staffTeamRepository::deleteAll);
+			log.debug("Saving user/staff");
+			val newUser = repository.save(user);
+			log.debug("Saving team links");
 			ofNullable(user.getStaff()).map(StaffEntity::getTeamLinks).ifPresent(staffTeamRepository::saveAll);
-			return repository.save(user);
+			log.debug("Finished saving user to database");
+			return newUser;
 		}
 		else
 		{
+			log.debug("Saving user/staff");
 			val newUser = repository.saveAndFlush(user);
+			log.debug("Saving new datasets");
 			probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
+			log.debug("Saving team links");
 			ofNullable(user.getStaff()).map(StaffEntity::getTeamLinks).ifPresent(staffTeamRepository::saveAll);
+			log.debug("Finished saving new user to database");
 			return newUser;
 		}
 	}
