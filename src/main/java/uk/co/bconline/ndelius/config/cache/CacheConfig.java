@@ -1,7 +1,7 @@
 package uk.co.bconline.ndelius.config.cache;
 
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
@@ -17,12 +17,15 @@ public class CacheConfig
 	@Bean
 	public CacheManager cacheManager()
 	{
-		return new ConcurrentMapCacheManager("roles", "roleGroups");
+		return new ConcurrentMapCacheManager();
 	}
 
-	@CacheEvict(value = {"roles", "roleGroups"}, allEntries = true)
 	public void evictCache()
 	{
-		log.debug("Role caches evicted");
+		cacheManager().getCacheNames().parallelStream()
+				.map(cacheManager()::getCache)
+				.peek(cache -> log.debug("Cache {} = {}", cache.getName(), cache.getNativeCache()))
+				.forEach(Cache::clear);
+		log.debug("Flushed all caches");
 	}
 }

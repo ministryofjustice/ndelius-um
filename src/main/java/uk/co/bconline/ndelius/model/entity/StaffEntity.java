@@ -22,6 +22,8 @@ import lombok.*;
 @AllArgsConstructor
 @Table(name = "STAFF")
 @Builder(toBuilder = true)
+@ToString(exclude = {"teamLinks", "user"})
+@EqualsAndHashCode(exclude = {"teamLinks", "user"})
 public class StaffEntity
 {
 	@Id

@@ -11,6 +11,6 @@ import lombok.*;
 @AllArgsConstructor
 public class ReferenceData
 {
-    @NotBlank private String code;
-    private String description;
+	@NotBlank private String code;
+	private String description;
 }

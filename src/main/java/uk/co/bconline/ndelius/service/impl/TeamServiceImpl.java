@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import uk.co.bconline.ndelius.model.Team;
@@ -30,6 +31,7 @@ public class TeamServiceImpl implements TeamService
 	}
 
 	@Override
+	@Cacheable("teamsByProbationArea")
 	public List<Team> getTeams(String probationArea)
 	{
 		List<TeamEntity> teams = ofNullable(probationArea)
@@ -40,6 +42,7 @@ public class TeamServiceImpl implements TeamService
 	}
 
 	@Override
+	@Cacheable("teamIdsByCode")
 	public Optional<Long> getTeamId(String code)
 	{
 		return repository.findByCode(code).map(TeamEntity::getId);

@@ -1,19 +1,24 @@
 package uk.co.bconline.ndelius.model.entity;
 
+import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
+
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cache;
+
+import lombok.*;
 
 @Getter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "TEAM")
+@Cache(usage = READ_ONLY)
+@ToString(exclude = "staffLinks")
+@EqualsAndHashCode(exclude = "staffLinks")
 public class TeamEntity
 {
 	public TeamEntity(Long id)
