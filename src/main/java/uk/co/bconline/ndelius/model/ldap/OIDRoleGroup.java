@@ -1,6 +1,6 @@
 package uk.co.bconline.ndelius.model.ldap;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.naming.Name;
 
@@ -24,5 +24,5 @@ public final class OIDRoleGroup
 
     @Setter
     @Transient
-    private List<OIDRole> roles;
+    private Set<OIDRole> roles;
 }

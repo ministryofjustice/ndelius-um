@@ -97,8 +97,11 @@ public class UserTransformer
 
 	public Optional<User> combine(UserEntity dbUser, OIDUser oidUser, ADUser ad1User, ADUser ad2User)
 	{
-		val allRoles = roleService.getUnfilteredRoles().map(OIDRole::getName).collect(toSet());
-		return Stream.of(
+		LocalDateTime t = LocalDateTime.now();
+		val allRoles = roleService.getAllRoles().stream().map(OIDRole::getName).collect(toSet());
+		log.trace("--{}ms	Get all roles for mapping", MILLIS.between(t, LocalDateTime.now()));
+		t = LocalDateTime.now();
+		val r = Stream.of(
 				ofNullable(oidUser).map(v -> User.builder()
 						.username(v.getUsername())
 						.aliasUsername(v.getAliasUsername())
@@ -149,6 +152,8 @@ public class UserTransformer
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.reduce(this::reduceUser);
+		log.trace("--{}ms	Combine results", MILLIS.between(t, LocalDateTime.now()));
+		return r;
 	}
 
 	public Optional<SearchResult> mapToSearchResult(UserEntity dbUser, OIDUser oidUser, ADUser ad1User, ADUser ad2User)
@@ -306,8 +311,8 @@ public class UserTransformer
 				.homeArea(ofNullable(user.getHomeArea()).map(Dataset::getCode).orElse(null))
 				.roles(ofNullable(user.getRoles()).map(list -> list.stream()
 						.map(roleTransformer::map)
-						.collect(toList()))
-						.orElse(emptyList()))
+						.collect(toSet()))
+						.orElse(emptySet()))
 				.build();
 	}
 

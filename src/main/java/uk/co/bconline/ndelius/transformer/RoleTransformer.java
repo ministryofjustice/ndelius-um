@@ -1,7 +1,5 @@
 package uk.co.bconline.ndelius.transformer;
 
-import static java.util.stream.Collectors.toList;
-
 import org.springframework.stereotype.Component;
 
 import uk.co.bconline.ndelius.model.Role;
@@ -15,8 +13,7 @@ public class RoleTransformer
 		return Role.builder()
 				.name(oidRole.getName())
 				.description(oidRole.getDescription())
-				.interactions(oidRole.getName().startsWith("UMBT") || oidRole.getName().startsWith("UABT")?
-						oidRole.getInteractions().stream().filter(i -> !i.equals("UMBI003")).collect(toList()): null)
+				.interactions(!oidRole.getInteractions().isEmpty()? oidRole.getInteractions(): null)
 				.build();
 	}
 

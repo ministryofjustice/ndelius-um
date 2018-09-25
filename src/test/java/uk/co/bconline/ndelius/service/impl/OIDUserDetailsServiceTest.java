@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import uk.co.bconline.ndelius.service.RoleService;
+import uk.co.bconline.ndelius.service.UserRoleService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -26,12 +26,12 @@ public class OIDUserDetailsServiceTest
 	private OIDUserDetailsService service;
 
 	@Autowired
-	private RoleService roleService;
+	private UserRoleService roleService;
 
 	@Test
 	public void retrieveRoles()
 	{
-		List<String> roles = roleService.getUserInteractions("test.user");
+		Set<String> roles = roleService.getUserInteractions("test.user");
 
 		assertFalse(roles.isEmpty());
 		assertThat(roles, hasItem("UMBI001"));
