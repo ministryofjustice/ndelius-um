@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import uk.co.bconline.ndelius.model.Organisation;
@@ -17,6 +18,7 @@ public class OrganisationServiceImpl implements OrganisationService
 {
 	private final OrganisationRepository repository;
 	private final OrganisationTransformer transformer;
+
 	@Autowired
 	public OrganisationServiceImpl(OrganisationRepository repository, OrganisationTransformer transformer)
 	{
@@ -25,11 +27,14 @@ public class OrganisationServiceImpl implements OrganisationService
 	}
 
 	@Override
+	@Cacheable("organisationIds")
 	public Optional<Long> getOrganisationId(String code)
 	{
 		return repository.findByCode(code).map(OrganisationEntity::getId);
 	}
+
 	@Override
+	@Cacheable(value = "organisations", key = "'all'")
 	public List<Organisation> getOrganisations()
 	{
 		List<OrganisationEntity> organisations = repository.findAll();
