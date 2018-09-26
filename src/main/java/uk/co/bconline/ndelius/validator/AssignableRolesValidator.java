@@ -15,7 +15,7 @@ import uk.co.bconline.ndelius.model.Role;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
 import uk.co.bconline.ndelius.service.OIDUserService;
-import uk.co.bconline.ndelius.service.RoleService;
+import uk.co.bconline.ndelius.service.UserRoleService;
 
 @Slf4j
 public class AssignableRolesValidator implements ConstraintValidator<AssignableRoles, User>
@@ -24,7 +24,7 @@ public class AssignableRolesValidator implements ConstraintValidator<AssignableR
 	private OIDUserService userService;
 
 	@Autowired
-	private RoleService roleService;
+	private UserRoleService userRoleService;
 
 	@Override
 	public boolean isValid(User user, ConstraintValidatorContext context)
@@ -35,7 +35,7 @@ public class AssignableRolesValidator implements ConstraintValidator<AssignableR
 
 		if (newRoles.isEmpty()) return true;
 
-		val assignableRoles = roleService.getRoles().stream().map(Role::getName).collect(toSet());
+		val assignableRoles = userRoleService.getRolesICanAssign().stream().map(OIDRole::getName).collect(toSet());
 		userService.getUser(user.getUsername()).ifPresent(u -> assignableRoles.addAll(u.getRoles().stream().map(
 				OIDRole::getName).collect(toSet())));
 

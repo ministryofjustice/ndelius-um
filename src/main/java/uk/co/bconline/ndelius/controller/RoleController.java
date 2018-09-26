@@ -1,7 +1,10 @@
 package uk.co.bconline.ndelius.controller;
 
+import static java.util.stream.Collectors.toSet;
 import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
+
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,6 +19,7 @@ import lombok.val;
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
 import uk.co.bconline.ndelius.model.Role;
 import uk.co.bconline.ndelius.service.RoleService;
+import uk.co.bconline.ndelius.transformer.RoleTransformer;
 
 @Slf4j
 @Validated
@@ -24,18 +28,22 @@ import uk.co.bconline.ndelius.service.RoleService;
 public class RoleController
 {
 	private final RoleService roleService;
+	private final RoleTransformer roleTransformer;
 
 	@Autowired
-	public RoleController(RoleService roleService)
+	public RoleController(
+			RoleService roleService,
+			RoleTransformer roleTransformer)
 	{
 		this.roleService = roleService;
+		this.roleTransformer = roleTransformer;
 	}
 
 	@Interaction("UMBI007")
 	@GetMapping(path="/roles")
-	public ResponseEntity<Iterable<Role>> getRoles()
+	public ResponseEntity<Set<Role>> getRoles()
 	{
-		val roles = roleService.getRoles();
+		val roles = roleService.getAllRoles().stream().map(roleTransformer::map).collect(toSet());
 
 		return !roles.isEmpty()? ok(roles): notFound().build();
 	}

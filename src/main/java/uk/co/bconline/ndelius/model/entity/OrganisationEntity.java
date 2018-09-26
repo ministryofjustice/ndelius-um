@@ -1,6 +1,10 @@
 package uk.co.bconline.ndelius.model.entity;
 
+import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Cache;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Cache(usage = READ_ONLY)
 @Table(name = "ORGANISATION")
 public class OrganisationEntity
 {

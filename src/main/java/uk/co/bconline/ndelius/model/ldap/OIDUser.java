@@ -3,7 +3,7 @@ package uk.co.bconline.ndelius.model.ldap;
 import static java.util.Collections.emptyList;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 import javax.naming.Name;
 
@@ -55,7 +55,7 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails
 	private String aliasUsername;
 
 	@Transient
-	private List<OIDRole> roles;
+	private Set<OIDRole> roles;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities()

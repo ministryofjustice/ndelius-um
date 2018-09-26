@@ -38,7 +38,7 @@ import uk.co.bconline.ndelius.repository.oid.OIDUserAliasRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 import uk.co.bconline.ndelius.service.OIDUserService;
-import uk.co.bconline.ndelius.service.RoleService;
+import uk.co.bconline.ndelius.service.UserRoleService;
 
 @Slf4j
 @Service
@@ -52,19 +52,19 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	private final OIDUserRepository userRepository;
 	private final OIDUserAliasRepository userAliasRepository;
 	private final OIDUserPreferencesRepository preferencesRepository;
-	private final RoleService roleService;
+	private final UserRoleService userRoleService;
 
 	@Autowired
 	public OIDUserDetailsService(
 			OIDUserRepository userRepository,
 			OIDUserAliasRepository userAliasRepository,
 			OIDUserPreferencesRepository preferencesRepository,
-			RoleService roleService)
+			UserRoleService userRoleService)
 	{
 		this.userRepository = userRepository;
 		this.userAliasRepository = userAliasRepository;
 		this.preferencesRepository = preferencesRepository;
-		this.roleService = roleService;
+		this.userRoleService = userRoleService;
 	}
 
 	@Override
@@ -134,18 +134,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		return results;
 	}
 
-	private float deriveScore(String query, OIDUser u)
-	{
-		return (float) Stream.of(query.split(" "))
-				.map(String::toLowerCase)
-				.mapToDouble(token -> Stream.of(u.getUsername(), u.getForenames(), u.getSurname())
-						.filter(str -> !StringUtils.isEmpty(str))
-						.filter(str -> str.toLowerCase().contains(token))
-						.mapToDouble(item -> (double) token.length() / item.length())
-						.max().orElse(0.0))
-				.sum();
-	}
-
 	@Override
 	public List<SearchResult> search(String query)
 	{
@@ -166,7 +154,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	{
 		return getBasicUser(username)
 				.map(u -> u.toBuilder()
-						.roles(roleService.getRolesByParent(username, OIDUser.class).collect(toList()))
+						.roles(userRoleService.getUserRoles(username))
 						.aliasUsername(getAlias(u.getDn()).orElse(username))
 						.build());
 	}
@@ -195,18 +183,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		return userAliasRepository
 				.findByAliasedUserDnIgnoreCase(getDn(username) + "," + oidBase)
 				.map(OIDUserAlias::getUsername);
-	}
-
-	private Optional<String> getAlias(Name userDn)
-	{
-		return userAliasRepository
-				.findByAliasedUserDnIgnoreCase(userDn.toString() + "," + oidBase)
-				.map(OIDUserAlias::getUsername);
-	}
-
-	private String getDn(String username)
-	{
-		return String.format("cn=%s,%s", username, USER_BASE);
 	}
 
 	@Override
@@ -250,6 +226,30 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		}
 
 		// Role associations
-		roleService.updateUserRoles(user.getUsername(), user.getRoles());
+		userRoleService.updateUserRoles(user.getUsername(), user.getRoles());
+	}
+
+	private float deriveScore(String query, OIDUser u)
+	{
+		return (float) Stream.of(query.split(" "))
+				.map(String::toLowerCase)
+				.mapToDouble(token -> Stream.of(u.getUsername(), u.getForenames(), u.getSurname())
+						.filter(str -> !StringUtils.isEmpty(str))
+						.filter(str -> str.toLowerCase().contains(token))
+						.mapToDouble(item -> (double) token.length() / item.length())
+						.max().orElse(0.0))
+				.sum();
+	}
+
+	private Optional<String> getAlias(Name userDn)
+	{
+		return userAliasRepository
+				.findByAliasedUserDnIgnoreCase(userDn.toString() + "," + oidBase)
+				.map(OIDUserAlias::getUsername);
+	}
+
+	private String getDn(String username)
+	{
+		return String.format("cn=%s,%s", username, USER_BASE);
 	}
 }
