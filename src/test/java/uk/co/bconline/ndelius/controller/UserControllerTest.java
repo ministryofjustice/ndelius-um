@@ -229,7 +229,7 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.error[*]", hasItem("username: already exists")));
 	}
 
-	@Test
+	@Test @Ignore("User creation has been disabled until we have access rights in Active Directory")
 	public void addUser() throws Exception
 	{
 		String token = token(mvc);
