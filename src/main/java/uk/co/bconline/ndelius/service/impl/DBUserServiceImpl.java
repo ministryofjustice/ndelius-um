@@ -63,7 +63,7 @@ public class DBUserServiceImpl implements DBUserService
 	public Optional<UserEntity> getUser(String username)
 	{
 		val t = LocalDateTime.now();
-		val u =  repository.getUserEntityByUsername(username);
+		val u =  repository.findByUsernameIgnoreCase(username);
 		log.trace("--{}ms	DB lookup", MILLIS.between(t, LocalDateTime.now()));
 		return u;
 	}
