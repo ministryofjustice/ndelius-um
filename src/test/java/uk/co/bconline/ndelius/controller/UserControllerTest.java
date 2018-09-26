@@ -209,7 +209,7 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.error[*]", hasItem("username: must not be blank")));
 	}
 
-	@Test
+	@Test @Ignore("User creation has been disabled until we have access rights in Active Directory")
 	public void addUserWithExistingUsername() throws Exception
 	{
 		String token = token(mvc);
