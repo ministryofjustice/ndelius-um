@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -209,7 +208,7 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.error[*]", hasItem("username: must not be blank")));
 	}
 
-	@Test @Ignore("User creation has been disabled until we have access rights in Active Directory")
+	@Test
 	public void addUserWithExistingUsername() throws Exception
 	{
 		String token = token(mvc);
@@ -229,7 +228,7 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.error[*]", hasItem("username: already exists")));
 	}
 
-	@Test @Ignore("User creation has been disabled until we have access rights in Active Directory")
+	@Test
 	public void addUser() throws Exception
 	{
 		String token = token(mvc);
@@ -274,7 +273,7 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.roles[0].interactions", hasItem("UMBI001")));
 	}
 
-	@Test @Ignore("User creation has been disabled until we have access rights in Active Directory")
+	@Test
 	public void addUserWithAliasUsername() throws Exception
 	{
 		String token = token(mvc);
@@ -299,7 +298,7 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.aliasUsername", is("test.user2.alias")));
 	}
 
-	@Test @Ignore("User creation has been disabled until we have access rights in Active Directory")
+	@Test
 	public void usersAreFilteredOnDatasets() throws Exception
 	{
 		String token = token(mvc);
@@ -324,7 +323,7 @@ public class UserControllerTest
 				.andExpect(status().isNotFound());
 	}
 
-	@Test @Ignore("User creation has been disabled until we have access rights in Active Directory")
+	@Test
 	public void updateUser() throws Exception
 	{
 		String token = token(mvc);
@@ -392,7 +391,7 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT002")));
 	}
 
-	@Test @Ignore("User creation has been disabled until we have access rights in Active Directory")
+	@Test
 	public void usersAreCreatedWithDefaultPreferences() throws Exception
 	{
 		mvc.perform(post("/api/user")
@@ -427,7 +426,7 @@ public class UserControllerTest
 				.andExpect(jsonPath("$", hasSize(4)));
 	}
 
-	@Test @Ignore("User creation has been disabled until we have access rights in Active Directory")
+	@Test
 	public void updateUserWithSameAliasDifferentCase() throws Exception
 	{
 		String token = token(mvc);

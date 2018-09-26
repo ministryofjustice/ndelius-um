@@ -115,6 +115,7 @@ public class UserTransformer
 								.map(l -> l.stream().filter(role -> allRoles.contains(role.getName())))
 								.map(transactions -> transactions
 										.map(roleTransformer::map)
+										.peek(role -> role.getInteractions().remove("UMBI003"))	// Temporary disabling of add-user
 										.collect(toList()))
 								.orElse(null))
 						.sources(Stream.of("OID",

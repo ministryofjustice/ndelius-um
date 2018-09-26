@@ -40,7 +40,7 @@ public class RoleServiceImpl implements RoleService
 	}
 
 	@Override
-	@Cacheable(value = "roles", key = "'all'")
+	@Cacheable(value = "rolesets", key = "'all'")
 	public Set<OIDRole> getAllRoles()
 	{
 		return Sets.newHashSet(roleRepository.findAll(query()
@@ -57,7 +57,7 @@ public class RoleServiceImpl implements RoleService
 	}
 
 	@Override
-	@Cacheable(value = "roles")
+	@Cacheable(value = "rolesets")
 	public Set<OIDRole> getRolesInGroup(String group)
 	{
 		return Sets.newHashSet(roleRepository.findAll(query()
