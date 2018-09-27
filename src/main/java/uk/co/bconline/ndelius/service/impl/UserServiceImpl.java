@@ -1,18 +1,19 @@
 package uk.co.bconline.ndelius.service.impl;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.concurrent.CompletableFuture.*;
 import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,36 +72,34 @@ public class UserServiceImpl implements UserService
 	@Override
 	public List<SearchResult> search(String query, int page, int pageSize)
 	{
-		if (StringUtils.isEmpty(query) || query.length() < 3) return Collections.emptyList();
+		if (StringUtils.isEmpty(query) || query.length() < 3) return emptyList();
+
+		val dbFuture = supplyAsync(() -> dbService.search(query));
+		val oidFuture = supplyAsync(() -> oidService.search(query));
+		val ad1Future = supplyAsync(() -> ad1Service.map(service -> service.search(query).stream()
+				.filter(user -> !oidService.getUsernameByAlias(user.getUsername()).isPresent())
+				.collect(toList())).orElse(emptyList()));
+		val ad2Future = supplyAsync(() -> ad2Service.map(service -> service.search(query)).orElse(emptyList()));
+		Set<SearchResult> foundUsers;
+		try
+		{
+			foundUsers = allOf(dbFuture, oidFuture, ad1Future, ad2Future)
+					.thenApply(v -> {
+						Set<SearchResult> results = new HashSet<>();
+						results.addAll(dbFuture.join());
+						results.addAll(oidFuture.join());
+						results.addAll(ad1Future.join());
+						results.addAll(ad2Future.join());
+						return results;
+					}).get();
+		}
+		catch (InterruptedException | ExecutionException e)
+		{
+			throw new AppException(String.format("Unable to complete user search for %s", query), e);
+		}
 
 		val datasetsFilter = datasetsFilter();
-
-		LocalDateTime t = LocalDateTime.now();
-		List<SearchResult> foundUsers = dbService.search(query);
-		log.debug("{}ms	DB Search", MILLIS.between(t, LocalDateTime.now()));
-
-		t = LocalDateTime.now();
-		List<String> foundUsernames = foundUsers.stream().map(SearchResult::getUsername).collect(toList());
-		foundUsers = Stream.concat(foundUsers.stream(), oidService.search(query, foundUsernames).stream())
-				.collect(toList());
-		log.debug("{}ms	OID Search", MILLIS.between(t, LocalDateTime.now()));
-
-		if (ad1Service.isPresent())
-		{
-			foundUsernames = foundUsers.stream().map(SearchResult::getUsername).collect(toList());
-			val ad1Users = ad1Service.get().search(query, foundUsernames).stream()
-					.filter(user -> !oidService.getUsernameByAlias(user.getUsername()).isPresent());
-			foundUsers = Stream.concat(foundUsers.stream(), ad1Users).collect(toList());
-		}
-
-		if (ad2Service.isPresent())
-		{
-			foundUsernames = foundUsers.stream().map(SearchResult::getUsername).collect(toList());
-			foundUsers = Stream.concat(foundUsers.stream(), ad2Service.get().search(query, foundUsernames).stream())
-					.collect(toList());
-		}
-
-		t = LocalDateTime.now();
+		val t = LocalDateTime.now();
 		val r = foundUsers.stream()
 				.sorted(comparing(SearchResult::getScore, Float::compare).reversed())
 				.filter(result -> datasetsFilter.test(result.getUsername()))

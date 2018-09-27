@@ -8,6 +8,6 @@ import uk.co.bconline.ndelius.model.entity.UserEntity;
 
 public interface UserEntityRepository extends JpaRepository<UserEntity, Long>
 {
-    Optional<UserEntity> findByUsernameIgnoreCase(String username);
+    Optional<UserEntity> findFirstByUsernameIgnoreCase(String username);
     boolean existsByUsername(String username);
 }

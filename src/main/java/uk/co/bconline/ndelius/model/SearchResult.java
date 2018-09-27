@@ -4,15 +4,13 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
 @AllArgsConstructor
 @Builder(toBuilder = true)
+@EqualsAndHashCode(of = "username")
 public final class SearchResult
 {
 	private String username;

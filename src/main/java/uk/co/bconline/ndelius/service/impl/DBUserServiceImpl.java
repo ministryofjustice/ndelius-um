@@ -63,7 +63,7 @@ public class DBUserServiceImpl implements DBUserService
 	public Optional<UserEntity> getUser(String username)
 	{
 		val t = LocalDateTime.now();
-		val u =  repository.findByUsernameIgnoreCase(username);
+		val u =  repository.findFirstByUsernameIgnoreCase(username);
 		log.trace("--{}ms	DB lookup", MILLIS.between(t, LocalDateTime.now()));
 		return u;
 	}
@@ -83,6 +83,7 @@ public class DBUserServiceImpl implements DBUserService
 	@Override
 	public List<SearchResult> search(String searchTerm)
 	{
+		LocalDateTime t = LocalDateTime.now();
 		val results = Arrays.stream(searchTerm.split("\\s+"))
 				.parallel()
 				.flatMap(token -> {
@@ -104,6 +105,7 @@ public class DBUserServiceImpl implements DBUserService
 						.score(entity.getScore())
 						.build())
 				.collect(toList());
+		log.trace("{}ms	DB Search", MILLIS.between(t, LocalDateTime.now()));
 		log.debug("Found {} DB results", results.size());
 		return results;
 	}
