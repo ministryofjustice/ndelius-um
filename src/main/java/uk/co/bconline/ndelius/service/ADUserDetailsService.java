@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.service;
 
-import static java.lang.Math.min;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
@@ -51,23 +50,17 @@ public abstract class ADUserDetailsService implements UserDetailsService
 		return r;
 	}
 
-	public List<SearchResult> search(String query, List<String> excludedUsernames)
+	public List<SearchResult> search(String query)
 	{
 		AndFilter filter = Stream.of(query.split(" "))
 				.map(token -> query().where("samAccountName").whitespaceWildcardsLike(token))
 				.collect(AndFilter::new, (f, q) -> f.and(q.filter()), AndFilter::and);
-
-		for (String excludedUsername: excludedUsernames.subList(0, min(50, excludedUsernames.size())))
-		{
-			filter = filter.and(query().where("samAccountName").not().is(excludedUsername).filter());
-		}
 
 		if (log.isDebugEnabled())
 		{
 			val filterString = filter.encode();
 			log.debug("Searching AD: {}", filterString);
 			log.debug("Filter length={}", filterString.length());
-			log.debug("Excluded usernames: {}", excludedUsernames);
 		}
 
 		val results = stream(getRepository()
@@ -75,7 +68,6 @@ public abstract class ADUserDetailsService implements UserDetailsService
 						.base(USER_BASE)
 						.filter(filter))
 				.spliterator(), false)
-				.filter(u -> !excludedUsernames.contains(u.getUsername()))
 				.map(u -> SearchResult.builder()
 						.username(u.getUsername())
 						.score(deriveScore(query, u))

@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import static java.lang.Math.min;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
@@ -8,7 +7,6 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -95,18 +93,13 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	 * @return a set of matching users from OID
 	 */
 	@Override
-	public List<SearchResult> search(String query, List<String> excludedUsernames)
+	public List<SearchResult> search(String query)
 	{
 		AndFilter filter = Stream.of(query.split(" "))
 				.map(token -> query().where("givenName").whitespaceWildcardsLike(token)
 							.or("sn").whitespaceWildcardsLike(token)
 							.or("cn").whitespaceWildcardsLike(token))
 				.collect(AndFilter::new, (f, q) -> f.and(q.filter()), AndFilter::and);
-
-		for (String excludedUsername: excludedUsernames.subList(0, min(50, excludedUsernames.size())))
-		{
-			filter = filter.and(query().where("cn").not().is(excludedUsername).filter());
-		}
 
 		filter = filter.and(query().where("objectclass").not().is("alias").filter());
 
@@ -115,29 +108,23 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 			val filterString = filter.encode();
 			log.debug("Searching OID: {}", filterString);
 			log.debug("Filter length={}", filterString.length());
-			log.debug("Excluded usernames: {}", excludedUsernames);
 		}
 
+		val t = LocalDateTime.now();
 		val results = stream(userRepository
 				.findAll(query()
 						.searchScope(ONELEVEL)
 						.base(USER_BASE)
 						.filter(filter))
 				.spliterator(), false)
-				.filter(u -> !excludedUsernames.contains(u.getUsername()))
 				.map(u -> SearchResult.builder()
 						.username(u.getUsername())
 						.score(deriveScore(query, u))
 						.build())
 				.collect(toList());
+		log.debug("{}ms	OID Search", MILLIS.between(t, LocalDateTime.now()));
 		log.debug("Found {} OID results", results.size());
 		return results;
-	}
-
-	@Override
-	public List<SearchResult> search(String query)
-	{
-		return search(query, Collections.emptyList());
 	}
 
 	@Override

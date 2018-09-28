@@ -10,7 +10,6 @@ public interface OIDUserService
 {
 	boolean usernameExists(String username);
 	List<SearchResult> search(String query);
-	List<SearchResult> search(String query, List<String> excludedUsernames);
 	Optional<OIDUser> getBasicUser(String username);
 	Optional<OIDUser> getUser(String username);
 	Optional<String> getAlias(String username);

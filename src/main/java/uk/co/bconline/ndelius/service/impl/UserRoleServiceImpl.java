@@ -96,10 +96,7 @@ public class UserRoleServiceImpl implements UserRoleService
 				.base(String.format("cn=%s,%s", username, USER_BASE))
 				.where("objectclass").like("NDRole*")).spliterator(), false)
 				.map(role -> role.getName().startsWith("UMBT") || role.getName().startsWith("UABT")?
-								roleService.getRole(role.getName()).map(fullRole -> {
-									fullRole.getInteractions().remove("UMBI003");	// Temporary disabling of add-user
-									return fullRole;
-								}).orElse(role): role)
+								roleService.getRole(role.getName()).orElse(role): role)
 				.collect(toSet());
 		log.trace("--{}ms	OID lookup user roles", MILLIS.between(t, LocalDateTime.now()));
 		return r;
