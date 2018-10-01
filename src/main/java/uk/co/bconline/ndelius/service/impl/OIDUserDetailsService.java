@@ -107,7 +107,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		{
 			val filterString = filter.encode();
 			log.debug("Searching OID: {}", filterString);
-			log.debug("Filter length={}", filterString.length());
 		}
 
 		val t = LocalDateTime.now();
@@ -122,8 +121,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 						.score(deriveScore(query, u))
 						.build())
 				.collect(toList());
-		log.debug("{}ms	OID Search", MILLIS.between(t, LocalDateTime.now()));
-		log.debug("Found {} OID results", results.size());
+		log.debug("Found {} OID results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));
 		return results;
 	}
 

@@ -60,9 +60,9 @@ public abstract class ADUserDetailsService implements UserDetailsService
 		{
 			val filterString = filter.encode();
 			log.debug("Searching AD: {}", filterString);
-			log.debug("Filter length={}", filterString.length());
 		}
 
+		val t = LocalDateTime.now();
 		val results = stream(getRepository()
 				.findAll(query()
 						.base(USER_BASE)
@@ -73,7 +73,7 @@ public abstract class ADUserDetailsService implements UserDetailsService
 						.score(deriveScore(query, u))
 						.build())
 				.collect(toList());
-		log.debug("Found {} AD results", results.size());
+		log.debug("Found {} AD results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));
 		return results;
 	}
 

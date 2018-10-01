@@ -83,7 +83,7 @@ public class DBUserServiceImpl implements DBUserService
 	@Override
 	public List<SearchResult> search(String searchTerm)
 	{
-		LocalDateTime t = LocalDateTime.now();
+		val t = LocalDateTime.now();
 		val results = Arrays.stream(searchTerm.split("\\s+"))
 				.parallel()
 				.flatMap(token -> {
@@ -105,8 +105,7 @@ public class DBUserServiceImpl implements DBUserService
 						.score(entity.getScore())
 						.build())
 				.collect(toList());
-		log.trace("{}ms	DB Search", MILLIS.between(t, LocalDateTime.now()));
-		log.debug("Found {} DB results", results.size());
+		log.debug("Found {} DB results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));
 		return results;
 	}
 

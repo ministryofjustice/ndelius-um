@@ -31,6 +31,7 @@ export class ItemSelectorComponent
   @Input() selected: any;
   @Input() available: any[];
   @Input() labelMapper: Function = (item: any) => item;
+  @Input() idMapper: Function = null;
   @Input() maxHeight: string = "auto";
   @Input() readonly: boolean;
   @Input() required: boolean = false;
@@ -47,7 +48,7 @@ export class ItemSelectorComponent
   toggle(item): void {
     if (this.multiple) {
       if (this.selected == null) this.selected = [];
-      let index = this.selected.map(item => this.mapToLabel(item)).indexOf(this.mapToLabel(item));
+      let index = this.selected.map(item => this.mapToId(item)).indexOf(this.mapToId(item));
       if (index === -1) {
         this.selected.push(item);
       } else {
@@ -69,13 +70,17 @@ export class ItemSelectorComponent
     return this.labelMapper(item);
   }
 
+  mapToId(item: any): string {
+    return this.idMapper != null? this.idMapper(item): this.labelMapper(item);
+  }
+
   isSelected(item: any): boolean {
     if (this.selected == null) return false;
-    let label: string = this.mapToLabel(item);
+    let id: string = this.mapToId(item);
     if (this.multiple) {
-      return this.selected.map(item => this.mapToLabel(item)).indexOf(label) !== -1;
+      return this.selected.map(item => this.mapToId(item)).indexOf(id) !== -1;
     } else {
-      return this.mapToLabel(this.selected) === label;
+      return this.mapToId(this.selected) === id;
     }
   }
 
