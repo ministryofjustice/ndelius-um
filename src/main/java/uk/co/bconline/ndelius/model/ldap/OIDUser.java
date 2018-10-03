@@ -19,7 +19,7 @@ import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @ToString(exclude = "password")
-@Entry(objectClasses = {"NDUser", "person", "top"}, base = "cn=Users")
+@Entry(objectClasses = {"NDUser", "person", "top"}, base = "ou=NDProd,cn=Users")
 public final class OIDUser implements OIDUserHomeArea, UserDetails
 {
 	@Id
@@ -27,7 +27,7 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails
 
 	@Setter
 	@Attribute(name="cn")
-	@DnAttribute(value="cn", index=1)
+	@DnAttribute(value="cn", index=2)
 	private String username;
 
 	@Attribute(name="uid")

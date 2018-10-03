@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Entry(objectClasses = {"NDRoleGroup", "top"}, base = "cn=ndRoleGroups,cn=Users")
+@Entry(objectClasses = {"NDRoleGroup", "top"}, base = "cn=ndRoleGroups,ou=NDProd,cn=Users")
 public final class OIDRoleGroup
 {
     @Id
