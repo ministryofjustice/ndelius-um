@@ -4,12 +4,12 @@ objectclass: domain
 objectclass: extensibleObject
 dc: ad1
 
-dn: cn=Users,dc=ad1,dc=local
+dn: ou=Users,dc=ad1,dc=local
 objectclass: top
 objectclass: organizationalUnit
 cn: Users
 
-dn: cn=Administrator,cn=Users,dc=ad1,dc=local
+dn: cn=Administrator,ou=Users,dc=ad1,dc=local
 objectclass: top
 objectclass: user
 objectclass: person
@@ -18,7 +18,7 @@ uid: Administrator
 samAccountName: Administrator
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
-dn: cn=test.user.alias,cn=Users,dc=ad1,dc=local
+dn: cn=test.user.alias,ou=Users,dc=ad1,dc=local
 objectclass: top
 objectclass: user
 objectclass: person

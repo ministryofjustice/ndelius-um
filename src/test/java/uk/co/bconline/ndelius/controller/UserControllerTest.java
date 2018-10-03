@@ -410,7 +410,7 @@ public class UserControllerTest
 
 		Optional<OIDUserPreferences> prefs = preferencesRepository.findOne(query()
 				.searchScope(SearchScope.ONELEVEL)
-				.base("cn=test.user6,cn=Users")
+				.base("cn=test.user6,ou=NDProd,cn=Users")
 				.where("cn").is("UserPreferences"));
 		assertTrue(prefs.isPresent());
 		assertEquals("NRO16", prefs.get().getMostRecentlyViewedOffenders());

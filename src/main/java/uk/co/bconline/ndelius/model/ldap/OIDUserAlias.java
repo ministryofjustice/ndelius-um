@@ -13,7 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@Entry(objectClasses = {"NDUser", "alias", "top"}, base="cn=Users")
+@Entry(objectClasses = {"NDUser", "alias", "top"}, base="ou=NDProd,cn=Users")
 @ToString(exclude = "password")
 public final class OIDUserAlias
 {
@@ -21,7 +21,7 @@ public final class OIDUserAlias
 	private Name dn;
 
 	@Attribute(name="cn")
-	@DnAttribute(value="cn", index=1)
+	@DnAttribute(value="cn", index=2)
 	private String username;
 
 	@Attribute(name="aliasedObjectName")
