@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -93,7 +94,7 @@ public class UserRoleServiceImpl implements UserRoleService
 		val t = LocalDateTime.now();
 		val r = stream(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
-				.base(String.format("cn=%s,%s", username, USER_BASE))
+				.base(join(",", "cn=" + username, USER_BASE))
 				.where("objectclass").like("NDRole*")).spliterator(), false)
 				.map(role -> role.getName().startsWith("UMBT") || role.getName().startsWith("UABT")?
 								roleService.getRole(role.getName()).orElse(role): role)
@@ -108,7 +109,7 @@ public class UserRoleServiceImpl implements UserRoleService
 		val t = LocalDateTime.now();
 		val r = stream(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
-				.base(String.format("cn=%s,%s", username, USER_BASE))
+				.base(join(",", "cn=" + username, USER_BASE))
 				.where("cn").like("UMBT*")
 				.or("cn").like("UABT*")).spliterator(), false)
 				.map(OIDRole::getName)
@@ -128,7 +129,7 @@ public class UserRoleServiceImpl implements UserRoleService
 		log.debug("Deleting existing role associations");
 		roleRepository.deleteAll(roleRepository.findAll(query()
 				.searchScope(SearchScope.ONELEVEL)
-				.base(String.format("cn=%s,%s", username, USER_BASE))
+				.base(join(",", "cn=" + username, USER_BASE))
 				.where("objectClass").like("NDRole*")));
 
 		log.debug("Saving new role associations");
@@ -138,7 +139,7 @@ public class UserRoleServiceImpl implements UserRoleService
 						.map(name -> OIDRoleAssociation.builder()
 								.name(name)
 								.username(username)
-								.aliasedObjectName(String.format("cn=%s,%s,%s", name, ROLE_BASE, oidBase))
+								.aliasedObjectName(join(",", "cn=" + name, ROLE_BASE, oidBase))
 								.build())
 						.collect(toList())));
 	}

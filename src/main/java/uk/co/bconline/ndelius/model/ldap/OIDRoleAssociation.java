@@ -13,18 +13,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entry(objectClasses = {"NDRoleAssociation", "alias", "top"}, base = "ou=NDProd,cn=Users")
+@Entry(objectClasses = {"NDRoleAssociation", "alias", "top"})
 public final class OIDRoleAssociation
 {
 	@Id
 	private Name dn;
 
 	@Attribute(name="cn")
-	@DnAttribute(value="cn", index=3)
+	@DnAttribute(value="cn", index=1)
 	private String name;
 
 	@Transient
-	@DnAttribute(value="cn", index=2)
+	@DnAttribute(value="cn", index=0)
 	private String username;
 
 	@Attribute(name="aliasedObjectName")

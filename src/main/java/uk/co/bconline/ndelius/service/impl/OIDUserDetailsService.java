@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -187,7 +188,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 		// User alias
 		log.debug("Deleting alias record if it exists");
-		userAliasRepository.findByAliasedUserDnIgnoreCase(String.format("cn=%s,%s,%s", user.getUsername(), USER_BASE, oidBase))
+		userAliasRepository.findByAliasedUserDnIgnoreCase(join(",", "cn=" + user.getUsername(), USER_BASE, oidBase))
 				.ifPresent(userAliasRepository::delete);
 		if (user.getAliasUsername() != null && !user.getAliasUsername().equalsIgnoreCase(user.getUsername()))
 		{
@@ -205,7 +206,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		log.debug("Checking if user preferences exist");
 		if (!preferencesRepository.findOne(query()
 				.searchScope(ONELEVEL)
-				.base(String.format("cn=%s,%s", user.getUsername(), USER_BASE))
+				.base(getDn(user.getUsername()))
 				.where("objectclass").isPresent()).isPresent())
 		{
 			log.debug("Creating user preferences");
@@ -237,6 +238,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 	private String getDn(String username)
 	{
-		return String.format("cn=%s,%s", username, USER_BASE);
+		return join(",", "cn=" + username, USER_BASE);
 	}
 }

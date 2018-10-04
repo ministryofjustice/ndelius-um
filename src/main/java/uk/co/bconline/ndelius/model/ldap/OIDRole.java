@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entry(objectClasses = "top", base = "cn=ndRoleCatalogue,ou=NDProd,cn=Users")
+@Entry(objectClasses = "top", base = "cn=ndRoleCatalogue")
 public final class OIDRole
 {
 	@Id

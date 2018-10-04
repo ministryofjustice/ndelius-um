@@ -4,6 +4,10 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 import static org.springframework.util.StringUtils.isEmpty;
 
+import java.util.stream.Stream;
+
+import org.springframework.util.StringUtils;
+
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -28,4 +32,10 @@ public class NameUtils
 		return stream(forenames.split(" ")).skip(1).collect(joining(" "));
 	}
 
+	public static String join(String delimiter, String... strings)
+	{
+		return Stream.of(strings)
+				.filter(str -> !StringUtils.isEmpty(str))
+				.collect(joining(delimiter));
+	}
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entry(objectClasses = {"UserPreferences", "top"}, base = "ou=NDProd,cn=Users")
+@Entry(objectClasses = {"UserPreferences", "top"})
 public final class OIDUserPreferences
 {
 	public OIDUserPreferences(String username)
@@ -23,11 +23,11 @@ public final class OIDUserPreferences
 	private Name dn;
 
 	@Attribute(name="cn")
-	@DnAttribute(value="cn", index=3)
+	@DnAttribute(value="cn", index=1)
 	private String cn = "UserPreferences";
 
 	@Transient
-	@DnAttribute(value="cn", index=2)
+	@DnAttribute(value="cn", index=0)
 	private String username;
 
 	@Attribute
