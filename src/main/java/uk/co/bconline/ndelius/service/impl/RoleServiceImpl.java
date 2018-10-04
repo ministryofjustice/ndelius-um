@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.service.impl;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 import java.util.Optional;
 import java.util.Set;
@@ -62,7 +63,7 @@ public class RoleServiceImpl implements RoleService
 	{
 		return Sets.newHashSet(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
-				.base(String.format("cn=%s,%s", group, GROUP_BASE))
+				.base(join(",", "cn=" + group, GROUP_BASE))
 				.where("objectclass").like("NDRole*")));
 	}
 }

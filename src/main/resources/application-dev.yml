@@ -13,7 +13,7 @@ spring:
 
 embedded:
   oid:
-    base-dn: dc=bcl,dc=local
+    base-dn: cn=Users,dc=bcl,dc=local
     credential:
       username: cn=orcladmin
       password: OIDmanager1
@@ -39,7 +39,7 @@ embedded:
       validation.enabled: false
 
 oid:
-  base: dc=bcl,dc=local
+  base: cn=Users,dc=bcl,dc=local
   urls: ldap://localhost:3060
   username: cn=orcladmin
   password: OIDmanager1
