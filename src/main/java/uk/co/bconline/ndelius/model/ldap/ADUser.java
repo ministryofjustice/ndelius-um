@@ -17,7 +17,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @ToString(exclude = "password")
-@Entry(objectClasses = "user", base = "ou=Users")
+@Entry(objectClasses = "user")
 public final class ADUser implements UserDetails
 {
 	@Id
@@ -25,7 +25,7 @@ public final class ADUser implements UserDetails
 
 	@Setter
 	@Attribute(name="sAMAccountName")
-	@DnAttribute(value="cn", index=1)
+	@DnAttribute(value="cn", index=0)
 	private String username;
 
 	@Attribute(name="userPrincipalName")
