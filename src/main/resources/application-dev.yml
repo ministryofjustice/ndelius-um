@@ -46,12 +46,12 @@ oid:
 
 ad:
   primary:
-    base: dc=ad1,dc=local
+    base: ou=Users,dc=ad1,dc=local
     urls: ldap://localhost:3061
     username: cn=Administrator,cn=Users,dc=ad1,dc=local
     password: secret
   secondary:
-    base: dc=ad2,dc=local
+    base: ou=Users,dc=ad2,dc=local
     urls: ldap://localhost:3062
     username: cn=Administrator,cn=Users,dc=ad2,dc=local
     password: secret

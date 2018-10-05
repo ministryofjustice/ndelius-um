@@ -17,7 +17,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @ToString(exclude = "password")
-@Entry(objectClasses = "user", base = "ou=Users")
+@Entry(objectClasses = "user")
 public final class ADUser implements UserDetails
 {
 	@Id
