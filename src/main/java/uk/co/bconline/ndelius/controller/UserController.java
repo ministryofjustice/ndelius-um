@@ -75,7 +75,7 @@ public class UserController
 
 	@Transactional
 	@Interaction("UMBI004")
-	@PutMapping(path="/user/{username}")
+	@PostMapping(path="/user/{username}")
 	public ResponseEntity updateUser(@RequestBody @Valid User user, @PathVariable("username") String username)
 	{
 		if (!userService.usernameExists(username))
