@@ -6,7 +6,8 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static uk.co.bconline.ndelius.model.UserValidationTest.aValidUser;
@@ -354,7 +355,7 @@ public class UserControllerTest
 				.andExpect(status().isCreated())
 				.andExpect(redirectedUrl("/user/test.user4"));
 
-		mvc.perform(put("/api/user/test.user4")
+		mvc.perform(post("/api/user/test.user4")
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
@@ -440,7 +441,7 @@ public class UserControllerTest
 				.andExpect(status().isCreated())
 				.andExpect(redirectedUrl("/user/test.user7"));
 
-		mvc.perform(put("/api/user/test.user7")
+		mvc.perform(post("/api/user/test.user7")
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(
