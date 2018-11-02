@@ -16,6 +16,8 @@ objectclass: person
 cn: Administrator
 uid: Administrator
 samAccountName: Administrator
+givenName: Super
+sn: User
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=test.user.alias,ou=Users,dc=ad1,dc=local
