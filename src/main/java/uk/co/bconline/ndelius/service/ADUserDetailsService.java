@@ -53,7 +53,9 @@ public abstract class ADUserDetailsService implements UserDetailsService
 	public List<SearchResult> search(String query)
 	{
 		AndFilter filter = Stream.of(query.split(" "))
-				.map(token -> query().where("samAccountName").whitespaceWildcardsLike(token))
+				.map(token -> query().where("givenName").whitespaceWildcardsLike(token)
+						.or("sn").whitespaceWildcardsLike(token)
+						.or("samAccountName").whitespaceWildcardsLike(token))
 				.collect(AndFilter::new, (f, q) -> f.and(q.filter()), AndFilter::and);
 
 		if (log.isDebugEnabled())
