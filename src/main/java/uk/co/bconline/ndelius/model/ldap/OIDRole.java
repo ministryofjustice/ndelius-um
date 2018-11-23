@@ -8,13 +8,11 @@ import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
+@ToString(of = {"name", "dn"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entry(objectClasses = "top", base = "cn=ndRoleCatalogue")

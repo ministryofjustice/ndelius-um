@@ -8,12 +8,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Builder
+@ToString
 @JsonInclude(NON_NULL)
 public class RoleGroup
 {
     private String name;
-    private List<Role> roles;
+    @Setter private List<Role> roles;
 }

@@ -15,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 @EnableScheduling
 public class CacheScheduler
 {
-	private static final int EVICT_DELAY_MS = 6 * 60 * 60 * 1000;	// 6 hours
-
 	private final CacheConfig cacheConfig;
 
 	@Autowired
@@ -25,7 +23,7 @@ public class CacheScheduler
 		this.cacheConfig = cacheConfig;
 	}
 
-	@Scheduled(fixedDelay = EVICT_DELAY_MS, initialDelay = 1000)
+	@Scheduled(fixedDelayString = "${cache.evict.delay}", initialDelay = 1000)
 	public void evictSchedule()
 	{
 		cacheConfig.evictCache();

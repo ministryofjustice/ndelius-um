@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import uk.co.bconline.ndelius.model.RoleGroup;
 
-public interface RoleGroupService
+public interface UserRoleGroupService
 {
-    List<RoleGroup> getRoleGroups();
+    List<RoleGroup> getAssignableRoleGroups();
     Optional<RoleGroup> getRoleGroup(String transactionGroupName);
 }
