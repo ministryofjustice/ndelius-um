@@ -29,11 +29,11 @@ public class User
 {
 	@NotBlank
 	@Size(max = 60)
-	@Pattern(regexp = "^[a-zA-Z0-9_\\-.]*$", message = "invalid format")
+	@Pattern(regexp = "^[a-zA-Z0-9_\\-.']*$", message = "invalid format")
 	private String username;
 
 	@Size(max = 60)
-	@Pattern(regexp = "^[a-zA-Z0-9_\\-.]*$", message = "invalid format")
+	@Pattern(regexp = "^[a-zA-Z0-9_\\-.']*$", message = "invalid format")
 	private String aliasUsername;
 
 	@NotBlank
