@@ -25,14 +25,14 @@
           <div class="col-sm-4">
             <input #username="ngModel" id="username" name="username" [(ngModel)]="user.username"
                    class="form-control" [readonly]="mode !== 'Add'"
-                   autocomplete="off" required pattern="^[a-zA-Z0-9_\-.]*$"
+                   autocomplete="off" required pattern="^[a-zA-Z0-9_\-.']*$"
                    maxlength="60"/>
             <div *ngIf="username.invalid && username.dirty" class="text-danger">
               <small *ngIf="username.errors['required']">
                 *Username is required
               </small>
               <small *ngIf="username.errors['pattern']">
-                *Username must be unique and contain only alphanumeric characters, hyphens or full-stops.
+                *Username must be unique and contain only alphanumeric characters, hyphens, apostrophes or full-stops.
               </small>
             </div>
           </div>
@@ -41,13 +41,13 @@
           <label for="alias-username" class="col-sm-2 col-form-label">Alias</label>
           <div class="col-sm-4">
             <input id="alias-username" name="alias-username" #aliasUsername="ngModel" [(ngModel)]="user.aliasUsername"
-                   class="form-control" [readonly]="mode === 'View'" autocomplete="off" required pattern="^[a-zA-Z0-9_\-.]*$" maxlength="60">
+                   class="form-control" [readonly]="mode === 'View'" autocomplete="off" required pattern="^[a-zA-Z0-9_\-.']*$" maxlength="60">
             <div *ngIf="aliasUsername.invalid && aliasUsername.dirty" class="text-danger">
               <small *ngIf="aliasUsername.errors['required']">
                 *Alias username is required
               </small>
               <small *ngIf="aliasUsername.errors['pattern']">
-                *Alias username must be unique and contain only alphanumeric characters, hyphens or full-stops.
+                *Alias username must be unique and contain only alphanumeric characters, hyphens, apostrophes or full-stops.
               </small>
             </div>
           </div>
