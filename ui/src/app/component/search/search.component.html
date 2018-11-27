@@ -7,10 +7,17 @@
       <h1>Search</h1>
       <form (ngSubmit)="search()" #form="ngForm">
         <div class="form-group">
-          <label for="query">
+          <label for="query" [class.mb-0]="recentUsers.length > 0">
               Use this screen to search for an existing user<ng-container *ngIf="auth.canAddUser()" >, or
               <a id="add-user-link" routerLink="/user">click here to add a new user</a> </ng-container>.
           </label>
+          <p class="small" *ngIf="recentUsers.length > 0">
+            Recently viewed:
+            <span *ngFor="let username of recentUsers.reverse(); let isLast = last">
+              <a routerLink="/user/{{username}}" (keyup.enter)="router.navigate(['/user/'+username])">{{username}}</a>{{isLast? '': ','}}
+            </span>
+            <a (click)="clearRecentUsers()" title="Clear" style="cursor: pointer">&times;</a>
+          </p>
           <div class="input-group">
             <input #queryInput="ngModel" id="query" name="query" type="search" class="form-control" [(ngModel)]="query"
                    placeholder="Search using name, username, team, staff code..."
