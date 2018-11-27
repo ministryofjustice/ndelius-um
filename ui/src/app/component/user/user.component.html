@@ -155,14 +155,14 @@
         <hr>
         <div class="form-group row">
           <label [for]="'role-groups-toggle-btn'" class="col-sm-2 col-form-label">Role Groups</label>
-          <div class="col-sm-{{selectedGroup != null && mode !== 'View'? '3  pr-sm-0': 4}}">
-            <item-selector id="role-groups" #roleGroupField maxHeight="300px"
-                           [(selected)]="selectedGroup"
+          <div class="col-sm-{{selectedGroups != null && selectedGroups.length != 0 && mode !== 'View'? '3  pr-sm-0': 4}}">
+            <item-selector id="role-groups" #roleGroupField multiple="true" maxHeight="300px"
+                           [(selected)]="selectedGroups"
                            [available]="roleGroups"
                            [readonly]="mode === 'View'"
                            [labelMapper]="nameToLabel"></item-selector>
           </div>
-          <div class="col-sm-1 pl-sm-1" *ngIf="selectedGroup != null && mode !== 'View'">
+          <div class="col-sm-1 pl-sm-1" *ngIf="selectedGroups != null && selectedGroups.length != 0 && mode !== 'View'">
             <button class="btn btn-outline-secondary w-100" (click)="addGroup()"
                     type="button">
               <span class="d-none d-lg-inline">Add &raquo;</span>

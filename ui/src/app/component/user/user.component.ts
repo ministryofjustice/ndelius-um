@@ -34,7 +34,7 @@ export class UserComponent implements OnInit {
   datasets: Dataset[];
   roles: Role[];
   roleGroups: RoleGroup[];
-  selectedGroup: RoleGroup;
+  selectedGroups: RoleGroup[];
   staffGrades: StaffGrade[];
   globalMinDate: Date = new Date(1900,0,1);
   globalMaxDate: Date = new Date(2099,11,31);
@@ -104,12 +104,14 @@ export class UserComponent implements OnInit {
   }
 
   addGroup(): void {
-    if (this.selectedGroup != null) {
+    if (this.selectedGroups != null) {
       if (this.user.roles == null) this.user.roles = [];
-      this.roleService.group(this.selectedGroup.name).subscribe((group: RoleGroup) => {
-        let userRoleNames = this.user.roles.map(r => r.name);
-        this.user.roles.push(...group.roles.filter(role => userRoleNames.indexOf(role.name) === -1));
-      });
+      this.selectedGroups.forEach(selectedGroup => {
+        this.roleService.group(selectedGroup.name).subscribe(group => {
+          let userRoleNames = this.user.roles.map(r => r.name);
+          this.user.roles.push(...group.roles.filter(role => userRoleNames.indexOf(role.name) === -1));
+        });
+      })
     }
   }
 
