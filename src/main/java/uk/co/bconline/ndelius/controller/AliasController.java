@@ -42,6 +42,10 @@ public class AliasController
 		val user = userService.getUser(username);
 		if (!user.isPresent()) return notFound().build();
 
+		if (userService.getUsernameByAlias(alias.getAliasUsername()).map(username::equals).orElse(false)) {
+			return badRequest().body(new ErrorResponse("Alias already exists for this user"));
+		}
+
 		userService.save(user.get().toBuilder()
 				.aliasUsername(alias.getAliasUsername()).build());
 
