@@ -314,6 +314,8 @@
         <button id="copy-btn" type="button" class="btn btn-secondary mr-2"
                 routerLink="/user" [queryParams]="{copy: user.username}"
                 *ngIf="mode !== 'Add' && auth.canAddUser()">Create another&hellip;</button>
+        <button id="back-btn" type="button" class="btn btn-secondary mr-2"
+                onClick="window.history.back()">Back</button>
       </div>
     </form>
   </div>
