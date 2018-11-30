@@ -1,5 +1,27 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.query.SearchScope;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import uk.co.bconline.ndelius.model.ldap.OIDRole;
+import uk.co.bconline.ndelius.model.ldap.OIDRoleAssociation;
+import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.repository.oid.OIDRoleAssociationRepository;
+import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
+import uk.co.bconline.ndelius.service.RoleService;
+import uk.co.bconline.ndelius.service.UserRoleService;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -8,29 +30,6 @@ import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
 import static uk.co.bconline.ndelius.util.NameUtils.join;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.ldap.odm.annotations.Entry;
-import org.springframework.ldap.query.SearchScope;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import uk.co.bconline.ndelius.model.ldap.OIDRole;
-import uk.co.bconline.ndelius.model.ldap.OIDRoleAssociation;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
-import uk.co.bconline.ndelius.repository.oid.OIDRoleAssociationRepository;
-import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
-import uk.co.bconline.ndelius.service.RoleService;
-import uk.co.bconline.ndelius.service.UserRoleService;
 
 @Slf4j
 @Service
@@ -67,8 +66,10 @@ public class UserRoleServiceImpl implements UserRoleService
 	@Override
 	public Set<OIDRole> getRolesICanAssign()
 	{
-		val me = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-		val myInteractions = getUserInteractions(me);
+		val myInteractions = SecurityContextHolder.getContext().getAuthentication()
+				.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.collect(toSet());
 		val privateAccess = myInteractions.contains(PRIVATE_ACCESS);
 		val publicAccess = myInteractions.contains(PUBLIC_ACCESS);
 		val nationalAccess = myInteractions.contains(NATIONAL_ACCESS);

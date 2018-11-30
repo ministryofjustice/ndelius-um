@@ -1,11 +1,5 @@
 package uk.co.bconline.ndelius.advice;
 
-import static java.util.Collections.singleton;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import java.lang.annotation.Annotation;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,10 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
 import uk.co.bconline.ndelius.model.ForbiddenResponse;
 import uk.co.bconline.ndelius.service.UserRoleService;
+
+import java.lang.annotation.Annotation;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration
@@ -30,8 +28,6 @@ public class AuthorisationHandlerTest
 	@WithMockUser
 	public void authorisationFailsIfRoleIsMissing() throws Throwable
 	{
-		when(service.getUserInteractions("user")).thenReturn(singleton("ROLE_USER"));
-
 		ResponseEntity response = (ResponseEntity) handler.authorise(joinPoint, interaction("SOME_OTHER_ROLE"));
 
 		verify(joinPoint, never()).proceed();
@@ -48,8 +44,6 @@ public class AuthorisationHandlerTest
 	@WithMockUser
 	public void authorisationSucceedsIfUserHasRole() throws Throwable
 	{
-		when(service.getUserInteractions("user")).thenReturn(singleton("ROLE_USER"));
-
 		handler.authorise(joinPoint, interaction("ROLE_USER"));
 
 		verify(joinPoint).proceed();
