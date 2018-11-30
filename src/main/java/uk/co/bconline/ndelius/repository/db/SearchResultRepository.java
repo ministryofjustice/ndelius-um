@@ -1,11 +1,10 @@
 package uk.co.bconline.ndelius.repository.db;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
+
+import java.util.List;
 
 public interface SearchResultRepository extends JpaRepository<SearchResultEntity, String>
 {
@@ -31,10 +30,11 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			+ "		OR SYS.UTL_MATCH.EDIT_DISTANCE(LOWER(REGEXP_SUBSTR(T.DESCRIPTION, '\\w+', 1, 2)), LOWER(?1)) BETWEEN 0 AND 2"
 			+ "		OR SYS.UTL_MATCH.EDIT_DISTANCE(LOWER(REGEXP_SUBSTR(T.DESCRIPTION, '\\w+', 1, 3)), LOWER(?1)) BETWEEN 0 AND 2"
 			+ "		OR SYS.UTL_MATCH.EDIT_DISTANCE(LOWER(REGEXP_SUBSTR(T.DESCRIPTION, '\\w+', 1, 4)), LOWER(?1)) BETWEEN 0 AND 2)"
-			+ " WHERE SYS.UTL_MATCH.EDIT_DISTANCE(LOWER(U.DISTINGUISHED_NAME), LOWER(?1)) BETWEEN 0 AND 2"
+			+ " WHERE U.USER_ID >= 15000000"	// Exclude historical/migrated users
+			+ "      AND (SYS.UTL_MATCH.EDIT_DISTANCE(LOWER(U.DISTINGUISHED_NAME), LOWER(?1)) BETWEEN 0 AND 2"
 			+ "      OR SYS.UTL_MATCH.EDIT_DISTANCE(LOWER(U.FORENAME), LOWER(?1)) BETWEEN 0 AND 2"
 			+ "      OR SYS.UTL_MATCH.EDIT_DISTANCE(LOWER(U.FORENAME2), LOWER(?1)) BETWEEN 0 AND 2"
-			+ "      OR SYS.UTL_MATCH.EDIT_DISTANCE(LOWER(U.SURNAME), LOWER(?1)) BETWEEN 0 AND 2"
+			+ "      OR SYS.UTL_MATCH.EDIT_DISTANCE(LOWER(U.SURNAME), LOWER(?1)) BETWEEN 0 AND 2)"
 			+ " GROUP BY U.DISTINGUISHED_NAME"
 			+ " ORDER BY SCORE DESC",
 		   nativeQuery = true)

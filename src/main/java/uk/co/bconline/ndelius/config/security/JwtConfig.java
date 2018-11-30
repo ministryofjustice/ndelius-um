@@ -1,10 +1,6 @@
 package uk.co.bconline.ndelius.config.security;
 
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
-import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE;
-import static org.springframework.http.HttpMethod.OPTIONS;
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,18 +8,20 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.authentication.AuthenticationManagerBeanDefinitionParser
-		.NullAuthenticationProvider;
+import org.springframework.security.config.authentication.AuthenticationManagerBeanDefinitionParser.NullAuthenticationProvider;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-
-import lombok.extern.slf4j.Slf4j;
 import uk.co.bconline.ndelius.security.filter.DelegatedAuthFilter;
 import uk.co.bconline.ndelius.security.filter.JwtAuthFilter;
 import uk.co.bconline.ndelius.security.handler.LoginHandler;
 import uk.co.bconline.ndelius.util.JwtHelper;
+
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE;
+import static org.springframework.http.HttpMethod.OPTIONS;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Slf4j
 @Order(1)
@@ -67,7 +65,7 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 	@Bean
 	public JwtAuthFilter jwtAuthenticationFilter()
 	{
-		return new JwtAuthFilter(jwtHelper,  userDetailsService(), loginHandler, jwtEntryPoint(), loginRequestMatcher);
+		return new JwtAuthFilter(jwtHelper, loginHandler, jwtEntryPoint(), loginRequestMatcher);
 	}
 
 	@Bean

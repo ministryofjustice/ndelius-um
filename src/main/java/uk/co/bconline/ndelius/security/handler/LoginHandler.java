@@ -1,11 +1,7 @@
 package uk.co.bconline.ndelius.security.handler;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -15,11 +11,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+import uk.co.bconline.ndelius.model.auth.UserInteraction;
+import uk.co.bconline.ndelius.model.auth.UserPrincipal;
 import uk.co.bconline.ndelius.security.AuthenticationToken;
+import uk.co.bconline.ndelius.service.UserRoleService;
 import uk.co.bconline.ndelius.util.JwtHelper;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 @Slf4j(topic = "audit")
@@ -32,34 +34,46 @@ public class LoginHandler implements AuthenticationSuccessHandler, Authenticatio
 	private String cookieName;
 
 	private final JwtHelper jwtHelper;
+	private final UserRoleService userRoleService;
 
 	@Autowired
-	public LoginHandler(JwtHelper jwtHelper)
+	public LoginHandler(JwtHelper jwtHelper,
+						UserRoleService userRoleService)
 	{
 		this.jwtHelper = jwtHelper;
+		this.userRoleService = userRoleService;
 	}
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 	{
-		val user = (UserDetails) authentication.getPrincipal();
-		val token = jwtHelper.generateToken(user.getUsername());
-		authentication = new AuthenticationToken(user, token);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-
-		// Add token to response cookie
-		val cookie = new Cookie(cookieName, token);
-		cookie.setHttpOnly(true);
-		cookie.setMaxAge(expiry * 60);
-		cookie.setPath("/");
-		response.addCookie(cookie);
-
-		log.info("{} [UMLOGIN] []", user.getUsername());
+		val username = ((UserDetails) authentication.getPrincipal()).getUsername();
+		generateToken(username, request, response);
+		log.info("{} [UMLOGIN] []", username);
 	}
 
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
 	{
 		log.error("??? [UMLOGIN] [{}, {}, {}]", request.getRequestURI(), request.getHeader(AUTHORIZATION), exception.getMessage());
+	}
+
+	public void generateToken(String username, HttpServletRequest request, HttpServletResponse response)
+	{
+		val interactions = userRoleService.getUserInteractions(username).stream()
+				.map(UserInteraction::new)
+				.collect(toList());
+		val user = UserPrincipal.builder()
+				.username(username)
+				.authorities(interactions)
+				.build();
+
+		// Add token to response cookie
+		val token = jwtHelper.generateToken(username, interactions);
+		jwtHelper.addTokenToResponse(token, response);
+
+		// Set authentication in context
+		val authentication = new AuthenticationToken(user, token);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 }
