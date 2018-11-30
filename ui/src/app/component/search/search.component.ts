@@ -18,6 +18,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   page: number;
 
   users: User[] = [];
+  recentUsers: string[] = JSON.parse(localStorage.getItem("recent-users")) || [];
   searching: boolean;
   noResults: boolean;
   hasMoreResults: boolean = true;
@@ -63,5 +64,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
   nextPage() {
     this.router.navigate(['/search'], {queryParams: {q: this.query, page: this.page + 1}});
+  }
+
+  clearRecentUsers() {
+    localStorage.removeItem('recent-users');
+    this.recentUsers = []
   }
 }
