@@ -116,7 +116,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 						.searchScope(ONELEVEL)
 						.base(USER_BASE)
 						.filter(filter))
-				.spliterator(), false)
+				.spliterator(), true)
 				.map(u -> SearchResult.builder()
 						.username(u.getUsername())
 						.score(deriveScore(query, u))
