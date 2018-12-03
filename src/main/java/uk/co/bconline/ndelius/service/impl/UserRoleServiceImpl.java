@@ -96,7 +96,7 @@ public class UserRoleServiceImpl implements UserRoleService
 		val r = stream(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
 				.base(join(",", "cn=" + username, USER_BASE))
-				.where("objectclass").like("NDRole*")).spliterator(), false)
+				.where("objectclass").like("NDRole*")).spliterator(), true)
 				.map(role -> role.getName().startsWith("UMBT") || role.getName().startsWith("UABT")?
 								roleService.getRole(role.getName()).orElse(role): role)
 				.collect(toSet());
@@ -112,7 +112,7 @@ public class UserRoleServiceImpl implements UserRoleService
 				.searchScope(ONELEVEL)
 				.base(join(",", "cn=" + username, USER_BASE))
 				.where("cn").like("UMBT*")
-				.or("cn").like("UABT*")).spliterator(), false)
+				.or("cn").like("UABT*")).spliterator(), true)
 				.map(OIDRole::getName)
 				.map(roleService::getRole)
 				.filter(Optional::isPresent)
