@@ -57,7 +57,7 @@ export class UserComponent implements OnInit {
           let recentUsers = JSON.parse(localStorage.getItem("recent-users")) || [];
           while (recentUsers.indexOf(params.id) > -1) recentUsers.splice(recentUsers.indexOf(params.id), 1);
           recentUsers.push(params.id);
-          localStorage.setItem("recent-users", JSON.stringify(recentUsers.slice(Math.max(0, recentUsers.length - 5), 5)));
+          localStorage.setItem("recent-users", JSON.stringify(recentUsers.slice(-5)));
           this.mode = this.auth.canUpdateUser()? 'Update': 'View';
           return this.userService.read(params.id);
         } else {
