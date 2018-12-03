@@ -37,7 +37,7 @@ public class RoleGroupServiceImpl implements RoleGroupService
 	@Cacheable(value = "roleGroups", key = "'all'")
     public List<RoleGroup> getRoleGroups()
     {
-        return stream(oidRoleGroupRepository.findAll().spliterator(), false)
+        return stream(oidRoleGroupRepository.findAll().spliterator(), true)
                 .map(roleGroupTransformer::map)
                 .collect(toList());
     }
