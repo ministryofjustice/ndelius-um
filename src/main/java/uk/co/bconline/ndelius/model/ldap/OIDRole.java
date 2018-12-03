@@ -12,9 +12,10 @@ import lombok.*;
 
 @Getter
 @Builder
-@ToString(of = {"name", "dn"})
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(of = {"name", "interactions"})
 @Entry(objectClasses = "top", base = "cn=ndRoleCatalogue")
 public final class OIDRole
 {
