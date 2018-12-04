@@ -18,7 +18,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   page: number;
 
   users: User[] = [];
-  recentUsers: string[] = JSON.parse(localStorage.getItem("recent-users")) || [];
+  recentUsers: string[] = (JSON.parse(localStorage.getItem("recent-users")) || []).reverse();
   searching: boolean;
   noResults: boolean;
   hasMoreResults: boolean = true;
