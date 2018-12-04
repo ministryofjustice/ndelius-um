@@ -106,6 +106,7 @@ public class UserServiceImpl implements UserService
 				.peek(result -> log.debug("SearchResult: username={}, score={}", result.getUsername(), result.getScore()))
 				.skip((long) (page-1) * pageSize)
 				.limit(pageSize)
+				.parallel()
 				.map(SearchResult::getUsername)
 				.map(this::getSearchResult)
 				.filter(Optional::isPresent)
