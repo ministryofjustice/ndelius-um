@@ -45,7 +45,7 @@
               <th>Username</th>
               <th class="text-truncate">Staff Code</th>
               <th>Team(s)</th>
-              <th colspan="4" class="text-right">Sources</th>
+              <th colspan="3" class="text-right">Sources</th>
               <th></th>
             </tr>
           </thead>
@@ -63,18 +63,15 @@
                   {{team.description}}{{isLast? '': ','}}
                 </span>
               </td>
-              <td class="pl-1 pr-0 d-lg-none" style="width: 55px">
+              <td class="pl-1 pr-0 d-lg-none" colspan="3" style="width: 55px">
                 <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('AD1') === -1"
                       title="TTP Active Directory">DOM1</span>
                 <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('AD2') === -1"
                       title="Steria Active Directory">OMNI</span>
+                <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('DB') === -1 && user.sources.indexOf('OID') === -1"
+                      title="National Delius">NDelius</span>
               </td>
-              <td class="pl-1 pr-0 d-lg-none" style="width: 55px">
-                <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('DB') === -1"
-                      title="National Delius Database">DB</span>
-                <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('OID') === -1"
-                      title="Oracle Internet Directory">OID</span>
-              </td>
+
               <td class="pl-1 pr-0 d-none d-lg-table-cell" style="width: 55px">
                 <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('AD1') === -1"
                       title="TTP Active Directory">DOM1</span>
@@ -83,14 +80,11 @@
                 <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('AD2') === -1"
                       title="Steria Active Directory">OMNI</span>
               </td>
-              <td class="pl-1 pr-0 d-none d-lg-table-cell" style="width: 35px">
-                <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('DB') === -1"
-                      title="National Delius Database">DB</span>
+              <td class="pl-1 d-none d-lg-table-cell" style="width: 55px">
+                <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('DB') === -1 && user.sources.indexOf('OID') === -1"
+                      title="National Delius">NDelius</span>
               </td>
-              <td class="pl-1 pr-0 d-none d-lg-table-cell" style="width: 40px">
-                <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('OID') === -1"
-                      title="Oracle Internet Directory">OID</span>
-              </td>
+
               <td class="text-right">
                 <span class="oi oi-chevron-right"></span>
               </td>

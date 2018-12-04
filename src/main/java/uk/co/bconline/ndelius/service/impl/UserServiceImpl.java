@@ -118,7 +118,9 @@ public class UserServiceImpl implements UserService
 	public Optional<SearchResult> getSearchResult(String username)
 	{
 		val dbFuture = supplyAsync(() -> dbService.getUser(username).orElse(null));
-		val oidFuture = supplyAsync(() -> oidService.getBasicUser(username).orElse(null));
+		val oidFuture = supplyAsync(() -> oidService.getBasicUser(username)
+				.map(u -> u.toBuilder().aliasUsername(oidService.getAlias(username).orElse(null)).build())
+				.orElse(null));
 		val ad1Future = supplyAsync(() -> ad1Service.flatMap(service -> service.getUser(username)).orElse(null));
 		val ad2Future = supplyAsync(() -> ad2Service.flatMap(service -> service.getUser(username)).orElse(null));
 
