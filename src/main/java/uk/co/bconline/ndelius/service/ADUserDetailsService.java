@@ -69,7 +69,7 @@ public abstract class ADUserDetailsService implements UserDetailsService
 				.findAll(query()
 						.base(USER_BASE)
 						.filter(filter))
-				.spliterator(), false)
+				.spliterator(), true)
 				.map(u -> SearchResult.builder()
 						.username(u.getUsername())
 						.score(deriveScore(query, u))
