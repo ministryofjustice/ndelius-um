@@ -96,7 +96,8 @@ public class UserRoleServiceImpl implements UserRoleService
 		val r = stream(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
 				.base(join(",", "cn=" + username, USER_BASE))
-				.where("objectclass").like("NDRole*")).spliterator(), true)
+                .where("objectclass").is("NDRole")
+                .or("objectclass").is("NDRoleAssociation")).spliterator(), true)
 				.map(role -> role.getName().startsWith("UMBT") || role.getName().startsWith("UABT")?
 								roleService.getRole(role.getName()).orElse(role): role)
 				.collect(toSet());
@@ -131,7 +132,8 @@ public class UserRoleServiceImpl implements UserRoleService
 		roleRepository.deleteAll(roleRepository.findAll(query()
 				.searchScope(SearchScope.ONELEVEL)
 				.base(join(",", "cn=" + username, USER_BASE))
-				.where("objectClass").like("NDRole*")));
+				.where("objectclass").is("NDRole")
+				.or("objectclass").is("NDRoleAssociation")));
 
 		log.debug("Saving new role associations");
 		ofNullable(roles).ifPresent(r ->

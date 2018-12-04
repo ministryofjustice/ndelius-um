@@ -47,7 +47,8 @@ public class RoleServiceImpl implements RoleService
 		return Sets.newHashSet(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
 				.base(ROLE_BASE)
-				.where("objectclass").like("NDRole*")));
+				.where("objectclass").is("NDRole")
+				.or("objectclass").is("NDRoleAssociation")));
 	}
 
 	@Override
@@ -64,6 +65,7 @@ public class RoleServiceImpl implements RoleService
 		return Sets.newHashSet(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
 				.base(join(",", "cn=" + group, GROUP_BASE))
-				.where("objectclass").like("NDRole*")));
+				.where("objectclass").is("NDRole")
+				.or("objectclass").is("NDRoleAssociation")));
 	}
 }
