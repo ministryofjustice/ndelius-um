@@ -13,7 +13,7 @@
           </label>
           <p class="small" *ngIf="recentUsers.length > 0">
             Recently viewed:
-            <span *ngFor="let username of recentUsers.reverse(); let isLast = last">
+            <span *ngFor="let username of recentUsers; let isLast = last">
               <a routerLink="/user/{{username}}" (keyup.enter)="router.navigate(['/user/'+username])">{{username}}</a>{{isLast? '': ','}}
             </span>
             <a (click)="clearRecentUsers()" title="Clear" style="cursor: pointer">&times;</a>
