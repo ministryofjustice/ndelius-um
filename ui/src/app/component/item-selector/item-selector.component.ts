@@ -113,6 +113,13 @@ export class ItemSelectorComponent
     }
   }
 
+  get titleText(): string {
+    if (this.available == null || !this.multiple) return this.displayText;
+    if (this.selected == null || this.selected.length == 0) return "Please select...";
+    if (this.selected.length == 1) return this.mapToLabel(this.selected[0]);
+    return this.selected.map(item => this.mapToLabel(item)).join("\u000a");
+  }
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
