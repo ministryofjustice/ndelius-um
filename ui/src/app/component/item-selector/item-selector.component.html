@@ -1,42 +1,65 @@
 <div class="dropdown">
-  <button [id]="id+'-toggle-btn'" type="button"
+  <button #toggleBtn [id]="id+'-toggle-btn'" type="button"
           class="form-control text-left d-flex justify-content-between align"
           data-toggle="dropdown"
           (click)="focusOnFilter()"
           [disabled]="readonly || available == null"
           [class.readonly]="readonly"
           [class.ng-dirty]="dirty"
-          [title]="titleText"
+          [title]="displayText"
           aria-haspopup="true" aria-expanded="false">
     <span class="text-truncate mr-2">{{displayText}}</span>
     <span class="oi oi-chevron-bottom float-right"></span>
   </button>
-  <div class="dropdown-menu bg-light px-lg-3 px-sm-2 py-3"
+  <div class="dropdown-menu bg-light px-lg-3 px-sm-2 py-3 animate-transform"
        style="overflow-y: auto; max-width: 200%"
        [class.dropdown-menu-right]="alignRight"
        [ngStyle]="{maxHeight: maxHeight}"
        (click)="!multiple || $event.stopPropagation()"
        [attr.aria-labelledby]="id+'-toggle-btn'">
-    <div class="form-group">
+    <div class="form-group" [class.mb-1]="multiple">
       <div class="input-group">
         <div class="input-group-prepend">
           <div class="input-group-text bg-white"><i class="oi oi-magnifying-glass"></i></div>
         </div>
         <input #filterControl [id]="id+'-filter'"
                [(ngModel)]="filter"
+               (input)="updateDropDown(0)"
                type="search"
                class="form-control py-2 border-left-0 border"
                aria-label="Filter">
       </div>
     </div>
-    <div class="text-truncate custom-control custom-{{multiple? 'checkbox': 'radio'}}"
+    <div class="text-truncate small" *ngIf="multiple">
+      <div class="pl-1">
+        <input #toggleSelectedBtn [id]="id + '-toggle-selected'"
+               class="d-none"
+               type="checkbox"
+               (input)="updateDropDown(100)"
+               [(ngModel)]="onlyShowSelected"/>
+        <label [for]="id+'-toggle-selected'"
+               class="mb-1 pb-1 w-100 border-bottom text-right"
+               style="cursor: pointer"
+               [title]="(onlyShowSelected? 'Show': 'Hide') +  ' unticked items?'">
+          <a tabindex="0" class="text-secondary"
+             (keyup.space)="toggleSelectedBtn.click()"
+             (keyup.enter)="toggleSelectedBtn.click()">
+            {{onlyShowSelected? 'Show all?': 'Filter selected?'}}
+            <span class="oi mr-1 ml-1" [class.oi-collapse-up]="!onlyShowSelected" [class.oi-expand-down]="onlyShowSelected"></span>
+          </a>
+        </label>
+      </div>
+    </div>
+    <div class="text-truncate animate-height custom-control custom-{{multiple? 'checkbox': 'radio'}}"
+         [ngStyle]="onlyShowSelected && !isSelected(item)? {minHeight: 0, height: 0}: {minHeight: '1.5em', height: '1.5em'}"
          *ngFor="let item of filtered; let i = index">
       <div class="pl-1">
         <input [id]="id+'-opt-'+i" [name]="id" class="custom-control-input"
                [type]="multiple? 'checkbox': 'radio'"
                (change)="toggle(item)"
                [checked]="isSelected(item)"
-               [disabled]="readonly"/>
+               [disabled]="readonly"
+               [tabindex]="onlyShowSelected && !isSelected(item)? -1: 0"/>
         <label [for]="id+'-opt-'+i"
                [title]="mapToLabel(item)"
                class="custom-control-label mb-0 w-100">{{mapToLabel(item)}}</label>

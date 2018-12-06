@@ -8,6 +8,8 @@ import {
   Validator,
 } from '@angular/forms';
 
+declare var $: any;
+
 @Component({
   selector: 'item-selector',
   templateUrl: './item-selector.component.html',
@@ -27,6 +29,7 @@ export class ItemSelectorComponent
     implements ControlValueAccessor, Validator
 {
   @ViewChild("filterControl") filterControl: ElementRef;
+  @ViewChild("toggleBtn") toggleBtn: ElementRef;
   @Input() id: string;
   @Input() selected: any;
   @Input() available: any[];
@@ -41,6 +44,7 @@ export class ItemSelectorComponent
 
   dirty: boolean = false;
   filter: string = "";
+  onlyShowSelected: boolean;
 
   private propagateChange = (_: any) => { };
   private propagateTouchChange = (_: any) => { };
@@ -113,13 +117,6 @@ export class ItemSelectorComponent
     }
   }
 
-  get titleText(): string {
-    if (this.available == null || !this.multiple) return this.displayText;
-    if (this.selected == null || this.selected.length == 0) return "Please select...";
-    if (this.selected.length == 1) return this.mapToLabel(this.selected[0]);
-    return this.selected.map(item => this.mapToLabel(item)).join("\u000a");
-  }
-
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
@@ -144,5 +141,9 @@ export class ItemSelectorComponent
 
   setDisabledState(isDisabled: boolean): void {
     this.readonly = isDisabled;
+  }
+
+  updateDropDown(timeout: number) {
+    setTimeout(() => $(this.toggleBtn.nativeElement).dropdown('update'), timeout);
   }
 }

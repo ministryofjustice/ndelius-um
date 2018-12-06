@@ -4,8 +4,18 @@
 @import '~open-iconic/font/css/open-iconic-bootstrap.css';
 
 .animate-padding {
-  transition: padding 300ms;
-  -webkit-transition: padding 300ms;
+  transition: padding 100ms;
+  -webkit-transition: padding 100ms;
+}
+
+.animate-height {
+  transition: height 100ms, min-height 100ms;
+  -webkit-transition: height 100ms, min-height 100ms;
+}
+
+.animate-transform {
+  transition: transform 100ms;
+  -webkit-transition: transform 100ms;
 }
 
 .jumbotron-compact {
