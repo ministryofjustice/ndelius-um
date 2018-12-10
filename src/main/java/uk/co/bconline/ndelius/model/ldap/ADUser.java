@@ -25,8 +25,10 @@ public final class ADUser implements UserDetails
 
 	@Setter
 	@Attribute(name="sAMAccountName")
-	@DnAttribute(value="cn", index=0)
 	private String username;
+
+	@DnAttribute(value="cn", index=0)
+	private String cn;
 
 	@Attribute(name="userPrincipalName")
 	private String userPrincipalName;
