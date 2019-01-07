@@ -1,27 +1,26 @@
 package uk.co.bconline.ndelius.service;
 
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
-import static org.springframework.util.StringUtils.isEmpty;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.springframework.ldap.filter.AndFilter;
+import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import uk.co.bconline.ndelius.model.SearchResult;
+import uk.co.bconline.ndelius.model.ldap.ADUser;
+import uk.co.bconline.ndelius.repository.ad.ADUserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.springframework.ldap.filter.AndFilter;
-import org.springframework.ldap.odm.annotations.Entry;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import uk.co.bconline.ndelius.model.SearchResult;
-import uk.co.bconline.ndelius.model.ldap.ADUser;
-import uk.co.bconline.ndelius.repository.ad.ADUserRepository;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Slf4j
 public abstract class ADUserDetailsService implements UserDetailsService
@@ -103,7 +102,7 @@ public abstract class ADUserDetailsService implements UserDetailsService
 					.userAccountControl(Integer.toString(NORMAL_ACCOUNT + PASSWD_NOTREQD + DONT_EXPIRE_PASSWORD))
 					.build();
 		}
-		getRepository().save(adUser);
+		getRepository().save(adUser.toBuilder().cn(adUser.getUsername()).build());
 	}
 
 	public boolean usernameExists(String username)
