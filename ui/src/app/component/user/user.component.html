@@ -171,7 +171,7 @@
           </div>
           <label [for]="'roles-toggle-btn'" class="col-sm-2 col-form-label">Roles</label>
           <div class="col-sm-4">
-            <item-selector id="roles" name="roles" multiple="true" maxHeight="300px"
+            <item-selector #rolesControl="ngModel" id="roles" name="roles" multiple="true" maxHeight="300px"
                            [required]="false"
                            [(ngModel)]="user.roles"
                            [available]="roles"
@@ -315,7 +315,7 @@
                 routerLink="/user" [queryParams]="{copy: user.username}"
                 *ngIf="mode !== 'Add' && auth.canAddUser()">Create another&hellip;</button>
         <button id="back-btn" type="button" class="btn btn-secondary mr-2"
-                onClick="window.history.back()">Back</button>
+                (click)="backButtonAlert()">Back</button>
       </div>
     </form>
   </div>
