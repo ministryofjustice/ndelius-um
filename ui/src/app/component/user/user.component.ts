@@ -16,7 +16,7 @@ import {OrganisationService} from "../../service/organisation.service";
 import {StaffGrade} from "../../model/staff-grade";
 import {StaffGradeService} from "../../service/staff-grade.service";
 import {AppComponent} from "../app/app.component";
-import {NgForm} from "@angular/forms";
+import {NgForm, NgModel} from "@angular/forms";
 
 @Component({
   selector: 'user',
@@ -28,6 +28,8 @@ export class UserComponent implements OnInit {
   saving: boolean;
   @ViewChild("form")
   form: NgForm;
+  @ViewChild("rolesControl")
+  rolesControl: NgModel;
   mode: string;
   user: User;
   teams: Team[];
@@ -114,6 +116,7 @@ export class UserComponent implements OnInit {
         this.roleService.group(selectedGroup.name).subscribe(group => {
           let userRoleNames = this.user.roles.map(r => r.name);
           this.user.roles.push(...group.roles.filter(role => userRoleNames.indexOf(role.name) === -1));
+          this.rolesControl.control.markAsDirty();
         });
       })
     }
@@ -204,5 +207,15 @@ export class UserComponent implements OnInit {
   generateStaffCode() {
     this.datasetService.nextStaffCode(this.user.homeArea.code)
       .subscribe(staffCode => this.user.staffCode = staffCode);
+  }
+
+  backButtonAlert(){
+    if (this.form.dirty) {
+      if(confirm("Any changes made on this screen will be lost. Select OK to continue or Cancel to stay on this screen.")){
+        window.history.back()
+      }
+    }else{
+      window.history.back();
+    }
   }
 }
