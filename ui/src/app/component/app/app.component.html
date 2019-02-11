@@ -10,9 +10,9 @@
       <li class="nav-item" *ngIf="auth.canAddUser()">
         <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/user">Add User</a>
       </li>
-      <li class="nav-item" *ngIf="auth.canMigrateUsers()">
-        <a class="nav-link" routerLinkActive="active" routerLink="/migrate">Migrate Users</a>
-      </li>
+      <!--<li class="nav-item" *ngIf="auth.canMigrateUsers()">-->
+        <!--<a class="nav-link" routerLinkActive="active" routerLink="/migrate">Migrate Users</a>-->
+      <!--</li>-->
     </ul>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item" *ngIf="auth.me">
