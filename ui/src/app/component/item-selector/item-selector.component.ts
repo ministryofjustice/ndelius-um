@@ -65,7 +65,11 @@ export class ItemSelectorComponent
     this.propagateChange(this.selected);
     this.dirty = true;
   }
-
+  toggleAllItems(){
+    if(this.selected != null){
+      this.selected = [];
+    }
+  }
   focusOnFilter(): void {
     setTimeout(() => this.filterControl.nativeElement.focus(), 0);
   }

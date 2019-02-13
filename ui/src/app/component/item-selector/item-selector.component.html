@@ -45,7 +45,27 @@
              (keyup.space)="toggleSelectedBtn.click()"
              (keyup.enter)="toggleSelectedBtn.click()">
             {{onlyShowSelected? 'Show all?': 'Filter selected?'}}
-            <span class="oi mr-1 ml-1" [class.oi-collapse-up]="!onlyShowSelected" [class.oi-expand-down]="onlyShowSelected"></span>
+            <span class="oi mr-1 ml-1" [class.oi-chevron-bottom]="!onlyShowSelected" [class.oi-chevron-top]="onlyShowSelected"></span>
+          </a>
+        </label>
+      </div>
+    </div>
+    <div class="text-truncate small" *ngIf="multiple">
+      <div class="pl-1">
+        <input #toggleSelectedBtn [id]="id + '-toggle-all'"
+               class="d-none"
+               type="checkbox"
+               (input)="updateDropDown(100)"/>
+        <label [for]="id+'-toggle-all'"
+               class="mb-1 pb-1 w-100 border-bottom text-right"
+               style="cursor: pointer"
+               [title]="'Remove all items'">
+          <a tabindex="0" class="text-secondary"
+             (keyup.space)="toggleSelectedBtn.click()"
+             (keyup.enter)="toggleSelectedBtn.click()"
+             (click)="toggleAllItems()">
+            {{'Remove all?'}}
+            <span class="oi mr-1 ml-1" [class.oi-x]="'Remove all'" ></span>
           </a>
         </label>
       </div>
