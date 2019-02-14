@@ -51,6 +51,9 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails
 	@Attribute(name="userPassword")
 	private String password;
 
+	@Attribute(name="email")
+	private String email;
+
 	@Transient
 	private String aliasUsername;
 

@@ -51,6 +51,7 @@ sn: User
 userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test user for basic authentication (password=secret)
+mail: test@test.com
 
 dn: cn=test.user.alias,cn=Users,dc=bcl,dc=local
 objectclass: top
@@ -81,6 +82,7 @@ cn: TestUser1
 uid: TestUser1
 userHomeArea: N01
 description: Test user for single sign-on (no password)
+email: test@test.com
 
 dn: cn=UMBT001,cn=TestUser1,cn=Users,dc=bcl,dc=local
 objectclass: top

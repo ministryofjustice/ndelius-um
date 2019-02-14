@@ -17,5 +17,6 @@ export class User {
   roles: Role[];
   startDate: Date = new Date();
   endDate: Date;
-  sources: string[]
+  sources: string[];
+  email: string;
 }

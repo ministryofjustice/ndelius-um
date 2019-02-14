@@ -59,6 +59,9 @@ public class UserEntity
 	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
+	@Column(name = "EMAIL")
+	private String email;
+
 	@JoinColumn(name = "STAFF_ID")
 	@ManyToOne(cascade = ALL)
 	private StaffEntity staff;

@@ -65,6 +65,8 @@ public class User
 	@Valid
 	private List<Team> teams;
 
+	private String email;
+
 	@Valid
 	@NotEmpty
 	private List<Dataset> datasets;
