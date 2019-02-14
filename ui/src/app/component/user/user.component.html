@@ -37,14 +37,6 @@
             </div>
           </div>
         </div>
-        <div class="form-group row">
-          <label for="email" class="col-sm-2 col-form-label">Email</label>
-          <div class="col-sm-4">
-            <input id="email" name="email" #forenames="ngModel" [(ngModel)]="user.email"
-                   autocomplete="email"
-                   class="form-control" required >
-          </div>
-        </div>
         <div class="form-group row" *ngIf="mode !== 'View' || (user.aliasUsername != null && user.aliasUsername != user.username)">
           <label for="alias-username" class="col-sm-2 col-form-label">Alias</label>
           <div class="col-sm-4">
@@ -68,6 +60,14 @@
                      (click)="user.aliasUsername = user.username">
               <label for="same-username" class="custom-control-label">Same as username?</label>
             </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="email" class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-4">
+            <input id="email" name="email" #email="ngModel" [(ngModel)]="user.email"
+                   autocomplete="email"
+                   class="form-control">
           </div>
         </div>
         <div class="form-group row">
