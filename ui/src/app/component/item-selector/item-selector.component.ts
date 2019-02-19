@@ -65,11 +65,21 @@ export class ItemSelectorComponent
     this.propagateChange(this.selected);
     this.dirty = true;
   }
+
   toggleAllItems(){
-    if(this.selected != null){
+    if (this.selected == null) {
       this.selected = [];
     }
+    if (this.selected.length < this.available.length) {
+      this.selected = Array.of(...this.available);
+    } else {
+      this.selected = [];
+    }
+    this.selectedChange.emit(this.selected);
+    this.propagateChange(this.selected);
+    this.dirty = true;
   }
+
   focusOnFilter(): void {
     setTimeout(() => this.filterControl.nativeElement.focus(), 0);
   }
