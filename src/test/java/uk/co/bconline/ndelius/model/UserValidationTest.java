@@ -424,4 +424,32 @@ public class UserValidationTest
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, hasItem(hasProperty("message", is("Date must be between 1900-01-01 and 2099-12-31"))));
 	}
+
+	@Test
+	public void testValidEmail()
+	{
+		User user = aValidUser().toBuilder()
+				.email("test@test.com")
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, empty());
+	}
+	@Test
+	public void testEmailNull()
+	{
+		User user = aValidUser().toBuilder()
+				.email(null)
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, empty());
+	}
+	@Test
+	public void testEmailEmpty()
+	{
+		User user = aValidUser().toBuilder()
+				.email("")
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, empty());
+	}
 }
