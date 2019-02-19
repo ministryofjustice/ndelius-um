@@ -193,7 +193,7 @@ export class UserComponent implements OnInit {
 
   backButtonAlert(){
     if (this.form.dirty) {
-      if(confirm("Any changes made on this screen will be lost. Select OK to continue or Cancel to stay on this screen.")){
+      if(confirm("Any changes made on this page will be lost. Select OK to continue or Cancel to stay on this screen.")){
         window.history.back()
       }
     }else{
