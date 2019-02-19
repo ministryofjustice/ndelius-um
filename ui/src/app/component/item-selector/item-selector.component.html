@@ -30,45 +30,32 @@
                aria-label="Filter">
       </div>
     </div>
-    <div class="text-truncate small" *ngIf="multiple">
-      <div class="pl-1">
-        <input #toggleSelectedBtn [id]="id + '-toggle-selected'"
-               class="d-none"
+    <div class="text-truncate text-muted small custom-control custom-checkbox border-bottom mb-1" *ngIf="multiple">
+      <div class="pl-1 float-left">
+        <input #toggleAllBtn [id]="id + '-toggle-all'" class="custom-control-input"
+               [class.d-none]="readonly"
                type="checkbox"
-               (input)="updateDropDown(100)"
-               [(ngModel)]="onlyShowSelected"/>
-        <label [for]="id+'-toggle-selected'"
-               class="mb-1 pb-1 w-100 border-bottom text-right"
-               style="cursor: pointer"
-               [title]="(onlyShowSelected? 'Show': 'Hide') +  ' unticked items?'">
-          <a tabindex="0" class="text-secondary"
-             (keyup.space)="toggleSelectedBtn.click()"
-             (keyup.enter)="toggleSelectedBtn.click()">
-            {{onlyShowSelected? 'Show all?': 'Filter selected?'}}
-            <span class="oi mr-1 ml-1" [class.oi-chevron-bottom]="!onlyShowSelected" [class.oi-chevron-top]="onlyShowSelected"></span>
-          </a>
-        </label>
-      </div>
-    </div>
-    <div class="text-truncate small" *ngIf="multiple">
-      <div class="pl-1">
-        <input #toggleSelectedBtn [id]="id + '-toggle-all'"
-               class="d-none"
-               type="checkbox"
-               (input)="updateDropDown(100)"/>
+               (input)="toggleAllItems()"
+               [checked]="selected != null && available != null && selected.length == available.length"
+               [indeterminate]="selected != null && available != null && selected.length > 0 && selected.length != available.length"/>
         <label [for]="id+'-toggle-all'"
-               class="mb-1 pb-1 w-100 border-bottom text-right"
-               style="cursor: pointer"
-               [title]="'Remove all items'">
-          <a tabindex="0" class="text-secondary"
-             (keyup.space)="toggleSelectedBtn.click()"
-             (keyup.enter)="toggleSelectedBtn.click()"
-             (click)="toggleAllItems()">
-            {{'Remove all?'}}
-            <span class="oi mr-1 ml-1" [class.oi-x]="'Remove all'" ></span>
-          </a>
-        </label>
+               class="custom-control-label"
+               title="Toggle all items">&nbsp;</label>
       </div>
+      <ul class="nav nav-tabs float-right" style="margin-bottom: -1px">
+        <li class="nav-item">
+          <a class="nav-link py-1" [class.active]="onlyShowSelected"
+             style="cursor: pointer; outline: none" tabindex="0"
+             (click)="onlyShowSelected = true; updateDropDown(100)"
+             (keyup.enter)="onlyShowSelected = true; updateDropDown(100)">Selected</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link py-1" [class.active]="!onlyShowSelected"
+             style="cursor: pointer; outline: none" tabindex="0"
+             (click)="onlyShowSelected = false; updateDropDown(100)"
+             (keyup.enter)="onlyShowSelected = false; updateDropDown(100)">All</a>
+        </li>
+      </ul>
     </div>
     <div class="text-truncate animate-height custom-control custom-{{multiple? 'checkbox': 'radio'}}"
          [ngStyle]="onlyShowSelected && !isSelected(item)? {minHeight: 0, height: 0}: {minHeight: '1.5em', height: '1.5em'}"
