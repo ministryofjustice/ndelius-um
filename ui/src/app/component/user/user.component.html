@@ -259,13 +259,11 @@
           <label for="staff-code" class="col-sm-2 col-form-label">Staff Code</label>
           <div class="col-sm-4">
             <div class="input-group">
-              <div class="input-group-prepend" *ngIf="mode !== 'View' && user.homeArea != null">
-                <span class="input-group-text">{{user.homeArea?.code}}</span>
-              </div>
+
               <input id="staff-code" name="staff-code" #staffcode="ngModel" class="form-control"
-                     [(ngModel)]="mode === 'View'? user.staffCode: staffCodeSuffix"
+                     [(ngModel)]="user.staffCode"
                      [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"
-                     pattern="[A-Z][0-9]{3}$" minlength="4" maxlength="4"/>
+                     pattern="[A-Z0-9]{3}[A-Z][0-9]{3}$" minlength="7" maxlength="7"/>
               <div class="input-group-append" *ngIf="mode !== 'View' && user.homeArea != null">
                 <button type="button" class="btn btn-outline-secondary" (click)="generateStaffCode()" title="Generate">
                   <span class="oi oi-loop-circular"></span>
@@ -273,7 +271,7 @@
               </div>
               <div *ngIf="staffcode.dirty && staffcode.invalid" class = text-danger>
                 <small *ngIf="staffcode.errors['pattern']">
-                  *Staff code must be one uppercase character then three numeric characters
+                  *Staff code must consist of 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001
                 </small>
               </div>
             </div>
