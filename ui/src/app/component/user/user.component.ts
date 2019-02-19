@@ -68,7 +68,6 @@ export class UserComponent implements OnInit {
               this.mode = 'Add';
               return this.userService.read(query.copy).pipe(map(user => {
                 user.username = null;
-                user.aliasUsername = null;
                 user.staffCode = null;
                 user.staffGrade = null;
                 user.teams = null;

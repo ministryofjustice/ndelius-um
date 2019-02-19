@@ -53,10 +53,7 @@
             <tr *ngFor="let user of users" style="cursor: pointer"
               routerLink="/user/{{user.username}}" (keyup.enter)="router.navigate(['/user/'+user.username])">
               <td class="font-weight-bold">{{user.forenames}} {{user.surname}}</td>
-              <td>
-                <span title="Username">{{user.username}}</span>
-                <span title="Alias" *ngIf="user.aliasUsername != null && user.aliasUsername != user.username">, {{user.aliasUsername}}</span>
-              </td>
+              <td>{{user.username}}</td>
               <td>{{user.staffCode}}</td>
               <td class="w-25">
                 <span *ngFor="let team of user.teams; let isLast = last">

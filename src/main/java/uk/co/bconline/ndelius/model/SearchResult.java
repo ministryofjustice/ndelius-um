@@ -1,10 +1,9 @@
 package uk.co.bconline.ndelius.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @ToString
@@ -14,7 +13,6 @@ import lombok.*;
 public final class SearchResult
 {
 	private String username;
-	private String aliasUsername;
 	private String forenames;
 	private String surname;
 	private List<Team> teams;

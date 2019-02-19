@@ -5,7 +5,6 @@ import {StaffGrade} from "./staff-grade";
 
 export class User {
   username: string;
-  aliasUsername: string;
   forenames: string;
   surname: string;
   email: string;

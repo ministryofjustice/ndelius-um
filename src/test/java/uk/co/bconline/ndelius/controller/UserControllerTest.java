@@ -1,21 +1,6 @@
 package uk.co.bconline.ndelius.controller;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static uk.co.bconline.ndelius.model.UserValidationTest.aValidUser;
-import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
-
-import java.time.LocalDate;
-import java.util.Optional;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,12 +16,24 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import uk.co.bconline.ndelius.model.*;
 import uk.co.bconline.ndelius.model.ldap.OIDUserPreferences;
 import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
 
 @SpringBootTest
 @DirtiesContext
@@ -287,31 +284,6 @@ public class UserControllerTest
 	}
 
 	@Test
-	public void addUserWithAliasUsername() throws Exception
-	{
-		String token = token(mvc);
-		mvc.perform(post("/api/user")
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
-						.username("test.user2")
-						.aliasUsername("test.user2.alias")
-						.startDate(LocalDate.of(2018,8,13))
-						.privateSector(false)
-						.homeArea(Dataset.builder().code("N01").build())
-						.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-						.forenames("Test")
-						.surname("User2")
-						.build())))
-				.andExpect(status().isCreated());
-
-		mvc.perform(get("/api/user/test.user2")
-				.header("Authorization", "Bearer " + token))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.aliasUsername", is("test.user2.alias")));
-	}
-
-	@Test
 	public void usersAreFilteredOnDatasets() throws Exception
 	{
 		String token = token(mvc);
@@ -342,7 +314,6 @@ public class UserControllerTest
 		String token = token(mvc);
 		User user = User.builder()
 				.username("test.user4")
-				.aliasUsername("test.user4.alias")
 				.forenames("Test")
 				.surname("User4")
 				.staffCode("N01C999")
@@ -371,7 +342,6 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
-						.aliasUsername("ABC")
 						.email("test2@test.com")
 						.forenames("A B C")
 						.surname("ABC")
@@ -392,7 +362,6 @@ public class UserControllerTest
 		mvc.perform(get("/api/user/test.user4")
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.aliasUsername", is("ABC")))
 				.andExpect(jsonPath("$.email", is("test2@test.com")))
 				.andExpect(jsonPath("$.forenames", is("A B C")))
 				.andExpect(jsonPath("$.surname", is("ABC")))
@@ -429,43 +398,6 @@ public class UserControllerTest
 				.where("cn").is("UserPreferences"));
 		assertTrue(prefs.isPresent());
 		assertEquals("NRO16", prefs.get().getMostRecentlyViewedOffenders());
-	}
-
-	@Test
-	public void searchHasNoDuplicateAliasRecords() throws Exception
-	{
-		mvc.perform(get("/api/users")
-				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "test"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(4)));
-	}
-
-	@Test
-	public void updateUserWithSameAliasDifferentCase() throws Exception
-	{
-		String token = token(mvc);
-
-		User user = aValidUser().toBuilder().username("test.user7").aliasUsername("test.user7.alias").build();
-
-		mvc.perform(post("/api/user")
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
-				.andExpect(status().isCreated())
-				.andExpect(redirectedUrl("/user/test.user7"));
-
-		mvc.perform(post("/api/user/test.user7")
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(
-						user.toBuilder().aliasUsername("TEST.USER7.ALIAS").build())))
-				.andExpect(status().isNoContent());
-
-		mvc.perform(get("/api/user/test.user7")
-				.header("Authorization", "Bearer " + token))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.aliasUsername", is("TEST.USER7.ALIAS")));
 	}
 
 	@Test

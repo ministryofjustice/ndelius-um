@@ -1,14 +1,5 @@
 package uk.co.bconline.ndelius.model;
 
-import static java.util.Collections.singletonList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
-import java.time.LocalDate;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,11 +9,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.security.AuthenticationToken;
 import uk.co.bconline.ndelius.service.RoleService;
 import uk.co.bconline.ndelius.service.UserService;
+
+import javax.validation.ConstraintViolation;
+import java.time.LocalDate;
+import java.util.Set;
+
+import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -49,7 +47,6 @@ public class UserValidationTest
 	{
 		return User.builder()
 				.username("test")
-				.aliasUsername("test")
 				.forenames("forenames")
 				.surname("surname")
 				.datasets(singletonList(Dataset.builder().code("N01").description("NPS London").build()))
@@ -90,32 +87,6 @@ public class UserValidationTest
 	{
 		User user = aValidUser().toBuilder()
 				.username("john.bob!")
-				.build();
-
-		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-
-		assertThat(constraintViolations, hasSize(1));
-		assertThat(constraintViolations, hasItem(hasProperty("message", is("invalid format"))));
-	}
-
-	@Test
-	public void testInvalidAliasUsername()
-	{
-		User user = aValidUser().toBuilder()
-				.aliasUsername("1234567890123456789012345678901234567890123456789012345678901234567890")
-				.build();
-
-		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-
-		assertThat(constraintViolations, hasSize(1));
-		assertThat(constraintViolations, hasItem(hasProperty("message", is("size must be between 0 and 60"))));
-	}
-
-	@Test
-	public void testInvalidAliasPattern()
-	{
-		User user = aValidUser().toBuilder()
-				.aliasUsername("aliasinvalid!!#'")
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
@@ -343,15 +314,6 @@ public class UserValidationTest
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, empty());
-	}
-
-	@Test
-	public void testDuplicateAliasUsername(){
-		User user = aValidUser().toBuilder()
-				.aliasUsername("test.user.alias")
-				.build();
-		Set<ConstraintViolation<Object>> constraintViolations = localValidatorFactory.validate(user);
-		assertThat(constraintViolations, hasItem(hasProperty("message", is("Alias username must be unique"))));
 	}
 
 	@Test
