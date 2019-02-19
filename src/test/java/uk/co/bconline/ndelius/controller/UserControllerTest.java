@@ -472,6 +472,6 @@ public class UserControllerTest
 		mvc.perform(get("/api/user/test.user")
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.email", is("test@test.com")));
+				.andExpect(jsonPath("$.email", is("test.user@test.com")));
 	}
 }
