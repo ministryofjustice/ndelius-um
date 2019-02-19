@@ -186,24 +186,6 @@ export class UserComponent implements OnInit {
     return item? 'Private': 'Public';
   }
 
-  get staffCodeSuffix(): string {
-    let staffCode = this.user.staffCode;
-    let homeArea = this.user.homeArea;
-    if (staffCode == null || homeArea == null || !staffCode.startsWith(homeArea.code)) {
-      return staffCode;
-    } else {
-      return staffCode.substring(homeArea.code.length);
-    }
-  }
-
-  set staffCodeSuffix(staffCodeSuffix: string) {
-    if (staffCodeSuffix == null || staffCodeSuffix === "") {
-      this.user.staffCode = null;
-    } else {
-      this.user.staffCode = this.user.homeArea.code + staffCodeSuffix;
-    }
-  }
-
   generateStaffCode() {
     this.datasetService.nextStaffCode(this.user.homeArea.code)
       .subscribe(staffCode => this.user.staffCode = staffCode);

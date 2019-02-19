@@ -261,7 +261,7 @@
             <div class="input-group">
 
               <input id="staff-code" name="staff-code" #staffcode="ngModel" class="form-control"
-                     [(ngModel)]="mode === 'View'? user.staffCode: user.staffCode"
+                     [(ngModel)]="user.staffCode"
                      [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"
                      pattern="[A-Z0-9]{3}[A-Z][0-9]{3}$" minlength="7" maxlength="7"/>
               <div class="input-group-append" *ngIf="mode !== 'View' && user.homeArea != null">
@@ -271,7 +271,7 @@
               </div>
               <div *ngIf="staffcode.dirty && staffcode.invalid" class = text-danger>
                 <small *ngIf="staffcode.errors['pattern']">
-                  *Staff code must be any 3 characters then one uppercase character then three numeric characters
+                  *Staff code must consist of 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001
                 </small>
               </div>
             </div>
