@@ -43,6 +43,8 @@ public class User
 	@Size(max = 35)
 	private String surname;
 
+	private String email;
+
 	@NotNull
 	private Boolean privateSector;
 

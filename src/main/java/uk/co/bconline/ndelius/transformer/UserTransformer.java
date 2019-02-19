@@ -107,6 +107,7 @@ public class UserTransformer
 						.aliasUsername(v.getAliasUsername())
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
+						.email(v.getEmail())
 						.privateSector("private".equalsIgnoreCase(v.getSector()))
 						.homeArea(datasetService.getDatasetByCode(v.getHomeArea()).orElse(null))
 						.endDate(ofNullable(v.getEndDate()).map(s ->
@@ -169,6 +170,7 @@ public class UserTransformer
 						.aliasUsername(v.getAliasUsername())
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
+						.email(v.getEmail())
 						.sources(Stream.of("OID",
 								v.getAliasUsername() != null && !v.getAliasUsername().equals(v.getUsername()) ? "AD1": null)
 								.filter(Objects::nonNull)
@@ -216,6 +218,7 @@ public class UserTransformer
 				.teams(ofNullable(a.getTeams()).orElse(b.getTeams()))
 				.datasets(ofNullable(a.getDatasets()).orElse(b.getDatasets()))
 				.roles(ofNullable(a.getRoles()).orElse(b.getRoles()))
+				.email(ofNullable(a.getEmail()).orElse(b.getEmail()))
 				.sources(Stream.concat(a.getSources().stream(), b.getSources().stream()).collect(toList()))
 				.build();
 	}
@@ -310,6 +313,7 @@ public class UserTransformer
 				.aliasUsername(user.getAliasUsername())
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
+				.email(user.getEmail())
 				.endDate(ofNullable(user.getEndDate()).map(d -> d.format(ofPattern(OID_DATE_FORMAT))).orElse(null))
 				.sector(user.getPrivateSector()? "private": "public")
 				.homeArea(ofNullable(user.getHomeArea()).map(Dataset::getCode).orElse(null))

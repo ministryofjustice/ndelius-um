@@ -36,6 +36,12 @@
               </small>
             </div>
           </div>
+          <label for="email" class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-4">
+            <input id="email" name="email" #email="ngModel" [(ngModel)]="user.email"
+                   autocomplete="email"
+                   class="form-control">
+          </div>
         </div>
         <div class="form-group row" *ngIf="mode !== 'View' || (user.aliasUsername != null && user.aliasUsername != user.username)">
           <label for="alias-username" class="col-sm-2 col-form-label">Alias</label>
