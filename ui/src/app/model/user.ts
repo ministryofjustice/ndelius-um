@@ -8,6 +8,7 @@ export class User {
   aliasUsername: string;
   forenames: string;
   surname: string;
+  email: string;
   staffCode: string;
   staffGrade: StaffGrade;
   privateSector: boolean;
@@ -18,5 +19,4 @@ export class User {
   startDate: Date = new Date();
   endDate: Date;
   sources: string[];
-  email: string;
 }
