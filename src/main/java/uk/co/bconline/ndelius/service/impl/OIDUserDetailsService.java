@@ -163,6 +163,13 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				});
 	}
 
+	public Optional<String> getUsernameByEmail(String email)
+	{
+		return userRepository
+				.findByEmail(email)
+				.map(OIDUser::getUsername);
+	}
+
 	@Override
 	public Optional<String> getAlias(String username)
 	{
