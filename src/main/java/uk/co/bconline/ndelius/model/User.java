@@ -20,6 +20,7 @@ import uk.co.bconline.ndelius.validator.*;
 @UniqueStaffCode
 @AssignableRoles
 @UniqueAliasUsername
+@UniqueEmail
 @ConditionallyRequired(ifPopulated = "Staff Code:staffCode", required = "Staff Grade:staffGrade")
 @ConditionallyRequired(ifPopulated = "Staff Grade:staffGrade", required = "Staff Code:staffCode")
 @ConditionallyRequired(ifPopulated = "Teams:teams", required = "Staff Code:staffCode")

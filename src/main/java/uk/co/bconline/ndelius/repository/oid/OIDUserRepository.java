@@ -11,4 +11,5 @@ public interface OIDUserRepository extends LdapRepository<OIDUser>
 {
 	Optional<OIDUser> findByUsername(String username);
 	Optional<OIDUserHomeArea> getOIDUserHomeAreaByUsername(String username);
+	Optional<OIDUser> findByEmail(String email);
 }
