@@ -463,4 +463,15 @@ public class UserControllerTest
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.aliasUsername", is("TEST.USER7.ALIAS")));
 	}
+
+	@Test
+	public void emailAddressIsReturned() throws Exception
+	{
+		String token = token(mvc);
+
+		mvc.perform(get("/api/user/test.user")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.email", is("test@test.com")));
+	}
 }

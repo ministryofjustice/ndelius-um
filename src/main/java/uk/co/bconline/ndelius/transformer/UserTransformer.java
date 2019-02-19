@@ -107,6 +107,7 @@ public class UserTransformer
 						.aliasUsername(v.getAliasUsername())
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
+						.email(v.getEmail())
 						.privateSector("private".equalsIgnoreCase(v.getSector()))
 						.homeArea(datasetService.getDatasetByCode(v.getHomeArea()).orElse(null))
 						.endDate(ofNullable(v.getEndDate()).map(s ->
