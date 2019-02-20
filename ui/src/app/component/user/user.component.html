@@ -15,6 +15,7 @@
         <h4 class="card-title mb-0">User Details</h4>
         <small class="text-muted" *ngIf="mode !== 'View' && (
         username.invalid ||
+        email.invalid ||
         forenames.invalid ||
         surname.invalid ||
         startdate.invalid ||
@@ -24,9 +25,9 @@
           <label for="username" class="col-sm-2 col-form-label">Username</label>
           <div class="col-sm-4">
             <input #username="ngModel" id="username" name="username" [(ngModel)]="user.username"
-                   class="form-control" [readonly]="mode !== 'Add'"
+                   class="form-control" [readonly]="mode == 'View'"
                    autocomplete="off" required pattern="^[a-zA-Z0-9_\-.']*$"
-                   maxlength="60"/>
+                   maxlength="60" aria-describedby="username-warning"/>
             <div *ngIf="username.invalid && username.dirty" class="text-danger">
               <small *ngIf="username.errors['required']">
                 *Username is required
@@ -34,6 +35,9 @@
               <small *ngIf="username.errors['pattern']">
                 *Username must be unique and contain only alphanumeric characters, hyphens, apostrophes or full-stops.
               </small>
+            </div>
+            <div *ngIf="username.dirty && user.username != params['id']" class="text-muted">
+              <small id="username-warning">Warning: The Delius account will be renamed, you must ensure that the new value matches the desired DOM1 account name.</small>
             </div>
           </div>
           <label for="email" class="col-sm-2 col-form-label">Email</label>

@@ -14,4 +14,5 @@ public interface OIDUserService
 	Optional<OIDUser> getUser(String username);
 	String getUserHomeArea(String username);
 	void save(OIDUser user);
+	void save(String username, OIDUser user);
 }

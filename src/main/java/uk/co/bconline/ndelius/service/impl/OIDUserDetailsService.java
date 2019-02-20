@@ -3,9 +3,12 @@ package uk.co.bconline.ndelius.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -44,16 +47,19 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	private final OIDUserRepository userRepository;
 	private final OIDUserPreferencesRepository preferencesRepository;
 	private final UserRoleService userRoleService;
+	private final LdapTemplate ldapTemplate;
 
 	@Autowired
 	public OIDUserDetailsService(
 			OIDUserRepository userRepository,
 			OIDUserPreferencesRepository preferencesRepository,
-			UserRoleService userRoleService)
+			UserRoleService userRoleService,
+			@Qualifier("oid") LdapTemplate ldapTemplate)
 	{
 		this.userRepository = userRepository;
 		this.preferencesRepository = preferencesRepository;
 		this.userRoleService = userRoleService;
+		this.ldapTemplate = ldapTemplate;
 	}
 
 	@Override
@@ -164,6 +170,27 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 		// Role associations
 		userRoleService.updateUserRoles(user.getUsername(), user.getRoles());
+
+	}
+
+	@Override
+	public void save(String existingUsername, OIDUser user)
+	{
+		// Keep hold of the new username, if it's different we'll rename it later
+		val newUsername = user.getUsername();
+		user.setUsername(existingUsername);
+
+		// Save changes to the user
+		save(user);
+
+		// Rename user if required
+		if (!existingUsername.equals(newUsername))
+		{
+			val oldDn = user.getDn();
+			val newDn = LdapNameBuilder.newInstance(getDn(newUsername)).build();
+			log.debug("Renaming OID entry from {} to {}", oldDn, newDn);
+			ldapTemplate.rename(oldDn, newDn);
+		}
 	}
 
 	private float deriveScore(String query, OIDUser u)

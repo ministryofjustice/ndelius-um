@@ -21,6 +21,7 @@ import java.util.Set;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static uk.co.bconline.ndelius.test.util.UserUtils.aValidUser;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -41,19 +42,6 @@ public class UserValidationTest
 	{
 		SecurityContextHolder.getContext()
 				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
-	}
-
-	public static User aValidUser()
-	{
-		return User.builder()
-				.username("test")
-				.forenames("forenames")
-				.surname("surname")
-				.datasets(singletonList(Dataset.builder().code("N01").description("NPS London").build()))
-				.homeArea(Dataset.builder().code("N01").description("NPS London").build())
-				.startDate(LocalDate.of(2000, 1, 1))
-				.privateSector(false)
-				.build();
 	}
 
 	@Test

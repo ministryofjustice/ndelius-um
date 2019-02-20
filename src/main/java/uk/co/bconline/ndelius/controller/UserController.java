@@ -1,28 +1,27 @@
 package uk.co.bconline.ndelius.controller;
 
-import static org.springframework.http.ResponseEntity.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import lombok.extern.slf4j.Slf4j;
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
-import uk.co.bconline.ndelius.model.ErrorResponse;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.UserService;
+import uk.co.bconline.ndelius.validator.NewUsernameMustNotAlreadyExist;
+import uk.co.bconline.ndelius.validator.UsernameMustNotAlreadyExist;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+
+import static org.springframework.http.ResponseEntity.*;
 
 @Slf4j
 @Validated
@@ -60,22 +59,17 @@ public class UserController
 	@Transactional
 	@Interaction("UMBI003")
 	@PostMapping(path="/user")
+	@UsernameMustNotAlreadyExist
 	public ResponseEntity addUser(@RequestBody @Valid User user) throws URISyntaxException
 	{
-		if (userService.usernameExists(user.getUsername()))
-		{
-			return badRequest().body(new ErrorResponse("username: already exists"));
-		}
-		else
-		{
-			userService.addUser(user);
-			return created(new URI(String.format("/user/%s", user.getUsername()))).build();
-		}
+		userService.addUser(user);
+		return created(new URI(String.format("/user/%s", user.getUsername()))).build();
 	}
 
 	@Transactional
 	@Interaction("UMBI004")
 	@PostMapping(path="/user/{username}")
+	@NewUsernameMustNotAlreadyExist
 	public ResponseEntity updateUser(@RequestBody @Valid User user, @PathVariable("username") String username)
 	{
 		if (!userService.usernameExists(username))
@@ -84,7 +78,7 @@ public class UserController
 		}
 		else
 		{
-			userService.updateUser(user);
+			userService.updateUser(username, user);
 			return noContent().build();
 		}
 	}

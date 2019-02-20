@@ -326,10 +326,9 @@ public class UserTransformer
 
 	public ADUser mapToAD1User(User user, ADUser existingUser)
 	{
-		val username = user.getUsername();
 		return existingUser.toBuilder()
-				.username(username)
-				.userPrincipalName(username + ad1PrincipalSuffix)
+				.username(user.getUsername())
+				.userPrincipalName(user.getUsername() + ad1PrincipalSuffix)
 				.forename(user.getForenames())
 				.surname(user.getSurname())
 				.displayName(combineNames(user.getForenames(), user.getSurname()))

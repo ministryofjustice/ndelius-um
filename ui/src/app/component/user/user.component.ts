@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {User} from "../../model/user";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {flatMap, map} from "rxjs/operators";
 import {UserService} from "../../service/user.service";
 import {Observable} from "rxjs/Observable";
@@ -31,6 +31,7 @@ export class UserComponent implements OnInit {
   @ViewChild("rolesControl")
   rolesControl: NgModel;
   mode: string;
+  params: Params;
   user: User;
   teams: Team[];
   datasets: Dataset[];
@@ -55,6 +56,7 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
     this.route.params
       .pipe(flatMap(params => {
+        this.params = params;
         if (params.id != null) {
           let recentUsers = JSON.parse(localStorage.getItem("recent-users")) || [];
           while (recentUsers.indexOf(params.id) > -1) recentUsers.splice(recentUsers.indexOf(params.id), 1);
@@ -158,7 +160,7 @@ export class UserComponent implements OnInit {
     } else if (this.mode === 'Update') {
       this.saving = true;
       window.scrollTo(0,0);
-      this.userService.update(this.user).subscribe(() => {
+      this.userService.update(this.params.id, this.user).subscribe(() => {
        this.router.navigate(["/user/" + this.user.username]).then(() => {
           AppComponent.success("Updated " + this.user.username + " successfully.");
           this.saving = false;

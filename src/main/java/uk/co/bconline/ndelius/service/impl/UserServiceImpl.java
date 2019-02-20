@@ -189,19 +189,31 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public void updateUser(User user)
+	public void updateUser(String username, User user)
 	{
-		val dbFuture = runAsync(() -> dbService.save(transformer.mapToUserEntity(user,
-				dbService.getUser(user.getUsername()).orElse(new UserEntity()))));
-		val oidFuture = runAsync(() -> oidService.save(transformer.mapToOIDUser(user,
-				oidService.getUser(user.getUsername()).orElse(new OIDUser()))));
+		val dbFuture = runAsync(() -> {
+			val existingUser = dbService.getUser(username).orElse(new UserEntity());
+			val updatedUser = transformer.mapToUserEntity(user, existingUser);
+			dbService.save(updatedUser);
+		});
+		val oidFuture = runAsync(() -> {
+			val existingUser = oidService.getUser(username).orElse(new OIDUser());
+			val updatedUser = transformer.mapToOIDUser(user, existingUser);
+			oidService.save(username, updatedUser);
+		});
 		val ad1Future = runAsync(() -> {
-			if (!ad1IsReadonly) ad1Service.ifPresent(service -> service.save(transformer.mapToAD1User(user,
-					service.getUser(user.getUsername()).orElse(new ADUser()))));
+			if (!ad1IsReadonly) ad1Service.ifPresent(service -> {
+				val existingUser = service.getUser(username).orElse(new ADUser());
+				val updatedUser = transformer.mapToAD1User(user, existingUser);
+				service.save(updatedUser);
+			});
 		});
 		val ad2Future = runAsync(() -> {
-			if (!ad2IsReadonly) ad2Service.ifPresent(service -> service.save(transformer.mapToAD2User(user,
-					service.getUser(user.getUsername()).orElse(new ADUser()))));
+			if (!ad2IsReadonly) ad2Service.ifPresent(service -> {
+				val existingUser = service.getUser(username).orElse(new ADUser());
+				val updatedUser = transformer.mapToAD2User(user, existingUser);
+				service.save(updatedUser);
+			});
 		});
 
 		try

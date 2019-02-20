@@ -1,9 +1,7 @@
 package uk.co.bconline.ndelius.advice;
 
-import static java.util.stream.Collectors.toList;
-
-import javax.validation.ConstraintViolationException;
-
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.ObjectError;
@@ -12,12 +10,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.exception.NotFoundException;
 import uk.co.bconline.ndelius.model.ErrorResponse;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Component
@@ -48,7 +48,7 @@ public class ControllerExceptionHandler
 		log.debug("Returning 400 response", exception);
 		return new ErrorResponse(exception
 				.getConstraintViolations().stream()
-				.map(cv -> cv.getPropertyPath() + ": " + cv.getMessage())
+				.map(ConstraintViolation::getMessage)
 				.collect(toList()));
 	}
 

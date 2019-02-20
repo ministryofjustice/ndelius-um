@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
+import static uk.co.bconline.ndelius.test.util.UserUtils.aValidUser;
+import static uk.co.bconline.ndelius.test.util.UserUtils.nextTestUsername;
 
 @SpringBootTest
 @DirtiesContext
@@ -206,11 +209,8 @@ public class UserControllerTest
 		mvc.perform(post("/api/user")
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
-						.forenames("Test")
-						.surname("User1")
-						.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-						.homeArea(Dataset.builder().code("C01").description("CRC London").build())
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(null)
 						.build())))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.error[*]", hasItem("username: must not be blank")));
@@ -223,28 +223,23 @@ public class UserControllerTest
 		mvc.perform(post("/api/user")
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
 						.username("test.user")
-						.forenames("Test")
-						.surname("User1")
-						.startDate(LocalDate.of(2018,8,13))
-						.datasets(singletonList(Dataset.builder().code("C01").description("CRC London").build()))
-						.homeArea(Dataset.builder().code("C01").description("CRC London").build())
-						.privateSector(false)
 						.build())))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.error[*]", hasItem("username: already exists")));
+				.andExpect(jsonPath("$.error[*]", hasItem("Username is already in use")));
 	}
 
 	@Test
 	public void addUser() throws Exception
 	{
+		String username = nextTestUsername();
 		String token = token(mvc);
 		mvc.perform(post("/api/user")
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
-						.username("test.user1")
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(username)
 						.email("test1@test.com")
 						.forenames("Test")
 						.surname("User1")
@@ -265,12 +260,12 @@ public class UserControllerTest
 								.build()))
 						.build())))
 				.andExpect(status().isCreated())
-				.andExpect(redirectedUrl("/user/test.user1"));
+				.andExpect(redirectedUrl("/user/" + username));
 
-		mvc.perform(get("/api/user/test.user1")
+		mvc.perform(get("/api/user/" + username)
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.username", is("test.user1")))
+				.andExpect(jsonPath("$.username", is(username)))
 				.andExpect(jsonPath("$.email", is("test1@test.com")))
 				.andExpect(jsonPath("$.staffCode", is("N01A999")))
 				.andExpect(jsonPath("$.staffGrade.code", is("GRADE2")))
@@ -286,24 +281,21 @@ public class UserControllerTest
 	@Test
 	public void usersAreFilteredOnDatasets() throws Exception
 	{
+		String username = nextTestUsername();
 		String token = token(mvc);
 		mvc.perform(post("/api/user")
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
-						.username("test.user3")
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(username)
 						.homeArea(Dataset.builder().code("C01").build())
-						.privateSector(true)
 						.datasets(asList(
 								Dataset.builder().code("C02").build(),
 								Dataset.builder().code("C03").build()))
-						.forenames("Test")
-						.surname("User3")
-						.startDate(LocalDate.of(2018,8,13))
 						.build())))
 				.andExpect(status().isCreated());
 
-		mvc.perform(get("/api/user/test.user3")
+		mvc.perform(get("/api/user/" + username)
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isNotFound());
 	}
@@ -311,9 +303,10 @@ public class UserControllerTest
 	@Test
 	public void updateUser() throws Exception
 	{
+		String username = nextTestUsername();
 		String token = token(mvc);
-		User user = User.builder()
-				.username("test.user4")
+		User user = aValidUser().toBuilder()
+				.username(username)
 				.forenames("Test")
 				.surname("User4")
 				.staffCode("N01C999")
@@ -336,9 +329,9 @@ public class UserControllerTest
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
 				.andExpect(status().isCreated())
-				.andExpect(redirectedUrl("/user/test.user4"));
+				.andExpect(redirectedUrl("/user/" + username));
 
-		mvc.perform(post("/api/user/test.user4")
+		mvc.perform(post("/api/user/" + username)
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
@@ -359,7 +352,7 @@ public class UserControllerTest
 						.build())))
 				.andExpect(status().isNoContent());
 
-		mvc.perform(get("/api/user/test.user4")
+		mvc.perform(get("/api/user/" + username)
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.email", is("test2@test.com")))
@@ -378,23 +371,18 @@ public class UserControllerTest
 	@Test
 	public void usersAreCreatedWithDefaultPreferences() throws Exception
 	{
+		String username = nextTestUsername();
 		mvc.perform(post("/api/user")
 				.header("Authorization", "Bearer " + token(mvc))
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(User.builder()
-						.username("test.user6")
-						.startDate(LocalDate.of(2018, 8, 13))
-						.privateSector(false)
-						.homeArea(Dataset.builder().code("N01").build())
-						.datasets(singletonList(Dataset.builder().code("N01").build()))
-						.forenames("Test")
-						.surname("User6")
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(username)
 						.build())))
 				.andExpect(status().isCreated());
 
 		Optional<OIDUserPreferences> prefs = preferencesRepository.findOne(query()
 				.searchScope(SearchScope.ONELEVEL)
-				.base("cn=test.user6")
+				.base("cn=" + username)
 				.where("cn").is("UserPreferences"));
 		assertTrue(prefs.isPresent());
 		assertEquals("NRO16", prefs.get().getMostRecentlyViewedOffenders());
@@ -409,5 +397,102 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.email", is("test.user@test.com")));
+	}
+
+	@Test
+	public void userCanBeRenamed() throws Exception
+	{
+		String username = nextTestUsername();
+		String token = token(mvc);
+
+		// Given
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(username)
+						.build())))
+				.andExpect(status().isCreated());
+
+		// When
+		mvc.perform(post("/api/user/" + username)
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(username + "-renamed")
+						.build())))
+				.andExpect(status().isNoContent());
+
+		// Then
+		mvc.perform(get("/api/user/" + username)
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isNotFound());
+		mvc.perform(get("/api/user/" + username + "-renamed")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.username", is(username + "-renamed")));
+	}
+
+	@Test
+	public void userCannotBeRenamedIfNewUsernameAlreadyExists() throws Exception
+	{
+		String username = nextTestUsername();
+		String token = token(mvc);
+
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(username)
+						.build())))
+				.andExpect(status().isCreated());
+
+		mvc.perform(post("/api/user/" + username)
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username("test.user")
+						.build())))
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	@Ignore("This won't work until we add the ability to link user's to existing staff codes")
+	public void userWithStaffCodeCanBeRenamed() throws Exception
+	{
+		String username = nextTestUsername();
+		User user = aValidUser().toBuilder()
+				.username(username)
+				.staffCode("ZZZA001")
+				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
+				.build();
+
+		String token = token(mvc);
+
+		// Given
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+				.andExpect(status().isCreated());
+
+		// When
+		mvc.perform(post("/api/user/" + username)
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+						.username(username + "-renamed")
+						.build())))
+				.andExpect(status().isNoContent());
+
+		// Then
+		mvc.perform(get("/api/user/" + username)
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isNotFound());
+		mvc.perform(get("/api/user/" + username + "-renamed")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.username", is(username + "-renamed")))
+				.andExpect(jsonPath("$.staffCode", is("ZZZA0001")));
 	}
 }
