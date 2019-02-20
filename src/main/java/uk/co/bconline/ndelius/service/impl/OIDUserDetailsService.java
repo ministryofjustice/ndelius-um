@@ -1,43 +1,39 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
-import static org.springframework.ldap.query.SearchScope.ONELEVEL;
-import static uk.co.bconline.ndelius.util.NameUtils.join;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.filter.AndFilter;
+import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.support.LdapNameBuilder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import uk.co.bconline.ndelius.model.SearchResult;
+import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.model.ldap.OIDUserPreferences;
+import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
+import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
+import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
+import uk.co.bconline.ndelius.service.OIDUserService;
+import uk.co.bconline.ndelius.service.UserRoleService;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import javax.naming.InvalidNameException;
-import javax.naming.Name;
-import javax.naming.ldap.LdapName;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.ldap.filter.AndFilter;
-import org.springframework.ldap.odm.annotations.Entry;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import uk.co.bconline.ndelius.model.SearchResult;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
-import uk.co.bconline.ndelius.model.ldap.OIDUserAlias;
-import uk.co.bconline.ndelius.model.ldap.OIDUserPreferences;
-import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
-import uk.co.bconline.ndelius.repository.oid.OIDUserAliasRepository;
-import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
-import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
-import uk.co.bconline.ndelius.service.OIDUserService;
-import uk.co.bconline.ndelius.service.UserRoleService;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 @Slf4j
 @Service
@@ -49,21 +45,21 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	private String oidBase;
 
 	private final OIDUserRepository userRepository;
-	private final OIDUserAliasRepository userAliasRepository;
 	private final OIDUserPreferencesRepository preferencesRepository;
 	private final UserRoleService userRoleService;
+	private final LdapTemplate ldapTemplate;
 
 	@Autowired
 	public OIDUserDetailsService(
 			OIDUserRepository userRepository,
-			OIDUserAliasRepository userAliasRepository,
 			OIDUserPreferencesRepository preferencesRepository,
-			UserRoleService userRoleService)
+			UserRoleService userRoleService,
+			@Qualifier("oid") LdapTemplate ldapTemplate)
 	{
 		this.userRepository = userRepository;
-		this.userAliasRepository = userAliasRepository;
 		this.preferencesRepository = preferencesRepository;
 		this.userRoleService = userRoleService;
+		this.ldapTemplate = ldapTemplate;
 	}
 
 	@Override
@@ -76,8 +72,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public boolean usernameExists(String username)
 	{
-		return userRepository.findByUsername(username).isPresent()
-				|| userAliasRepository.findByUsername(username).isPresent();
+		return userRepository.findByUsername(username).isPresent();
 	}
 
 	/**
@@ -101,8 +96,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 							.or("sn").whitespaceWildcardsLike(token)
 							.or("cn").whitespaceWildcardsLike(token))
 				.collect(AndFilter::new, (f, q) -> f.and(q.filter()), AndFilter::and);
-
-		filter = filter.and(query().where("objectclass").not().is("alias").filter());
 
 		if (log.isDebugEnabled())
 		{
@@ -141,26 +134,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		return getBasicUser(username)
 				.map(u -> u.toBuilder()
 						.roles(userRoleService.getUserRoles(username))
-						.aliasUsername(getAlias(u.getDn()).orElse(username))
 						.build());
-	}
-
-	public Optional<String> getUsernameByAlias(String aliasUsername)
-	{
-		return userAliasRepository.findByUsername(aliasUsername)
-				.map(OIDUserAlias::getAliasedUserDn)
-				.map(dn -> {
-					try
-					{
-						val name =  new LdapName(dn);
-						return (String) name.getRdn(name.size() - 1).getValue();
-					}
-					catch (InvalidNameException e)
-					{
-						log.error("Error parsing alias user dn", e);
-						return null;
-					}
-				});
 	}
 
 	public Optional<String> getUsernameByEmail(String email)
@@ -168,14 +142,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		return userRepository
 				.findByEmail(email)
 				.map(OIDUser::getUsername);
-	}
-
-	@Override
-	public Optional<String> getAlias(String username)
-	{
-		return userAliasRepository
-				.findByAliasedUserDnIgnoreCase(getDn(username) + "," + oidBase)
-				.map(OIDUserAlias::getUsername);
 	}
 
 	@Override
@@ -191,22 +157,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		log.debug("Saving user: {}", user.getUsername());
 		userRepository.save(user);
 
-		// User alias
-		log.debug("Deleting alias record if it exists");
-		userAliasRepository.findByAliasedUserDnIgnoreCase(join(",", "cn=" + user.getUsername(), USER_BASE, oidBase))
-				.ifPresent(userAliasRepository::delete);
-		if (user.getAliasUsername() != null && !user.getAliasUsername().equalsIgnoreCase(user.getUsername()))
-		{
-			log.debug("Creating alias record: {}", user.getAliasUsername());
-			userAliasRepository.save(OIDUserAlias.builder()
-					.username(user.getAliasUsername())
-					.password(user.getPassword())
-					.aliasedUserDn(user.getDn().toString() + "," + oidBase)
-					.surname(user.getSurname())
-					.sector(user.getSector())
-					.build());
-		}
-
 		// Preferences
 		log.debug("Checking if user preferences exist");
 		if (!preferencesRepository.findOne(query()
@@ -220,6 +170,27 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 
 		// Role associations
 		userRoleService.updateUserRoles(user.getUsername(), user.getRoles());
+
+	}
+
+	@Override
+	public void save(String existingUsername, OIDUser user)
+	{
+		// Keep hold of the new username, if it's different we'll rename it later
+		val newUsername = user.getUsername();
+		user.setUsername(existingUsername);
+
+		// Save changes to the user
+		save(user);
+
+		// Rename user if required
+		if (!existingUsername.equals(newUsername))
+		{
+			val oldDn = user.getDn();
+			val newDn = LdapNameBuilder.newInstance(getDn(newUsername)).build();
+			log.debug("Renaming OID entry from {} to {}", oldDn, newDn);
+			ldapTemplate.rename(oldDn, newDn);
+		}
 	}
 
 	private float deriveScore(String query, OIDUser u)
@@ -232,13 +203,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 						.mapToDouble(item -> (double) token.length() / item.length())
 						.max().orElse(0.0))
 				.sum();
-	}
-
-	private Optional<String> getAlias(Name userDn)
-	{
-		return userAliasRepository
-				.findByAliasedUserDnIgnoreCase(userDn.toString() + "," + oidBase)
-				.map(OIDUserAlias::getUsername);
 	}
 
 	private String getDn(String username)

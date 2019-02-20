@@ -1,15 +1,13 @@
 package uk.co.bconline.ndelius.model;
 
-import java.time.LocalDate;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import uk.co.bconline.ndelius.validator.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.*;
-import uk.co.bconline.ndelius.validator.*;
+import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @ToString
@@ -19,7 +17,6 @@ import uk.co.bconline.ndelius.validator.*;
 @ValidDates
 @UniqueStaffCode
 @AssignableRoles
-@UniqueAliasUsername
 @UniqueEmail
 @ConditionallyRequired(ifPopulated = "Staff Code:staffCode", required = "Staff Grade:staffGrade")
 @ConditionallyRequired(ifPopulated = "Staff Grade:staffGrade", required = "Staff Code:staffCode")
@@ -31,10 +28,6 @@ public class User
 	@Size(max = 60)
 	@Pattern(regexp = "^[a-zA-Z0-9_\\-.']*$", message = "invalid format")
 	private String username;
-
-	@Size(max = 60)
-	@Pattern(regexp = "^[a-zA-Z0-9_\\-.']*$", message = "invalid format")
-	private String aliasUsername;
 
 	@NotBlank
 	@Size(max = 71)

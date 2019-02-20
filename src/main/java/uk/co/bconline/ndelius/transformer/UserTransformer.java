@@ -1,13 +1,17 @@
 package uk.co.bconline.ndelius.transformer;
 
-import static java.time.format.DateTimeFormatter.ofPattern;
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.util.Collections.*;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
-import static org.springframework.util.StringUtils.isEmpty;
-import static uk.co.bconline.ndelius.util.NameUtils.*;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import uk.co.bconline.ndelius.model.*;
+import uk.co.bconline.ndelius.model.entity.*;
+import uk.co.bconline.ndelius.model.ldap.ADUser;
+import uk.co.bconline.ndelius.model.ldap.OIDRole;
+import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.service.*;
+import uk.co.bconline.ndelius.util.LdapPasswordUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,19 +22,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import uk.co.bconline.ndelius.model.*;
-import uk.co.bconline.ndelius.model.entity.*;
-import uk.co.bconline.ndelius.model.ldap.ADUser;
-import uk.co.bconline.ndelius.model.ldap.OIDRole;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
-import uk.co.bconline.ndelius.service.*;
-import uk.co.bconline.ndelius.util.LdapPasswordUtils;
+import static java.time.format.DateTimeFormatter.ofPattern;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Collections.*;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+import static org.springframework.util.StringUtils.isEmpty;
+import static uk.co.bconline.ndelius.util.NameUtils.*;
 
 @Slf4j
 @Component
@@ -81,7 +80,6 @@ public class UserTransformer
 	{
 		return SearchResult.builder()
 				.username(user.getUsername())
-				.aliasUsername(user.getAliasUsername())
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
 				.teams(user.getTeams())
@@ -104,7 +102,6 @@ public class UserTransformer
 		val r = Stream.of(
 				ofNullable(oidUser).map(v -> User.builder()
 						.username(v.getUsername())
-						.aliasUsername(v.getAliasUsername())
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
 						.email(v.getEmail())
@@ -122,10 +119,7 @@ public class UserTransformer
 										})
 										.collect(toList()))
 								.orElse(null))
-						.sources(Stream.of("OID",
-								v.getAliasUsername() != null && !v.getAliasUsername().equals(v.getUsername()) ? "AD1": null)
-								.filter(Objects::nonNull)
-								.collect(toList()))
+						.sources(singletonList("OID"))
 						.build()),
 				ofNullable(dbUser).map(v -> User.builder()
 						.username(v.getUsername())
@@ -167,14 +161,10 @@ public class UserTransformer
 		val r = Stream.of(
 				ofNullable(oidUser).map(v -> User.builder()
 						.username(v.getUsername())
-						.aliasUsername(v.getAliasUsername())
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
 						.email(v.getEmail())
-						.sources(Stream.of("OID",
-								v.getAliasUsername() != null && !v.getAliasUsername().equals(v.getUsername()) ? "AD1": null)
-								.filter(Objects::nonNull)
-								.collect(toList()))
+						.sources(singletonList("OID"))
 						.build()),
 				ofNullable(dbUser).map(v -> User.builder()
 						.username(v.getUsername())
@@ -310,7 +300,6 @@ public class UserTransformer
 				.username(user.getUsername())
 				.uid(user.getUsername())
 				.password(LdapPasswordUtils.fixPassword(ofNullable(existingUser.getPassword()).orElse(oidDefaultPassword)))
-				.aliasUsername(user.getAliasUsername())
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
 				.email(user.getEmail())
@@ -337,10 +326,9 @@ public class UserTransformer
 
 	public ADUser mapToAD1User(User user, ADUser existingUser)
 	{
-		val username = ofNullable(user.getAliasUsername()).orElse(user.getUsername());
 		return existingUser.toBuilder()
-				.username(username)
-				.userPrincipalName(username + ad1PrincipalSuffix)
+				.username(user.getUsername())
+				.userPrincipalName(user.getUsername() + ad1PrincipalSuffix)
 				.forename(user.getForenames())
 				.surname(user.getSurname())
 				.displayName(combineNames(user.getForenames(), user.getSurname()))

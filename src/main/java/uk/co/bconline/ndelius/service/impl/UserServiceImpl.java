@@ -1,29 +1,13 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.util.Collections.emptyList;
-import static java.util.Comparator.comparing;
-import static java.util.Optional.ofNullable;
-import static java.util.concurrent.CompletableFuture.*;
-import static java.util.stream.Collectors.toList;
-
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Predicate;
-
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
@@ -34,6 +18,20 @@ import uk.co.bconline.ndelius.service.DBUserService;
 import uk.co.bconline.ndelius.service.DatasetService;
 import uk.co.bconline.ndelius.service.UserService;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
+
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Collections.emptyList;
+import static java.util.Comparator.comparing;
+import static java.util.concurrent.CompletableFuture.*;
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
@@ -76,9 +74,7 @@ public class UserServiceImpl implements UserService
 
 		val dbFuture = supplyAsync(() -> dbService.search(query));
 		val oidFuture = supplyAsync(() -> oidService.search(query));
-		val ad1Future = supplyAsync(() -> ad1Service.map(service -> service.search(query).stream()
-				.filter(user -> !oidService.getUsernameByAlias(user.getUsername()).isPresent())
-				.collect(toList())).orElse(emptyList()));
+		val ad1Future = supplyAsync(() -> ad1Service.map(service -> service.search(query)).orElse(emptyList()));
 		val ad2Future = supplyAsync(() -> ad2Service.map(service -> service.search(query)).orElse(emptyList()));
 		Set<SearchResult> foundUsers;
 		try
@@ -118,9 +114,7 @@ public class UserServiceImpl implements UserService
 	public Optional<SearchResult> getSearchResult(String username)
 	{
 		val dbFuture = supplyAsync(() -> dbService.getUser(username).orElse(null));
-		val oidFuture = supplyAsync(() -> oidService.getBasicUser(username)
-				.map(u -> u.toBuilder().aliasUsername(oidService.getAlias(username).orElse(null)).build())
-				.orElse(null));
+		val oidFuture = supplyAsync(() -> oidService.getBasicUser(username).orElse(null));
 		val ad1Future = supplyAsync(() -> ad1Service.flatMap(service -> service.getUser(username)).orElse(null));
 		val ad2Future = supplyAsync(() -> ad2Service.flatMap(service -> service.getUser(username)).orElse(null));
 
@@ -195,22 +189,30 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public void updateUser(User user)
+	public void updateUser(String username, User user)
 	{
-		val dbFuture = runAsync(() -> dbService.save(transformer.mapToUserEntity(user,
-				dbService.getUser(user.getUsername()).orElse(new UserEntity()))));
-		val oidFuture = runAsync(() -> oidService.save(transformer.mapToOIDUser(user,
-				oidService.getUser(user.getUsername()).orElse(new OIDUser()))));
+		val dbFuture = runAsync(() -> {
+			val existingUser = dbService.getUser(username).orElse(new UserEntity());
+			val updatedUser = transformer.mapToUserEntity(user, existingUser);
+			dbService.save(updatedUser);
+		});
+		val oidFuture = runAsync(() -> {
+			val existingUser = oidService.getUser(username).orElse(new OIDUser());
+			val updatedUser = transformer.mapToOIDUser(user, existingUser);
+			oidService.save(username, updatedUser);
+		});
 		val ad1Future = runAsync(() -> {
 			if (!ad1IsReadonly) ad1Service.ifPresent(service -> {
-				val existingUser = service.getUser(ofNullable(user.getAliasUsername()).orElse(user.getUsername())).orElse(new ADUser());
-				service.save(transformer.mapToAD1User(user, existingUser));
+				val existingUser = service.getUser(username).orElse(new ADUser());
+				val updatedUser = transformer.mapToAD1User(user, existingUser);
+				service.save(updatedUser);
 			});
 		});
 		val ad2Future = runAsync(() -> {
 			if (!ad2IsReadonly) ad2Service.ifPresent(service -> {
-				val existingUser = service.getUser(user.getUsername()).orElse(new ADUser());
-				service.save(transformer.mapToAD2User(user, existingUser));
+				val existingUser = service.getUser(username).orElse(new ADUser());
+				val updatedUser = transformer.mapToAD2User(user, existingUser);
+				service.save(updatedUser);
 			});
 		});
 

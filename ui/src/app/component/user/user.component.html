@@ -15,6 +15,7 @@
         <h4 class="card-title mb-0">User Details</h4>
         <small class="text-muted" *ngIf="mode !== 'View' && (
         username.invalid ||
+        email.invalid ||
         forenames.invalid ||
         surname.invalid ||
         startdate.invalid ||
@@ -24,9 +25,9 @@
           <label for="username" class="col-sm-2 col-form-label">Username</label>
           <div class="col-sm-4">
             <input #username="ngModel" id="username" name="username" [(ngModel)]="user.username"
-                   class="form-control" [readonly]="mode !== 'Add'"
+                   class="form-control" [readonly]="mode == 'View'"
                    autocomplete="off" required pattern="^[a-zA-Z0-9_\-.']*$"
-                   maxlength="60"/>
+                   maxlength="60" aria-describedby="username-warning"/>
             <div *ngIf="username.invalid && username.dirty" class="text-danger">
               <small *ngIf="username.errors['required']">
                 *Username is required
@@ -35,37 +36,15 @@
                 *Username must be unique and contain only alphanumeric characters, hyphens, apostrophes or full-stops.
               </small>
             </div>
+            <div *ngIf="username.dirty && user.username != params['id']" class="text-muted">
+              <small id="username-warning">Warning: The Delius account will be renamed, you must ensure that the new value matches the desired DOM1 account name.</small>
+            </div>
           </div>
           <label for="email" class="col-sm-2 col-form-label">Email</label>
           <div class="col-sm-4">
             <input id="email" name="email" #email="ngModel" [(ngModel)]="user.email"
                    autocomplete="email"
                    class="form-control">
-          </div>
-        </div>
-        <div class="form-group row" *ngIf="mode !== 'View' || (user.aliasUsername != null && user.aliasUsername != user.username)">
-          <label for="alias-username" class="col-sm-2 col-form-label">Alias</label>
-          <div class="col-sm-4">
-            <input id="alias-username" name="alias-username" #aliasUsername="ngModel" [(ngModel)]="user.aliasUsername"
-                   class="form-control" [readonly]="mode === 'View'" autocomplete="off" required pattern="^[a-zA-Z0-9_\-.']*$" maxlength="60">
-            <div *ngIf="aliasUsername.invalid && aliasUsername.dirty" class="text-danger">
-              <small *ngIf="aliasUsername.errors['required']">
-                *Alias username is required
-              </small>
-              <small *ngIf="aliasUsername.errors['pattern']">
-                *Alias username must be unique and contain only alphanumeric characters, hyphens, apostrophes or full-stops.
-              </small>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="custom-control custom-checkbox pt-2">
-              <input id="same-username" name="same-username"
-                     type="checkbox" class="custom-control-input"
-                     [disabled]="user.aliasUsername === user.username || mode === 'View'"
-                     [checked]="user.aliasUsername === user.username"
-                     (click)="user.aliasUsername = user.username">
-              <label for="same-username" class="custom-control-label">Same as username?</label>
-            </div>
           </div>
         </div>
         <div class="form-group row">

@@ -1,18 +1,16 @@
 package uk.co.bconline.ndelius.model.ldap;
 
-import static java.util.Collections.emptyList;
-
-import java.util.Collection;
-import java.util.Set;
-
-import javax.naming.Name;
-
+import lombok.*;
 import org.springframework.ldap.odm.annotations.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import lombok.*;
 import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
+
+import javax.naming.Name;
+import java.util.Collection;
+import java.util.Set;
+
+import static java.util.Collections.emptyList;
 
 @Getter
 @NoArgsConstructor
@@ -53,9 +51,6 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails
 
 	@Attribute(name="mail")
 	private String email;
-
-	@Transient
-	private String aliasUsername;
 
 	@Transient
 	private Set<OIDRole> roles;
