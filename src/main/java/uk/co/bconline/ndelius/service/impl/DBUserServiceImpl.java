@@ -1,23 +1,12 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
@@ -27,6 +16,16 @@ import uk.co.bconline.ndelius.repository.db.SearchResultRepository;
 import uk.co.bconline.ndelius.repository.db.StaffTeamRepository;
 import uk.co.bconline.ndelius.repository.db.UserEntityRepository;
 import uk.co.bconline.ndelius.service.DBUserService;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
@@ -56,7 +55,7 @@ public class DBUserServiceImpl implements DBUserService
 	@Override
 	public boolean usernameExists(String username)
 	{
-		return repository.existsByUsername(username);
+		return repository.existsByUsernameIgnoreCase(username);
 	}
 
 	@Override
