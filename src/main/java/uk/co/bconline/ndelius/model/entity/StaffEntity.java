@@ -67,8 +67,8 @@ public class StaffEntity
 	private ReferenceDataEntity grade;
 
 	@Setter
-	@OneToMany(mappedBy = "staff")
-	private Set<UserEntity> user;
+	@OneToMany(mappedBy = "staff", fetch = EAGER)
+	private Set<UserEntity> user = new HashSet<>();
 
 	@Column(name = "CREATED_BY_USER_ID")
 	private Long createdById;

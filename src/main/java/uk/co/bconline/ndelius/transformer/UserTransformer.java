@@ -262,6 +262,12 @@ public class UserTransformer
 	public StaffEntity mapToStaffEntity(User user, StaffEntity existingStaff)
 	{
 		val myUserId = dbUserService.getMyUserId();
+		if (user.getStaffCode() != null && !user.getStaffCode().equals(existingStaff.getCode()))
+		{
+			// staff code has changed, fetch the new staff record to reassign it to this user
+			existingStaff = dbUserService.getUserByStaffCode(user.getStaffCode())
+					.map(UserEntity::getStaff).orElse(new StaffEntity());
+		}
 		val entity = existingStaff.toBuilder()
 				.code(user.getStaffCode())
 				.grade(ofNullable(user.getStaffGrade())

@@ -17,12 +17,12 @@ import uk.co.bconline.ndelius.service.DBUserService;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 @Slf4j
 @Service
@@ -128,12 +128,16 @@ public class DBUserServiceImpl implements DBUserService
 			probationAreaUserRepository.deleteAll(existingUser.get().getProbationAreaLinks());
 			log.debug("Saving new datasets");
 			probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
-			log.debug("Deleting any existing team links");
-			ofNullable(existingUser.get().getStaff()).map(StaffEntity::getTeamLinks).ifPresent(staffTeamRepository::deleteAll);
 			log.debug("Saving user/staff");
 			val newUser = repository.save(user);
-			log.debug("Saving team links");
-			ofNullable(user.getStaff()).map(StaffEntity::getTeamLinks).ifPresent(staffTeamRepository::saveAll);
+			updateUserTeams(user);
+			log.debug("Unlinking any other users with the same staff code");
+			// Required due to modelling the OneToOne user/staff relationship as a OneToMany
+			ofNullable(user.getStaff()).map(StaffEntity::getCode)
+					.flatMap(staffRepository::findByCode).map(StaffEntity::getUser)
+					.ifPresent(users -> users.stream()
+							.filter(u -> !u.getUsername().equals(user.getUsername()))
+							.forEach(u -> repository.save(u.toBuilder().staff(null).build())));
 			log.debug("Finished saving user to database");
 			return newUser;
 		}
@@ -148,5 +152,23 @@ public class DBUserServiceImpl implements DBUserService
 			log.debug("Finished saving new user to database");
 			return newUser;
 		}
+	}
+
+	private void updateUserTeams(UserEntity user)
+	{
+		log.debug("Deleting any existing team links");
+		ofNullable(user.getStaff()).map(StaffEntity::getCode)
+				.flatMap(staffRepository::findByCode).map(StaffEntity::getTeamLinks)
+				.map(links -> links.stream().filter(Objects::nonNull).collect(toSet()))
+				.ifPresent(staffTeamRepository::deleteAll);
+		log.debug("Saving team links");
+		ofNullable(user.getStaff()).map(StaffEntity::getCode)
+				.flatMap(staffRepository::findByCode)
+				.flatMap(existingStaff -> ofNullable(user.getStaff())
+						.map(StaffEntity::getTeamLinks)
+						.map(links -> links.stream()
+								.peek(link -> link.getId().setStaff(existingStaff))	// Fix staff id
+								.collect(toSet())))
+				.ifPresent(staffTeamRepository::saveAll);
 	}
 }

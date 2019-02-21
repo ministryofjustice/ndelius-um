@@ -39,6 +39,8 @@ export class UserComponent implements OnInit {
   selectedGroups: RoleGroup[];
   staffGrades: StaffGrade[];
   userWithStaffCode: User;
+  loadingStaffCode: boolean;
+  generatingStaffCode: boolean;
   globalMinDate: Date = new Date(1900,0,1);
   globalMaxDate: Date = new Date(2099,11,31);
 
@@ -193,21 +195,27 @@ export class UserComponent implements OnInit {
   }
 
   generateStaffCode(): void {
+    this.generatingStaffCode = true;
     this.datasetService.nextStaffCode(this.user.homeArea.code)
       .subscribe(staffCode => {
-        this.user.staffCode = staffCode;
-        this.staffCodeChanged();
-      });
+          this.user.staffCode = staffCode;
+          this.staffCodeChanged();
+          this.generatingStaffCode = false;
+        },
+        () => this.generatingStaffCode = false);
   }
 
   staffCodeChanged(): void {
     this.userWithStaffCode = null;
+    this.loadingStaffCode = true;
     this.userService.readByStaffCode(this.user.staffCode)
       .subscribe(user => {
-        this.userWithStaffCode = user;
-        this.user.staffGrade = user.staffGrade;
-        this.user.teams = user.teams;
-      });
+          this.userWithStaffCode = user;
+          this.user.staffGrade = user.staffGrade;
+          this.user.teams = user.teams;
+          this.loadingStaffCode = false
+        },
+        () => this.loadingStaffCode = false);
   }
 
   backButtonAlert(): void {
