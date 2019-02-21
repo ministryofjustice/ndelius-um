@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {User} from "../../model/user";
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {flatMap, map} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, flatMap, map} from "rxjs/operators";
 import {UserService} from "../../service/user.service";
 import {Observable} from "rxjs/Observable";
 import {AuthorisationService} from "../../service/impl/authorisation.service";
@@ -26,10 +26,9 @@ import {NgForm, NgModel} from "@angular/forms";
 export class UserComponent implements OnInit {
   loaded: boolean;
   saving: boolean;
-  @ViewChild("form")
-  form: NgForm;
-  @ViewChild("rolesControl")
-  rolesControl: NgModel;
+  @ViewChild("form") form: NgForm;
+  @ViewChild("rolesControl") rolesControl: NgModel;
+  @ViewChild('staffCode') staffCodeControl: NgModel;
   mode: string;
   params: Params;
   user: User;
@@ -39,6 +38,7 @@ export class UserComponent implements OnInit {
   roleGroups: RoleGroup[];
   selectedGroups: RoleGroup[];
   staffGrades: StaffGrade[];
+  userWithStaffCode: User;
   globalMinDate: Date = new Date(1900,0,1);
   globalMaxDate: Date = new Date(2099,11,31);
 
@@ -87,6 +87,11 @@ export class UserComponent implements OnInit {
         this.addSelectableRoles(user.roles || []);
         this.loaded = true;
         this.homeAreaChanged();
+        setTimeout(() => {
+          this.staffCodeControl.valueChanges
+            .pipe(debounceTime(500), distinctUntilChanged())
+            .subscribe(() => this.staffCodeChanged());
+        });
       });
 
     this.roleService.groups().subscribe((roleGroups: RoleGroup[]) => {
@@ -187,12 +192,25 @@ export class UserComponent implements OnInit {
     return item? 'Private': 'Public';
   }
 
-  generateStaffCode() {
+  generateStaffCode(): void {
     this.datasetService.nextStaffCode(this.user.homeArea.code)
-      .subscribe(staffCode => this.user.staffCode = staffCode);
+      .subscribe(staffCode => {
+        this.user.staffCode = staffCode;
+        this.staffCodeChanged();
+      });
   }
 
-  backButtonAlert(){
+  staffCodeChanged(): void {
+    this.userWithStaffCode = null;
+    this.userService.readByStaffCode(this.user.staffCode)
+      .subscribe(user => {
+        this.userWithStaffCode = user;
+        this.user.staffGrade = user.staffGrade;
+        this.user.teams = user.teams;
+      });
+  }
+
+  backButtonAlert(): void {
     if (this.form.dirty) {
       if(confirm("Any changes made on this page will be lost. Select OK to continue or Cancel to stay on this screen.")){
         window.history.back()

@@ -88,6 +88,11 @@ public class UserTransformer
 				.build();
 	}
 
+	public Optional<User> map(UserEntity user)
+	{
+		return combine(user, null, null, null);
+	}
+
 	public Optional<User> map(OIDUser user)
 	{
 		return combine(null, user, null, null);

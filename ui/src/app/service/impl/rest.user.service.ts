@@ -31,6 +31,10 @@ export class RestUserService implements UserService {
     return this.http.get<User>(environment.api.baseurl + "user/" + username);
   }
 
+  readByStaffCode(staffCode: string): Observable<User> {
+    return this.http.get<User>(environment.api.baseurl + "staff/" + staffCode);
+  }
+
   update(username: string, user: User): Observable<void> {
     return this.http.post<void>(environment.api.baseurl + "user/" + username, user);
   }

@@ -171,6 +171,12 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
+	public Optional<User> getUserByStaffCode(String staffCode)
+	{
+		return dbService.getUserByStaffCode(staffCode).flatMap(transformer::map);
+	}
+
+	@Override
 	public void addUser(User user)
 	{
 		val dbFuture = runAsync(() -> dbService.save(transformer.mapToUserEntity(user, new UserEntity())));

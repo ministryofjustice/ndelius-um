@@ -11,6 +11,7 @@ public interface UserService
 	boolean usernameExists(String username);
 	List<SearchResult> search(String query, int page, int pageSize);
 	Optional<User> getUser(String username);
+	Optional<User> getUserByStaffCode(String staffCode);
 	void addUser(User user);
 	void updateUser(String username, User user);
 }

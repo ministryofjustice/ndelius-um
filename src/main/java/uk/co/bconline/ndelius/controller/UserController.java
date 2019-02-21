@@ -56,6 +56,15 @@ public class UserController
 				.orElse(notFound().build());
 	}
 
+	@Interaction("UMBI002")
+	@GetMapping(path="/staff/{staffCode}")
+	public ResponseEntity<User> getUserByStaffCode(@PathVariable("staffCode") String staffCode)
+	{
+		return userService.getUserByStaffCode(staffCode)
+				.map(ResponseEntity::ok)
+				.orElse(notFound().build());
+	}
+
 	@Transactional
 	@Interaction("UMBI003")
 	@PostMapping(path="/user")

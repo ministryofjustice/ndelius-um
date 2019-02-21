@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @ValidDates
-@UniqueStaffCode
 @AssignableRoles
 @UniqueEmail
 @ConditionallyRequired(ifPopulated = "Staff Code:staffCode", required = "Staff Grade:staffGrade")

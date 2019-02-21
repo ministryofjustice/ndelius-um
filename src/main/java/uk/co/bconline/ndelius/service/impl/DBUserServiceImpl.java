@@ -11,10 +11,7 @@ import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
-import uk.co.bconline.ndelius.repository.db.ProbationAreaUserRepository;
-import uk.co.bconline.ndelius.repository.db.SearchResultRepository;
-import uk.co.bconline.ndelius.repository.db.StaffTeamRepository;
-import uk.co.bconline.ndelius.repository.db.UserEntityRepository;
+import uk.co.bconline.ndelius.repository.db.*;
 import uk.co.bconline.ndelius.service.DBUserService;
 
 import java.time.LocalDateTime;
@@ -35,6 +32,7 @@ public class DBUserServiceImpl implements DBUserService
 	private String datasourceUrl;
 
 	private final UserEntityRepository repository;
+	private final StaffRepository staffRepository;
 	private final SearchResultRepository searchResultRepository;
 	private final ProbationAreaUserRepository probationAreaUserRepository;
 	private final StaffTeamRepository staffTeamRepository;
@@ -42,11 +40,13 @@ public class DBUserServiceImpl implements DBUserService
 	@Autowired
 	public DBUserServiceImpl(
 			UserEntityRepository repository,
+			StaffRepository staffRepository,
 			SearchResultRepository searchResultRepository,
 			ProbationAreaUserRepository probationAreaUserRepository,
 			StaffTeamRepository staffTeamRepository)
 	{
 		this.repository = repository;
+		this.staffRepository = staffRepository;
 		this.searchResultRepository = searchResultRepository;
 		this.probationAreaUserRepository = probationAreaUserRepository;
 		this.staffTeamRepository = staffTeamRepository;
@@ -67,7 +67,16 @@ public class DBUserServiceImpl implements DBUserService
 		return u;
 	}
 
-	public Long getUserId(String username)
+	@Override
+	public Optional<UserEntity> getUserByStaffCode(String code)
+	{
+		val staff = staffRepository.findByCode(code);
+		return staff.map(s -> s.getUser().isEmpty()?
+				UserEntity.builder().staff(s).build():
+				s.getUser().iterator().next());
+	}
+
+	private Long getUserId(String username)
 	{
 		return getUser(username).map(UserEntity::getId).orElse(null);
 	}
