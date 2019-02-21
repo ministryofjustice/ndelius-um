@@ -13,11 +13,6 @@
   -webkit-transition: height 100ms, min-height 100ms;
 }
 
-.animate-transform {
-  transition: transform 100ms;
-  -webkit-transition: transform 100ms;
-}
-
 .jumbotron-compact {
   padding-top: $jumbotron-padding * 2/3;
   padding-bottom: $jumbotron-padding / 2;

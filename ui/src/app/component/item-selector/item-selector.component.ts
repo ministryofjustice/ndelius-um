@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 
 declare var $: any;
+declare var Popper: any;
 
 @Component({
   selector: 'item-selector',
@@ -26,7 +27,7 @@ declare var $: any;
     }]
 })
 export class ItemSelectorComponent
-    implements ControlValueAccessor, Validator
+    implements ControlValueAccessor, Validator, OnInit
 {
   @ViewChild("filterControl") filterControl: ElementRef;
   @ViewChild("toggleBtn") toggleBtn: ElementRef;
@@ -157,7 +158,11 @@ export class ItemSelectorComponent
     this.readonly = isDisabled;
   }
 
-  updateDropDown(timeout: number) {
-    setTimeout(() => $(this.toggleBtn.nativeElement).dropdown('update'), timeout);
+  updateDropDown() {
+    $(this.toggleBtn.nativeElement).dropdown('update');
+  }
+
+  ngOnInit(): void {
+    Popper.Defaults.modifiers.computeStyle.gpuAcceleration = false;
   }
 }
