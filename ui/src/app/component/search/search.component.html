@@ -24,7 +24,8 @@
                    autocomplete="off">
             <div class="input-group-append">
               <button class="btn btn-primary" type="submit">
-                <span class="oi oi-magnifying-glass"></span>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="searching"></span>
+                <span class="oi oi-magnifying-glass" *ngIf="!searching"></span>
               </button>
             </div>
           </div>

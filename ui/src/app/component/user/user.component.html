@@ -310,8 +310,13 @@
       </section>
       <hr/>
       <div class="btn-toolbar pb-4">
-        <button id="save-btn" type="submit"  class="btn btn-primary mr-2"
-                *ngIf="mode !== 'View'">Save</button>
+        <button id="save-btn" type="submit" class="btn btn-primary mr-2"
+                *ngIf="mode !== 'View'"
+                [disabled]="saving">
+          <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true" *ngIf="saving"></span>
+          <span *ngIf="saving">Saving&hellip;</span>
+          <span *ngIf="!saving">Save</span>
+        </button>
         <button id="copy-btn" type="button" class="btn btn-secondary mr-2"
                 routerLink="/user" [queryParams]="{copy: user.username}"
                 *ngIf="mode !== 'Add' && auth.canAddUser()">Create another&hellip;</button>
