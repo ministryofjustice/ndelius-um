@@ -146,19 +146,6 @@ public class UserValidationTest
 		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be blank"))));
 	}
 
-//	@Test
-//	public void testStaffCodeNotMatchingHomeAreaCode()
-//	{
-//		User user = aValidUser().toBuilder()
-//				.staffCode("C01A500")
-//				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
-//				.build();
-//
-//		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-//
-//		assertThat(constraintViolations, hasSize(1));
-//		assertThat(constraintViolations, hasItem(hasProperty("message", is("Home area code doesn't match staff code prefix"))));
-//	}
 	@Test
 	public void testStaffGradeWithoutStaffCode()
 	{
@@ -302,37 +289,6 @@ public class UserValidationTest
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, empty());
-	}
-
-	@Test
-	public void staffCodeShouldBeUnique()
-	{
-		User user = aValidUser().toBuilder()
-				.staffCode("N01A000")
-				.build();
-		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertThat(constraintViolations, hasItem(hasProperty("message", is("Staff Code must be unique"))));
-	}
-
-	@Test
-	public void staffCodeShouldBeUniqueToUser()
-	{
-		User user = aValidUser().toBuilder()
-				.staffCode("N01A001")
-				.build();
-		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertThat(constraintViolations, hasItem(hasProperty("message", is("Staff Code must be unique"))));
-	}
-
-	@Test
-	public void staffCodeShouldBeUniqueToUserBeingUpdated()
-	{
-		User user = aValidUser().toBuilder()
-				.username("test.user")
-				.staffCode("N01A001")
-				.build();
-		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertThat(constraintViolations, not(hasItem(hasProperty("message", is("Staff Code must be unique")))));
 	}
 
 	@Test

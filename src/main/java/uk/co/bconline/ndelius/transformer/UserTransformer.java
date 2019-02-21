@@ -90,69 +90,68 @@ public class UserTransformer
 
 	public Optional<User> map(UserEntity user)
 	{
-		return combine(user, null, null, null);
+		return ofNullable(user).map(v -> User.builder()
+				.username(v.getUsername())
+				.forenames(combineNames(v.getForename(), v.getForename2()))
+				.surname(v.getSurname())
+				.datasets(datasetTransformer.map(v.getDatasets()))
+				.staffCode(ofNullable(v.getStaff()).map(StaffEntity::getCode).orElse(null))
+				.staffGrade(ofNullable(v.getStaff())
+						.map(StaffEntity::getGrade)
+						.map(referenceDataTransformer::map)
+						.orElse(null))
+				.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
+				.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElse(v.getEndDate()))
+				.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(this::map).orElse(null))
+				.sources(singletonList("DB"))
+				.build());
 	}
 
 	public Optional<User> map(OIDUser user)
 	{
-		return combine(null, user, null, null);
+		LocalDateTime t = LocalDateTime.now();
+		val allRoles = roleService.getAllRoles().stream().map(OIDRole::getName).collect(toSet());
+		log.trace("--{}ms	Get all roles for mapping", MILLIS.between(t, LocalDateTime.now()));
+		return ofNullable(user).map(v -> User.builder()
+				.username(v.getUsername())
+				.forenames(v.getForenames())
+				.surname(v.getSurname())
+				.email(v.getEmail())
+				.privateSector("private".equalsIgnoreCase(v.getSector()))
+				.homeArea(datasetService.getDatasetByCode(v.getHomeArea()).orElse(null))
+				.endDate(ofNullable(v.getEndDate()).map(s ->
+						LocalDate.parse(s.substring(0, 8), ofPattern(OID_DATE_FORMAT.substring(0, 8)))).orElse(null))
+				.roles(ofNullable(v.getRoles())
+						.map(l -> l.stream().filter(role -> allRoles.contains(role.getName())))
+						.map(transactions -> transactions
+								.map(roleTransformer::map)
+								.peek(role -> {
+									// Temporary disabling of add-user
+									if (role.getInteractions() != null) role.getInteractions().remove("UMBI003");
+								})
+								.collect(toList()))
+						.orElse(null))
+				.sources(singletonList("OID"))
+				.build());
+	}
+
+	public Optional<User> map(ADUser user)
+	{
+		return ofNullable(user).map(v -> User.builder()
+				.username(v.getUsername())
+				.forenames(v.getForename())
+				.surname(v.getSurname())
+				.build());
 	}
 
 	public Optional<User> combine(UserEntity dbUser, OIDUser oidUser, ADUser ad1User, ADUser ad2User)
 	{
-		LocalDateTime t = LocalDateTime.now();
-		val allRoles = roleService.getAllRoles().stream().map(OIDRole::getName).collect(toSet());
-		log.trace("--{}ms	Get all roles for mapping", MILLIS.between(t, LocalDateTime.now()));
-		t = LocalDateTime.now();
+		val t = LocalDateTime.now();
 		val r = Stream.of(
-				ofNullable(oidUser).map(v -> User.builder()
-						.username(v.getUsername())
-						.forenames(v.getForenames())
-						.surname(v.getSurname())
-						.email(v.getEmail())
-						.privateSector("private".equalsIgnoreCase(v.getSector()))
-						.homeArea(datasetService.getDatasetByCode(v.getHomeArea()).orElse(null))
-						.endDate(ofNullable(v.getEndDate()).map(s ->
-								LocalDate.parse(s.substring(0, 8), ofPattern(OID_DATE_FORMAT.substring(0, 8)))).orElse(null))
-						.roles(ofNullable(v.getRoles())
-								.map(l -> l.stream().filter(role -> allRoles.contains(role.getName())))
-								.map(transactions -> transactions
-										.map(roleTransformer::map)
-										.peek(role -> {
-											// Temporary disabling of add-user
-											if (role.getInteractions() != null) role.getInteractions().remove("UMBI003");
-										})
-										.collect(toList()))
-								.orElse(null))
-						.sources(singletonList("OID"))
-						.build()),
-				ofNullable(dbUser).map(v -> User.builder()
-						.username(v.getUsername())
-						.forenames(combineNames(v.getForename(), v.getForename2()))
-						.surname(v.getSurname())
-						.datasets(datasetTransformer.map(v.getDatasets()))
-						.staffCode(ofNullable(v.getStaff()).map(StaffEntity::getCode).orElse(null))
-						.staffGrade(ofNullable(v.getStaff())
-								.map(StaffEntity::getGrade)
-								.map(referenceDataTransformer::map)
-								.orElse(null))
-						.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
-						.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElse(v.getEndDate()))
-						.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(this::map).orElse(null))
-						.sources(singletonList("DB"))
-						.build()),
-				ofNullable(ad1User).map(v -> User.builder()
-						.username(v.getUsername())
-						.forenames(v.getForename())
-						.surname(v.getSurname())
-						.sources(singletonList("AD1"))
-						.build()),
-				ofNullable(ad2User).map(v -> User.builder()
-						.username(v.getUsername())
-						.forenames(v.getForename())
-						.surname(v.getSurname())
-						.sources(singletonList("AD2"))
-						.build()))
+				map(oidUser),
+				map(dbUser),
+				map(ad1User).map(u -> u.toBuilder().sources(singletonList("AD1")).build()),
+				map(ad1User).map(u -> u.toBuilder().sources(singletonList("AD2")).build()))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.reduce(this::reduceUser);
