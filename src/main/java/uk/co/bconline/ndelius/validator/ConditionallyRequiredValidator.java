@@ -1,31 +1,25 @@
 package uk.co.bconline.ndelius.validator;
 
-import static org.springframework.util.StringUtils.isEmpty;
+import lombok.val;
+import org.springframework.beans.BeanWrapperImpl;
+import uk.co.bconline.ndelius.model.User;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.springframework.beans.BeanWrapperImpl;
-
-import lombok.val;
-import uk.co.bconline.ndelius.model.User;
+import static org.springframework.util.StringUtils.isEmpty;
+import static uk.co.bconline.ndelius.util.NameUtils.camelCaseToTitleCase;
 
 public class ConditionallyRequiredValidator implements ConstraintValidator<ConditionallyRequired, User>
 {
 	private String requiredFieldName;
-	private String requiredFieldLabel;
 	private String ifPopulatedFieldName;
-	private String ifPopulatedFieldLabel;
 
 	@Override
 	public void initialize(ConditionallyRequired annotation)
 	{
-		val required = annotation.required().split(":");
-		val ifPopulated = annotation.ifPopulated().split(":");
-		requiredFieldName = required[1];
-		requiredFieldLabel = required[0];
-		ifPopulatedFieldName = ifPopulated[1];
-		ifPopulatedFieldLabel = ifPopulated[0];
+		requiredFieldName = annotation.required();
+		ifPopulatedFieldName = annotation.ifPopulated();
 	}
 
 	@Override
@@ -40,7 +34,9 @@ public class ConditionallyRequiredValidator implements ConstraintValidator<Condi
 		{
 			ctx.disableDefaultConstraintViolation();
 			ctx.buildConstraintViolationWithTemplate(
-					String.format("%s is required if %s is populated", requiredFieldLabel, ifPopulatedFieldLabel))
+					String.format("%s is required if %s is populated",
+							camelCaseToTitleCase(requiredFieldName),
+							camelCaseToTitleCase(ifPopulatedFieldName)))
 					.addConstraintViolation();
 		}
 

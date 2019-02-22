@@ -1,14 +1,13 @@
 package uk.co.bconline.ndelius.util;
 
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
-import static org.springframework.util.StringUtils.isEmpty;
+import lombok.experimental.UtilityClass;
+import org.springframework.util.StringUtils;
 
 import java.util.stream.Stream;
 
-import org.springframework.util.StringUtils;
-
-import lombok.experimental.UtilityClass;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @UtilityClass
 public class NameUtils
@@ -37,5 +36,12 @@ public class NameUtils
 		return Stream.of(strings)
 				.filter(str -> !StringUtils.isEmpty(str))
 				.collect(joining(delimiter));
+	}
+
+	public static String camelCaseToTitleCase(String s) {
+		return StringUtils.capitalize(s.replaceAll(String.format("%s|%s|%s",
+				"(?<=[A-Z])(?=[A-Z][a-z])",
+				"(?<=[^A-Z])(?=[A-Z])",
+				"(?<=[A-Za-z])(?=[^A-Za-z])"), " "));
 	}
 }

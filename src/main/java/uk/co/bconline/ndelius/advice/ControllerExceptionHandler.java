@@ -18,6 +18,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import static java.util.stream.Collectors.toList;
+import static uk.co.bconline.ndelius.util.NameUtils.camelCaseToTitleCase;
 
 @Slf4j
 @Component
@@ -32,7 +33,7 @@ public class ControllerExceptionHandler
 		val result = exception.getBindingResult();
 		val errors = result
 				.getFieldErrors().stream()
-				.map(e -> e.getField() + ": " + e.getDefaultMessage())
+				.map(e -> camelCaseToTitleCase(e.getField()) + " " + e.getDefaultMessage())
 				.collect(toList());
 		errors.addAll(result
 				.getGlobalErrors().stream()

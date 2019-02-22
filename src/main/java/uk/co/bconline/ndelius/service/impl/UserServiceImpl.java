@@ -32,6 +32,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.concurrent.CompletableFuture.*;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.core.NestedExceptionUtils.getMostSpecificCause;
 
 @Slf4j
 @Service
@@ -190,7 +191,7 @@ public class UserServiceImpl implements UserService
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
-			throw new AppException(String.format("Unable to create user (%s)", e.getMessage()), e);
+			throw new AppException(String.format("Unable to create user (%s)", getMostSpecificCause(e).getMessage()), e);
 		}
 	}
 
@@ -228,7 +229,7 @@ public class UserServiceImpl implements UserService
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
-			throw new AppException(String.format("Unable to update user (%s)", e.getMessage()), e);
+			throw new AppException(String.format("Unable to update user (%s)", getMostSpecificCause(e).getMessage()), e);
 		}
 	}
 

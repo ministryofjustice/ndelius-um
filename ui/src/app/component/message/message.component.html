@@ -1,3 +1,4 @@
 <div *ngIf="message != null" class="mb-0 alert alert-{{severity}} alert-dismissible">
-  {{message}} <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <span [innerHTML]="message"></span>
+  <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
 </div>
