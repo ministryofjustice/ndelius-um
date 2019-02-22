@@ -234,13 +234,6 @@
       <section class="mb-4 card card-body">
         <h4 class="card-title mb-0">Staff Details</h4>
         <hr>
-        <div class="alert alert-info rounded" *ngIf="mode !== 'View' && homeArea.invalid">
-          <p class="m-0">
-            <span class="oi oi-info"></span>
-            &nbsp;
-            Authorisation section must be completed before entering staff details.
-          </p>
-        </div>
         <div class="form-group row">
           <div class="col-sm-2">
             <label for="staff-code" class="col-form-label">Staff Code</label>
@@ -252,9 +245,9 @@
             <div class="input-group">
               <input id="staff-code" name="staff-code" #staffCode="ngModel" class="form-control"
                      [(ngModel)]="user.staffCode"
-                     [readonly]="mode === 'View' || user.homeArea == null" autocomplete="off"
+                     [readonly]="mode === 'View'" autocomplete="off"
                      pattern="[A-Z0-9]{3}[A-Z][0-9]{3}$" minlength="7" maxlength="7"/>
-              <div class="input-group-append" *ngIf="mode !== 'View' && user.homeArea != null">
+              <div class="input-group-append" *ngIf="mode !== 'View'">
                 <button type="button" class="btn btn-outline-secondary" (click)="generateStaffCode()"
                         title="Click to set to the next available staff code">
                   <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="generatingStaffCode"></span>
@@ -282,11 +275,11 @@
           <label [for]="'staff-grade-toggle-btn'" class="col-sm-2 col-form-label">Staff Grade</label>
           <div class="col-sm-4">
             <item-selector id="staff-grade" name="staffGrade" #staffGrade="ngModel" maxHeight="300px"
-                           [required]="user.staffCode != null && staffCode.valid == true"
+                           [required]="user.staffCode != null && user.staffCode != '' && staffCode.valid == true"
                            [(ngModel)]="user.staffGrade"
                            [(selected)]="user.staffGrade"
                            [available]="staffGrades"
-                           [readonly]="mode === 'View' || user.staffCode == null"
+                           [readonly]="mode === 'View'"
                            [alignRight]="true"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
             <div *ngIf="staffGrade.dirty && staffGrade.invalid" class = text-danger>
@@ -303,7 +296,7 @@
                            [(ngModel)] = "user.teams"
                            [(selected)]="user.teams"
                            [available]="teams"
-                           [readonly]="mode === 'View' || user.staffCode == null"
+                           [readonly]="mode === 'View'"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
           </div>
         </div>
