@@ -212,7 +212,7 @@ public class UserControllerTest
 						.username(null)
 						.build())))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.error[*]", hasItem("username: must not be blank")));
+				.andExpect(jsonPath("$.error[*]", hasItem("Username must not be blank")));
 	}
 
 	@Test
