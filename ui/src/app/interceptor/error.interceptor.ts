@@ -11,6 +11,7 @@ import {Injectable} from "@angular/core";
 import {tap} from "rxjs/operators";
 import {AppComponent} from "../component/app/app.component";
 import {Router} from "@angular/router";
+import {environment} from "../../environments/environment";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -19,7 +20,9 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(tap(()=>{},(res: HttpResponseBase) => {
-      if (res instanceof HttpErrorResponse && this.router.url != '/migrate') {
+      if (res instanceof HttpErrorResponse
+        && req.url.indexOf(environment.api.baseurl + 'staff/') == -1
+        && this.router.url != '/migrate') {
         AppComponent.error("Error " + res.status + " | " + ErrorInterceptor.parseErrorResponse(res));
         window.scrollTo(0, 0);
       }

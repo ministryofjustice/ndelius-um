@@ -2,7 +2,6 @@ package uk.co.bconline.ndelius.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -457,7 +456,6 @@ public class UserControllerTest
 	}
 
 	@Test
-	@Ignore("This won't work until we add the ability to link user's to existing staff codes")
 	public void userWithStaffCodeCanBeRenamed() throws Exception
 	{
 		String username = nextTestUsername();
@@ -493,6 +491,63 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.username", is(username + "-renamed")))
-				.andExpect(jsonPath("$.staffCode", is("ZZZA0001")));
+				.andExpect(jsonPath("$.staffCode", is("ZZZA001")));
+	}
+
+	@Test
+	public void staffCodeCanBeUpdatedToAnExistingValue() throws Exception
+	{
+		String username1 = nextTestUsername();
+		User user1 = aValidUser().toBuilder()
+				.username(username1)
+				.staffCode("ZZZB001")
+				.staffGrade(ReferenceData.builder().code("GRADE1").description("Grade 1").build())
+				.teams(singletonList(Team.builder().code("N01TST").build()))
+				.build();
+		String username2 = nextTestUsername();
+		User user2 = aValidUser().toBuilder()
+				.username(username2)
+				.staffCode("ZZZB002")
+				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
+				.teams(singletonList(Team.builder().code("N02TST").build()))
+				.build();
+
+		String token = token(mvc);
+
+		// Given 2 users with staff codes
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user1)))
+				.andExpect(status().isCreated());
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user2)))
+				.andExpect(status().isCreated());
+
+		// When I update user 2's staff code to that of user 1
+		mvc.perform(post("/api/user/" + username2)
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user2.toBuilder()
+						.staffCode("ZZZB001")
+						.staffGrade(ReferenceData.builder().code("GRADE1").description("Grade 1").build())
+						.teams(singletonList(Team.builder().code("N01TST").build()))
+						.build())))
+				.andExpect(status().isNoContent());
+
+		// Then user 2's staff code is updated, and user 1 has no staff code
+		mvc.perform(get("/api/user/" + username2)
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.staffCode", is("ZZZB001")))
+				.andExpect(jsonPath("$.staffGrade.code", is("GRADE1")))
+				.andExpect(jsonPath("$.teams[*]", hasSize(1)))
+				.andExpect(jsonPath("$.teams[0].code", is("N01TST")));
+		mvc.perform(get("/api/user/" + username1)
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.staffCode", isEmptyOrNullString()));
 	}
 }

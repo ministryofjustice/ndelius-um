@@ -1,20 +1,20 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import static javax.persistence.FetchType.EAGER;
-import static org.hibernate.annotations.NotFoundAction.IGNORE;
+import lombok.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.*;
-
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.Type;
-
-import lombok.*;
+import static java.util.Collections.emptySet;
+import static java.util.Optional.ofNullable;
+import static javax.persistence.FetchType.EAGER;
+import static org.hibernate.annotations.NotFoundAction.IGNORE;
 
 @Getter
 @Entity
@@ -67,8 +67,8 @@ public class StaffEntity
 	private ReferenceDataEntity grade;
 
 	@Setter
-	@OneToMany(mappedBy = "staff")
-	private Set<UserEntity> user;
+	@OneToMany(mappedBy = "staff", fetch = EAGER)
+	private Set<UserEntity> user = new HashSet<>();
 
 	@Column(name = "CREATED_BY_USER_ID")
 	private Long createdById;
@@ -88,8 +88,10 @@ public class StaffEntity
 
 	public Set<TeamEntity> getTeams()
 	{
-		return teamLinks.stream()
-				.map(StaffTeamEntity::getTeam)
-				.collect(Collectors.toSet());
+		return ofNullable(teamLinks)
+				.map(links -> links.stream()
+						.map(StaffTeamEntity::getTeam)
+						.collect(Collectors.toSet()))
+				.orElse(emptySet());
 	}
 }

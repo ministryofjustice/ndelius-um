@@ -1,20 +1,20 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
-import static org.hibernate.annotations.NotFoundAction.IGNORE;
+import lombok.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.*;
-
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.Type;
-
-import lombok.*;
+import static java.util.Collections.emptySet;
+import static java.util.Optional.ofNullable;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
+import static org.hibernate.annotations.NotFoundAction.IGNORE;
 
 @Getter
 @Entity
@@ -73,8 +73,10 @@ public class UserEntity
 
 	public Set<ProbationAreaEntity> getDatasets()
 	{
-		return probationAreaLinks.stream()
-				.map(ProbationAreaUserEntity::getProbationArea)
-				.collect(Collectors.toSet());
+		return ofNullable(probationAreaLinks)
+				.map(links -> links.stream()
+						.map(ProbationAreaUserEntity::getProbationArea)
+						.collect(Collectors.toSet()))
+				.orElse(emptySet());
 	}
 }

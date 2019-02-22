@@ -6,5 +6,6 @@ export abstract class UserService {
   abstract search(query: string, page: number): Observable<User[]>;
   abstract create(user: User): Observable<void>;
   abstract read(username: string): Observable<User>;
+  abstract readByStaffCode(staffCode: string): Observable<User>;
   abstract update(username: string, user: User): Observable<void>;
 }
