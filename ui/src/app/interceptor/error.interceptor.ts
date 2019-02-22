@@ -77,7 +77,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       header = 'Validation Errors';
     }
     if (res.status == 401) {
-      error = 'Session expired. Please <a href=\'javascript:\' onclick=\'window.location.reload()\'>refresh</a> the page to login again.'
+      error = 'Session expired. Please refresh the page to login again.'
     } else if (res.status == 403) {
       error = 'Access denied.' + (res.error.requiredRoles instanceof Array? ' Missing roles: ' + res.error.requiredRoles.join(', '): '');
     } else if (res.error != null && res.error.error instanceof Array) {
