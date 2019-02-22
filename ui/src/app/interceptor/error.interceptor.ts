@@ -72,12 +72,12 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   static parseErrorResponse(res: HttpErrorResponse) {
     let error: string = res.error? JSON.stringify(res.error): '';
-    let header: string = res.status + ' ' + ErrorInterceptor.HTTP_STATUS_CODES[res.status];
+    let header: string = res.status + ' ' + (ErrorInterceptor.HTTP_STATUS_CODES[res.status] || 'Unknown');
     if (res.status == 400 && res.error != null && res.error.error instanceof Array) {
       header = 'Validation Errors';
     }
     if (res.status == 401) {
-      error = 'Session expired. Please refresh the page to login again.'
+      error = 'Session expired. Please <a href=\'javascript:\' onclick=\'window.location.reload()\'>refresh</a> the page to login again.'
     } else if (res.status == 403) {
       error = 'Access denied.' + (res.error.requiredRoles instanceof Array? ' Missing roles: ' + res.error.requiredRoles.join(', '): '');
     } else if (res.error != null && res.error.error instanceof Array) {
