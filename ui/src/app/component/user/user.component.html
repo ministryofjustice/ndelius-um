@@ -299,6 +299,16 @@
                            [readonly]="mode === 'View'"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
           </div>
+          <label [for]="'sub-contracted-provider-toggle-btn'" class="col-sm-2 col-form-label">Sub-contracted Provider</label>
+          <div class="col-sm-4">
+            <item-selector id="sub-contracted-provider" name="sub-contracted-provider" #subContractedProvidersList="ngModel" maxHeight="300px"
+                           [(ngModel)] = "user.subContractedProvider"
+                           [(selected)]="user.subContractedProvider"
+                           [available]="subContractedProviders"
+                           [readonly]="mode === 'View'"
+                           [alignRight]="true"
+                           [labelMapper]="codeDescriptionToLabel"></item-selector>
+          </div>
         </div>
       </section>
       <hr/>

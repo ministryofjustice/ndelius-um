@@ -15,6 +15,7 @@ export class User {
   teams: Team[];
   datasets: Dataset[];
   roles: Role[];
+  subContractedProvider: Dataset;
   startDate: Date = new Date();
   endDate: Date;
   sources: string[];

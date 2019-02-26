@@ -38,6 +38,7 @@ export class UserComponent implements OnInit {
   roleGroups: RoleGroup[];
   selectedGroups: RoleGroup[];
   staffGrades: StaffGrade[];
+  subContractedProviders: Dataset[];
   userWithStaffCode: User;
   loadingStaffCode: boolean;
   generatingStaffCode: boolean;
@@ -139,8 +140,13 @@ export class UserComponent implements OnInit {
           this.user.teams = this.user.teams.filter(team => teams.map(team => team.code).indexOf(team.code) !== -1);
         }
       });
+      this.subContractedProviders = null;
+      this.datasetService.subContractedProviders(this.user.homeArea.code).subscribe((subContractedProviders: Dataset[]) => {
+        this.subContractedProviders = subContractedProviders;
+      });
     } else {
       this.teams = [];
+      this.subContractedProviders = [];
     }
   }
 

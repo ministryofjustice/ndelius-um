@@ -19,4 +19,8 @@ export class RestDatasetService implements DatasetService {
       responseType: 'text'
     })
   }
+
+  subContractedProviders(datasetCode: string): Observable<Dataset[]> {
+    return this.http.get<Dataset[]>(environment.api.baseurl + "dataset/" + datasetCode + "/subContractedProviders")
+  }
 }

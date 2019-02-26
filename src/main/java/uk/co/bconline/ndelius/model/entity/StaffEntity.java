@@ -66,6 +66,10 @@ public class StaffEntity
 	@JoinColumn(name = "STAFF_GRADE_ID")
 	private ReferenceDataEntity grade;
 
+	@ManyToOne
+	@JoinColumn(name = "SC_PROVIDER_ID")
+	private SubContractedProviderEntity subContractedProvider;
+
 	@Setter
 	@OneToMany(mappedBy = "staff", fetch = EAGER)
 	private Set<UserEntity> user = new HashSet<>();

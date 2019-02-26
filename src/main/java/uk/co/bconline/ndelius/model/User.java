@@ -67,6 +67,8 @@ public class User
 
 	private List<Role> roles;
 
+	private Dataset subContractedProvider;
+
 	@JsonIgnore
 	private List<String> sources;
 }
