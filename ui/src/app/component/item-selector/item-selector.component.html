@@ -17,7 +17,7 @@
        [ngStyle]="{maxHeight: maxHeight}"
        (click)="!multiple || $event.stopPropagation()"
        [attr.aria-labelledby]="id+'-toggle-btn'">
-    <div class="form-group" [class.mb-1]="multiple">
+    <div class="form-group mb-1">
       <div class="input-group">
         <div class="input-group-prepend">
           <div class="input-group-text bg-white"><i class="oi oi-magnifying-glass"></i></div>
@@ -55,6 +55,9 @@
              (keyup.enter)="onlyShowSelected = false; updateDropDown()">All</a>
         </li>
       </ul>
+    </div>
+    <div class="small mb-1 pl-1" *ngIf="!multiple">
+      <a href="javascript:" (click)="toggle(null)">Clear</a>
     </div>
     <div class="text-truncate custom-control custom-{{multiple? 'checkbox': 'radio'}}"
          [class.d-none]="onlyShowSelected && !isSelected(item)"

@@ -80,7 +80,7 @@ public class UserValidationTest
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 
 		assertThat(constraintViolations, hasSize(1));
-		assertThat(constraintViolations, hasItem(hasProperty("message", is("invalid format"))));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("must be unique and contain only alphanumeric characters, hyphens, apostrophes or full-stops"))));
 	}
 
 	@Test
@@ -239,7 +239,7 @@ public class UserValidationTest
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 
 		assertThat(constraintViolations, hasSize(1));
-		assertThat(constraintViolations, hasItem(hasProperty("message", is("invalid format"))));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("must consist of 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001"))));
 	}
 
 	@Test

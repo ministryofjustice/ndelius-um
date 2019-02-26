@@ -17,15 +17,16 @@ import java.util.List;
 @ValidDates
 @AssignableRoles
 @UniqueEmail
-@ConditionallyRequired(ifPopulated = "Staff Code:staffCode", required = "Staff Grade:staffGrade")
-@ConditionallyRequired(ifPopulated = "Staff Grade:staffGrade", required = "Staff Code:staffCode")
-@ConditionallyRequired(ifPopulated = "Teams:teams", required = "Staff Code:staffCode")
-@ConditionallyRequired(ifPopulated = "Staff Code:staffCode", required = "Start Date:startDate")
+@ConditionallyRequired(ifPopulated = "staffCode", required = "staffGrade")
+@ConditionallyRequired(ifPopulated = "staffGrade", required = "staffCode")
+@ConditionallyRequired(ifPopulated = "teams", required = "staffCode")
+@ConditionallyRequired(ifPopulated = "staffCode", required = "startDate")
 public class User
 {
 	@NotBlank
 	@Size(max = 60)
-	@Pattern(regexp = "^[a-zA-Z0-9_\\-.']*$", message = "invalid format")
+	@Pattern(regexp = "^[a-zA-Z0-9_\\-.']*$",
+			message = "must be unique and contain only alphanumeric characters, hyphens, apostrophes or full-stops")
 	private String username;
 
 	@NotBlank
@@ -41,7 +42,8 @@ public class User
 	@NotNull
 	private Boolean privateSector;
 
-	@Pattern(regexp = "^[A-Z0-9]{3}[A-Z][0-9]{3}$", message = "invalid format")
+	@Pattern(regexp = "^$|^[A-Z0-9]{3}[A-Z][0-9]{3}$",
+			message = "must consist of 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001")
 	private String staffCode;
 
 	@Valid
