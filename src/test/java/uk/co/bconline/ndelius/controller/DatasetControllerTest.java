@@ -1,13 +1,5 @@
 package uk.co.bconline.ndelius.controller;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +12,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -55,17 +55,16 @@ public class DatasetControllerTest
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(6)))
-				.andExpect(jsonPath("$[0].code", equalTo("N01")))
-				.andExpect(jsonPath("$[0].active", equalTo(true)))
-				.andExpect(jsonPath("$[1].code", equalTo("N02")))
-				.andExpect(jsonPath("$[1].active", equalTo(true)))
-				.andExpect(jsonPath("$[2].code", equalTo("N03")))
-				.andExpect(jsonPath("$[2].active", equalTo(true)))
-				.andExpect(jsonPath("$[3].code", equalTo("C01")))
-				.andExpect(jsonPath("$[3].active", equalTo(true)))
-				.andExpect(jsonPath("$[4].code", equalTo("C02")))
-				.andExpect(jsonPath("$[4].active", equalTo(true)))
-				.andExpect(jsonPath("$[5].code", equalTo("C03")))
-				.andExpect(jsonPath("$[5].active", equalTo(true)));
+				.andExpect(jsonPath("$[*].code", hasItems("N01", "N02", "N03", "C01", "C02", "C03")));
+	}
+
+	@Test
+	public void subContractedProvidersAreReturned() throws Exception
+	{
+		mvc.perform(get("/api/dataset/N01/subContractedProviders")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", hasSize(3)))
+				.andExpect(jsonPath("$[*].code", hasItems("N01SC1", "N01SC2", "N01SC3")));
 	}
 }

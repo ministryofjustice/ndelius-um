@@ -1,9 +1,9 @@
 package uk.co.bconline.ndelius.service;
 
+import uk.co.bconline.ndelius.model.Dataset;
+
 import java.util.List;
 import java.util.Optional;
-
-import uk.co.bconline.ndelius.model.Dataset;
 
 public interface DatasetService
 {
@@ -14,4 +14,6 @@ public interface DatasetService
 	Optional<Dataset> getDatasetByCode(String code);
 	Optional<Long> getOrganisationIdByDatasetCode(String code);
 	String getNextStaffCode(String datasetCode);
+	List<Dataset> getSubContractedProviders(String datasetCode);
+	Optional<Long> getSubContractedProviderId(String code);
 }

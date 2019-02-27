@@ -1,17 +1,17 @@
 package uk.co.bconline.ndelius.transformer;
 
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
-
-import java.util.Collection;
-import java.util.List;
-
 import org.springframework.stereotype.Component;
-
 import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.Organisation;
 import uk.co.bconline.ndelius.model.entity.OrganisationEntity;
 import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
+import uk.co.bconline.ndelius.model.entity.SubContractedProviderEntity;
+
+import java.util.Collection;
+import java.util.List;
+
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class DatasetTransformer
@@ -50,6 +50,15 @@ public class DatasetTransformer
 				.code(entity.getCode())
 				.description(entity.getDescription())
 				.active("Y".equalsIgnoreCase(entity.getSelectable()))
+				.build();
+	}
+
+	public Dataset map(SubContractedProviderEntity entity)
+	{
+		return Dataset.builder()
+				.code(entity.getCode())
+				.description(entity.getDescription())
+				.active(entity.getActive())
 				.build();
 	}
 }

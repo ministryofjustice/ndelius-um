@@ -318,6 +318,7 @@ public class UserControllerTest
 				.datasets(asList(
 						Dataset.builder().code("N01").build(),
 						Dataset.builder().code("N02").build()))
+				.subContractedProvider(Dataset.builder().code("N01SC2").build())
 				.roles(singletonList(Role.builder()
 						.name("UMBT001")
 						.build()))
@@ -344,6 +345,7 @@ public class UserControllerTest
 								Dataset.builder().code("N01").build(),
 								Dataset.builder().code("C02").build(),
 								Dataset.builder().code("C03").build()))
+						.subContractedProvider(Dataset.builder().code("N01SC3").build())
 						.teams(singletonList(Team.builder().code("N02TST").build()))
 						.homeArea(Dataset.builder().code("N01").build())
 						.privateSector(false)
@@ -361,6 +363,7 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.startDate", is("2001-02-03")))
 				.andExpect(jsonPath("$.datasets", hasSize(3)))
 				.andExpect(jsonPath("$.datasets[*].code", hasItems("N01", "C02", "C03")))
+				.andExpect(jsonPath("$.subContractedProvider.code", is("N01SC3")))
 				.andExpect(jsonPath("$.teams", hasSize(1)))
 				.andExpect(jsonPath("$.teams[*].code", hasItem("N02TST")))
 				.andExpect(jsonPath("$.roles", hasSize(1)))
@@ -549,5 +552,16 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.staffCode", isEmptyOrNullString()));
+	}
+
+	@Test
+	public void subContractedProviderIsReturned() throws Exception
+	{
+		String token = token(mvc);
+
+		mvc.perform(get("/api/user/test.user")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.subContractedProvider.code", is("N01SC1")));
 	}
 }

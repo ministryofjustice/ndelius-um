@@ -1,31 +1,35 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import static java.util.stream.Collectors.toList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import uk.co.bconline.ndelius.model.Dataset;
+import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
+import uk.co.bconline.ndelius.model.entity.SubContractedProviderEntity;
+import uk.co.bconline.ndelius.repository.db.DatasetRepository;
+import uk.co.bconline.ndelius.repository.db.SubContractedProviderRepository;
+import uk.co.bconline.ndelius.service.DatasetService;
+import uk.co.bconline.ndelius.transformer.DatasetTransformer;
 
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import uk.co.bconline.ndelius.model.Dataset;
-import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
-import uk.co.bconline.ndelius.repository.db.DatasetRepository;
-import uk.co.bconline.ndelius.service.DatasetService;
-import uk.co.bconline.ndelius.transformer.DatasetTransformer;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class DatasetServiceImpl implements DatasetService
 {
 	private final DatasetTransformer transformer;
 	private final DatasetRepository repository;
+	private final SubContractedProviderRepository subContractedProviderRepository;
 
 	@Autowired
 	public DatasetServiceImpl(
 			DatasetRepository repository,
+			SubContractedProviderRepository subContractedProviderRepository,
 			DatasetTransformer transformer)
 	{
 		this.repository = repository;
+		this.subContractedProviderRepository = subContractedProviderRepository;
 		this.transformer = transformer;
 	}
 
@@ -73,5 +77,17 @@ public class DatasetServiceImpl implements DatasetService
 	public Optional<Long> getOrganisationIdByDatasetCode(String code)
 	{
 		return repository.findByCode(code).map(ProbationAreaEntity::getOrganisationId);
+	}
+
+	@Override
+	public List<Dataset> getSubContractedProviders(String datasetCode) {
+		return subContractedProviderRepository.findAllByProviderCode(datasetCode).stream()
+				.map(transformer::map)
+				.collect(toList());
+	}
+
+	@Override
+	public Optional<Long> getSubContractedProviderId(String code) {
+		return subContractedProviderRepository.findByCode(code).map(SubContractedProviderEntity::getId);
 	}
 }
