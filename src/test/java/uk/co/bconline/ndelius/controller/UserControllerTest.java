@@ -564,4 +564,41 @@ public class UserControllerTest
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.subContractedProvider.code", is("N01SC1")));
 	}
+
+	@Test
+	public void userWithEmailAddressCanBeRenamed() throws Exception
+	{
+		String username = nextTestUsername();
+		String token = token(mvc);
+
+		// Given
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(username)
+						.email(username + "@test.test")
+						.build())))
+				.andExpect(status().isCreated());
+
+		// When
+		mvc.perform(post("/api/user/" + username)
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(username + "-renamed")
+						.email(username + "@test.test")
+						.build())))
+				.andExpect(status().isNoContent());
+
+		// Then
+		mvc.perform(get("/api/user/" + username)
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isNotFound());
+		mvc.perform(get("/api/user/" + username + "-renamed")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.username", is(username + "-renamed")))
+				.andExpect(jsonPath("$.email", is(username + "@test.test")));
+	}
 }

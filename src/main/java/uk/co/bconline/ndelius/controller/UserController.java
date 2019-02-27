@@ -14,9 +14,11 @@ import uk.co.bconline.ndelius.service.UserService;
 import uk.co.bconline.ndelius.validator.NewUsernameMustNotAlreadyExist;
 import uk.co.bconline.ndelius.validator.UsernameMustNotAlreadyExist;
 
+import javax.validation.GroupSequence;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.groups.Default;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -24,8 +26,8 @@ import java.util.List;
 import static org.springframework.http.ResponseEntity.*;
 
 @Slf4j
-@Validated
 @RestController
+@Validated(UserController.ValidationOrder.class)
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController
 {
@@ -78,8 +80,9 @@ public class UserController
 	@Transactional
 	@Interaction("UMBI004")
 	@PostMapping(path="/user/{username}")
-	@NewUsernameMustNotAlreadyExist
-	public ResponseEntity updateUser(@RequestBody @Valid User user, @PathVariable("username") String username)
+	@NewUsernameMustNotAlreadyExist(groups=Validate1st.class)
+	public ResponseEntity updateUser(@RequestBody @Validated(Validate2nd.class) User user,
+									 @PathVariable("username") String username)
 	{
 		if (!userService.usernameExists(username))
 		{
@@ -91,4 +94,9 @@ public class UserController
 			return noContent().build();
 		}
 	}
+
+	interface Validate1st {}
+	interface Validate2nd {}
+	@GroupSequence({Validate1st.class, Validate2nd.class, Default.class})
+	interface ValidationOrder {}
 }
