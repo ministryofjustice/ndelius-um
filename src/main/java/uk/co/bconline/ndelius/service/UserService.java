@@ -1,17 +1,20 @@
 package uk.co.bconline.ndelius.service;
 
+import org.springframework.validation.annotation.Validated;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+@Validated
 public interface UserService
 {
 	boolean usernameExists(String username);
 	List<SearchResult> search(String query, int page, int pageSize);
 	Optional<User> getUser(String username);
 	Optional<User> getUserByStaffCode(String staffCode);
-	void addUser(User user);
-	void updateUser(String username, User user);
+	void addUser(@Valid User user);
+	void updateUser(@Valid User user);
 }
