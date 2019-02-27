@@ -3,7 +3,6 @@ package uk.co.bconline.ndelius.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.Dataset;
-import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
 import uk.co.bconline.ndelius.model.entity.SubContractedProviderEntity;
 import uk.co.bconline.ndelius.repository.db.DatasetRepository;
 import uk.co.bconline.ndelius.repository.db.SubContractedProviderRepository;
@@ -58,7 +57,7 @@ public class DatasetServiceImpl implements DatasetService
 	@Override
 	public Optional<Long> getDatasetId(String code)
 	{
-		return repository.findByCode(code).map(ProbationAreaEntity::getId);
+		return repository.findIdByCode(code);
 	}
 
 	@Override
@@ -76,7 +75,7 @@ public class DatasetServiceImpl implements DatasetService
 	@Override
 	public Optional<Long> getOrganisationIdByDatasetCode(String code)
 	{
-		return repository.findByCode(code).map(ProbationAreaEntity::getOrganisationId);
+		return repository.findOrganisationIdByCode(code);
 	}
 
 	@Override

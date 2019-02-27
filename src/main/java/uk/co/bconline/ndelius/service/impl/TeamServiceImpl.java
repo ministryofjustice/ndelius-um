@@ -1,19 +1,18 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import static java.util.Optional.ofNullable;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
 import uk.co.bconline.ndelius.model.Team;
 import uk.co.bconline.ndelius.model.entity.TeamEntity;
 import uk.co.bconline.ndelius.repository.db.TeamRepository;
 import uk.co.bconline.ndelius.service.TeamService;
 import uk.co.bconline.ndelius.transformer.TeamTransformer;
+
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 @Service
 public class TeamServiceImpl implements TeamService
@@ -45,6 +44,6 @@ public class TeamServiceImpl implements TeamService
 	@Cacheable("teamIdsByCode")
 	public Optional<Long> getTeamId(String code)
 	{
-		return repository.findByCode(code).map(TeamEntity::getId);
+		return repository.findIdByCode(code);
 	}
 }

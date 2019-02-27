@@ -78,7 +78,7 @@ public class DBUserServiceImpl implements DBUserService
 
 	private Long getUserId(String username)
 	{
-		return getUser(username).map(UserEntity::getId).orElse(null);
+		return repository.getUserId(username).orElse(null);
 	}
 
 	@Override
