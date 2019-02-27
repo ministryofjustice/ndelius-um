@@ -53,10 +53,10 @@
           <tbody>
             <tr *ngFor="let user of users" style="cursor: pointer"
               routerLink="/user/{{user.username}}" (keyup.enter)="router.navigate(['/user/'+user.username])">
-              <td class="font-weight-bold">{{user.forenames}} {{user.surname}}</td>
-              <td>{{user.username}}</td>
-              <td>{{user.staffCode}}</td>
-              <td class="w-25">
+              <td class="font-weight-bold" title="Name">{{user.forenames}} {{user.surname}}</td>
+              <td title="Username">{{user.username}}</td>
+              <td title="Staff Code">{{user.staffCode}}</td>
+              <td class="w-25" title="Team(s)">
                 <span *ngFor="let team of user.teams; let isLast = last">
                   {{team.description}}{{isLast? '': ','}}
                 </span>
