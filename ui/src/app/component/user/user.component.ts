@@ -17,6 +17,7 @@ import {StaffGrade} from "../../model/staff-grade";
 import {StaffGradeService} from "../../service/staff-grade.service";
 import {AppComponent} from "../app/app.component";
 import {NgForm, NgModel} from "@angular/forms";
+import {RecentUsersUtils} from "../../util/recent-users.utils";
 
 @Component({
   selector: 'user',
@@ -61,10 +62,7 @@ export class UserComponent implements OnInit {
       .pipe(flatMap(params => {
         this.params = params;
         if (params.id != null) {
-          let recentUsers = JSON.parse(localStorage.getItem("recent-users")) || [];
-          while (recentUsers.indexOf(params.id) > -1) recentUsers.splice(recentUsers.indexOf(params.id), 1);
-          recentUsers.push(params.id);
-          localStorage.setItem("recent-users", JSON.stringify(recentUsers.slice(-5)));
+          RecentUsersUtils.add(params.id);
           this.mode = this.auth.canUpdateUser()? 'Update': 'View';
           return this.userService.read(params.id);
         } else {
@@ -76,6 +74,7 @@ export class UserComponent implements OnInit {
                 user.staffCode = null;
                 user.staffGrade = null;
                 user.teams = null;
+                user.subContractedProvider = null;
                 return user;
               }));
             } else {
@@ -174,7 +173,8 @@ export class UserComponent implements OnInit {
       this.saving = true;
       window.scrollTo(0,0);
       this.userService.update(this.params.id, this.user).subscribe(() => {
-       this.router.navigate(["/user/" + this.user.username]).then(() => {
+        if (this.params.id != this.user.username) RecentUsersUtils.remove(this.params.id);
+        this.router.navigate(["/user/" + this.user.username]).then(() => {
           AppComponent.success("Updated " + this.user.username + " successfully.");
           this.saving = false;
         });
@@ -219,6 +219,7 @@ export class UserComponent implements OnInit {
           this.userWithStaffCode = user;
           this.user.staffGrade = user.staffGrade;
           this.user.teams = user.teams;
+          this.user.subContractedProvider = user.subContractedProvider;
           this.loadingStaffCode = false
         },
         () => this.loadingStaffCode = false);
