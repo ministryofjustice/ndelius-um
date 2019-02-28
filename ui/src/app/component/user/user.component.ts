@@ -195,7 +195,7 @@ export class UserComponent implements OnInit {
       window.scrollTo(0,0);
       this.userService.update(this.params.id, this.user).subscribe(() => {
         if (this.params.id != this.user.username) RecentUsersUtils.remove(this.params.id);
-        this.router.navigate(["/user/" + this.user.username]).then(() => {
+        this.router.navigate(["/user/" + this.user.username], {replaceUrl: true}).then(() => {
           AppComponent.success("Updated " + this.user.username + " successfully.");
           this.saving = false;
         });
