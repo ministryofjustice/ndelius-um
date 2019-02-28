@@ -28,7 +28,7 @@
     "moment": "^2.22.2",
     "ngx-papaparse": "^2.1.4",
     "open-iconic": "^1.1.1",
-    "popper.js": "^1.14.4",
+    "popper.js": "^1.14.7",
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.0.0",
     "zone.js": "^0.8.26"
