@@ -199,12 +199,16 @@ public class UserServiceImpl implements UserService
 	public void updateUser(User user)
 	{
 		val dbFuture = runAsync(() -> {
+			log.debug("Fetching existing DB value");
 			val existingUser = dbService.getUser(user.getExistingUsername()).orElse(new UserEntity());
+			log.debug("Transforming into DB user");
 			val updatedUser = transformer.mapToUserEntity(user, existingUser);
 			dbService.save(updatedUser);
 		});
 		val oidFuture = runAsync(() -> {
+			log.debug("Fetching existing OID value");
 			val existingUser = oidService.getUser(user.getExistingUsername()).orElse(new OIDUser());
+			log.debug("Transforming into OID user");
 			val updatedUser = transformer.mapToOIDUser(user, existingUser);
 			oidService.save(user.getExistingUsername(), updatedUser);
 		});

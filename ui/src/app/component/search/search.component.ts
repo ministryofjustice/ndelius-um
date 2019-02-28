@@ -6,6 +6,7 @@ import {UserService} from "../../service/user.service";
 import {AuthorisationService} from "../../service/impl/authorisation.service";
 import {NgModel} from "@angular/forms";
 import {forkJoin, of} from "rxjs";
+import {RecentUsersUtils} from "../../util/recent-users.utils";
 
 @Component({
   selector: 'search',
@@ -18,7 +19,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   page: number;
 
   users: User[] = [];
-  recentUsers: string[] = (JSON.parse(localStorage.getItem("recent-users")) || []).reverse();
+  recentUsers: string[] = RecentUsersUtils.getRecentUsers().reverse();
   searching: boolean;
   noResults: boolean;
   hasMoreResults: boolean = true;
@@ -67,7 +68,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   clearRecentUsers() {
-    localStorage.removeItem('recent-users');
+    RecentUsersUtils.clear();
     this.recentUsers = []
   }
 }
