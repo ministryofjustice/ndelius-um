@@ -3,7 +3,7 @@
           class="form-control text-left d-flex justify-content-between align"
           data-toggle="dropdown"
           (click)="focusOnFilter()"
-          [disabled]="readonly || available == null"
+          [disabled]="readonly || available == null || available.length == 0"
           [class.readonly]="readonly"
           [class.ng-dirty]="dirty"
           [title]="displayText"

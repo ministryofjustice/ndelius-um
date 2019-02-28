@@ -149,6 +149,27 @@ export class UserComponent implements OnInit {
     }
   }
 
+  staffCodeChanged(): void {
+    this.userWithStaffCode = null;
+    this.loadingStaffCode = true;
+    this.userService.readByStaffCode(this.user.staffCode)
+      .subscribe(user => {
+          this.userWithStaffCode = user;
+          this.user.staffGrade = user.staffGrade;
+          this.user.teams = user.teams;
+          this.user.subContractedProvider = user.subContractedProvider;
+          this.loadingStaffCode = false
+        },
+        () => this.loadingStaffCode = false);
+  }
+
+  datasetsChanged() {
+    if (this.user.datasets.length == 1 && this.user.homeArea == null) {
+      this.user.homeArea = this.user.datasets[0];
+      this.homeAreaChanged();
+    }
+  }
+
   submit(): void {
     if(!this.form.valid){
       Object.keys(this.form.controls).forEach(key => {
@@ -211,27 +232,13 @@ export class UserComponent implements OnInit {
         () => this.generatingStaffCode = false);
   }
 
-  staffCodeChanged(): void {
-    this.userWithStaffCode = null;
-    this.loadingStaffCode = true;
-    this.userService.readByStaffCode(this.user.staffCode)
-      .subscribe(user => {
-          this.userWithStaffCode = user;
-          this.user.staffGrade = user.staffGrade;
-          this.user.teams = user.teams;
-          this.user.subContractedProvider = user.subContractedProvider;
-          this.loadingStaffCode = false
-        },
-        () => this.loadingStaffCode = false);
+  backButtonAlert(): void {
+    if (!this.form.dirty || confirm("Any changes made on this screen will be lost. Select OK to continue or Cancel to stay on this screen.")) {
+      window.history.back()
+    }
   }
 
-  backButtonAlert(): void {
-    if (this.form.dirty) {
-      if(confirm("Any changes made on this page will be lost. Select OK to continue or Cancel to stay on this screen.")){
-        window.history.back()
-      }
-    }else{
-      window.history.back();
-    }
+  get homeAreas(): Dataset[] {
+    return Array.from(new Set([this.user.homeArea, ...this.user.datasets].filter(el => el != null)));
   }
 }
