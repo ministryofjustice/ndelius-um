@@ -601,4 +601,20 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.username", is(username + "-renamed")))
 				.andExpect(jsonPath("$.email", is(username + "@test.test")));
 	}
+
+	@Test
+	public void emailMustBeUnique() throws Exception
+	{
+		String username = nextTestUsername();
+		String token = token(mvc);
+
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(username)
+						.email("test.user@test.com")
+						.build())))
+				.andExpect(status().isBadRequest());
+	}
 }

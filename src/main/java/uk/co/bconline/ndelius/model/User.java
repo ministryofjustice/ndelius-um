@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import uk.co.bconline.ndelius.validator.*;
 
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -28,6 +29,11 @@ public class User
 	@Pattern(regexp = "^[a-zA-Z0-9_\\-.']*$",
 			message = "must be unique and contain only alphanumeric characters, hyphens, apostrophes or full-stops")
 	private String username;
+
+	@Setter
+	@Transient
+	@JsonIgnore
+	private String existingUsername;
 
 	@NotBlank
 	@Size(max = 71)

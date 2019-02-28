@@ -14,8 +14,10 @@ import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.exception.NotFoundException;
 import uk.co.bconline.ndelius.model.ErrorResponse;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ElementKind;
+import javax.validation.Path;
+import java.util.Iterator;
 
 import static java.util.stream.Collectors.toList;
 import static uk.co.bconline.ndelius.util.NameUtils.camelCaseToTitleCase;
@@ -49,7 +51,14 @@ public class ControllerExceptionHandler
 		log.debug("Returning 400 response", exception);
 		return new ErrorResponse(exception
 				.getConstraintViolations().stream()
-				.map(ConstraintViolation::getMessage)
+				.map(e -> {
+					Path.Node node = getLast(e.getPropertyPath().iterator());
+					if (node == null || node.getKind() != ElementKind.PROPERTY) {
+						return e.getMessage();
+					} else {
+						return camelCaseToTitleCase(node.getName()) + " " + e.getMessage();
+					}
+				})
 				.collect(toList()));
 	}
 
@@ -69,5 +78,11 @@ public class ControllerExceptionHandler
 		log.error("Returning 500 response", exception);
 		if (exception.getMessage() == null) return null;
 		return new ErrorResponse(exception.getMessage());
+	}
+
+	private <T> T getLast(Iterator<T> propertyPath) {
+		T node = null;
+		while (propertyPath.hasNext()) node = propertyPath.next();
+		return node;
 	}
 }
