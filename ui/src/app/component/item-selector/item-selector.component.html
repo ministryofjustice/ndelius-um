@@ -44,7 +44,9 @@
         </div>
       </div>
       <div class="pl-1 py-1 float-left" *ngIf="!multiple">
-        <a href="javascript:" (click)="toggle(null)">Clear</a>
+        <a href="javascript:"
+           (click)="toggle(null)"
+           (keyup.space)="toggle(null)">Clear</a>
       </div>
       <ul class="nav nav-tabs float-right" style="margin-bottom: -1px"
           (click)="$event.stopPropagation()">
@@ -52,13 +54,13 @@
           <a class="nav-link py-1" [class.active]="onlyShowSelected"
              style="cursor: pointer; outline: none" tabindex="0"
              (click)="onlyShowSelected = true; updateDropDown()"
-             (keyup.enter)="onlyShowSelected = true; updateDropDown()">Selected</a>
+             (keyup.space)="onlyShowSelected = true; updateDropDown()">Selected</a>
         </li>
         <li class="nav-item">
           <a class="nav-link py-1" [class.active]="!onlyShowSelected"
              style="cursor: pointer; outline: none" tabindex="0"
              (click)="onlyShowSelected = false; updateDropDown()"
-             (keyup.enter)="onlyShowSelected = false; updateDropDown()">All</a>
+             (keyup.space)="onlyShowSelected = false; updateDropDown()">All</a>
         </li>
       </ul>
     </div>
