@@ -173,7 +173,7 @@
             <item-selector id="datasets" name="datasets" multiple="true" #datasetsList="ngModel" maxHeight="300px"
                            required="true"
                            [(ngModel)]="user.datasets"
-                           [(selected)]="user.datasets"
+                           [(selected)]="user.datasets" (selectedChange)="datasetsChanged()"
                            [available]="datasets"
                            [readonly]="mode === 'View'"
                            [labelMapper]="codeDescriptionToLabel"
@@ -212,8 +212,8 @@
                            required="true"
                            [(ngModel)]="user.homeArea"
                            [(selected)]="user.homeArea" (selectedChange)="homeAreaChanged()"
-                           [available]="user.datasets"
-                           [readonly]="mode === 'View' || user.datasets == null || user.datasets.length === 0"
+                           [available]="homeAreas"
+                           [readonly]="mode === 'View'"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
             <div *ngIf="homeArea.dirty && homeArea.invalid" class = text-danger>
               <small *ngIf="homeArea.errors['list']">
