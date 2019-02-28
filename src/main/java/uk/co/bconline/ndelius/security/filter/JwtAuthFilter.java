@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import uk.co.bconline.ndelius.model.auth.UserPrincipal;
 import uk.co.bconline.ndelius.security.AuthenticationToken;
 import uk.co.bconline.ndelius.security.handler.LoginHandler;
+import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
 import uk.co.bconline.ndelius.util.JwtHelper;
 
 import javax.servlet.FilterChain;
@@ -31,16 +32,19 @@ public class JwtAuthFilter extends OncePerRequestFilter
 	private final LoginHandler loginHandler;
 	private final AuthenticationEntryPoint jwtEntryPoint;
 	private final RequestMatcher loginRequestMatcher;
+	private final OIDUserDetailsService oidUserDetailsService;
 
 	public JwtAuthFilter(JwtHelper jwtHelper,
-			LoginHandler loginHandler,
-			AuthenticationEntryPoint jwtEntryPoint,
-			RequestMatcher loginRequestMatcher)
+						 LoginHandler loginHandler,
+						 AuthenticationEntryPoint jwtEntryPoint,
+						 RequestMatcher loginRequestMatcher,
+						 OIDUserDetailsService oidUserDetailsService)
 	{
 		this.jwtHelper = jwtHelper;
 		this.loginHandler = loginHandler;
 		this.jwtEntryPoint = jwtEntryPoint;
 		this.loginRequestMatcher = loginRequestMatcher;
+		this.oidUserDetailsService = oidUserDetailsService;
 	}
 
 	@Override
@@ -53,8 +57,14 @@ public class JwtAuthFilter extends OncePerRequestFilter
 			try
 			{
 				val claims = jwtHelper.parseToken(token);
+				val username = claims.getSubject();
+
+				if (!oidUserDetailsService.usernameExists(username)) {
+					throw new JwtException("Subject no longer exists");
+				}
+
 				val user = UserPrincipal.builder()
-						.username(claims.getSubject())
+						.username(username)
 						.authorities(jwtHelper.getInteractions(claims))
 						.build();
 
