@@ -20,6 +20,7 @@ import javax.validation.Path;
 import java.util.Iterator;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.core.NestedExceptionUtils.getMostSpecificCause;
 import static uk.co.bconline.ndelius.util.NameUtils.camelCaseToTitleCase;
 
 @Slf4j
@@ -78,6 +79,14 @@ public class ControllerExceptionHandler
 		log.error("Returning 500 response", exception);
 		if (exception.getMessage() == null) return null;
 		return new ErrorResponse(exception.getMessage());
+	}
+
+	@ExceptionHandler
+	@ResponseBody
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ErrorResponse handle(RuntimeException exception) {
+		log.error("Returning 500 response", exception);
+		return new ErrorResponse(getMostSpecificCause(exception).getMessage());
 	}
 
 	private <T> T getLast(Iterator<T> propertyPath) {
