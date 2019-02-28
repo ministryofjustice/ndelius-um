@@ -33,7 +33,6 @@ export class ItemSelectorComponent
   @ViewChild("toggleBtn") toggleBtn: ElementRef;
   @Input() id: string;
   @Input() selected: any;
-  @Input() available: any[];
   @Input() labelMapper: Function = (item: any) => item;
   @Input() idMapper: Function = null;
   @Input() maxHeight: string = "auto";
@@ -42,6 +41,7 @@ export class ItemSelectorComponent
   @Input() multiple: boolean;
   @Input() alignRight: boolean;
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
+  private availableItems: any[];
 
   dirty: boolean = false;
   filter: string = "";
@@ -101,6 +101,26 @@ export class ItemSelectorComponent
     } else {
       return this.mapToId(this.selected) === id;
     }
+  }
+
+  get available(): any[] {
+    if (this.selected == null) return this.availableItems || [];
+    if (this.availableItems == null) return [];
+
+    let removeNullAndDuplicates = (el, pos, arr) => {
+      return el != null && arr.map(item => this.mapToId(item)).indexOf(this.mapToId(el)) === pos;
+    };
+
+    if (this.multiple) {
+      return [...this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
+    } else {
+      return [this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
+    }
+  }
+
+  @Input()
+  set available(available: any[]) {
+    this.availableItems = available;
   }
 
   get filtered(): any[] {
