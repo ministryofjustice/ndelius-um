@@ -84,10 +84,15 @@ public class JwtHelper
 
 	public void addTokenToResponse(String token, HttpServletResponse response)
 	{
+		response.addCookie(createCookie(token));
+	}
+
+	public Cookie createCookie(String token)
+	{
 		val cookie = new Cookie(cookieName, token);
 		cookie.setHttpOnly(true);
 		cookie.setPath("/");
-		response.addCookie(cookie);
+		return cookie;
 	}
 
 	public List<UserInteraction> getInteractions(Claims claims) {

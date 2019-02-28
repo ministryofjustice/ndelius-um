@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.config.security;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import uk.co.bconline.ndelius.security.filter.DelegatedAuthFilter;
 import uk.co.bconline.ndelius.security.filter.JwtAuthFilter;
 import uk.co.bconline.ndelius.security.handler.LoginHandler;
+import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
 import uk.co.bconline.ndelius.util.JwtHelper;
 
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
@@ -31,13 +33,18 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 	private final JwtHelper jwtHelper;
 	private final RequestMatcher loginRequestMatcher;
 	private final LoginHandler loginHandler;
+	private final OIDUserDetailsService oidUserDetailsService;
 
 	@Autowired
-	public JwtConfig(JwtHelper jwtHelper, RequestMatcher loginRequestMatcher, LoginHandler loginHandler)
+	public JwtConfig(JwtHelper jwtHelper,
+					 RequestMatcher loginRequestMatcher,
+					 LoginHandler loginHandler,
+					 OIDUserDetailsService oidUserDetailsService)
 	{
 		this.jwtHelper = jwtHelper;
 		this.loginRequestMatcher = loginRequestMatcher;
 		this.loginHandler = loginHandler;
+		this.oidUserDetailsService = oidUserDetailsService;
 	}
 
 	@Override
@@ -65,7 +72,7 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 	@Bean
 	public JwtAuthFilter jwtAuthenticationFilter()
 	{
-		return new JwtAuthFilter(jwtHelper, loginHandler, jwtEntryPoint(), loginRequestMatcher);
+		return new JwtAuthFilter(jwtHelper, loginHandler, jwtEntryPoint(), loginRequestMatcher, oidUserDetailsService);
 	}
 
 	@Bean
@@ -80,6 +87,10 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 		return (request, response, e) -> {
 			response.setHeader(WWW_AUTHENTICATE, "Bearer");
 			response.sendError(SC_UNAUTHORIZED, e.getMessage());
+			// clear session cookie
+			val cookie = jwtHelper.createCookie("");
+			cookie.setMaxAge(0);
+			response.addCookie(cookie);
 		};
 	}
 

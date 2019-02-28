@@ -617,4 +617,25 @@ public class UserControllerTest
 						.build())))
 				.andExpect(status().isBadRequest());
 	}
+
+	@Test
+	@DirtiesContext
+	public void authenticationIsReassertedAfterUsernameIsChanged() throws Exception
+	{
+		String token = token(mvc);
+
+		mvc.perform(post("/api/user/test.user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username("test.user-renamed")
+						.build())))
+				.andExpect(status().isNoContent());
+
+		mvc.perform(get("/api/whoami")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isUnauthorized())
+				.andExpect(cookie().value("my-cookie", isEmptyOrNullString()))
+				.andExpect(cookie().maxAge("my-cookie", is(0)));
+	}
 }
