@@ -67,6 +67,7 @@ public class UserEntity
 	@JoinColumn(name = "ORGANISATION_ID")
 	private OrganisationEntity organisation;
 
+	@Builder.Default
 	@NotFound(action = IGNORE)
 	@OneToMany(mappedBy = "user", fetch = EAGER)
 	private Set<ProbationAreaUserEntity> probationAreaLinks = new HashSet<>();

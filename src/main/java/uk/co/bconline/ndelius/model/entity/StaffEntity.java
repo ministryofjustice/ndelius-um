@@ -71,6 +71,7 @@ public class StaffEntity
 	private SubContractedProviderEntity subContractedProvider;
 
 	@Setter
+	@Builder.Default
 	@OneToMany(mappedBy = "staff", fetch = EAGER)
 	private Set<UserEntity> user = new HashSet<>();
 
@@ -86,6 +87,7 @@ public class StaffEntity
 	@Column(name = "LAST_UPDATED_DATETIME")
 	private LocalDateTime updatedAt;
 
+	@Builder.Default
 	@NotFound(action = IGNORE)
 	@OneToMany(mappedBy = "staff", fetch = EAGER)
 	private Set<StaffTeamEntity> teamLinks = new HashSet<>();
