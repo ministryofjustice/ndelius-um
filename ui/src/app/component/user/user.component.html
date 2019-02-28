@@ -43,7 +43,7 @@
           <label for="email" class="col-sm-2 col-form-label">Email</label>
           <div class="col-sm-4">
             <input id="email" name="email" #email="ngModel" [(ngModel)]="user.email"
-                   autocomplete="email"
+                   autocomplete="email" [readonly]="mode == 'View'"
                    class="form-control">
           </div>
         </div>
