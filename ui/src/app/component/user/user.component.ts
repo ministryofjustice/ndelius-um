@@ -164,6 +164,10 @@ export class UserComponent implements OnInit {
   }
 
   datasetsChanged() {
+    if (this.user.homeArea != null && this.user.datasets.map(d => d.code).indexOf(this.user.homeArea.code) == -1) {
+      this.user.homeArea = null;
+      this.homeAreaChanged();
+    }
     if (this.user.datasets.length == 1 && this.user.homeArea == null) {
       this.user.homeArea = this.user.datasets[0];
       this.homeAreaChanged();
