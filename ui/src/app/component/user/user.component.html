@@ -212,7 +212,7 @@
                            required="true"
                            [(ngModel)]="user.homeArea"
                            [(selected)]="user.homeArea" (selectedChange)="homeAreaChanged()"
-                           [available]="datasets"
+                           [available]="user.datasets"
                            [readonly]="mode === 'View'"
                            [labelMapper]="codeDescriptionToLabel"></item-selector>
             <div *ngIf="homeArea.dirty && homeArea.invalid" class = text-danger>
