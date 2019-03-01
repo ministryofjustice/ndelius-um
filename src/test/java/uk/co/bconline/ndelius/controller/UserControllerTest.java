@@ -638,4 +638,29 @@ public class UserControllerTest
 				.andExpect(cookie().value("my-cookie", isEmptyOrNullString()))
 				.andExpect(cookie().maxAge("my-cookie", is(0)));
 	}
+
+	@Test
+	public void searchDoesntReturnInactiveUsersByDefault() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc))
+				.param("q", "test.user"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", hasItem("test.user")))
+				.andExpect(jsonPath("$[*].username", not(hasItem("test.user.inactive"))))
+				.andExpect(jsonPath("$[*].username", not(hasItem("test.user.inactive.dbonly"))))
+				.andExpect(jsonPath("$[*].username", not(hasItem("test.user.inactive.oidonly"))));
+	}
+
+	@Test
+	public void inactiveUsersAreReturnedWhenFlagIsSpecified() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc))
+				.param("q", "test.user")
+				.param("includeInactiveUsers", "true"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", hasItems(
+						"test.user", "test.user.inactive", "test.user.inactive.dbonly", "test.user.inactive.oidonly")));
+	}
 }

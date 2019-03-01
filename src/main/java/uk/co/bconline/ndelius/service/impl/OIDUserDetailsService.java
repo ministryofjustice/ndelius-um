@@ -33,6 +33,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static uk.co.bconline.ndelius.util.LdapUtils.mapOIDStringToDate;
 import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 @Slf4j
@@ -112,6 +113,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				.spliterator(), true)
 				.map(u -> SearchResult.builder()
 						.username(u.getUsername())
+						.endDate(mapOIDStringToDate(u.getEndDate()))
 						.score(deriveScore(query, u))
 						.build())
 				.collect(toList());

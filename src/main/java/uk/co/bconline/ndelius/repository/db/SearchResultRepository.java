@@ -1,11 +1,10 @@
 package uk.co.bconline.ndelius.repository.db;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
+
+import java.util.List;
 
 public interface SearchResultRepository extends JpaRepository<SearchResultEntity, String>
 {
@@ -25,17 +24,18 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			+ "  LEFT OUTER JOIN STAFF S ON U.STAFF_ID = S.STAFF_ID"
 			+ "  LEFT OUTER JOIN STAFF_TEAM ST ON U.STAFF_ID = ST.STAFF_ID"
 			+ "  LEFT OUTER JOIN TEAM T ON ST.TEAM_ID = T.TEAM_ID"
-			+ " WHERE SOUNDEX(U.DISTINGUISHED_NAME) = SOUNDEX(?1)"
+			+ " WHERE (?2 OR U.END_DATE IS NULL OR U.END_DATE >= SYSDATE)"
+			+ " AND (SOUNDEX(U.DISTINGUISHED_NAME) = SOUNDEX(?1)"
 			+ "      OR SOUNDEX(U.FORENAME) = SOUNDEX(?1)"
 			+ "      OR SOUNDEX(U.FORENAME2) = SOUNDEX(?1)"
 			+ "      OR SOUNDEX(U.SURNAME) = SOUNDEX(?1)"
 			+ "      OR LOWER(S.OFFICER_CODE) LIKE '%' || LOWER(?1) || '%'"
 			+ "      OR LOWER(T.CODE) LIKE '%' || LOWER(?1) || '%'"
-			+ "      OR LOWER(T.DESCRIPTION) LIKE '%' || LOWER(?1) || '%'"
+			+ "      OR LOWER(T.DESCRIPTION) LIKE '%' || LOWER(?1) || '%')"
 			+ " GROUP BY U.DISTINGUISHED_NAME"
 			+ " ORDER BY SCORE DESC",
 		   nativeQuery = true)
-	List<SearchResultEntity> search(String query);
+	List<SearchResultEntity> search(String query, boolean includeInactiveUsers);
 
 	@Query(value = "SELECT U.DISTINGUISHED_NAME, "
 			+ "  MAX(GREATEST( "
@@ -50,14 +50,15 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			+ "      LEFT OUTER JOIN STAFF S on U.STAFF_ID = S.STAFF_ID "
 			+ "      LEFT OUTER JOIN STAFF_TEAM ST on U.STAFF_ID = ST.STAFF_ID "
 			+ "      LEFT OUTER JOIN TEAM T ON ST.TEAM_ID = T.TEAM_ID "
-			+ "WHERE LOWER(U.DISTINGUISHED_NAME) LIKE '%'||LOWER(?1)||'%' "
+			+ "WHERE (?2 OR U.END_DATE IS NULL OR U.END_DATE >= SYSDATE) "
+			+ "AND (LOWER(U.DISTINGUISHED_NAME) LIKE '%'||LOWER(?1)||'%' "
 			+ "      OR LOWER(U.FORENAME) LIKE '%'||LOWER(?1)||'%' "
 			+ "      OR LOWER(U.FORENAME2) LIKE '%'||LOWER(?1)||'%' "
 			+ "      OR LOWER(U.SURNAME) LIKE '%'||LOWER(?1)||'%' "
 			+ "      OR LOWER(S.OFFICER_CODE) LIKE '%'||LOWER(?1)||'%' "
 			+ "      OR LOWER(T.CODE) LIKE '%'||LOWER(?1)||'%' "
-			+ "      OR LOWER(T.DESCRIPTION) LIKE '%'||LOWER(?1)||'%' "
+			+ "      OR LOWER(T.DESCRIPTION) LIKE '%'||LOWER(?1)||'%') "
 			+ "GROUP BY DISTINGUISHED_NAME "
 			+ "ORDER BY SCORE DESC", nativeQuery = true)
-	List<SearchResultEntity> simpleSearch(String query);
+	List<SearchResultEntity> simpleSearch(String query, boolean includeInactiveUsers);
 }

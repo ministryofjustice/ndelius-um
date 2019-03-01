@@ -12,6 +12,6 @@ public interface DBUserService
 	boolean usernameExists(String username);
 	Optional<UserEntity> getUser(String username);
 	Optional<UserEntity> getUserByStaffCode(String staffCode);
-	List<SearchResult> search(String searchTerm);
+	List<SearchResult> search(String searchTerm, boolean includeInactiveUsers);
 	UserEntity save(UserEntity user);
 }

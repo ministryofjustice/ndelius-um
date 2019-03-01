@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -18,6 +19,7 @@ public final class SearchResult
 	private List<Team> teams;
 	private String staffCode;
 	private List<String> sources;
+	private LocalDate endDate;
 	@JsonIgnore
 	private float score;
 }

@@ -89,15 +89,15 @@ public class DBUserServiceImpl implements DBUserService
 	}
 
 	@Override
-	public List<SearchResult> search(String searchTerm)
+	public List<SearchResult> search(String searchTerm, boolean includeInactiveUsers)
 	{
 		val t = LocalDateTime.now();
 		val results = Arrays.stream(searchTerm.split("\\s+"))
 				.parallel()
 				.flatMap(token -> {
 					log.debug("Searching DB: {}", token);
-					if (datasourceUrl.startsWith("jdbc:oracle")) return searchResultRepository.search(token).stream();
-					else return searchResultRepository.simpleSearch(token).stream();
+					if (datasourceUrl.startsWith("jdbc:oracle")) return searchResultRepository.search(token, includeInactiveUsers).stream();
+					else return searchResultRepository.simpleSearch(token, includeInactiveUsers).stream();
 				})
 				.collect(groupingBy(SearchResultEntity::getUsername))
 				.values()

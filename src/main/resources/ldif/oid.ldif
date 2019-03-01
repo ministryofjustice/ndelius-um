@@ -53,6 +53,32 @@ userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test user for basic authentication (password=secret)
 
+dn: cn=test.user.inactive,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: person
+objectclass: NDUser
+cn: test.user.inactive
+uid: test.user.inactive
+givenName: Inactive
+sn: User
+orclActiveEndDate: 20000101000000
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test user with end date of 01/01/2000
+
+dn: cn=test.user.inactive.oidonly,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: person
+objectclass: NDUser
+cn: test.user.inactive.oidonly
+uid: test.user.inactive.oidonly
+givenName: Inactive
+sn: User (OID)
+orclActiveEndDate: 20000101000000
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test user with end date of 01/01/2000
+
 dn: cn=test.user.alias,cn=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: alias

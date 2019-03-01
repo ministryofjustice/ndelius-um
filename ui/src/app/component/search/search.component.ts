@@ -7,6 +7,7 @@ import {AuthorisationService} from "../../service/impl/authorisation.service";
 import {NgModel} from "@angular/forms";
 import {forkJoin, of} from "rxjs";
 import {RecentUsersUtils} from "../../util/recent-users.utils";
+import {Team} from "../../model/team";
 
 @Component({
   selector: 'search',
@@ -17,13 +18,13 @@ export class SearchComponent implements OnInit, AfterViewInit {
   @ViewChild('queryInput') queryInput: NgModel;
   query: string = "";
   page: number;
+  includeInactiveUsers: boolean = false;
 
   users: User[] = [];
   recentUsers: string[] = RecentUsersUtils.getRecentUsers().reverse();
   searching: boolean;
   noResults: boolean;
   hasMoreResults: boolean = true;
-  previousQuery: string = "";
   searchId: number = 0;
 
   constructor(private route: ActivatedRoute, public router: Router, private service: UserService, public auth: AuthorisationService) {
@@ -35,17 +36,17 @@ export class SearchComponent implements OnInit, AfterViewInit {
       tap(() => this.searching = true),
       flatMap(params => forkJoin(of(++this.searchId), this.service.search(
         this.query = params.q,
-        this.page = +params.page || 1
+        this.page = +params.page || 1,
+        this.includeInactiveUsers
       )))
     ).subscribe(value => {
       let id = value[0];
       let users: User[] = value[1];
       if(id != this.searchId) return;
       this.hasMoreResults = users.length !== 0;
-      if(this.previousQuery != this.query){
-        this.previousQuery = this.query;
+      if (this.page == 1) {
         this.users = users;
-      } else{
+      } else {
         this.users.push(...users);
       }
       this.noResults = this.users.length === 0;
@@ -60,15 +61,19 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   search() {
-    this.router.navigate(['/search'], {queryParams: {q: this.query}});
+    this.router.navigate(['/search'], {queryParams: {q: this.query, t: new Date().getTime()}});
   }
 
   nextPage() {
-    this.router.navigate(['/search'], {queryParams: {q: this.query, page: this.page + 1}});
+    this.router.navigate(['/search'], {queryParams: {q: this.query, page: this.page + 1, t: new Date().getTime()}});
   }
 
   clearRecentUsers() {
     RecentUsersUtils.clear();
     this.recentUsers = []
+  }
+
+  teamDescriptions(teams: Team[]): string {
+    return (teams || []).map(t => t.description).join('\n');
   }
 }
