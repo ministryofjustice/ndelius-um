@@ -41,9 +41,10 @@ public class UserController
 	public ResponseEntity<List<SearchResult>> search(
 			@RequestParam("q") String query,
 			@Min(1) @RequestParam(value = "page", defaultValue = "1") Integer page,
-			@Min(1) @Max(100) @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize)
+			@Min(1) @Max(100) @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+			@RequestParam(value = "includeInactiveUsers", defaultValue = "false") Boolean includeInactiveUsers)
 	{
-		return ok(userService.search(query, page, pageSize));
+		return ok(userService.search(query, page, pageSize, includeInactiveUsers));
 	}
 
 	@Interaction("UMBI002")

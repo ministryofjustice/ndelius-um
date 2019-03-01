@@ -23,10 +23,32 @@
                    placeholder="Search using name, username, team, staff code..."
                    autocomplete="off">
             <div class="input-group-append">
-              <button class="btn btn-primary" type="submit">
+              <button class="btn btn-outline-secondary" type="button"
+                      title="Show/hide search filters"
+                      data-toggle="collapse" data-target="#filters"
+                      aria-expanded="false" aria-controls="collapseExample">
+                <span class="oi oi-chevron-bottom"></span>
+              </button>
+              <button class="btn btn-primary" type="submit"
+                      [title]="searching? 'Searching...': 'Search'"
+                      [disabled]="searching">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="searching"></span>
                 <span class="oi oi-magnifying-glass" *ngIf="!searching"></span>
               </button>
+            </div>
+          </div>
+          <div id="filters" class="collapse float-right">
+            <div class="bg-light border-left border-right border-bottom card-body py-2 rounded-bottom">
+              <div class="custom-control custom-checkbox">
+                <input id="include-inactive-users-filter" name="include-inactive-users-filter" class="custom-control-input"
+                       [(ngModel)]="includeInactiveUsers"
+                       (change)="search()"
+                       type="checkbox"/>
+                <label for="include-inactive-users-filter" class="custom-control-label"
+                       title="Toggle whether to display users with an end date in the past">
+                  Include inactive users?
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -46,6 +68,7 @@
               <th>Username</th>
               <th class="text-truncate">Staff Code</th>
               <th>Team(s)</th>
+              <th *ngIf="includeInactiveUsers" class="text-nowrap">End Date</th>
               <th colspan="3" class="text-right">Sources</th>
               <th></th>
             </tr>
@@ -60,11 +83,11 @@
               </td>
               <td title="Username">{{user.username}}</td>
               <td title="Staff Code">{{user.staffCode}}</td>
-              <td class="w-25" title="Team(s)">
-                <span *ngFor="let team of user.teams; let isLast = last">
-                  {{team.description}}{{isLast? '': ','}}
-                </span>
+              <td class="w-25" [title]="teamDescriptions(user.teams)">
+                <span *ngIf="user.teams != null && user.teams.length == 1">{{ user.teams[0].description }}</span>
+                <span *ngIf="user.teams != null && user.teams.length > 1">{{ user.teams.length }} teams</span>
               </td>
+              <td title="End Date" *ngIf="includeInactiveUsers" class="text-nowrap">{{ user.endDate }}</td>
               <td class="pl-1 pr-0 d-lg-none" colspan="3" style="width: 55px">
                 <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('AD1') === -1"
                       title="TTP Active Directory">DOM1</span>

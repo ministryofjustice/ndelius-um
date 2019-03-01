@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.config.security;
 
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +20,10 @@ import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import lombok.val;
 import uk.co.bconline.ndelius.security.filter.BasicAuthFilter;
 import uk.co.bconline.ndelius.security.handler.LoginHandler;
 import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
-import uk.co.bconline.ndelius.util.LdapPasswordUtils;
+import uk.co.bconline.ndelius.util.LdapUtils;
 
 @Configuration
 @EnableWebSecurity
@@ -49,7 +48,7 @@ public class WebSecurityGlobalConfig extends WebSecurityConfigurerAdapter
 			@Override
 			public boolean matches(CharSequence rawPassword, String encodedPassword)
 			{
-				return encodedPassword != null && super.matches(rawPassword, LdapPasswordUtils.fixPassword(encodedPassword));
+				return encodedPassword != null && super.matches(rawPassword, LdapUtils.fixPassword(encodedPassword));
 			}
 		};
 	}

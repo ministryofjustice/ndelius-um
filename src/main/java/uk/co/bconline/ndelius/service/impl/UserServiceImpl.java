@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
 
+import static java.time.LocalDate.now;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
@@ -69,11 +70,11 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public List<SearchResult> search(String query, int page, int pageSize)
+	public List<SearchResult> search(String query, int page, int pageSize, boolean includeInactiveUsers)
 	{
 		if (StringUtils.isEmpty(query) || query.length() < 3) return emptyList();
 
-		val dbFuture = supplyAsync(() -> dbService.search(query));
+		val dbFuture = supplyAsync(() -> dbService.search(query, includeInactiveUsers));
 		val oidFuture = supplyAsync(() -> oidService.search(query));
 		val ad1Future = supplyAsync(() -> ad1Service.map(service -> service.search(query)).orElse(emptyList()));
 		val ad2Future = supplyAsync(() -> ad2Service.map(service -> service.search(query)).orElse(emptyList()));
@@ -100,6 +101,7 @@ public class UserServiceImpl implements UserService
 		val r = foundUsers.stream()
 				.sorted(comparing(SearchResult::getScore, Float::compare).reversed())
 				.filter(result -> datasetsFilter.test(result.getUsername()))
+				.filter(result -> includeInactiveUsers || result.getEndDate() == null || !result.getEndDate().isBefore(now()))
 				.peek(result -> log.debug("SearchResult: username={}, score={}", result.getUsername(), result.getScore()))
 				.skip((long) (page-1) * pageSize)
 				.limit(pageSize)

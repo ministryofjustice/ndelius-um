@@ -14,11 +14,12 @@ export class RestUserService implements UserService {
     return this.http.get<User>(environment.api.baseurl + "whoami")
   }
 
-  search(query: string, page: number): Observable<User[]> {
+  search(query: string, page: number, includeInactiveUsers: boolean): Observable<User[]> {
     return this.http.get<User[]>(environment.api.baseurl + "users", {
       params: {
         q: query,
         page: page.toString(),
+        includeInactiveUsers: String(includeInactiveUsers)
       }
     });
   }

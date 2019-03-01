@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface UserService
 {
 	boolean usernameExists(String username);
-	List<SearchResult> search(String query, int page, int pageSize);
+	List<SearchResult> search(String query, int page, int pageSize, boolean includeInactiveUsers);
 	Optional<User> getUser(String username);
 	Optional<User> getUserByStaffCode(String staffCode);
 	void addUser(@Valid User user);

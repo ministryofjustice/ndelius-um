@@ -11,9 +11,8 @@ import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.service.*;
-import uk.co.bconline.ndelius.util.LdapPasswordUtils;
+import uk.co.bconline.ndelius.util.LdapUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -22,21 +21,20 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.*;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.springframework.util.StringUtils.isEmpty;
+import static uk.co.bconline.ndelius.util.LdapUtils.mapOIDStringToDate;
+import static uk.co.bconline.ndelius.util.LdapUtils.mapToOIDString;
 import static uk.co.bconline.ndelius.util.NameUtils.*;
 
 @Slf4j
 @Component
 public class UserTransformer
 {
-	private static final String OID_DATE_FORMAT = "yyyyMMdd'000000Z'";
-
 	@Value("${ad.primary.principal.suffix:}")
 	private String ad1PrincipalSuffix;
 
@@ -84,6 +82,7 @@ public class UserTransformer
 				.surname(user.getSurname())
 				.teams(user.getTeams())
 				.staffCode(user.getStaffCode())
+				.endDate(user.getEndDate())
 				.sources(user.getSources())
 				.build();
 	}
@@ -123,8 +122,7 @@ public class UserTransformer
 				.email(v.getEmail())
 				.privateSector("private".equalsIgnoreCase(v.getSector()))
 				.homeArea(datasetService.getDatasetByCode(v.getHomeArea()).orElse(null))
-				.endDate(ofNullable(v.getEndDate()).map(s ->
-						LocalDate.parse(s.substring(0, 8), ofPattern(OID_DATE_FORMAT.substring(0, 8)))).orElse(null))
+				.endDate(mapOIDStringToDate(v.getEndDate()))
 				.roles(ofNullable(v.getRoles())
 						.map(l -> l.stream().filter(role -> allRoles.contains(role.getName())))
 						.map(transactions -> transactions
@@ -172,6 +170,7 @@ public class UserTransformer
 						.forenames(v.getForenames())
 						.surname(v.getSurname())
 						.email(v.getEmail())
+						.endDate(mapOIDStringToDate(v.getEndDate()))
 						.sources(singletonList("OID"))
 						.build()),
 				ofNullable(dbUser).map(v -> User.builder()
@@ -180,6 +179,7 @@ public class UserTransformer
 						.surname(v.getSurname())
 						.staffCode(ofNullable(v.getStaff()).map(StaffEntity::getCode).orElse(null))
 						.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(this::map).orElse(null))
+						.endDate(v.getEndDate())
 						.sources(singletonList("DB"))
 						.build()),
 				ofNullable(ad1User).map(v -> User.builder()
@@ -319,11 +319,11 @@ public class UserTransformer
 		return existingUser.toBuilder()
 				.username(user.getUsername())
 				.uid(user.getUsername())
-				.password(LdapPasswordUtils.fixPassword(ofNullable(existingUser.getPassword()).orElse(oidDefaultPassword)))
+				.password(LdapUtils.fixPassword(ofNullable(existingUser.getPassword()).orElse(oidDefaultPassword)))
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
 				.email(user.getEmail())
-				.endDate(ofNullable(user.getEndDate()).map(d -> d.format(ofPattern(OID_DATE_FORMAT))).orElse(null))
+				.endDate(mapToOIDString(user.getEndDate()))
 				.sector(user.getPrivateSector()? "private": "public")
 				.homeArea(ofNullable(user.getHomeArea()).map(Dataset::getCode).orElse(null))
 				.roles(ofNullable(user.getRoles()).map(list -> list.stream()
