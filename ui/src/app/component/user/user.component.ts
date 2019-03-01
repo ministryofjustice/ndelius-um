@@ -237,8 +237,4 @@ export class UserComponent implements OnInit {
       window.history.back()
     }
   }
-
-  get homeAreas(): Dataset[] {
-    return Array.from(new Set([this.user.homeArea, ...this.user.datasets].filter(el => el != null)));
-  }
 }
