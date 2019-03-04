@@ -249,7 +249,7 @@ public class UserServiceImpl implements UserService
 			val t = LocalDateTime.now();
 			val theirDatasets = datasetService.getDatasetCodes(username);
 			val theirHomeArea = oidService.getUserHomeArea(username);
-			if (theirHomeArea != null) theirDatasets.add(oidService.getUserHomeArea(username));
+			if (theirHomeArea != null) theirDatasets.add(theirHomeArea);
 			val r = theirDatasets.isEmpty() || myDatasets.stream().anyMatch(theirDatasets::contains);
 			log.trace("--{}ms	Dataset filter", MILLIS.between(t, LocalDateTime.now()));
 			return r;
