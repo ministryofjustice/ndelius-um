@@ -5,8 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
@@ -38,6 +40,10 @@ public class SubContractedProviderEntity
 
 	@Column(name = "ACTIVE_FLAG")
 	private Boolean active;
+
+	@Column(name = "END_DATE")
+	@Type(type = "java.time.LocalDate")
+	private LocalDate endDate;
 
 	@ManyToOne
 	@JoinColumn(name = "PROVIDER_ID")
