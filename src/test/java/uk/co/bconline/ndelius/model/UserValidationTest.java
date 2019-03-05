@@ -214,6 +214,19 @@ public class UserValidationTest
 	}
 
 	@Test
+	public void testSubContractedProviderWithoutStaffCode()
+	{
+		User user = aValidUser().toBuilder()
+				.subContractedProvider(Dataset.builder().code("SC").build())
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("Staff Code is required if Sub Contracted Provider is populated"))));
+	}
+
+	@Test
 	public void testEmptyTeamWithoutStaffCode()
 	{
 		User user = aValidUser().toBuilder()
