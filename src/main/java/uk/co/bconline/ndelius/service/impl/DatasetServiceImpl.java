@@ -12,8 +12,6 @@ import uk.co.bconline.ndelius.transformer.DatasetTransformer;
 import java.util.List;
 import java.util.Optional;
 
-import static java.time.LocalDate.now;
-import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -82,8 +80,7 @@ public class DatasetServiceImpl implements DatasetService
 
 	@Override
 	public List<Dataset> getSubContractedProviders(String datasetCode) {
-		return subContractedProviderRepository.findAllByProviderCodeAndActiveTrueAndEndDateBefore(datasetCode, now().plus(1, DAYS))
-				.stream()
+		return subContractedProviderRepository.findAllByProviderCode(datasetCode).stream()
 				.map(transformer::map)
 				.collect(toList());
 	}

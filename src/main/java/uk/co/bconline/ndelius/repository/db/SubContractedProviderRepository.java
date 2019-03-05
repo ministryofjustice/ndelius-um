@@ -2,16 +2,20 @@ package uk.co.bconline.ndelius.repository.db;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import uk.co.bconline.ndelius.model.entity.SubContractedProviderEntity;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public interface SubContractedProviderRepository extends JpaRepository<SubContractedProviderEntity, Long>
 {
 	@Cacheable("subContractedProvidersByProviderCode")
-	List<SubContractedProviderEntity> findAllByProviderCodeAndActiveTrueAndEndDateBefore(String providerCode, LocalDate today);
+	@Query("SELECT s FROM SubContractedProviderEntity s " +
+			"WHERE s.provider.code = ?1 " +
+			"AND s.active = true " +
+			"AND (s.endDate IS NULL OR s.endDate >= SYSDATE)")
+	List<SubContractedProviderEntity> findAllByProviderCode(String providerCode);
 
 	@Cacheable("subContractedProviderByCode")
 	Optional<SubContractedProviderEntity> findByCode(String code);
