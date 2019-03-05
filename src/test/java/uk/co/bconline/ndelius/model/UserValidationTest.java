@@ -9,7 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.model.auth.UserInteraction;
+import uk.co.bconline.ndelius.model.auth.UserPrincipal;
 import uk.co.bconline.ndelius.security.AuthenticationToken;
 import uk.co.bconline.ndelius.service.RoleService;
 import uk.co.bconline.ndelius.service.UserService;
@@ -22,6 +23,7 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static uk.co.bconline.ndelius.test.util.UserUtils.aValidUser;
+import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -41,7 +43,9 @@ public class UserValidationTest
 	public void user()
 	{
 		SecurityContextHolder.getContext()
-				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
+				.setAuthentication(new AuthenticationToken(UserPrincipal.builder()
+						.username("test.user")
+						.build(), ""));
 	}
 
 	@Test
@@ -353,6 +357,7 @@ public class UserValidationTest
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, empty());
 	}
+
 	@Test
 	public void testEmailNull()
 	{
@@ -362,6 +367,7 @@ public class UserValidationTest
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, empty());
 	}
+
 	@Test
 	public void testEmailEmpty()
 	{
@@ -371,6 +377,7 @@ public class UserValidationTest
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, empty());
 	}
+
 	@Test
 	public void testNonUniqueEmail()
 	{
@@ -380,5 +387,50 @@ public class UserValidationTest
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, hasItem(hasProperty("message", is("Email must be unique"))));
+	}
+
+	@Test
+	public void invalidDatasets()
+	{
+		User user = aValidUser().toBuilder()
+				.datasets(singletonList(Dataset.builder()
+						.code("not-real")
+						.build()))
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("attempting to assign invalid datasets"))));
+	}
+
+	@Test
+	public void localUserCannotAssignNationalRoles()
+	{
+		User user = aValidUser().toBuilder()
+				.datasets(singletonList(Dataset.builder()
+						.code(NATIONAL_ACCESS)	// Only a national user can apply the national access role
+						.build()))
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("attempting to assign invalid datasets"))));
+	}
+
+	@Test
+	public void nationalUserCanAssignAnyDataset()
+	{
+		SecurityContextHolder.getContext()
+				.setAuthentication(new AuthenticationToken(UserPrincipal.builder()
+						.username("test.user")
+						.authorities(singletonList(new UserInteraction(NATIONAL_ACCESS)))
+						.build(), ""));
+
+		User user = aValidUser().toBuilder()
+				.datasets(singletonList(Dataset.builder()
+						.code(NATIONAL_ACCESS)	// Only a national user can apply the national access role
+						.build()))
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, empty());
 	}
 }

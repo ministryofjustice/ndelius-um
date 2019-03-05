@@ -1,6 +1,10 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.entity.SubContractedProviderEntity;
@@ -13,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
+import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 
 @Service
 public class DatasetServiceImpl implements DatasetService
@@ -35,9 +40,19 @@ public class DatasetServiceImpl implements DatasetService
 	@Override
 	public List<Dataset> getDatasets()
 	{
-		return repository.findAllBySelectable("Y").stream()
-				.map(transformer::map)
-				.collect(toList());
+		val myPrincipal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		val isNational = myPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+				.anyMatch(NATIONAL_ACCESS::equals);
+
+		if (isNational) {
+			// If I am a national access user, return all datasets
+			return repository.findAllBySelectable("Y").stream()
+					.map(transformer::map)
+					.collect(toList());
+		} else {
+			// If I am not a national access user, only return datasets that are already assigned to my user
+			return getDatasets(myPrincipal.getUsername());
+		}
 	}
 
 	@Override

@@ -16,8 +16,9 @@ import java.util.List;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @ValidDates
-@AssignableRoles
 @UniqueEmail
+@AssignableRoles
+@AssignableDatasets
 @ConditionallyRequired(ifPopulated = "staffCode", required = "staffGrade")
 @ConditionallyRequired(ifPopulated = "staffGrade", required = "staffCode")
 @ConditionallyRequired(ifPopulated = "teams", required = "staffCode")
