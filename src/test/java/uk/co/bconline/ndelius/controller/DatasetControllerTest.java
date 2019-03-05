@@ -67,4 +67,14 @@ public class DatasetControllerTest
 				.andExpect(jsonPath("$", hasSize(3)))
 				.andExpect(jsonPath("$[*].code", hasItems("N01SC1", "N01SC2", "N01SC3")));
 	}
+
+	@Test
+	public void inactiveOrEndDatedSubContractedProvidersAreNotReturned() throws Exception
+	{
+		mvc.perform(get("/api/dataset/C02/subContractedProviders")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", hasSize(1)))
+				.andExpect(jsonPath("$[*].code", hasItems("C02SC1")));
+	}
 }
