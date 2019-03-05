@@ -21,6 +21,7 @@ import java.util.List;
 @ConditionallyRequired(ifPopulated = "staffCode", required = "staffGrade")
 @ConditionallyRequired(ifPopulated = "staffGrade", required = "staffCode")
 @ConditionallyRequired(ifPopulated = "teams", required = "staffCode")
+@ConditionallyRequired(ifPopulated = "subContractedProvider", required = "staffCode")
 @ConditionallyRequired(ifPopulated = "staffCode", required = "startDate")
 public class User
 {
