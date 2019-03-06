@@ -280,22 +280,9 @@ public class UserControllerTest
 	@Test
 	public void usersAreFilteredOnDatasets() throws Exception
 	{
-		String username = nextTestUsername();
-		String token = token(mvc);
-		mvc.perform(post("/api/user")
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
-						.username(username)
-						.homeArea(Dataset.builder().code("C01").build())
-						.datasets(asList(
-								Dataset.builder().code("C02").build(),
-								Dataset.builder().code("C03").build()))
-						.build())))
-				.andExpect(status().isCreated());
-
-		mvc.perform(get("/api/user/" + username)
-				.header("Authorization", "Bearer " + token))
+		// Attempt to lookup N02 user, as a non-national N01 user
+		mvc.perform(get("/api/user/Joe.Bloggs")
+				.header("Authorization", "Bearer " + token(mvc, "test.user.local")))
 				.andExpect(status().isNotFound());
 	}
 
