@@ -11,6 +11,7 @@ import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
 import uk.co.bconline.ndelius.service.DBUserService;
 import uk.co.bconline.ndelius.service.DatasetService;
+import uk.co.bconline.ndelius.service.OIDUserService;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -25,7 +26,10 @@ import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 public class AssignableDatasetsValidator implements ConstraintValidator<AssignableDatasets, User>
 {
 	@Autowired
-	private DBUserService userService;
+	private DBUserService dbUserService;
+
+	@Autowired
+	private OIDUserService oidUserService;
 
 	@Autowired
 	private DatasetService datasetService;
@@ -49,7 +53,9 @@ public class AssignableDatasetsValidator implements ConstraintValidator<Assignab
 		val assignableDatasets = datasetService.getDatasets(myPrincipal.getUsername()).stream()
 				.map(Dataset::getCode)
 				.collect(toSet());
-		userService.getUser(ofNullable(user.getExistingUsername()).orElse(user.getUsername())).ifPresent(
+		assignableDatasets.add(oidUserService.getUserHomeArea(myPrincipal.getUsername()));
+
+		dbUserService.getUser(ofNullable(user.getExistingUsername()).orElse(user.getUsername())).ifPresent(
 				u -> assignableDatasets.addAll(u.getDatasets().stream()
 						.map(ProbationAreaEntity::getCode)
 						.collect(toSet())));
