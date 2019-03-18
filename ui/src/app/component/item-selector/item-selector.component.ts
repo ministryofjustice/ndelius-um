@@ -27,33 +27,33 @@ declare var Popper: any;
     }]
 })
 export class ItemSelectorComponent
-    implements ControlValueAccessor, Validator, OnInit
-{
-  @ViewChild("filterControl") filterControl: ElementRef;
-  @ViewChild("toggleBtn") toggleBtn: ElementRef;
+    implements ControlValueAccessor, Validator, OnInit {
+  @ViewChild('filterControl') filterControl: ElementRef;
+  @ViewChild('toggleBtn') toggleBtn: ElementRef;
   @Input() id: string;
   @Input() selected: any;
-  @Input() labelMapper: Function = (item: any) => item;
-  @Input() idMapper: Function = null;
-  @Input() maxHeight: string = "auto";
+  @Input() maxHeight = 'auto';
   @Input() readonly: boolean;
-  @Input() required: boolean = false;
+  @Input() required = false;
   @Input() multiple: boolean;
   @Input() alignRight: boolean;
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
   private availableItems: any[];
 
-  dirty: boolean = false;
-  filter: string = "";
+  dirty = false;
+  filter = '';
   onlyShowSelected: boolean;
+
+  @Input() idMapper: Function = null;
+  @Input() labelMapper: Function = (item: any) => item;
 
   private propagateChange = (_: any) => { };
   private propagateTouchChange = (_: any) => { };
 
   toggle(item): void {
     if (this.multiple) {
-      if (this.selected == null) this.selected = [];
-      let index = this.selected.map(item => this.mapToId(item)).indexOf(this.mapToId(item));
+      if (this.selected == null) { this.selected = []; }
+      const index = this.selected.map(i => this.mapToId(i)).indexOf(this.mapToId(item));
       if (index === -1) {
         this.selected.push(item);
       } else {
@@ -67,7 +67,7 @@ export class ItemSelectorComponent
     this.dirty = true;
   }
 
-  toggleAllItems(){
+  toggleAllItems() {
     if (this.selected == null) {
       this.selected = [];
     }
@@ -90,24 +90,24 @@ export class ItemSelectorComponent
   }
 
   mapToId(item: any): string {
-    return this.idMapper != null? this.idMapper(item): this.labelMapper(item);
+    return this.idMapper != null ? this.idMapper(item) : this.labelMapper(item);
   }
 
   isSelected(item: any): boolean {
-    if (this.selected == null) return false;
-    let id: string = this.mapToId(item);
+    if (this.selected == null) { return false; }
+    const id: string = this.mapToId(item);
     if (this.multiple) {
-      return this.selected.map(item => this.mapToId(item)).indexOf(id) !== -1;
+      return this.selected.map(i => this.mapToId(i)).indexOf(id) !== -1;
     } else {
       return this.mapToId(this.selected) === id;
     }
   }
 
   get available(): any[] {
-    if (this.selected == null) return this.availableItems || [];
-    if (this.availableItems == null) return [];
+    if (this.selected == null) { return this.availableItems || []; }
+    if (this.availableItems == null) { return []; }
 
-    let removeNullAndDuplicates = (el, pos, arr) => {
+    const removeNullAndDuplicates = (el, pos, arr) => {
       return el != null && arr.map(item => this.mapToId(item)).indexOf(this.mapToId(el)) === pos;
     };
 
@@ -129,25 +129,25 @@ export class ItemSelectorComponent
       items = this.available;
     } else {
       items = this.available.filter(item => {
-        return this.mapToLabel(item).toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
+        return this.mapToLabel(item).toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
       });
     }
-    return items == null? items: items.sort((a, b) => {
-      let labelA = this.mapToLabel(a);
-      let labelB = this.mapToLabel(b);
-      return labelA == labelB? 0: labelA < labelB? -1: 1;
+    return items == null ? items : items.sort((a, b) => {
+      const labelA = this.mapToLabel(a);
+      const labelB = this.mapToLabel(b);
+      return labelA === labelB ? 0 : labelA < labelB ? -1 : 1;
     });
   }
 
   get displayText(): string {
-    if (this.available == null) return "Loading...";
+    if (this.available == null) { return 'Loading...'; }
 
     if (this.multiple) {
-      if (this.selected == null || this.selected.length == 0) return "Please select...";
-      if (this.selected.length == 1) return this.mapToLabel(this.selected[0]);
-      return this.selected.length + " selected";
+      if (this.selected == null || this.selected.length === 0) { return 'Please select...'; }
+      if (this.selected.length === 1) { return this.mapToLabel(this.selected[0]); }
+      return this.selected.length + ' selected';
     } else {
-      if (this.selected == null) return "Please select...";
+      if (this.selected == null) { return 'Please select...'; }
       return this.mapToLabel(this.selected);
     }
   }
@@ -167,9 +167,9 @@ export class ItemSelectorComponent
   }
 
   validate(c: FormControl): ValidationErrors {
-    if(this.required == false || this.readonly) return null;
-    if(this.selected == null || (this.selected instanceof Array && this.selected.length == 0)) {
-      return {"list": "cannot be empty"}
+    if (this.required === false || this.readonly) { return null; }
+    if (this.selected == null || (this.selected instanceof Array && this.selected.length === 0)) {
+      return {'list': 'cannot be empty'};
     }
     return null;
   }

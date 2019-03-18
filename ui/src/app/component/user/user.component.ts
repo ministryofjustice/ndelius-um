@@ -1,23 +1,23 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
-import {User} from "../../model/user";
-import {ActivatedRoute, Params, Router} from "@angular/router";
-import {debounceTime, distinctUntilChanged, flatMap, map} from "rxjs/operators";
-import {UserService} from "../../service/user.service";
-import {Observable} from "rxjs/Observable";
-import {AuthorisationService} from "../../service/impl/authorisation.service";
-import {RoleService} from "../../service/role.service";
-import {Role} from "../../model/role";
-import {Dataset} from "../../model/dataset";
-import {DatasetService} from "../../service/dataset.service";
-import {Team} from "../../model/team";
-import {TeamService} from "../../service/team.service";
-import {RoleGroup} from "../../model/role-group";
-import {OrganisationService} from "../../service/organisation.service";
-import {StaffGrade} from "../../model/staff-grade";
-import {StaffGradeService} from "../../service/staff-grade.service";
-import {AppComponent} from "../app/app.component";
-import {NgForm, NgModel} from "@angular/forms";
-import {RecentUsersUtils} from "../../util/recent-users.utils";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {User} from '../../model/user';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {debounceTime, distinctUntilChanged, flatMap, map} from 'rxjs/operators';
+import {UserService} from '../../service/user.service';
+import {Observable} from 'rxjs/Observable';
+import {AuthorisationService} from '../../service/impl/authorisation.service';
+import {RoleService} from '../../service/role.service';
+import {Role} from '../../model/role';
+import {Dataset} from '../../model/dataset';
+import {DatasetService} from '../../service/dataset.service';
+import {Team} from '../../model/team';
+import {TeamService} from '../../service/team.service';
+import {RoleGroup} from '../../model/role-group';
+import {OrganisationService} from '../../service/organisation.service';
+import {StaffGrade} from '../../model/staff-grade';
+import {StaffGradeService} from '../../service/staff-grade.service';
+import {AppComponent} from '../app/app.component';
+import {NgForm, NgModel} from '@angular/forms';
+import {RecentUsersUtils} from '../../util/recent-users.utils';
 
 @Component({
   selector: 'user',
@@ -27,8 +27,8 @@ import {RecentUsersUtils} from "../../util/recent-users.utils";
 export class UserComponent implements OnInit {
   loaded: boolean;
   saving: boolean;
-  @ViewChild("form") form: NgForm;
-  @ViewChild("rolesControl") rolesControl: NgModel;
+  @ViewChild('form') form: NgForm;
+  @ViewChild('rolesControl') rolesControl: NgModel;
   @ViewChild('staffCode') staffCodeControl: NgModel;
   mode: string;
   params: Params;
@@ -43,8 +43,8 @@ export class UserComponent implements OnInit {
   userWithStaffCode: User;
   loadingStaffCode: boolean;
   generatingStaffCode: boolean;
-  globalMinDate: Date = new Date(1900,0,1);
-  globalMaxDate: Date = new Date(2099,11,31);
+  globalMinDate: Date = new Date(1900, 0, 1);
+  globalMaxDate: Date = new Date(2099, 11, 31);
 
   constructor(
     private route: ActivatedRoute,
@@ -63,7 +63,7 @@ export class UserComponent implements OnInit {
         this.params = params;
         if (params.id != null) {
           RecentUsersUtils.add(params.id);
-          this.mode = this.auth.canUpdateUser()? 'Update': 'View';
+          this.mode = this.auth.canUpdateUser() ? 'Update' : 'View';
           return this.userService.read(params.id);
         } else {
           return this.route.queryParams.pipe(flatMap(query => {
@@ -104,7 +104,7 @@ export class UserComponent implements OnInit {
 
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {
       this.datasets = datasets;
-      if (this.user != null && this.user.datasets == null) this.user.datasets = [];
+      if (this.user != null && this.user.datasets == null) { this.user.datasets = []; }
     });
 
     this.staffGradeService.staffGrades().subscribe((staffGrades: StaffGrade[]) => {
@@ -119,14 +119,14 @@ export class UserComponent implements OnInit {
 
   addGroup(): void {
     if (this.selectedGroups != null) {
-      if (this.user.roles == null) this.user.roles = [];
+      if (this.user.roles == null) { this.user.roles = []; }
       this.selectedGroups.forEach(selectedGroup => {
         this.roleService.group(selectedGroup.name).subscribe(group => {
-          let userRoleNames = this.user.roles.map(r => r.name);
+          const userRoleNames = this.user.roles.map(r => r.name);
           this.user.roles.push(...group.roles.filter(role => userRoleNames.indexOf(role.name) === -1));
           this.rolesControl.control.markAsDirty();
         });
-      })
+      });
     }
   }
 
@@ -136,7 +136,7 @@ export class UserComponent implements OnInit {
       this.teamService.providerTeams(this.user.homeArea.code).subscribe((teams: Team[]) => {
         this.teams = teams;
         if (this.user.teams != null) {
-          this.user.teams = this.user.teams.filter(team => teams.map(team => team.code).indexOf(team.code) !== -1);
+          this.user.teams = this.user.teams.filter(team => teams.map(t => t.code).indexOf(team.code) !== -1);
         }
       });
       this.subContractedProviders = null;
@@ -158,49 +158,49 @@ export class UserComponent implements OnInit {
           this.user.staffGrade = user.staffGrade;
           this.user.teams = user.teams;
           this.user.subContractedProvider = user.subContractedProvider;
-          this.loadingStaffCode = false
+          this.loadingStaffCode = false;
         },
         () => this.loadingStaffCode = false);
   }
 
   datasetsChanged() {
-    if (this.user.homeArea != null && this.user.datasets.map(d => d.code).indexOf(this.user.homeArea.code) == -1) {
+    if (this.user.homeArea != null && this.user.datasets.map(d => d.code).indexOf(this.user.homeArea.code) === -1) {
       this.user.homeArea = null;
       this.homeAreaChanged();
     }
-    if (this.user.datasets.length == 1 && this.user.homeArea == null) {
+    if (this.user.datasets.length === 1 && this.user.homeArea == null) {
       this.user.homeArea = this.user.datasets[0];
       this.homeAreaChanged();
     }
   }
 
   submit(): void {
-    if(!this.form.valid){
+    if (!this.form.valid) {
       Object.keys(this.form.controls).forEach(key => {
-        let abstractControl = this.form.controls[key];
+        const abstractControl = this.form.controls[key];
         abstractControl.markAsDirty();
         abstractControl.updateValueAndValidity();
       });
-      AppComponent.error("Please correct any highlighted fields before submitting user details.");
-      window.scrollTo(0,0);
+      AppComponent.error('Please correct any highlighted fields before submitting user details.');
+      window.scrollTo(0, 0);
       return;
     }
     if (this.mode === 'Add') {
       this.saving = true;
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
       this.userService.create(this.user).subscribe(() => {
-        this.router.navigate(["/user/" + this.user.username]).then(() => {
-          AppComponent.success("Created " + this.user.username + " successfully.");
+        this.router.navigate(['/user/' + this.user.username]).then(() => {
+          AppComponent.success('Created ' + this.user.username + ' successfully.');
           this.saving = false;
         });
       }, () => this.saving = false);
     } else if (this.mode === 'Update') {
       this.saving = true;
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
       this.userService.update(this.params.id, this.user).subscribe(() => {
-        if (this.params.id != this.user.username) RecentUsersUtils.remove(this.params.id);
-        this.router.navigate(["/user/" + this.user.username], {replaceUrl: true}).then(() => {
-          AppComponent.success("Updated " + this.user.username + " successfully.");
+        if (this.params.id !== this.user.username) { RecentUsersUtils.remove(this.params.id); }
+        this.router.navigate(['/user/' + this.user.username], {replaceUrl: true}).then(() => {
+          AppComponent.success('Updated ' + this.user.username + ' successfully.');
           this.saving = false;
         });
       }, () => this.saving = false);
@@ -210,11 +210,11 @@ export class UserComponent implements OnInit {
   }
 
   codeDescriptionToLabel(item: {code: string, description: string}): string {
-    return (item.description != null? item.description + ' - ': '') + item.code;
+    return (item.description != null ? item.description + ' - ' : '') + item.code;
   }
 
   nameDescriptionToLabel(item: {name: string, description: string}): string {
-    return (item.description != null? item.description + ' - ': '') + item.name;
+    return (item.description != null ? item.description + ' - ' : '') + item.name;
   }
 
   nameToLabel(item: {name: string}): string {
@@ -222,7 +222,7 @@ export class UserComponent implements OnInit {
   }
 
   sectorToLabel(item: boolean): string {
-    return item? 'Private': 'Public';
+    return item ? 'Private' : 'Public';
   }
 
   generateStaffCode(): void {
@@ -237,8 +237,9 @@ export class UserComponent implements OnInit {
   }
 
   backButtonAlert(): void {
-    if (!this.form.dirty || confirm("Any changes made on this screen will be lost. Select OK to continue or Cancel to stay on this screen.")) {
-      window.history.back()
+    if (!this.form.dirty ||
+      confirm('Any changes made on this screen will be lost. Select OK to continue or Cancel to stay on this screen.')) {
+      window.history.back();
     }
   }
 }

@@ -1,13 +1,13 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
-import {User} from "../../model/user";
-import {ActivatedRoute, Router} from "@angular/router";
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from "rxjs/operators";
-import {UserService} from "../../service/user.service";
-import {AuthorisationService} from "../../service/impl/authorisation.service";
-import {NgModel} from "@angular/forms";
-import {forkJoin, of} from "rxjs";
-import {RecentUsersUtils} from "../../util/recent-users.utils";
-import {Team} from "../../model/team";
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {User} from '../../model/user';
+import {ActivatedRoute, Router} from '@angular/router';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {UserService} from '../../service/user.service';
+import {AuthorisationService} from '../../service/impl/authorisation.service';
+import {NgModel} from '@angular/forms';
+import {forkJoin, of} from 'rxjs';
+import {RecentUsersUtils} from '../../util/recent-users.utils';
+import {Team} from '../../model/team';
 
 @Component({
   selector: 'search',
@@ -16,23 +16,23 @@ import {Team} from "../../model/team";
 })
 export class SearchComponent implements OnInit, AfterViewInit {
   @ViewChild('queryInput') queryInput: NgModel;
-  query: string = "";
+  query = '';
   page: number;
-  includeInactiveUsers: boolean = false;
+  includeInactiveUsers = false;
 
   users: User[] = [];
   recentUsers: string[] = RecentUsersUtils.getRecentUsers().reverse();
   searching: boolean;
   noResults: boolean;
-  hasMoreResults: boolean = true;
-  searchId: number = 0;
+  hasMoreResults = true;
+  searchId = 0;
 
   constructor(private route: ActivatedRoute, public router: Router, private service: UserService, public auth: AuthorisationService) {
   }
 
   ngOnInit(): void {
     this.route.queryParams.pipe(
-      filter(params => params.q != null && params.q !== ""),
+      filter(params => params.q != null && params.q !== ''),
       tap(() => this.searching = true),
       flatMap(params => forkJoin(of(++this.searchId), this.service.search(
         this.query = params.q,
@@ -40,11 +40,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.includeInactiveUsers
       )))
     ).subscribe(value => {
-      let id = value[0];
-      let users: User[] = value[1];
-      if(id != this.searchId) return;
+      const id = value[0];
+      const users: User[] = value[1];
+      if (id !== this.searchId) { return; }
       this.hasMoreResults = users.length !== 0;
-      if (this.page == 1) {
+      if (this.page === 1) {
         this.users = users;
       } else {
         this.users.push(...users);
@@ -70,7 +70,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
   clearRecentUsers() {
     RecentUsersUtils.clear();
-    this.recentUsers = []
+    this.recentUsers = [];
   }
 
   teamDescriptions(teams: Team[]): string {
