@@ -40,8 +40,10 @@ node {
 }
 
 npm_install.args = ['ui', '--prefix=ui']
+npm_test.args = ['--prefix=ui']
+npm_test.dependsOn(npm_install)
 npm_run.args = ['build-prod', '--prefix=ui']
-npm_run.dependsOn(npm_install)
+npm_run.dependsOn(npm_test)
 processResources.dependsOn(npm_run)
 
 repositories {

@@ -10,7 +10,6 @@ import {Observable} from 'rxjs/Observable';
 import {Injectable} from '@angular/core';
 import {tap} from 'rxjs/operators';
 import {AppComponent} from '../component/app/app.component';
-import {Router} from '@angular/router';
 import {environment} from '../../environments/environment';
 
 @Injectable()
@@ -57,9 +56,9 @@ export class ErrorInterceptor implements HttpInterceptor {
     505 : 'HTTP Version Not Supported'
   };
 
-  constructor(private router: Router) {}
+  constructor() {}
 
-  static parseErrorResponse(res: HttpErrorResponse) {
+  static parseErrorResponse(res: HttpErrorResponse): string {
     let error: string = res.error ? JSON.stringify(res.error) : '';
     let header: string = res.status + ' ' + (ErrorInterceptor.HTTP_STATUS_CODES[res.status] || 'Unknown');
     if (res.status === 400 && res.error != null && res.error.error instanceof Array) {
@@ -79,8 +78,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(tap(() => {}, (res: HttpResponseBase) => {
       if (res instanceof HttpErrorResponse
-        && req.url.indexOf(environment.api.baseurl + 'staff/') === -1
-        && this.router.url !== '/migrate') {
+        && req.url.indexOf(environment.api.baseurl + 'staff/') === -1) {
         AppComponent.error(ErrorInterceptor.parseErrorResponse(res));
         window.scrollTo(0, 0);
       }
