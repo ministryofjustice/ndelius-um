@@ -153,7 +153,7 @@ public class UserTransformer
 				map(oidUser),
 				map(dbUser),
 				map(ad1User).map(u -> u.toBuilder().sources(singletonList("AD1")).build()),
-				map(ad1User).map(u -> u.toBuilder().sources(singletonList("AD2")).build()))
+				map(ad2User).map(u -> u.toBuilder().sources(singletonList("AD2")).build()))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.reduce(this::reduceUser);
