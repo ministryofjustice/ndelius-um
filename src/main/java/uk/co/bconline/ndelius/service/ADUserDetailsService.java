@@ -26,6 +26,9 @@ import static org.springframework.util.StringUtils.isEmpty;
 public abstract class ADUserDetailsService implements UserDetailsService
 {
 	private static final String USER_BASE = ADUser.class.getAnnotation(Entry.class).base();
+	private static final int NORMAL_ACCOUNT = 0x0200;
+	private static final int PASSWD_NOTREQD = 0x0020;
+	private static final int DONT_EXPIRE_PASSWORD = 0x10000;
 
 	public abstract ADUserRepository getRepository();
 
@@ -95,9 +98,6 @@ public abstract class ADUserDetailsService implements UserDetailsService
 	{
 		if (adUser.getUserAccountControl() == null)
 		{
-			int NORMAL_ACCOUNT = 0x0200;
-			int PASSWD_NOTREQD = 0x0020;
-			int DONT_EXPIRE_PASSWORD = 0x10000;
 			adUser = adUser.toBuilder()
 					.userAccountControl(Integer.toString(NORMAL_ACCOUNT + PASSWD_NOTREQD + DONT_EXPIRE_PASSWORD))
 					.build();
