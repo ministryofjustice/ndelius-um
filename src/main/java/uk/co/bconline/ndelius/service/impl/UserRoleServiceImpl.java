@@ -98,8 +98,7 @@ public class UserRoleServiceImpl implements UserRoleService
 				.base(join(",", "cn=" + username, USER_BASE))
                 .where("objectclass").is("NDRole")
                 .or("objectclass").is("NDRoleAssociation")).spliterator(), true)
-				.map(role -> role.getName().startsWith("UMBT") || role.getName().startsWith("UABT")?
-								roleService.getRole(role.getName()).orElse(role): role)
+				.map(role -> roleService.getRole(role.getName()).orElse(role))
 				.collect(toSet());
 		log.trace("--{}ms	OID lookup user roles", MILLIS.between(t, LocalDateTime.now()));
 		return r;
