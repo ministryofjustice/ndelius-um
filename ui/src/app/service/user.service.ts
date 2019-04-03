@@ -1,5 +1,5 @@
-import {User} from "../model/user";
-import {Observable} from "rxjs/Observable";
+import {User} from '../model/user';
+import {Observable} from 'rxjs/Observable';
 
 export abstract class UserService {
   abstract whoami(): Observable<User>;
