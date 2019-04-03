@@ -100,6 +100,13 @@ objectclass: NDRoleAssociation
 cn: UMBT003
 aliasedObjectName: cn=UMBT003,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
 
+dn: cn=RDBT001,cn=test.user,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: RDBT001
+aliasedObjectName: cn=RDBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+
 dn: cn=TestUser1,cn=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: person
