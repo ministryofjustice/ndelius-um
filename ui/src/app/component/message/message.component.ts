@@ -4,9 +4,9 @@ import {Component, Input} from '@angular/core';
   selector: 'message',
   templateUrl: './message.component.html'
 })
-export class MessageComponent{
+export class MessageComponent {
   @Input()
   message: string;
   @Input()
-  severity: string = "info";
+  severity = 'info';
 }

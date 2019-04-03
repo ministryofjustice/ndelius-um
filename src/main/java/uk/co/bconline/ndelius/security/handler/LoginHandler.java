@@ -48,7 +48,7 @@ public class LoginHandler implements AuthenticationSuccessHandler, Authenticatio
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 	{
 		val username = ((UserDetails) authentication.getPrincipal()).getUsername();
-		generateToken(username, request, response);
+		generateToken(username, response);
 		log.info("{} [UMLOGIN] []", username);
 	}
 
@@ -58,7 +58,7 @@ public class LoginHandler implements AuthenticationSuccessHandler, Authenticatio
 		log.error("??? [UMLOGIN] [{}, {}, {}]", request.getRequestURI(), request.getHeader(AUTHORIZATION), exception.getMessage());
 	}
 
-	public void generateToken(String username, HttpServletRequest request, HttpServletResponse response)
+	public void generateToken(String username, HttpServletResponse response)
 	{
 		val interactions = userRoleService.getUserInteractions(username).stream()
 				.map(UserInteraction::new)

@@ -74,35 +74,11 @@ public class JwtAuthFilter extends OncePerRequestFilter
 			}
 			catch (ExpiredJwtException e)
 			{
-				log.debug("Token has expired, attempting to refresh user details");
-				val username = e.getClaims().getSubject();
-				val expiredAt = e.getClaims().getExpiration().toInstant();
-				if (expiredAt.isAfter(now().minus(24, ChronoUnit.HOURS)))
-				{
-					loginHandler.generateToken(username, request, response);
-				}
-				else
-				{
-					log.debug("Token is older than 24 hours, re-asserting authentication", e);
-					val failed = new InsufficientAuthenticationException("Expired token", e);
-					loginHandler.onAuthenticationFailure(request, response, failed);
-					if (!loginRequestMatcher.matches(request))
-					{
-						jwtEntryPoint.commence(request, response, failed);
-						return;
-					}
-				}
+				if (!handleExpiredToken(request, response, e)) return;
 			}
 			catch (JwtException e)
 			{
-				log.error("Unable to accept JWT token", e);
-				val failed = new InsufficientAuthenticationException("Invalid token", e);
-				loginHandler.onAuthenticationFailure(request, response, failed);
-				if (!loginRequestMatcher.matches(request))
-				{
-					jwtEntryPoint.commence(request, response, failed);
-					return;
-				}
+				if (!handleInvalidToken(request, response, e)) return;
 			}
 		}
 		else if (!loginRequestMatcher.matches(request) && !"OPTIONS".equals(request.getMethod())
@@ -114,5 +90,43 @@ public class JwtAuthFilter extends OncePerRequestFilter
 			return;
 		}
 		filterChain.doFilter(request, response);
+	}
+
+	private boolean handleExpiredToken(HttpServletRequest request, HttpServletResponse response, ExpiredJwtException e)
+			throws IOException, ServletException
+	{
+		log.debug("Token has expired, attempting to refresh user details");
+		val username = e.getClaims().getSubject();
+		val expiredAt = e.getClaims().getExpiration().toInstant();
+		if (expiredAt.isAfter(now().minus(24, ChronoUnit.HOURS)))
+		{
+			loginHandler.generateToken(username, response);
+		}
+		else
+		{
+			log.debug("Token is older than 24 hours, re-asserting authentication", e);
+			val failed = new InsufficientAuthenticationException("Expired token", e);
+			loginHandler.onAuthenticationFailure(request, response, failed);
+			if (!loginRequestMatcher.matches(request))
+			{
+				jwtEntryPoint.commence(request, response, failed);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean handleInvalidToken(HttpServletRequest request, HttpServletResponse response, JwtException e)
+			throws IOException, ServletException
+	{
+		log.error("Unable to accept JWT token", e);
+		val failed = new InsufficientAuthenticationException("Invalid token", e);
+		loginHandler.onAuthenticationFailure(request, response, failed);
+		if (!loginRequestMatcher.matches(request))
+		{
+			jwtEntryPoint.commence(request, response, failed);
+			return false;
+		}
+		return true;
 	}
 }

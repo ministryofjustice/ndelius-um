@@ -1,6 +1,6 @@
-import {Observable} from "rxjs/Observable";
-import {Role} from "../model/role";
-import {RoleGroup} from "../model/role-group";
+import {Observable} from 'rxjs/Observable';
+import {Role} from '../model/role';
+import {RoleGroup} from '../model/role-group';
 
 export abstract class RoleService {
   abstract roles(): Observable<Role[]>;

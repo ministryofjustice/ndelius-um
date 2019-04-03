@@ -29,6 +29,7 @@ import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
 import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 @Slf4j
@@ -96,8 +97,8 @@ public class UserRoleServiceImpl implements UserRoleService
 		val r = stream(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
 				.base(join(",", "cn=" + username, USER_BASE))
-                .where("objectclass").is("NDRole")
-                .or("objectclass").is("NDRoleAssociation")).spliterator(), true)
+                .where(OBJECTCLASS).is("NDRole")
+                .or(OBJECTCLASS).is("NDRoleAssociation")).spliterator(), true)
 				.map(role -> roleService.getRole(role.getName()).orElse(role))
 				.collect(toSet());
 		log.trace("--{}ms	OID lookup user roles", MILLIS.between(t, LocalDateTime.now()));
@@ -131,8 +132,8 @@ public class UserRoleServiceImpl implements UserRoleService
 		roleRepository.deleteAll(roleRepository.findAll(query()
 				.searchScope(SearchScope.ONELEVEL)
 				.base(join(",", "cn=" + username, USER_BASE))
-				.where("objectclass").is("NDRole")
-				.or("objectclass").is("NDRoleAssociation")));
+				.where(OBJECTCLASS).is("NDRole")
+				.or(OBJECTCLASS).is("NDRoleAssociation")));
 
 		log.debug("Saving new role associations");
 		ofNullable(roles).ifPresent(r ->

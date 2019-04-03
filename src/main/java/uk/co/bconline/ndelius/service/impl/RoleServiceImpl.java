@@ -1,25 +1,24 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import static org.springframework.ldap.query.LdapQueryBuilder.query;
-import static org.springframework.ldap.query.SearchScope.ONELEVEL;
-import static uk.co.bconline.ndelius.util.NameUtils.join;
-
-import java.util.Optional;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.stereotype.Service;
-
-import com.google.common.collect.Sets;
-
-import lombok.extern.slf4j.Slf4j;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
 import uk.co.bconline.ndelius.model.ldap.OIDRoleGroup;
 import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
 import uk.co.bconline.ndelius.service.RoleService;
+
+import java.util.Optional;
+import java.util.Set;
+
+import static org.springframework.ldap.query.LdapQueryBuilder.query;
+import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
+import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 @Slf4j
 @Service
@@ -47,8 +46,8 @@ public class RoleServiceImpl implements RoleService
 		return Sets.newHashSet(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
 				.base(ROLE_BASE)
-				.where("objectclass").is("NDRole")
-				.or("objectclass").is("NDRoleAssociation")));
+				.where(OBJECTCLASS).is("NDRole")
+				.or(OBJECTCLASS).is("NDRoleAssociation")));
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class RoleServiceImpl implements RoleService
 		return Sets.newHashSet(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
 				.base(join(",", "cn=" + group, GROUP_BASE))
-				.where("objectclass").is("NDRole")
-				.or("objectclass").is("NDRoleAssociation")));
+				.where(OBJECTCLASS).is("NDRole")
+				.or(OBJECTCLASS).is("NDRoleAssociation")));
 	}
 }

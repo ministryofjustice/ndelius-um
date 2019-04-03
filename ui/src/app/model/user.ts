@@ -1,7 +1,7 @@
-import {Role} from "./role";
-import {Dataset} from "./dataset";
-import {Team} from "./team";
-import {StaffGrade} from "./staff-grade";
+import {Role} from './role';
+import {Dataset} from './dataset';
+import {Team} from './team';
+import {StaffGrade} from './staff-grade';
 
 export class User {
   username: string;

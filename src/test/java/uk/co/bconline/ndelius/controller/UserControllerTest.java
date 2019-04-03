@@ -606,22 +606,6 @@ public class UserControllerTest
 	}
 
 	@Test
-	public void emailMustBeUnique() throws Exception
-	{
-		String username = nextTestUsername();
-		String token = token(mvc);
-
-		mvc.perform(post("/api/user")
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
-						.username(username)
-						.email("test.user@test.com")
-						.build())))
-				.andExpect(status().isBadRequest());
-	}
-
-	@Test
 	@DirtiesContext
 	public void authenticationIsReassertedAfterUsernameIsChanged() throws Exception
 	{

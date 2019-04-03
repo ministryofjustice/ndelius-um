@@ -353,6 +353,7 @@ public class UserValidationTest
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, empty());
 	}
+
 	@Test
 	public void testEmailNull()
 	{
@@ -362,6 +363,7 @@ public class UserValidationTest
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, empty());
 	}
+
 	@Test
 	public void testEmailEmpty()
 	{
@@ -370,15 +372,5 @@ public class UserValidationTest
 				.build();
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, empty());
-	}
-	@Test
-	public void testNonUniqueEmail()
-	{
-		User user = aValidUser().toBuilder()
-				.email("test@test.com")
-				.build();
-
-		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
-		assertThat(constraintViolations, hasItem(hasProperty("message", is("Email must be unique"))));
 	}
 }
