@@ -1,15 +1,15 @@
 package uk.co.bconline.ndelius.config.data.embedded.interceptor;
 
-import static java.util.Arrays.stream;
-
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchEntry;
 import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
 import com.unboundid.ldap.sdk.DereferencePolicy;
 import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.LDAPInterface;
-
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
+import static java.util.Arrays.stream;
+import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
 
 @Slf4j
 public class AliasDereferencingInterceptor extends InMemoryOperationInterceptor
@@ -22,7 +22,7 @@ public class AliasDereferencingInterceptor extends InMemoryOperationInterceptor
 		if (entry.getRequest().getDereferencePolicy() == DereferencePolicy.NEVER) return;
 
 		val searchEntry = entry.getSearchEntry();
-		val isAlias = stream(searchEntry.getAttributeValues("objectclass")).anyMatch("alias"::equalsIgnoreCase);
+		val isAlias = stream(searchEntry.getAttributeValues(OBJECTCLASS)).anyMatch("alias"::equalsIgnoreCase);
 
 		if(isAlias)
 		{
