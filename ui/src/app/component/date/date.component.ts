@@ -7,7 +7,7 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ValidationErrors,
-  Validator,
+  Validator
 } from '@angular/forms';
 
 @Component({
@@ -33,14 +33,13 @@ export class DateComponent implements Validator, ControlValueAccessor {
   @Input() min: Date;
   @Input() max: Date;
 
-  date: number;
-  month: number;
-  year: number;
+  date: string;
+  month: string;
+  year: string;
 
   change(): void {
-
     if (this.basicValidation() == null) {
-      this.writeValue(moment.utc([this.year, this.month - 1, this.date]).toDate());
+      this.writeValue(moment.utc([+this.year, +this.month - 1, +this.date]).toDate());
     } else {
       this.writeValue(null);
     }
@@ -75,27 +74,27 @@ export class DateComponent implements Validator, ControlValueAccessor {
     if (this.value != null) {
       const m = moment.utc(this.value);
       this.value = m.toDate();
-      this.date = this.value.getDate();
-      this.month = this.value.getMonth() + 1;
-      this.year = this.value.getFullYear();
+      this.date = this.value.getDate().toString();
+      this.month = (this.value.getMonth() + 1).toString();
+      this.year = this.value.getFullYear().toString();
     }
   }
 
   public validate(c: FormControl): ValidationErrors {
-    if ((this.year == null || this.year === 0)
-      && (this.month == null || this.month === 0)
-      && (this.date == null || this.date === 0)) {
+    if ((this.year == null || this.year === '')
+      && (this.month == null || this.month === '')
+      && (this.date == null || this.date === '')) {
       return this.required ? {'required': 'date is required'} : null;
     }
     return this.basicValidation();
   }
 
   private basicValidation(): ValidationErrors {
-    const emptyItems = [this.year, this.month, this.date].filter(item => item == null || item === 0);
+    const emptyItems = [this.year, this.month, this.date].filter(item => item == null || item === '');
     if (emptyItems.length >= 1 && emptyItems.length < 3) {
       return {'incomplete' : 'All date fields are required'};
     }
-    const m = moment.utc([this.year, this.month - 1, this.date]);
+    const m = moment.utc([+this.year, +this.month - 1, +this.date]);
     if (!m.isValid()) {return {'invalidDate': 'date is invalid'}; }
     if (this.max != null && m.isAfter(this.max)) { return {'max': 'should be before ' + this.max}; }
     if (this.min != null && m.isBefore(this.min)) { return {'min': 'should be after ' + this.min}; }
