@@ -4,20 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-
-import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
 @Data
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Cache(usage = READ_ONLY)
 @Table(name = "SC_PROVIDER")
 public class SubContractedProviderEntity
 {
