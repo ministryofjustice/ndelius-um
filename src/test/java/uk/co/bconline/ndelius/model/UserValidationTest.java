@@ -9,7 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.model.auth.UserInteraction;
+import uk.co.bconline.ndelius.model.auth.UserPrincipal;
 import uk.co.bconline.ndelius.security.AuthenticationToken;
 import uk.co.bconline.ndelius.service.RoleService;
 import uk.co.bconline.ndelius.service.UserService;
@@ -22,6 +23,7 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static uk.co.bconline.ndelius.test.util.UserUtils.aValidUser;
+import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 
 @SpringBootTest
 @ActiveProfiles("test")
