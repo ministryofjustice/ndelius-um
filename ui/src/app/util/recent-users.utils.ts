@@ -1,6 +1,6 @@
 export class RecentUsersUtils {
-  private static KEY: string = "recent-users";
-  private static LIMIT: number = 5;
+  private static KEY = 'recent-users';
+  private static LIMIT = 5;
 
   public static getRecentUsers(): string[] {
     return JSON.parse(localStorage.getItem(this.KEY)) || [];
@@ -11,15 +11,15 @@ export class RecentUsersUtils {
   }
 
   public static add(username: string): void {
-    let recentUsers = this.getRecentUsers();
-    while (recentUsers.indexOf(username) > -1) recentUsers.splice(recentUsers.indexOf(username), 1);
+    const recentUsers = this.getRecentUsers();
+    while (recentUsers.indexOf(username) > -1) { recentUsers.splice(recentUsers.indexOf(username), 1); }
     recentUsers.push(username);
     this.setRecentUsers(recentUsers);
   }
 
   public static remove(username: string): void {
-    let recentUsers = this.getRecentUsers();
-    while (recentUsers.indexOf(username) > -1) recentUsers.splice(recentUsers.indexOf(username), 1);
+    const recentUsers = this.getRecentUsers();
+    while (recentUsers.indexOf(username) > -1) { recentUsers.splice(recentUsers.indexOf(username), 1); }
     this.setRecentUsers(recentUsers);
   }
 

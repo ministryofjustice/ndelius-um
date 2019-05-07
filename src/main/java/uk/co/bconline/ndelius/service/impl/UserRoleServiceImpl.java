@@ -4,12 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.query.SearchScope;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
 import uk.co.bconline.ndelius.model.ldap.OIDRoleAssociation;
+import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.repository.oid.OIDRoleAssociationRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
 import uk.co.bconline.ndelius.service.RoleService;
@@ -27,7 +29,6 @@ import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
-import static uk.co.bconline.ndelius.util.Constants.*;
 import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 @Slf4j
@@ -85,10 +86,9 @@ public class UserRoleServiceImpl implements UserRoleService
 		val r = stream(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
 				.base(join(",", "cn=" + username, USER_BASE))
-                .where("objectclass").is("NDRole")
-                .or("objectclass").is("NDRoleAssociation")).spliterator(), true)
-				.map(role -> role.getName().startsWith("UMBT") || role.getName().startsWith("UABT")?
-								roleService.getRole(role.getName()).orElse(role): role)
+                .where(OBJECTCLASS).is("NDRole")
+                .or(OBJECTCLASS).is("NDRoleAssociation")).spliterator(), true)
+				.map(role -> roleService.getRole(role.getName()).orElse(role))
 				.collect(toSet());
 		log.trace("--{}ms	OID lookup user roles", MILLIS.between(t, LocalDateTime.now()));
 		return r;
@@ -121,8 +121,8 @@ public class UserRoleServiceImpl implements UserRoleService
 		roleRepository.deleteAll(roleRepository.findAll(query()
 				.searchScope(SearchScope.ONELEVEL)
 				.base(join(",", "cn=" + username, USER_BASE))
-				.where("objectclass").is("NDRole")
-				.or("objectclass").is("NDRoleAssociation")));
+				.where(OBJECTCLASS).is("NDRole")
+				.or(OBJECTCLASS).is("NDRoleAssociation")));
 
 		log.debug("Saving new role associations");
 		ofNullable(roles).ifPresent(r ->

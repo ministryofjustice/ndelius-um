@@ -122,6 +122,7 @@ public class UserTransformer
 				.email(v.getEmail())
 				.privateSector("private".equalsIgnoreCase(v.getSector()))
 				.homeArea(datasetService.getDatasetByCode(v.getHomeArea()).orElse(null))
+				.startDate(mapOIDStringToDate(v.getStartDate()))
 				.endDate(mapOIDStringToDate(v.getEndDate()))
 				.roles(ofNullable(v.getRoles())
 						.map(l -> l.stream().filter(role -> allRoles.contains(role.getName())))
@@ -153,7 +154,7 @@ public class UserTransformer
 				map(oidUser),
 				map(dbUser),
 				map(ad1User).map(u -> u.toBuilder().sources(singletonList("AD1")).build()),
-				map(ad1User).map(u -> u.toBuilder().sources(singletonList("AD2")).build()))
+				map(ad2User).map(u -> u.toBuilder().sources(singletonList("AD2")).build()))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.reduce(this::reduceUser);
@@ -323,6 +324,7 @@ public class UserTransformer
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
 				.email(user.getEmail())
+				.startDate(mapToOIDString(user.getStartDate()))
 				.endDate(mapToOIDString(user.getEndDate()))
 				.sector(user.getPrivateSector()? "private": "public")
 				.homeArea(ofNullable(user.getHomeArea()).map(Dataset::getCode).orElse(null))

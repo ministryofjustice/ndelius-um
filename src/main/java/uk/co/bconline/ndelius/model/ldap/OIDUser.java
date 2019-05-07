@@ -43,6 +43,9 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails
 	@Attribute(name="userSector")
 	private String sector;
 
+	@Attribute(name="orclActiveStartDate") // format=yyyyMMddHHmmss
+	private String startDate;
+
 	@Attribute(name="orclActiveEndDate") // format=yyyyMMddHHmmss
 	private String endDate;
 

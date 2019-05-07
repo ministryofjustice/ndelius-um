@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +22,12 @@ import uk.co.bconline.ndelius.model.ldap.OIDUserPreferences;
 import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -590,22 +593,6 @@ public class UserControllerTest
 	}
 
 	@Test
-	public void emailMustBeUnique() throws Exception
-	{
-		String username = nextTestUsername();
-		String token = token(mvc);
-
-		mvc.perform(post("/api/user")
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
-						.username(username)
-						.email("test.user@test.com")
-						.build())))
-				.andExpect(status().isBadRequest());
-	}
-
-	@Test
 	@DirtiesContext
 	public void authenticationIsReassertedAfterUsernameIsChanged() throws Exception
 	{
@@ -649,5 +636,19 @@ public class UserControllerTest
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", hasItems(
 						"test.user", "test.user.inactive", "test.user.inactive.dbonly", "test.user.inactive.oidonly")));
+	}
+
+	@Test
+	public void userRolesHaveDescriptionsRegardlessOfAdminAccess() throws Exception
+	{
+		mvc.perform(get("/api/user/test.user")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isOk())
+				.andDo(mvcResult -> {
+					String json = mvcResult.getResponse().getContentAsString();
+					List<String> descriptions = JsonPath.parse(json).read("$.roles[*].description");
+					List<String> names = JsonPath.parse(json).read("$.roles[*].name");
+					assertThat(descriptions, hasSize(names.size()));
+				});
 	}
 }

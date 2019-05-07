@@ -33,6 +33,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
 import static uk.co.bconline.ndelius.util.LdapUtils.mapOIDStringToDate;
 import static uk.co.bconline.ndelius.util.NameUtils.join;
 
@@ -164,7 +165,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		if (!preferencesRepository.findOne(query()
 				.searchScope(ONELEVEL)
 				.base(getDn(user.getUsername()))
-				.where("objectclass").isPresent()).isPresent())
+				.where(OBJECTCLASS).isPresent()).isPresent())
 		{
 			log.debug("Creating user preferences");
 			preferencesRepository.save(new OIDUserPreferences(user.getUsername()));

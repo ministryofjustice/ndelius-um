@@ -1,19 +1,39 @@
 import {Component, OnInit} from '@angular/core';
-import {UserService} from "../../service/user.service";
-import {NavigationStart, Router} from "@angular/router";
-import {AuthorisationService} from "../../service/impl/authorisation.service";
+import {UserService} from '../../service/user.service';
+import {NavigationStart, Router} from '@angular/router';
+import {AuthorisationService} from '../../service/impl/authorisation.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
-  title: string = "User Management";
-  loaded: boolean;
   static globalMessage: string;
-  static globalMessageSeverity: string = "info";
+  static globalMessageSeverity = 'info';
+
+  title = 'User Management';
+  loaded: boolean;
 
   constructor(private service: UserService, public auth: AuthorisationService, private router: Router) {}
+
+  static error(message: string) {
+    AppComponent.globalMessage = message;
+    AppComponent.globalMessageSeverity = 'danger';
+  }
+
+  static info(message: string) {
+    AppComponent.globalMessage = message;
+    AppComponent.globalMessageSeverity = 'info';
+  }
+
+  static success(message: string) {
+    AppComponent.globalMessage = message;
+    AppComponent.globalMessageSeverity = 'success';
+  }
+
+  static hideMessage() {
+    AppComponent.globalMessage = null;
+  }
 
   ngOnInit() {
     this.service.whoami().subscribe(me => {
@@ -22,8 +42,8 @@ export class AppComponent implements OnInit {
     });
 
     this.router.routeReuseStrategy.shouldReuseRoute = (future, curr) => {
-      return future.routeConfig == curr.routeConfig
-        && (future.routeConfig == null || future.routeConfig.path != "user/:id");
+      return future.routeConfig === curr.routeConfig
+        && (future.routeConfig == null || future.routeConfig.path !== 'user/:id');
     };
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
@@ -32,30 +52,11 @@ export class AppComponent implements OnInit {
     });
   }
 
-  get globalMessage(){
+  get globalMessage() {
     return AppComponent.globalMessage;
   }
 
-  get globalMessageSeverity(){
+  get globalMessageSeverity() {
     return AppComponent.globalMessageSeverity;
-  }
-
-  static error(message: string) {
-    AppComponent.globalMessage = message;
-    AppComponent.globalMessageSeverity = "danger";
-  }
-
-  static info(message: string) {
-    AppComponent.globalMessage = message;
-    AppComponent.globalMessageSeverity = "info";
-  }
-
-  static success(message: string) {
-    AppComponent.globalMessage = message;
-    AppComponent.globalMessageSeverity = "success";
-  }
-
-  static hideMessage() {
-    AppComponent.globalMessage = null;
   }
 }

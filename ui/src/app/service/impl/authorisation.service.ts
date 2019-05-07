@@ -1,16 +1,16 @@
-import {Injectable} from "@angular/core";
-import {Role} from "../../model/role";
-import {User} from "../../model/user";
+import {Injectable} from '@angular/core';
+import {Role} from '../../model/role';
+import {User} from '../../model/user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthorisationService {
   static me: User;
-  static SEARCH_USER_ROLE: string = 'UMBI001';
-  static GET_USER_ROLE: string = 'UMBI002';
-  static ADD_USER_ROLE: string = 'UMBI003';
-  static UPDATE_USER_ROLE: string = 'UMBI004';
+  static SEARCH_USER_ROLE = 'UMBI001';
+  static GET_USER_ROLE = 'UMBI002';
+  static ADD_USER_ROLE = 'UMBI003';
+  static UPDATE_USER_ROLE = 'UMBI004';
 
   hasRole(role: string): boolean {
     return AuthorisationService.me.roles

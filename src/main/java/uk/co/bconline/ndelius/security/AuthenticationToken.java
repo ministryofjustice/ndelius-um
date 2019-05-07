@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @EqualsAndHashCode(callSuper = false)
 public class AuthenticationToken extends AbstractAuthenticationToken
 {
-	private final Object principal;
-	private final Object credentials;
+	private transient final Object principal;
+	private transient final Object credentials;
 
 	public AuthenticationToken(UserDetails principal, String credentials)
 	{

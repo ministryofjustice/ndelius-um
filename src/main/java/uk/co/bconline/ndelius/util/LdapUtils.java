@@ -13,6 +13,8 @@ public class LdapUtils
 {
 	private static final String OID_DATE_FORMAT = "yyyyMMdd'000000Z'";
 
+	public static final String OBJECTCLASS = "objectclass";
+
 	public static String fixPassword(String password)
 	{
 		if (!isEmpty(password) && !password.startsWith("{"))

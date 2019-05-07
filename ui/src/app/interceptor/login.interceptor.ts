@@ -1,8 +1,8 @@
 import {HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse,} from '@angular/common/http';
-import {Observable} from "rxjs/Observable";
-import {environment} from "../../environments/environment";
-import {Injectable} from "@angular/core";
-import {flatMap} from "rxjs/operators";
+import {Observable} from 'rxjs/Observable';
+import {environment} from '../../environments/environment';
+import {Injectable} from '@angular/core';
+import {flatMap} from 'rxjs/operators';
 
 /**
  * Only used for development, where UI is served separately. Intercepts HTTP requests to perform authentication where required.
@@ -20,27 +20,27 @@ export class LoginInterceptor implements HttpInterceptor {
   constructor(private http: HttpClient) {
   }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.url.endsWith("login")) return next.handle(req);
-
-    if (LoginInterceptor.token != null) {
-      return LoginInterceptor.appendToken(req, next);
-    } else {
-      console.log("In development mode, authenticating as", this.user.name);
-
-      return this.http.post(environment.api.baseurl + "login", "", {
-        headers: {"Authorization": "Basic " + btoa(this.user.name + ":" + this.user.pass)}
-      }).pipe(flatMap((res: HttpResponse<any>) => {
-        console.log("Storing auth token", res);
-        LoginInterceptor.token = res['token'];
-        return LoginInterceptor.appendToken(req, next)
-      }));
-    }
-  }
-
   private static appendToken(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req.clone({
       headers: req.headers.set('Authorization', 'Bearer ' + this.token)
     }));
+  }
+
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (req.url.endsWith('login')) { return next.handle(req); }
+
+    if (LoginInterceptor.token != null) {
+      return LoginInterceptor.appendToken(req, next);
+    } else {
+      console.log('In development mode, authenticating as', this.user.name);
+
+      return this.http.post(environment.api.baseurl + 'login', '', {
+        headers: {'Authorization': 'Basic ' + btoa(this.user.name + ':' + this.user.pass)}
+      }).pipe(flatMap((res: HttpResponse<any>) => {
+        console.log('Storing auth token', res);
+        LoginInterceptor.token = res['token'];
+        return LoginInterceptor.appendToken(req, next);
+      }));
+    }
   }
 }
