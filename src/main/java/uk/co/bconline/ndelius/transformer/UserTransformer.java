@@ -253,7 +253,9 @@ public class UserTransformer
 				.staff(isEmpty(staff.getCode())? null: staff)
 				.build();
 		entity.getProbationAreaLinks().clear();
-		entity.getProbationAreaLinks().addAll(Stream.concat(user.getDatasets().stream(), user.getEstablishments().stream())
+		entity.getProbationAreaLinks().addAll(Stream
+				.concat(user.getDatasets().stream(),
+						ofNullable(user.getEstablishments()).map(List::stream).orElse(Stream.empty()))
 				.parallel()
 				.map(dataset -> datasetService.getDatasetId(dataset.getCode()).orElse(null))
 				.filter(Objects::nonNull)
