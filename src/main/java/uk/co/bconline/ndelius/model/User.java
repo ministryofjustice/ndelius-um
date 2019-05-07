@@ -72,6 +72,9 @@ public class User
 	@NotEmpty
 	private List<Dataset> datasets;
 
+	@Valid
+	private List<Dataset> establishments;
+
 	private List<Role> roles;
 
 	private Dataset subContractedProvider;

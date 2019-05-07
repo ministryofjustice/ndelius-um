@@ -14,6 +14,10 @@ export class RestDatasetService implements DatasetService {
     return this.http.get<Dataset[]>(environment.api.baseurl + 'datasets');
   }
 
+  establishments(): Observable<Dataset[]> {
+    return this.http.get<Dataset[]>(environment.api.baseurl + 'establishments');
+  }
+
   nextStaffCode(datasetCode: string): Observable<string> {
     return this.http.get(environment.api.baseurl + 'dataset/' + datasetCode + '/nextStaffCode', {
       responseType: 'text'

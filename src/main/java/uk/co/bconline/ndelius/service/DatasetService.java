@@ -16,4 +16,5 @@ public interface DatasetService
 	String getNextStaffCode(String datasetCode);
 	List<Dataset> getSubContractedProviders(String datasetCode);
 	Optional<Long> getSubContractedProviderId(String code);
+	List<Dataset> getEstablishments();
 }

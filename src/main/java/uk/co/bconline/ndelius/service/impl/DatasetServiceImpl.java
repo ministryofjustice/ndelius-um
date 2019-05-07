@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.entity.SubContractedProviderEntity;
-import uk.co.bconline.ndelius.repository.db.DatasetRepository;
+import uk.co.bconline.ndelius.repository.db.ProbationAreaRepository;
 import uk.co.bconline.ndelius.repository.db.SubContractedProviderRepository;
 import uk.co.bconline.ndelius.service.DatasetService;
 import uk.co.bconline.ndelius.transformer.DatasetTransformer;
@@ -23,12 +23,12 @@ import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 public class DatasetServiceImpl implements DatasetService
 {
 	private final DatasetTransformer transformer;
-	private final DatasetRepository repository;
+	private final ProbationAreaRepository repository;
 	private final SubContractedProviderRepository subContractedProviderRepository;
 
 	@Autowired
 	public DatasetServiceImpl(
-			DatasetRepository repository,
+			ProbationAreaRepository repository,
 			SubContractedProviderRepository subContractedProviderRepository,
 			DatasetTransformer transformer)
 	{
@@ -46,7 +46,7 @@ public class DatasetServiceImpl implements DatasetService
 
 		if (isNational) {
 			// If I am a national access user, return all datasets
-			return repository.findAllBySelectable("Y").stream()
+			return repository.findAllSelectableNonEstablishments().stream()
 					.map(transformer::map)
 					.collect(toList());
 		} else {
@@ -59,6 +59,7 @@ public class DatasetServiceImpl implements DatasetService
 	public List<Dataset> getDatasets(String username)
 	{
 		return repository.findAllByUserLinks_User_Username(username).stream()
+				.filter(p -> !p.isEstablishment())
 				.map(transformer::map)
 				.collect(toList());
 	}
@@ -103,5 +104,13 @@ public class DatasetServiceImpl implements DatasetService
 	@Override
 	public Optional<Long> getSubContractedProviderId(String code) {
 		return subContractedProviderRepository.findByCode(code).map(SubContractedProviderEntity::getId);
+	}
+
+	@Override
+	public List<Dataset> getEstablishments()
+	{
+		return repository.findAllBySelectableTrueAndEstablishmentTrue().stream()
+				.map(transformer::map)
+				.collect(toList());
 	}
 }

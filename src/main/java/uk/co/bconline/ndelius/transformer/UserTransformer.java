@@ -93,7 +93,8 @@ public class UserTransformer
 				.username(v.getUsername())
 				.forenames(combineNames(v.getForename(), v.getForename2()))
 				.surname(v.getSurname())
-				.datasets(datasetTransformer.map(v.getDatasets()))
+				.datasets(datasetTransformer.mapToDatasets(v.getDatasets()))
+				.establishments(datasetTransformer.mapToEstablishments(v.getDatasets()))
 				.staffCode(ofNullable(v.getStaff()).map(StaffEntity::getCode).orElse(null))
 				.staffGrade(ofNullable(v.getStaff())
 						.map(StaffEntity::getGrade)
@@ -216,6 +217,7 @@ public class UserTransformer
 				.endDate(ofNullable(a.getEndDate()).orElse(b.getEndDate()))
 				.teams(ofNullable(a.getTeams()).orElse(b.getTeams()))
 				.datasets(ofNullable(a.getDatasets()).orElse(b.getDatasets()))
+				.establishments(ofNullable(a.getEstablishments()).orElse(b.getEstablishments()))
 				.subContractedProvider(ofNullable(a.getSubContractedProvider()).orElse(b.getSubContractedProvider()))
 				.roles(ofNullable(a.getRoles()).orElse(b.getRoles()))
 				.email(ofNullable(a.getEmail()).orElse(b.getEmail()))
@@ -251,7 +253,8 @@ public class UserTransformer
 				.staff(isEmpty(staff.getCode())? null: staff)
 				.build();
 		entity.getProbationAreaLinks().clear();
-		entity.getProbationAreaLinks().addAll(user.getDatasets().stream()
+		entity.getProbationAreaLinks().addAll(Stream.concat(user.getDatasets().stream(), user.getEstablishments().stream())
+				.parallel()
 				.map(dataset -> datasetService.getDatasetId(dataset.getCode()).orElse(null))
 				.filter(Objects::nonNull)
 				.map(ProbationAreaEntity::new)
@@ -302,7 +305,7 @@ public class UserTransformer
 				.updatedById(myUserId)
 				.build();
 		entity.getTeamLinks().clear();
-		entity.getTeamLinks().addAll(ofNullable(user.getTeams()).map(list -> list.stream()
+		entity.getTeamLinks().addAll(ofNullable(user.getTeams()).map(list -> list.parallelStream()
 				.map(team -> teamService.getTeamId(team.getCode()).orElse(null))
 				.filter(Objects::nonNull)
 				.map(id -> StaffTeamEntity.builder()

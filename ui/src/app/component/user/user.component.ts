@@ -35,6 +35,7 @@ export class UserComponent implements OnInit {
   user: User;
   teams: Team[];
   datasets: Dataset[];
+  establishments: Dataset[];
   roles: Role[];
   roleGroups: RoleGroup[];
   selectedGroups: RoleGroup[];
@@ -105,6 +106,11 @@ export class UserComponent implements OnInit {
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {
       this.datasets = datasets;
       if (this.user != null && this.user.datasets == null) { this.user.datasets = []; }
+    });
+
+    this.datasetService.establishments().subscribe((establishments: Dataset[]) => {
+      this.establishments = establishments;
+      if (this.user != null && this.user.establishments == null) { this.user.establishments = []; }
     });
 
     this.staffGradeService.staffGrades().subscribe((staffGrades: StaffGrade[]) => {
