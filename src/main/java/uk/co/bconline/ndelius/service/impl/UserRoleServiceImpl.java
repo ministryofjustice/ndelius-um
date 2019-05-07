@@ -75,7 +75,7 @@ public class UserRoleServiceImpl implements UserRoleService
 						&& (localAccess || !"local".equalsIgnoreCase(role.getAdminLevel()))
 						&& (level1Access || !role.isLevel1())
 						&& (level2Access || !role.isLevel2())
-						&& (level3Access || !role.isLevel2()))
+						&& (level3Access || !role.isLevel3()))
 				.collect(toSet());
 	}
 

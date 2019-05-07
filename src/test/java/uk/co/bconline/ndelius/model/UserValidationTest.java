@@ -19,11 +19,12 @@ import javax.validation.ConstraintViolation;
 import java.time.LocalDate;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static uk.co.bconline.ndelius.test.util.UserUtils.aValidUser;
-import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
+import static uk.co.bconline.ndelius.util.Constants.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -392,11 +393,57 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void localUserCannotAssignNationalRoles()
+	public void localUserCannotAssignNationalRole()
+	{
+		User user = aValidUser().toBuilder()
+				.roles(singletonList(Role.builder()
+						.name(NATIONAL_ROLE)	// Only a national user can apply the national access role
+						.build()))
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("attempting to assign invalid roles"))));
+	}
+
+	@Test
+	public void nationalUserCanAssignNationalRole()
+	{
+		SecurityContextHolder.getContext()
+				.setAuthentication(new AuthenticationToken(UserPrincipal.builder()
+						.username("test.user")
+						// Note: the National Role is marked as sector:public - so we need to also have the Public Role
+						.authorities(asList(new UserInteraction(NATIONAL_ACCESS), new UserInteraction(PUBLIC_ACCESS)))
+						.build(), ""));
+
+		User user = aValidUser().toBuilder()
+				.roles(singletonList(Role.builder()
+						.name(NATIONAL_ROLE)	// Only a national user can apply the national access role
+						.build()))
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, empty());
+	}
+
+	@Test
+	public void localUserCanAssignTheirOwnDatasets()
 	{
 		User user = aValidUser().toBuilder()
 				.datasets(singletonList(Dataset.builder()
-						.code(NATIONAL_ACCESS)	// Only a national user can apply the national access role
+						.code("N01")	// test.user only has NXX datasets
+						.build()))
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, empty());
+	}
+
+	@Test
+	public void localUserCanOnlyAssignTheirOwnDatasets()
+	{
+		User user = aValidUser().toBuilder()
+				.datasets(singletonList(Dataset.builder()
+						.code("C01")	// test.user only has NXX datasets
 						.build()))
 				.build();
 
@@ -415,7 +462,7 @@ public class UserValidationTest
 
 		User user = aValidUser().toBuilder()
 				.datasets(singletonList(Dataset.builder()
-						.code(NATIONAL_ACCESS)	// Only a national user can apply the national access role
+						.code("C01")	// test.user only has NXX datasets, but is now a National User
 						.build()))
 				.build();
 

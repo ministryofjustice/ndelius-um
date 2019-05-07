@@ -17,4 +17,7 @@ public class Constants {
 	public static final String LEVEL3_ACCESS = "UABI024";
 	public static final String NATIONAL_ACCESS = "UABI025";
 	public static final String LOCAL_ACCESS = "UABI026";
+
+	// Roles
+	public static final String NATIONAL_ROLE = "UABT0050";
 }
