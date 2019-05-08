@@ -5,7 +5,7 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ValidationErrors,
-  Validator,
+  Validator
 } from '@angular/forms';
 
 declare var $: any;
@@ -30,6 +30,7 @@ export class ItemSelectorComponent
     implements ControlValueAccessor, Validator, OnInit {
   @ViewChild('filterControl') filterControl: ElementRef;
   @ViewChild('toggleBtn') toggleBtn: ElementRef;
+  @ViewChild('dropdown') dropdown: ElementRef;
   @Input() id: string;
   @Input() selected: any;
   @Input() maxHeight = 'auto';
@@ -184,5 +185,14 @@ export class ItemSelectorComponent
 
   ngOnInit(): void {
     Popper.Defaults.modifiers.computeStyle.gpuAcceleration = false;
+  }
+
+  collapseDropdown(): boolean {
+    if (this.dropdown.nativeElement.classList.contains('show')) {
+      this.toggleBtn.nativeElement.click();
+      this.toggleBtn.nativeElement.focus();
+      return true;
+    }
+    return false;
   }
 }
