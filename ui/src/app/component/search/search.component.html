@@ -87,7 +87,7 @@
                 <span *ngIf="user.teams != null && user.teams.length == 1">{{ user.teams[0].description }}</span>
                 <span *ngIf="user.teams != null && user.teams.length > 1">{{ user.teams.length }} teams</span>
               </td>
-              <td title="End Date" *ngIf="includeInactiveUsers" class="text-nowrap">{{ user.endDate }}</td>
+              <td title="End Date" *ngIf="includeInactiveUsers" class="text-nowrap">{{ user.endDate | date: 'dd/MM/yyyy' }}</td>
               <td class="pl-1 pr-0 d-lg-none" colspan="3" style="width: 55px">
                 <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('AD1') === -1"
                       title="TTP Active Directory">DOM1</span>
