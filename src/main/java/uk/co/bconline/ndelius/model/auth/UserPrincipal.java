@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -13,7 +14,8 @@ import java.util.List;
 public class UserPrincipal implements UserDetails {
     private String username;
     private String password;
-    private List<UserInteraction> authorities;
+    @Builder.Default
+    private List<UserInteraction> authorities = new ArrayList<>();
     private boolean accountNonExpired;
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;

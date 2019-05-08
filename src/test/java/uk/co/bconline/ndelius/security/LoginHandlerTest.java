@@ -60,7 +60,7 @@ public class LoginHandlerTest
 		List<UserInteraction> interactions = jwtHelper.getInteractions(token);
 
 		assertNotNull(interactions);
-		assertThat(interactions, hasSize(11));
+		assertThat(interactions, hasSize(13));
 		assertThat(interactions, hasItem(hasProperty("authority", is("UMBI001"))));
 	}
 }

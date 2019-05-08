@@ -14,6 +14,7 @@ export class User {
   homeArea: Dataset;
   teams: Team[];
   datasets: Dataset[];
+  establishments: Dataset[];
   roles: Role[];
   subContractedProvider: Dataset;
   startDate: Date = new Date();

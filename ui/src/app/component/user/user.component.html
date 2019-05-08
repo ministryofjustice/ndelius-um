@@ -176,31 +176,29 @@
                            [(selected)]="user.datasets" (selectedChange)="datasetsChanged()"
                            [available]="datasets"
                            [readonly]="mode === 'View'"
-                           [labelMapper]="codeDescriptionToLabel"
-                           aria-describedby="datasets-help-text">
+                           [labelMapper]="codeDescriptionToLabel">
             </item-selector>
             <div *ngIf="datasetsList.dirty && datasetsList.invalid" class=text-danger>
               <small *ngIf="datasetsList.errors['invalid']">
-                *Dataset is invalid
+                *Datasets are invalid
               </small>
               <small *ngIf="datasetsList.errors['list']">
                 *At least one dataset is required
               </small>
             </div>
           </div>
-          <label [for]="'sector-toggle-btn'" class="col-sm-2 col-form-label">Sector</label>
+          <label [for]="'establishments-toggle-btn'" class="col-sm-2 col-form-label">Establishments</label>
           <div class="col-sm-4">
-            <item-selector id="sector" name="sector" #sectorSelector="ngModel"
-                           required="true"
-                           [(ngModel)]="user.privateSector"
-                           [(selected)]="user.privateSector"
-                           [available]="[true, false]"
+            <item-selector id="establishments" name="establishments" #establishmentsList="ngModel" multiple="true" maxHeight="300px"
+                           [(ngModel)]="user.establishments"
+                           [(selected)]="user.establishments"
+                           [available]="establishments"
                            [readonly]="mode === 'View'"
-                           [alignRight]="true"
-                           [labelMapper]="sectorToLabel"></item-selector>
-            <div *ngIf="sectorSelector.dirty && sectorSelector.invalid" class = text-danger>
-              <small *ngIf="sectorSelector.errors['list']">
-                *Sector is required
+                           [labelMapper]="codeDescriptionToLabel">
+            </item-selector>
+            <div *ngIf="establishmentsList.dirty && establishmentsList.invalid" class=text-danger>
+              <small *ngIf="establishmentsList.errors['invalid']">
+                *Establishments are invalid
               </small>
             </div>
           </div>
@@ -220,14 +218,26 @@
                 *At least one home area is required
               </small>
             </div>
+            <div class="text-muted small"
+                 *ngIf="user.homeArea == null && datasetsList.invalid">
+              Datasets must be entered before selecting a Home Area
+            </div>
           </div>
-          <label [for]="'datasets-toggle-btn'" class="col-sm-6 col-form-label text-muted"
-                 *ngIf="user.homeArea == null && datasetsList.invalid">Datasets must be entered before selecting a Home Area</label>
-          <label for="organisation" class="col-sm-2 col-form-label" style="white-space: nowrap"
-                 *ngIf="user.homeArea?.organisation?.description">Organisation</label>
-          <div id="organisation" class="col-sm-4 col-form-label text-truncate"
-               [title]="user.homeArea?.organisation?.description">
-            {{user.homeArea?.organisation?.description}}
+          <label [for]="'sector-toggle-btn'" class="col-sm-2 col-form-label">Sector</label>
+          <div class="col-sm-4">
+            <item-selector id="sector" name="sector" #sectorSelector="ngModel"
+                           required="true"
+                           [(ngModel)]="user.privateSector"
+                           [(selected)]="user.privateSector"
+                           [available]="[true, false]"
+                           [readonly]="mode === 'View'"
+                           [alignRight]="true"
+                           [labelMapper]="sectorToLabel"></item-selector>
+            <div *ngIf="sectorSelector.dirty && sectorSelector.invalid" class = text-danger>
+              <small *ngIf="sectorSelector.errors['list']">
+                *Sector is required
+              </small>
+            </div>
           </div>
         </div>
       </section>

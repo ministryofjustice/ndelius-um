@@ -1,14 +1,13 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
-
-import java.util.Set;
+import lombok.*;
+import org.hibernate.annotations.Cache;
+import uk.co.bconline.ndelius.model.entity.converter.YNConverter;
 
 import javax.persistence.*;
+import java.util.Set;
 
-import org.hibernate.annotations.Cache;
-
-import lombok.*;
+import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
 @Data
 @Entity
@@ -42,7 +41,12 @@ public class ProbationAreaEntity
 	private Long organisationId;
 
 	@Column(name = "SELECTABLE")
-	private String selectable;
+	@Convert(converter = YNConverter.class)
+	private boolean selectable;
+
+	@Column(name = "ESTABLISHMENT")
+	@Convert(converter = YNConverter.class)
+	private boolean establishment;
 
 	@OneToMany(mappedBy = "probationArea")
 	private Set<ProbationAreaUserEntity> userLinks;

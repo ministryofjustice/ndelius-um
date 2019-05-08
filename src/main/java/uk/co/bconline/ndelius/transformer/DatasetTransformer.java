@@ -37,9 +37,18 @@ public class DatasetTransformer
 				.orElse(null);
 	}
 
-	public List<Dataset> map(Collection<ProbationAreaEntity> entities)
+	public List<Dataset> mapToDatasets(Collection<ProbationAreaEntity> entities)
 	{
 		return entities.stream()
+				.filter(p -> !p.isEstablishment())
+				.map(this::map)
+				.collect(toList());
+	}
+
+	public List<Dataset> mapToEstablishments(Collection<ProbationAreaEntity> entities)
+	{
+		return entities.stream()
+				.filter(ProbationAreaEntity::isEstablishment)
 				.map(this::map)
 				.collect(toList());
 	}
@@ -49,7 +58,7 @@ public class DatasetTransformer
 		return Dataset.builder()
 				.code(entity.getCode())
 				.description(entity.getDescription())
-				.active("Y".equalsIgnoreCase(entity.getSelectable()))
+				.active(entity.isSelectable())
 				.build();
 	}
 

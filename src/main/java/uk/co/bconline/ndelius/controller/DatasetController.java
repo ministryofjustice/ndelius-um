@@ -40,6 +40,13 @@ public class DatasetController
 	}
 
 	@Interaction("UMBI006")
+	@GetMapping(value = "/establishments", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Dataset>> getEstablishments()
+	{
+		return ok(datasetService.getEstablishments());
+	}
+
+	@Interaction("UMBI006")
 	@GetMapping(value = "/dataset/{datasetCode}/nextStaffCode", produces = MediaType.TEXT_PLAIN_VALUE)
 	public ResponseEntity<String> getNextStaffCode(@PathVariable("datasetCode") String datasetCode)
 	{

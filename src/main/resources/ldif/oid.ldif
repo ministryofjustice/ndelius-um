@@ -107,6 +107,31 @@ objectclass: NDRoleAssociation
 cn: RDBT001
 aliasedObjectName: cn=RDBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
 
+dn: cn=UABT0050,cn=test.user,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UABT0050
+aliasedObjectName: cn=UABT0050,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+
+dn: cn=test.user.local,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: person
+objectclass: NDUser
+cn: test.user.local
+uid: test.user.local
+userHomeArea: N01
+mail: test.user.local@test.com
+description: Test user with only local RBAC access
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+
+dn: cn=UMBT001,cn=test.user.local,cn=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UMBT001
+aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,cn=Users,dc=bcl,dc=local
+
 dn: cn=TestUser1,cn=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: person

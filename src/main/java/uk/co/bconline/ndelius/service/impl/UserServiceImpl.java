@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ import static java.util.Comparator.comparing;
 import static java.util.concurrent.CompletableFuture.*;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.core.NestedExceptionUtils.getMostSpecificCause;
+import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 
 @Slf4j
 @Service
@@ -241,9 +243,14 @@ public class UserServiceImpl implements UserService
 
 	private Predicate<String> datasetsFilter()
 	{
-		val me = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-		val myDatasets = datasetService.getDatasetCodes(me);
-		myDatasets.add(oidService.getUserHomeArea(me));
+		val me = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		val isNational = me.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+			.anyMatch(NATIONAL_ACCESS::equals);
+		if (isNational) return (String username) -> true;
+
+		val myUsername = me.getUsername();
+		val myDatasets = datasetService.getDatasetCodes(myUsername);
+		myDatasets.add(oidService.getUserHomeArea(myUsername));
 
 		return (String username) -> {
 			val t = LocalDateTime.now();

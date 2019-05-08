@@ -2,10 +2,7 @@ package uk.co.bconline.ndelius.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import uk.co.bconline.ndelius.validator.AssignableRoles;
-import uk.co.bconline.ndelius.validator.ConditionallyRequired;
-import uk.co.bconline.ndelius.validator.DateRange;
-import uk.co.bconline.ndelius.validator.ValidDates;
+import uk.co.bconline.ndelius.validator.*;
 
 import javax.persistence.Transient;
 import javax.validation.Valid;
@@ -20,6 +17,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @ValidDates
 @AssignableRoles
+@AssignableDatasets
 @ConditionallyRequired(ifPopulated = "staffCode", required = "staffGrade")
 @ConditionallyRequired(ifPopulated = "staffGrade", required = "staffCode")
 @ConditionallyRequired(ifPopulated = "teams", required = "staffCode")
@@ -73,6 +71,9 @@ public class User
 	@Valid
 	@NotEmpty
 	private List<Dataset> datasets;
+
+	@Valid
+	private List<Dataset> establishments;
 
 	private List<Role> roles;
 

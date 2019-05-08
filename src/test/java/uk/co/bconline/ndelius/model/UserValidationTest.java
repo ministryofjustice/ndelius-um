@@ -9,7 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.model.auth.UserInteraction;
+import uk.co.bconline.ndelius.model.auth.UserPrincipal;
 import uk.co.bconline.ndelius.security.AuthenticationToken;
 import uk.co.bconline.ndelius.service.RoleService;
 import uk.co.bconline.ndelius.service.UserService;
@@ -18,10 +19,12 @@ import javax.validation.ConstraintViolation;
 import java.time.LocalDate;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static uk.co.bconline.ndelius.test.util.UserUtils.aValidUser;
+import static uk.co.bconline.ndelius.util.Constants.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -41,7 +44,9 @@ public class UserValidationTest
 	public void user()
 	{
 		SecurityContextHolder.getContext()
-				.setAuthentication(new AuthenticationToken(OIDUser.builder().username("test.user").build(), ""));
+				.setAuthentication(new AuthenticationToken(UserPrincipal.builder()
+						.username("test.user")
+						.build(), ""));
 	}
 
 	@Test
@@ -370,6 +375,97 @@ public class UserValidationTest
 		User user = aValidUser().toBuilder()
 				.email("")
 				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, empty());
+	}
+
+	@Test
+	public void invalidDatasets()
+	{
+		User user = aValidUser().toBuilder()
+				.datasets(singletonList(Dataset.builder()
+						.code("not-real")
+						.build()))
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("attempting to assign invalid datasets"))));
+	}
+
+	@Test
+	public void localUserCannotAssignNationalRole()
+	{
+		User user = aValidUser().toBuilder()
+				.roles(singletonList(Role.builder()
+						.name(NATIONAL_ROLE)	// Only a national user can apply the national access role
+						.build()))
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("attempting to assign invalid roles"))));
+	}
+
+	@Test
+	public void nationalUserCanAssignNationalRole()
+	{
+		SecurityContextHolder.getContext()
+				.setAuthentication(new AuthenticationToken(UserPrincipal.builder()
+						.username("test.user")
+						// Note: the National Role is marked as sector:public - so we need to also have the Public Role
+						.authorities(asList(new UserInteraction(NATIONAL_ACCESS), new UserInteraction(PUBLIC_ACCESS)))
+						.build(), ""));
+
+		User user = aValidUser().toBuilder()
+				.roles(singletonList(Role.builder()
+						.name(NATIONAL_ROLE)	// Only a national user can apply the national access role
+						.build()))
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, empty());
+	}
+
+	@Test
+	public void localUserCanAssignTheirOwnDatasets()
+	{
+		User user = aValidUser().toBuilder()
+				.datasets(singletonList(Dataset.builder()
+						.code("N01")	// test.user only has NXX datasets
+						.build()))
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, empty());
+	}
+
+	@Test
+	public void localUserCanOnlyAssignTheirOwnDatasets()
+	{
+		User user = aValidUser().toBuilder()
+				.datasets(singletonList(Dataset.builder()
+						.code("C01")	// test.user only has NXX datasets
+						.build()))
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("attempting to assign invalid datasets"))));
+	}
+
+	@Test
+	public void nationalUserCanAssignAnyDataset()
+	{
+		SecurityContextHolder.getContext()
+				.setAuthentication(new AuthenticationToken(UserPrincipal.builder()
+						.username("test.user")
+						.authorities(singletonList(new UserInteraction(NATIONAL_ACCESS)))
+						.build(), ""));
+
+		User user = aValidUser().toBuilder()
+				.datasets(singletonList(Dataset.builder()
+						.code("C01")	// test.user only has NXX datasets, but is now a National User
+						.build()))
+				.build();
+
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 		assertThat(constraintViolations, empty());
 	}
