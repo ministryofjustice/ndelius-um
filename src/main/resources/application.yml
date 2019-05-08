@@ -9,7 +9,6 @@ jwt:
 
 cache.evict.delay: 86400000 # = 24*60*60*1000 = 24 hours
 
-oid.default-password: '{SSHA}S22CgeZ/VQJHivxBKe0kONRCA1XelJr0'
 oid.base-environment:
   java.naming.ldap.derefAliases: never
   com.sun.jndi.ldap.connect.pool: true
