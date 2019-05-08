@@ -12,7 +12,7 @@
     <span class="oi oi-chevron-bottom float-right"></span>
   </button>
   <div class="dropdown-menu bg-light px-lg-3 px-sm-2 py-3"
-       style="overflow-y: auto; max-width: 200%"
+       style="overflow-y: auto; min-width: 100%; max-width: 200%"
        [class.dropdown-menu-right]="alignRight"
        [ngStyle]="{maxHeight: maxHeight}"
        (click)="!multiple || $event.stopPropagation()"
