@@ -41,8 +41,14 @@ public class UserTransformer
 	@Value("${ad.secondary.principal.suffix:}")
 	private String ad2PrincipalSuffix;
 
-	@Value("${oid.default-password:}")
-	private String oidDefaultPassword;
+	@Value("${ad.primary.readonly:false}")
+	private boolean ad1IsReadonly;
+
+	@Value("${ad.secondary.readonly:false}")
+	private boolean ad2IsReadonly;
+
+	@Value("${oid.default-password:#{null}}")
+	private String defaultPassword;
 
 	private final TeamService teamService;
 	private final ReferenceDataService referenceDataService;
@@ -130,8 +136,9 @@ public class UserTransformer
 						.map(transactions -> transactions
 								.map(roleTransformer::map)
 								.peek(role -> {
-									// Temporary disabling of add-user
-									if (role.getInteractions() != null) role.getInteractions().remove("UMBI003");
+									// Disable add-user if either AD is in readonly mode
+									if ((ad1IsReadonly || ad2IsReadonly) && role.getInteractions() != null)
+										role.getInteractions().remove("UMBI003");
 								})
 								.collect(toList()))
 						.orElse(null))
@@ -325,7 +332,9 @@ public class UserTransformer
 		return existingUser.toBuilder()
 				.username(user.getUsername())
 				.uid(user.getUsername())
-				.password(LdapUtils.fixPassword(ofNullable(existingUser.getPassword()).orElse(oidDefaultPassword)))
+				.password(ofNullable(existingUser.getPassword())
+						.map(LdapUtils::fixPassword)
+						.orElse(ofNullable(defaultPassword).orElse(LdapUtils.randomPassword())))
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
 				.email(user.getEmail())

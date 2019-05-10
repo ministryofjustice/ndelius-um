@@ -1,6 +1,11 @@
 package uk.co.bconline.ndelius.util;
 
 import lombok.experimental.UtilityClass;
+import lombok.val;
+import net.bytebuddy.utility.RandomString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 
 import java.time.LocalDate;
 
@@ -11,6 +16,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 @UtilityClass
 public class LdapUtils
 {
+	private static final Logger log = LoggerFactory.getLogger(LdapUtils.class);
 	private static final String OID_DATE_FORMAT = "yyyyMMdd'000000Z'";
 
 	public static final String OBJECTCLASS = "objectclass";
@@ -30,6 +36,12 @@ public class LdapUtils
 			return new String(bytes);
 		}
 		return password;
+	}
+
+	public static String randomPassword() {
+		val password = RandomString.make(32);
+		if (log.isDebugEnabled()) log.debug("Generating randomized password: {}", password);
+		return new LdapShaPasswordEncoder().encode(password);
 	}
 
 	public static LocalDate mapOIDStringToDate(String oidDateString)

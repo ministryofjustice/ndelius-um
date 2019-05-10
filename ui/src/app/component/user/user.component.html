@@ -36,7 +36,7 @@
                 *Username must be unique and contain only alphanumeric characters, hyphens, apostrophes or full-stops.
               </small>
             </div>
-            <div *ngIf="username.dirty && user.username != params['id']" class="text-muted">
+            <div *ngIf="mode == 'Update' && username.dirty && user.username != params['id']" class="text-muted">
               <small id="username-warning">Warning: The Delius account will be renamed, you must ensure that the new value matches the desired DOM1 account name.</small>
             </div>
           </div>
