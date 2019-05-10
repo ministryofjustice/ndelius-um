@@ -1,8 +1,12 @@
-<div class="dropdown">
+<div #dropdown class="dropdown">
   <button #toggleBtn [id]="id+'-toggle-btn'" type="button"
           class="form-control text-left d-flex justify-content-between align"
           data-toggle="dropdown"
           (click)="focusOnFilter()"
+          (keydown.arrowup)="collapseDropdown() && $event.stopPropagation()"
+          (keydown.arrowdown)="collapseDropdown() && $event.stopPropagation()"
+          (keydown.alt.arrowup)="collapseDropdown() && $event.stopPropagation()"
+          (keydown.alt.arrowdown)="collapseDropdown() && $event.stopPropagation()"
           [disabled]="readonly || available == null || available.length == 0"
           [class.readonly]="readonly"
           [class.ng-dirty]="dirty"
@@ -16,6 +20,9 @@
        [class.dropdown-menu-right]="alignRight"
        [ngStyle]="{maxHeight: maxHeight}"
        (click)="!multiple || $event.stopPropagation()"
+       (keyup.escape)="collapseDropdown()"
+       (keyup.alt.arrowup)="collapseDropdown()"
+       (keyup.alt.arrowdown)="collapseDropdown()"
        [attr.aria-labelledby]="id+'-toggle-btn'">
     <div class="form-group mb-1">
       <div class="input-group">
