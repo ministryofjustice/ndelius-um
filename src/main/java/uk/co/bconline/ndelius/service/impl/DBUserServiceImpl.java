@@ -137,7 +137,8 @@ public class DBUserServiceImpl implements DBUserService
 					.flatMap(staffRepository::findByCode).map(StaffEntity::getUser)
 					.ifPresent(users -> users.stream()
 							.filter(u -> !u.getUsername().equals(user.getUsername()))
-							.forEach(u -> repository.save(u.toBuilder().staff(null).build())));
+							.map(u -> u.toBuilder().staff(null).createdBy(null).updatedBy(null).build())
+							.forEach(repository::save));
 			log.debug("Finished saving user to database");
 			return newUser;
 		}

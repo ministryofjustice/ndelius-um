@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import uk.co.bconline.ndelius.validator.*;
 
@@ -8,6 +9,7 @@ import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -78,6 +80,18 @@ public class User
 	private List<Role> roles;
 
 	private Dataset subContractedProvider;
+
+	@ApiModelProperty(readOnly = true)
+	private String createdBy;
+
+	@ApiModelProperty(readOnly = true)
+	private LocalDateTime createdAt;
+
+	@ApiModelProperty(readOnly = true)
+	private String updatedBy;
+
+	@ApiModelProperty(readOnly = true)
+	private LocalDateTime updatedAt;
 
 	@JsonIgnore
 	private List<String> sources;

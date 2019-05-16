@@ -6,6 +6,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -66,6 +67,26 @@ public class UserEntity
 	@ManyToOne
 	@JoinColumn(name = "ORGANISATION_ID")
 	private OrganisationEntity organisation;
+
+	@Column(name = "CREATED_BY_USER_ID")
+	private Long createdById;
+
+	@ManyToOne
+	@JoinColumn(name = "CREATED_BY_USER_ID", insertable = false, updatable = false)
+	private UserEntity createdBy;
+
+	@Column(name = "CREATED_DATETIME")
+	private LocalDateTime createdAt;
+
+	@Column(name = "LAST_UPDATED_USER_ID")
+	private Long updatedById;
+
+	@ManyToOne
+	@JoinColumn(name = "LAST_UPDATED_USER_ID", insertable = false, updatable = false)
+	private UserEntity updatedBy;
+
+	@Column(name = "LAST_UPDATED_DATETIME")
+	private LocalDateTime updatedAt;
 
 	@Builder.Default
 	@NotFound(action = IGNORE)

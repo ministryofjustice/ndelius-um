@@ -1,8 +1,8 @@
 package uk.co.bconline.ndelius.util;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class NameUtilsTest
 {
@@ -28,6 +28,20 @@ public class NameUtilsTest
 		assertEquals(" a", result);
 		assertEquals("", NameUtils.firstForename(result));
 		assertEquals("a", NameUtils.subsequentForenames(result));
+	}
+
+	@Test
+	public void combineLotsOfNames()
+	{
+		String result = NameUtils.combineNames("a b", "c d", "e f", "g h", "i j");
+		assertEquals("a b c d e f g h i j", result);
+	}
+
+	@Test
+	public void combineLotsOfNamesWithNulls()
+	{
+		String result = NameUtils.combineNames(null, "c d", "e f", null, "i j");
+		assertEquals(" c d e f i j", result);
 	}
 
 	@Test

@@ -25,6 +25,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -37,6 +39,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
+import static uk.co.bconline.ndelius.test.util.CustomMatchers.isWithin;
 import static uk.co.bconline.ndelius.test.util.UserUtils.aValidUser;
 import static uk.co.bconline.ndelius.test.util.UserUtils.nextTestUsername;
 
@@ -277,7 +280,11 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.homeArea.code", is("N01")))
 				.andExpect(jsonPath("$.roles", hasSize(1)))
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT001")))
-				.andExpect(jsonPath("$.roles[0].interactions", hasItem("UMBI001")));
+				.andExpect(jsonPath("$.roles[0].interactions", hasItem("UMBI001")))
+				.andExpect(jsonPath("$.createdBy", is("Test User")))
+				.andExpect(jsonPath("$.createdAt", isWithin(5, SECONDS).of(now())))
+				.andExpect(jsonPath("$.updatedBy", is("Test User")))
+				.andExpect(jsonPath("$.updatedAt", isWithin(5, SECONDS).of(now())));
 	}
 
 	@Test
@@ -321,6 +328,8 @@ public class UserControllerTest
 				.andExpect(status().isCreated())
 				.andExpect(redirectedUrl("/user/" + username));
 
+		Thread.sleep(5000); // small wait to test the difference in created/updated date
+
 		mvc.perform(post("/api/user/" + username)
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -357,7 +366,9 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.teams", hasSize(1)))
 				.andExpect(jsonPath("$.teams[*].code", hasItem("N02TST")))
 				.andExpect(jsonPath("$.roles", hasSize(1)))
-				.andExpect(jsonPath("$.roles[0].name", is("UMBT002")));
+				.andExpect(jsonPath("$.roles[0].name", is("UMBT002")))
+				.andExpect(jsonPath("$.createdAt", not(isWithin(5, SECONDS).of(now()))))
+				.andExpect(jsonPath("$.updatedAt", isWithin(5, SECONDS).of(now())));
 	}
 
 	@Test
@@ -650,5 +661,17 @@ public class UserControllerTest
 					List<String> names = JsonPath.parse(json).read("$.roles[*].name");
 					assertThat(descriptions, hasSize(names.size()));
 				});
+	}
+
+	@Test
+	public void handlingNullCreatedUpdatedDetails() throws Exception
+	{
+		mvc.perform(get("/api/user/test.user")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.createdBy", is(nullValue())))
+				.andExpect(jsonPath("$.createdAt", is(nullValue())))
+				.andExpect(jsonPath("$.updatedBy", is(nullValue())))
+				.andExpect(jsonPath("$.updatedAt", is(nullValue())));
 	}
 }
