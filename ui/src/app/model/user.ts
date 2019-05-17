@@ -19,5 +19,9 @@ export class User {
   subContractedProvider: Dataset;
   startDate: Date = new Date();
   endDate: Date;
+  createdBy: string;
+  createdAt: Date;
+  updatedBy: string;
+  updatedAt: Date;
   sources: string[];
 }

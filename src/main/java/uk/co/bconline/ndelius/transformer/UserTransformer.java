@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.*;
 import static java.util.Optional.ofNullable;
@@ -113,15 +114,23 @@ public class UserTransformer
 				.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
 				.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElse(v.getEndDate()))
 				.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(this::map).orElse(null))
+				.createdAt(v.getCreatedAt())
+				.createdBy(ofNullable(v.getCreatedBy())
+						.map(c -> combineNames(c.getForename(), c.getForename2(), c.getSurname()))
+						.orElse(null))
+				.updatedAt(v.getUpdatedAt())
+				.updatedBy(ofNullable(v.getUpdatedBy())
+						.map(u -> combineNames(u.getForename(), u.getForename2(), u.getSurname()))
+						.orElse(null))
 				.sources(singletonList("DB"))
 				.build());
 	}
 
 	public Optional<User> map(OIDUser user)
 	{
-		LocalDateTime t = LocalDateTime.now();
+		LocalDateTime t = now();
 		val allRoles = roleService.getAllRoles().stream().map(OIDRole::getName).collect(toSet());
-		log.trace("--{}ms	Get all roles for mapping", MILLIS.between(t, LocalDateTime.now()));
+		log.trace("--{}ms	Get all roles for mapping", MILLIS.between(t, now()));
 		return ofNullable(user).map(v -> User.builder()
 				.username(v.getUsername())
 				.forenames(v.getForenames())
@@ -157,7 +166,7 @@ public class UserTransformer
 
 	public Optional<User> combine(UserEntity dbUser, OIDUser oidUser, ADUser ad1User, ADUser ad2User)
 	{
-		val t = LocalDateTime.now();
+		val t = now();
 		val r = Stream.of(
 				map(oidUser),
 				map(dbUser),
@@ -166,13 +175,13 @@ public class UserTransformer
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.reduce(this::reduceUser);
-		log.trace("--{}ms	Combine results", MILLIS.between(t, LocalDateTime.now()));
+		log.trace("--{}ms	Combine results", MILLIS.between(t, now()));
 		return r;
 	}
 
 	public Optional<SearchResult> mapToSearchResult(UserEntity dbUser, OIDUser oidUser, ADUser ad1User, ADUser ad2User)
 	{
-		val t = LocalDateTime.now();
+		val t = now();
 		val r = Stream.of(
 				ofNullable(oidUser).map(v -> User.builder()
 						.username(v.getUsername())
@@ -207,7 +216,7 @@ public class UserTransformer
 				.map(Optional::get)
 				.reduce(this::reduceUser)
 				.map(this::map);
-		log.trace("--{}ms	Map result", MILLIS.between(t, LocalDateTime.now()));
+		log.trace("--{}ms	Map result", MILLIS.between(t, now()));
 		return r;
 	}
 
@@ -228,6 +237,10 @@ public class UserTransformer
 				.subContractedProvider(ofNullable(a.getSubContractedProvider()).orElse(b.getSubContractedProvider()))
 				.roles(ofNullable(a.getRoles()).orElse(b.getRoles()))
 				.email(ofNullable(a.getEmail()).orElse(b.getEmail()))
+				.createdAt(ofNullable(a.getCreatedAt()).orElse(b.getCreatedAt()))
+				.createdBy(ofNullable(a.getCreatedBy()).orElse(b.getCreatedBy()))
+				.updatedAt(ofNullable(a.getUpdatedAt()).orElse(b.getUpdatedAt()))
+				.updatedBy(ofNullable(a.getUpdatedBy()).orElse(b.getUpdatedBy()))
 				.sources(Stream.concat(a.getSources().stream(), b.getSources().stream()).collect(toList()))
 				.build();
 	}
@@ -258,6 +271,11 @@ public class UserTransformer
 						.flatMap(datasetService::getOrganisationIdByDatasetCode)
 						.map(OrganisationEntity::new).orElse(null))
 				.staff(isEmpty(staff.getCode())? null: staff)
+				.createdBy(null).updatedBy(null)
+				.createdById(ofNullable(existingUser.getCreatedById()).orElse(myUserId))
+				.createdAt(ofNullable(existingUser.getCreatedAt()).orElse(now()))
+				.updatedById(myUserId)
+				.updatedAt(now())
 				.build();
 		entity.getProbationAreaLinks().clear();
 		entity.getProbationAreaLinks().addAll(Stream
@@ -269,8 +287,8 @@ public class UserTransformer
 				.map(ProbationAreaEntity::new)
 				.map(dataset -> ProbationAreaUserEntity.builder()
 						.id(new ProbationAreaUserId(dataset, entity))
-						.createdById(myUserId).createdAt(LocalDateTime.now())
-						.updatedById(myUserId).updatedAt(LocalDateTime.now())
+						.createdById(myUserId).createdAt(now())
+						.updatedById(myUserId).updatedAt(now())
 						.build())
 				.collect(Collectors.toSet()));
 		staff.setUser(singleton(entity));
@@ -308,9 +326,9 @@ public class UserTransformer
 						.flatMap(datasetService::getSubContractedProviderId)
 						.map(SubContractedProviderEntity::new)
 						.orElse(null))
-				.createdAt(ofNullable(existingStaff.getCreatedAt()).orElse(LocalDateTime.now()))
+				.createdAt(ofNullable(existingStaff.getCreatedAt()).orElse(now()))
 				.createdById(ofNullable(existingStaff.getCreatedById()).orElse(myUserId))
-				.updatedAt(LocalDateTime.now())
+				.updatedAt(now())
 				.updatedById(myUserId)
 				.build();
 		entity.getTeamLinks().clear();
@@ -319,8 +337,8 @@ public class UserTransformer
 				.filter(Objects::nonNull)
 				.map(id -> StaffTeamEntity.builder()
 						.id(new StaffTeamId(entity, new TeamEntity(id)))
-						.createdById(myUserId).createdAt(LocalDateTime.now())
-						.updatedById(myUserId).updatedAt(LocalDateTime.now())
+						.createdById(myUserId).createdAt(now())
+						.updatedById(myUserId).updatedAt(now())
 						.build())
 				.collect(toSet()))
 				.orElse(emptySet()));

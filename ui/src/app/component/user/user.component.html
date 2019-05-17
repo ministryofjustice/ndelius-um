@@ -36,7 +36,7 @@
                 *Username must be unique and contain only alphanumeric characters, hyphens, apostrophes or full-stops.
               </small>
             </div>
-            <div *ngIf="mode == 'Update' && username.dirty && user.username != params['id']" class="text-muted">
+            <div *ngIf="mode == 'Update' && username.dirty && user.username.toLowerCase() != params['id'].toLowerCase()" class="text-muted">
               <small id="username-warning">Warning: The Delius account will be renamed, you must ensure that the new value matches the desired DOM1 account name.</small>
             </div>
           </div>
@@ -322,7 +322,17 @@
         </div>
       </section>
       <hr/>
-      <div class="btn-toolbar pb-4">
+      <div class="text-muted small pb-4 float-sm-left">
+        <div id="updated-details" *ngIf="user.updatedBy != null && user.updatedAt != null">
+          <small class="oi oi-pencil"></small>
+          Updated by {{user.updatedBy}} on {{user.updatedAt | date: 'dd/MM/yyyy'}} at {{user.updatedAt | date: 'HH:mm'}}
+        </div>
+        <div id="created-details" *ngIf="user.createdBy != null && user.createdAt != null">
+          <small class="oi oi-plus"></small>
+          Created by {{user.createdBy}} on {{user.createdAt | date: 'dd/MM/yyyy'}} at {{user.createdAt | date: 'HH:mm'}}
+        </div>
+      </div>
+      <div class="btn-toolbar pb-4 float-sm-right">
         <button id="save-btn" type="submit" class="btn btn-primary mr-2"
                 *ngIf="mode !== 'View'"
                 [disabled]="saving">
@@ -330,10 +340,10 @@
           <span *ngIf="saving">Saving&hellip;</span>
           <span *ngIf="!saving">Save</span>
         </button>
-        <button id="copy-btn" type="button" class="btn btn-secondary mr-2"
+        <button id="copy-btn" type="button" class="btn btn-outline-secondary mr-2"
                 routerLink="/user" [queryParams]="{copy: user.username}"
                 *ngIf="mode !== 'Add' && auth.canAddUser()">Create another&hellip;</button>
-        <button id="back-btn" type="button" class="btn btn-secondary mr-2"
+        <button id="back-btn" type="button" class="btn btn-outline-secondary mr-2"
                 (click)="backButtonAlert()">Back</button>
       </div>
     </form>

@@ -1,22 +1,27 @@
 package uk.co.bconline.ndelius.util;
 
 import lombok.experimental.UtilityClass;
+import lombok.val;
 import org.springframework.util.StringUtils;
 
 import java.util.stream.Stream;
 
+import static java.util.Arrays.copyOfRange;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 import static org.springframework.util.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.trimTrailingWhitespace;
 
 @UtilityClass
 public class NameUtils
 {
-	public static String combineNames(String name1, String name2)
+	public static String combineNames(String... names)
 	{
-		if (name1 == null) name1 = "";
-		if (isEmpty(name2)) return name1;
-		return name1 + " " + name2;
+		if (names == null || names.length == 0) return "";
+		if (names[0] == null) names[0] = "";
+		val firstName = names[0];
+		val otherNames = join(" ", copyOfRange(names, 1, names.length));
+		return trimTrailingWhitespace(firstName + " " + otherNames);
 	}
 
 	public static String firstForename(String forenames)
