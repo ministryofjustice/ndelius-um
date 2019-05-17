@@ -23,7 +23,7 @@ import static org.hibernate.annotations.NotFoundAction.IGNORE;
 @AllArgsConstructor
 @Table(name = "USER_")
 @Builder(toBuilder = true)
-@EqualsAndHashCode(exclude = "probationAreaLinks")
+@EqualsAndHashCode(exclude = {"probationAreaLinks", "createdBy", "updatedBy"})
 public class UserEntity
 {
 	public UserEntity(Long id)
