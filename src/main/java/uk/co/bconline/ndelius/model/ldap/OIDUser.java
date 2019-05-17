@@ -43,17 +43,25 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails
 	@Attribute(name="userSector")
 	private String sector;
 
-	@Attribute(name="orclActiveStartDate") // format=yyyyMMddHHmmss
-	private String startDate;
-
-	@Attribute(name="orclActiveEndDate") // format=yyyyMMddHHmmss
-	private String endDate;
-
 	@Attribute(name="userPassword")
 	private String password;
 
 	@Attribute(name="mail")
 	private String email;
+
+	// Oracle-specific start/end date (format=yyyyMMddHHmmss):
+	@Attribute(name="orclActiveStartDate")
+	private String oracleStartDate;
+
+	@Attribute(name="orclActiveEndDate")
+	private String oracleEndDate;
+
+	// Non Oracle-specific start/end date (format=yyyyMMddHHmmss):
+	@Attribute(name="startDate")
+	private String startDate;
+
+	@Attribute(name="endDate")
+	private String endDate;
 
 	@Transient
 	private Set<OIDRole> roles;

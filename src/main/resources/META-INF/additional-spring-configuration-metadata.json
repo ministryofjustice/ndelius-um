@@ -17,7 +17,7 @@
     },
     {
       "name": "spnego.debug",
-      "type": "java.lang.String",
+      "type": "java.lang.Boolean",
       "description": "Enable debug output during SPGNEGO authentication. It may also be useful to set 'logging.level.org.springframework.security.kerberos: DEBUG'."
     },
     {
@@ -69,6 +69,12 @@
       "name": "cache.evict.delay",
       "type": "java.lang.String",
       "description": "How often the caches should be cleared, in milliseconds. Defaults to 24 hours."
+    },
+    {
+      "name": "oid.useOracleAttributes",
+      "type": "java.lang.Boolean",
+      "default": true,
+      "description": "Whether to use the 'orclActiveStartDate' and 'orclActiveEndDate' attributes instead of the 'startDate' and 'endDate' attributes in the User LDAP entry."
     }
   ]
 }
