@@ -674,4 +674,13 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.updatedBy", is(nullValue())))
 				.andExpect(jsonPath("$.updatedAt", is(nullValue())));
 	}
+
+	@Test
+	public void oracleStartAndEndDatesAreReturnedByDefault() throws Exception
+	{
+		mvc.perform(get("/api/user/test.user")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.startDate", is("2000-01-01")));
+	}
 }

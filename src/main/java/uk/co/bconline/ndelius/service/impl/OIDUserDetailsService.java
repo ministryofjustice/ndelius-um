@@ -46,6 +46,9 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Value("${oid.base}")
 	private String oidBase;
 
+	@Value("${oid.useOracleAttributes:#{true}}")
+	private boolean useOracleAttributes;
+
 	private final OIDUserRepository userRepository;
 	private final OIDUserPreferencesRepository preferencesRepository;
 	private final UserRoleService userRoleService;
@@ -114,7 +117,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				.spliterator(), true)
 				.map(u -> SearchResult.builder()
 						.username(u.getUsername())
-						.endDate(mapOIDStringToDate(u.getEndDate()))
+						.endDate(mapOIDStringToDate(useOracleAttributes? u.getOracleEndDate(): u.getEndDate()))
 						.score(deriveScore(query, u))
 						.build())
 				.collect(toList());
@@ -126,9 +129,16 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	public Optional<OIDUser> getBasicUser(String username)
 	{
 		val t = LocalDateTime.now();
-		val r = userRepository.findByUsername(username);
+		Optional<OIDUser> user = userRepository.findByUsername(username);
+		if (useOracleAttributes) {
+			user = user.map(u -> u.toBuilder()
+					.startDate(u.getOracleStartDate())
+					.endDate(u.getOracleEndDate())
+					.oracleStartDate(null)
+					.oracleEndDate(null).build());
+		}
 		log.trace("--{}ms	OID lookup", MILLIS.between(t, LocalDateTime.now()));
-		return r;
+		return user;
 	}
 
 	@Override
@@ -138,13 +148,6 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				.map(u -> u.toBuilder()
 						.roles(userRoleService.getUserRoles(username))
 						.build());
-	}
-
-	public Optional<String> getUsernameByEmail(String email)
-	{
-		return userRepository
-				.findByEmail(email)
-				.map(OIDUser::getUsername);
 	}
 
 	@Override
@@ -158,6 +161,13 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	{
 		// Save user
 		log.debug("Saving user: {}", user.getUsername());
+		if (useOracleAttributes) {
+			user = user.toBuilder()
+					.oracleStartDate(user.getStartDate())
+					.oracleEndDate(user.getEndDate())
+					.startDate(null)
+					.endDate(null).build();
+		}
 		userRepository.save(user);
 
 		// Preferences

@@ -49,6 +49,8 @@ uid: test.user
 givenName: Test
 sn: User
 mail: test.user@test.com
+startDate: 20000102000000
+orclActiveStartDate: 20000101000000
 userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test user for basic authentication (password=secret)
