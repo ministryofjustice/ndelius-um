@@ -14,10 +14,7 @@ import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.util.LdapUtils;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -112,7 +109,7 @@ public class UserTransformer
 						.map(datasetTransformer::map)
 						.orElse(null))
 				.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
-				.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElse(v.getEndDate()))
+				.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElseGet(v::getEndDate))
 				.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(this::map).orElse(null))
 				.createdAt(v.getCreatedAt())
 				.createdBy(ofNullable(v.getCreatedBy())
@@ -223,24 +220,24 @@ public class UserTransformer
 	private User reduceUser(User a, User b)
 	{
 		return a.toBuilder()
-				.username(ofNullable(a.getUsername()).orElse(b.getUsername()))
-				.forenames(ofNullable(a.getForenames()).orElse(b.getForenames()))
-				.surname(ofNullable(a.getSurname()).orElse(b.getSurname()))
-				.staffCode(ofNullable(a.getStaffCode()).orElse(b.getStaffCode()))
-				.staffGrade(ofNullable(a.getStaffGrade()).orElse(b.getStaffGrade()))
-				.homeArea(ofNullable(a.getHomeArea()).orElse(b.getHomeArea()))
-				.startDate(ofNullable(a.getStartDate()).orElse(b.getStartDate()))
-				.endDate(ofNullable(a.getEndDate()).orElse(b.getEndDate()))
-				.teams(ofNullable(a.getTeams()).orElse(b.getTeams()))
-				.datasets(ofNullable(a.getDatasets()).orElse(b.getDatasets()))
-				.establishments(ofNullable(a.getEstablishments()).orElse(b.getEstablishments()))
-				.subContractedProvider(ofNullable(a.getSubContractedProvider()).orElse(b.getSubContractedProvider()))
-				.roles(ofNullable(a.getRoles()).orElse(b.getRoles()))
-				.email(ofNullable(a.getEmail()).orElse(b.getEmail()))
-				.createdAt(ofNullable(a.getCreatedAt()).orElse(b.getCreatedAt()))
-				.createdBy(ofNullable(a.getCreatedBy()).orElse(b.getCreatedBy()))
-				.updatedAt(ofNullable(a.getUpdatedAt()).orElse(b.getUpdatedAt()))
-				.updatedBy(ofNullable(a.getUpdatedBy()).orElse(b.getUpdatedBy()))
+				.username(ofNullable(a.getUsername()).orElseGet(b::getUsername))
+				.forenames(ofNullable(a.getForenames()).orElseGet(b::getForenames))
+				.surname(ofNullable(a.getSurname()).orElseGet(b::getSurname))
+				.staffCode(ofNullable(a.getStaffCode()).orElseGet(b::getStaffCode))
+				.staffGrade(ofNullable(a.getStaffGrade()).orElseGet(b::getStaffGrade))
+				.homeArea(ofNullable(a.getHomeArea()).orElseGet(b::getHomeArea))
+				.startDate(ofNullable(a.getStartDate()).orElseGet(b::getStartDate))
+				.endDate(ofNullable(a.getEndDate()).orElseGet(b::getEndDate))
+				.teams(ofNullable(a.getTeams()).orElseGet(b::getTeams))
+				.datasets(ofNullable(a.getDatasets()).orElseGet(b::getDatasets))
+				.establishments(ofNullable(a.getEstablishments()).orElseGet(b::getEstablishments))
+				.subContractedProvider(ofNullable(a.getSubContractedProvider()).orElseGet(b::getSubContractedProvider))
+				.roles(ofNullable(a.getRoles()).orElseGet(b::getRoles))
+				.email(ofNullable(a.getEmail()).orElseGet(b::getEmail))
+				.createdAt(ofNullable(a.getCreatedAt()).orElseGet(b::getCreatedAt))
+				.createdBy(ofNullable(a.getCreatedBy()).orElseGet(b::getCreatedBy))
+				.updatedAt(ofNullable(a.getUpdatedAt()).orElseGet(b::getUpdatedAt))
+				.updatedBy(ofNullable(a.getUpdatedBy()).orElseGet(b::getUpdatedBy))
 				.sources(Stream.concat(a.getSources().stream(), b.getSources().stream()).collect(toList()))
 				.build();
 	}
@@ -280,7 +277,7 @@ public class UserTransformer
 		entity.getProbationAreaLinks().clear();
 		entity.getProbationAreaLinks().addAll(Stream
 				.concat(user.getDatasets().stream(),
-						ofNullable(user.getEstablishments()).map(List::stream).orElse(Stream.empty()))
+						ofNullable(user.getEstablishments()).map(List::stream).orElseGet(Stream::empty))
 				.parallel()
 				.map(dataset -> datasetService.getDatasetId(dataset.getCode()).orElse(null))
 				.filter(Objects::nonNull)
@@ -352,7 +349,7 @@ public class UserTransformer
 				.uid(user.getUsername())
 				.password(ofNullable(existingUser.getPassword())
 						.map(LdapUtils::fixPassword)
-						.orElse(ofNullable(defaultPassword).orElse(LdapUtils.randomPassword())))
+						.orElse(ofNullable(defaultPassword).orElseGet(LdapUtils::randomPassword)))
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
 				.email(user.getEmail())
@@ -363,7 +360,7 @@ public class UserTransformer
 				.roles(ofNullable(user.getRoles()).map(list -> list.stream()
 						.map(roleTransformer::map)
 						.collect(toSet()))
-						.orElse(emptySet()))
+						.orElseGet(Collections::emptySet))
 				.build();
 	}
 
