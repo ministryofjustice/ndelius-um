@@ -96,10 +96,10 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public List<SearchResult> search(String query)
 	{
-		AndFilter filter = Stream.of(query.split(" "))
-				.map(token -> query().where("givenName").whitespaceWildcardsLike(token)
-							.or("sn").whitespaceWildcardsLike(token)
-							.or("cn").whitespaceWildcardsLike(token))
+		AndFilter filter = Stream.of(query.trim().split("\\s+"))
+				.map(token -> query().where("givenName").like(token + '*')
+						.or("sn").like(token + '*')
+						.or("cn").like(token + '*'))
 				.collect(AndFilter::new, (f, q) -> f.and(q.filter()), AndFilter::and);
 
 		if (log.isDebugEnabled())
