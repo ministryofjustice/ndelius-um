@@ -15,6 +15,10 @@ import uk.co.bconline.ndelius.advice.annotation.Interaction;
 import uk.co.bconline.ndelius.model.ForbiddenResponse;
 import uk.co.bconline.ndelius.service.UserRoleService;
 
+import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.now;
+import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -37,6 +41,7 @@ public class AuthorisationHandler
 	@Around("@annotation(interaction)")
 	public Object authorise(ProceedingJoinPoint joinPoint, Interaction interaction) throws Throwable
 	{
+		val t = now();
 		if (interaction.secured())
 		{
 			val user = (UserDetails) getContext().getAuthentication().getPrincipal();
@@ -51,6 +56,7 @@ public class AuthorisationHandler
 				return new ResponseEntity<>(new ForbiddenResponse(username, interaction.value()), FORBIDDEN);
 			}
 		}
+		log.trace("--{}ms	Authorisation", MILLIS.between(t, LocalDateTime.now()));
 		return joinPoint.proceed();
 	}
 }

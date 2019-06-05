@@ -19,7 +19,10 @@ import uk.co.bconline.ndelius.util.JwtHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 
+import static java.time.LocalDateTime.now;
+import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -60,6 +63,8 @@ public class LoginHandler implements AuthenticationSuccessHandler, Authenticatio
 
 	public void generateToken(String username, HttpServletResponse response)
 	{
+		val t = now();
+
 		val interactions = userRoleService.getUserInteractions(username).stream()
 				.map(UserInteraction::new)
 				.collect(toList());
@@ -75,5 +80,7 @@ public class LoginHandler implements AuthenticationSuccessHandler, Authenticatio
 		// Set authentication in context
 		val authentication = new AuthenticationToken(user, token);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		log.trace("--{}ms	auth: Generate token", MILLIS.between(t, LocalDateTime.now()));
 	}
 }

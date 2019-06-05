@@ -1,16 +1,7 @@
 package uk.co.bconline.ndelius.security.filter;
 
-import static uk.co.bconline.ndelius.util.EncryptionUtils.decrypt;
-
-import java.io.IOException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -23,10 +14,20 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import uk.co.bconline.ndelius.security.handler.LoginHandler;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+import static java.time.LocalDateTime.now;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static uk.co.bconline.ndelius.util.EncryptionUtils.decrypt;
 
 @Slf4j
 public class DelegatedAuthFilter extends OncePerRequestFilter
@@ -53,6 +54,7 @@ public class DelegatedAuthFilter extends OncePerRequestFilter
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 			FilterChain filterChain) throws IOException, ServletException
 	{
+		val t = now();
 		val timestamp = decrypt(request.getParameter("t"), secret);
 		val username = decrypt(request.getParameter("u"), secret);
 		if (timestamp == null || username == null)
@@ -69,6 +71,8 @@ public class DelegatedAuthFilter extends OncePerRequestFilter
 			log.debug(String.format("%s - username=%s, timestamp=%s", e.getMessage(), username, timestamp), e);
 			throw e;
 		}
+
+		log.trace("{}ms		auth: Decrypt request params", MILLIS.between(t, LocalDateTime.now()));
 
 		val auth = authenticationManager.authenticate(new PreAuthenticatedAuthenticationToken(username, timestamp));
 		loginHandler.onAuthenticationSuccess(request, response, auth);

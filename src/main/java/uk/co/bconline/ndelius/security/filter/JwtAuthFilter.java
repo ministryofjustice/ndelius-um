@@ -21,9 +21,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.MILLIS;
 
 @Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter
@@ -59,9 +61,11 @@ public class JwtAuthFilter extends OncePerRequestFilter
 				val claims = jwtHelper.parseToken(token);
 				val username = claims.getSubject();
 
+				val t = LocalDateTime.now();
 				if (!oidUserDetailsService.usernameExists(username)) {
 					throw new JwtException("Subject no longer exists");
 				}
+				log.trace("--{}ms	auth: Check username exists", MILLIS.between(t, LocalDateTime.now()));
 
 				val user = UserPrincipal.builder()
 						.username(username)
