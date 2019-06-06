@@ -170,11 +170,22 @@ public class UserControllerTest
 	@Test
 	public void searchResultsAreFilteredOnTheCurrentUsersDatasets() throws Exception
 	{
+		// Given I login as N01 user
+		String token = token(mvc, "test.user.local");
+
+		// When I search for an N04 user, Then I should get no results
 		mvc.perform(get("/api/users")
-				.header("Authorization", "Bearer " + token(mvc))
+				.header("Authorization", "Bearer " + token)
 				.param("q", "Jim.Bloggs"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", not(hasItem("Jim.Bloggs"))));
+
+		// When I search for an N01 user, Then I should get results
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token)
+				.param("q", "Tiffiny.Thrasher"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", hasItem("Tiffiny.Thrasher")));
 	}
 
 	@Test

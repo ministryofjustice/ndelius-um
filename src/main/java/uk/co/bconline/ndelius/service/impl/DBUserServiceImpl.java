@@ -15,14 +15,13 @@ import uk.co.bconline.ndelius.repository.db.*;
 import uk.co.bconline.ndelius.service.DBUserService;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
+import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
 
 @Slf4j
 @Service
@@ -89,16 +88,12 @@ public class DBUserServiceImpl implements DBUserService
 	}
 
 	@Override
-	public List<SearchResult> search(String searchTerm, boolean includeInactiveUsers)
+	public List<SearchResult> search(String searchTerm, boolean includeInactiveUsers, Set<String> datasets)
 	{
 		val t = LocalDateTime.now();
 		val results = Arrays.stream(searchTerm.split("\\s+"))
 				.parallel()
-				.flatMap(token -> {
-					log.debug("Searching DB: {}", token);
-					if (datasourceUrl.startsWith("jdbc:oracle")) return searchResultRepository.search(token, includeInactiveUsers).stream();
-					else return searchResultRepository.simpleSearch(token, includeInactiveUsers).stream();
-				})
+				.flatMap(token -> searchForToken(token, includeInactiveUsers, datasets))
 				.collect(groupingBy(SearchResultEntity::getUsername))
 				.values()
 				.stream()
@@ -115,6 +110,21 @@ public class DBUserServiceImpl implements DBUserService
 				.collect(toList());
 		log.debug("Found {} DB results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));
 		return results;
+	}
+
+	private Stream<SearchResultEntity> searchForToken(String token, boolean includeInactiveUsers, Set<String> datasets) {
+
+		log.debug("Searching DB: {}", token);
+		val isOracle = datasourceUrl.startsWith("jdbc:oracle");
+		if (isNational()) {
+			return isOracle?
+					searchResultRepository.search(token, includeInactiveUsers).stream():
+					searchResultRepository.simpleSearch(token, includeInactiveUsers).stream();
+		} else {
+			return isOracle?
+					searchResultRepository.search(token, includeInactiveUsers, datasets).stream():
+					searchResultRepository.simpleSearch(token, includeInactiveUsers, datasets).stream();
+		}
 	}
 
 	@Override

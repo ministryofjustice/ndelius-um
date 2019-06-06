@@ -30,13 +30,13 @@ givenName: Super
 sn: User
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
-dn: cn=test.user.alias,ou=Users,dc=ad1,dc=local
+dn: cn=test.user,ou=Users,dc=ad1,dc=local
 objectclass: top
 objectclass: user
 objectclass: person
-cn: test.user.alias
-uid: test.user.alias
-samAccountName: test.user.alias
+cn: test.user
+uid: test.user
+samAccountName: test.user
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 
 dn: cn=nps-user,ou=NPSUsers,ou=Users,dc=ad1,dc=local

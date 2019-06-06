@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
+import org.springframework.ldap.filter.OrFilter;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,13 +27,16 @@ import uk.co.bconline.ndelius.service.UserRoleService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
 import static uk.co.bconline.ndelius.util.LdapUtils.mapOIDStringToDate;
 import static uk.co.bconline.ndelius.util.NameUtils.join;
@@ -84,23 +88,37 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	 * Search for a list of users with a single text query.
 	 *
 	 * The search query will be tokenized on space, then each token will be AND matched with wildcards.
-	 *
 	 * eg.
+	 * "john"		-> (|(givenName=john*)(sn=john*)(cn=john*))
+	 * "john smith"	-> (&(|(givenName=john*)(sn=john*)(cn=john*))(|(givenName=smith*)(sn=smith*)(cn=smith*)))
 	 *
-	 * "john"		-> (|(givenName=*john*)(sn=*john*)(cn=*john*))
-	 * "john smith"	-> (&(|(givenName=*john*)(sn=*john*)(cn=*john*))(|(givenName=*smith*)(sn=*smith*)(cn=*smith*)))
+	 * The query will then be suffixed with a filter to ensure the userHomeArea attribute is contained within the
+	 * provided set of datasets
+	 * eg.
+	 * "john", {"N01", "N02"}	-> (&(|(givenName=john*)(sn=john*)(cn=john*))(|(userHomeArea=N01)(userHomeArea=N02))
 	 *
 	 * @param query space-delimited query string
+	 * @param datasets a set of dataset codes to search within
 	 * @return a set of matching users from OID
 	 */
 	@Override
-	public List<SearchResult> search(String query)
+	public List<SearchResult> search(String query, Set<String> datasets)
 	{
+		// For a national search, we don't need to search LDAP as all the users will be returned by the DB search
+		// (We only ever need to search OID to find users that match on userHomeArea - as that attribute doesn't exist in the DB)
+		if (isNational()) return emptyList();
+
+		// Build up tokenized filter on givenName (forenames), sn (surname) and cn (username)
 		AndFilter filter = Stream.of(query.trim().split("\\s+"))
 				.map(token -> query().where("givenName").like(token + '*')
 						.or("sn").like(token + '*')
 						.or("cn").like(token + '*'))
 				.collect(AndFilter::new, (f, q) -> f.and(q.filter()), AndFilter::and);
+
+		// Add additional filter that userHomeArea must be contained in 'datasets'
+		filter = filter.and(datasets.stream()
+				.map(dataset -> query().where("userHomeArea").is(dataset))
+				.collect(OrFilter::new, (f, q) -> f.or(q.filter()), OrFilter::or));
 
 		if (log.isDebugEnabled())
 		{
