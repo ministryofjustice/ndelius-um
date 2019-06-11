@@ -51,7 +51,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       }
       this.noResults = this.users.length === 0;
       this.searching = false;
-    });
+    }, () => this.searching = false);
   }
 
   ngAfterViewInit(): void {

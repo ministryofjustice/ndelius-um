@@ -92,7 +92,7 @@ public class DBUserServiceImpl implements DBUserService
 	public List<SearchResult> search(String searchTerm, boolean includeInactiveUsers)
 	{
 		val t = LocalDateTime.now();
-		val results = Arrays.stream(searchTerm.split("\\s+"))
+		val results = Arrays.stream(searchTerm.trim().split("\\s+"))
 				.parallel()
 				.flatMap(token -> {
 					log.debug("Searching DB: {}", token);
