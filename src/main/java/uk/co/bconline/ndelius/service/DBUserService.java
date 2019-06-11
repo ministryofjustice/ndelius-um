@@ -5,6 +5,7 @@ import uk.co.bconline.ndelius.model.entity.UserEntity;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface DBUserService
 {
@@ -12,6 +13,6 @@ public interface DBUserService
 	boolean usernameExists(String username);
 	Optional<UserEntity> getUser(String username);
 	Optional<UserEntity> getUserByStaffCode(String staffCode);
-	List<SearchResult> search(String searchTerm, boolean includeInactiveUsers);
+	List<SearchResult> search(String searchTerm, boolean includeInactiveUsers, Set<String> datasets);
 	UserEntity save(UserEntity user);
 }

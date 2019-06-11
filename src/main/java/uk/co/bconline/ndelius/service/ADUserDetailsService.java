@@ -54,10 +54,10 @@ public abstract class ADUserDetailsService implements UserDetailsService
 
 	public List<SearchResult> search(String query)
 	{
-		AndFilter filter = Stream.of(query.split(" "))
-				.map(token -> query().where("givenName").whitespaceWildcardsLike(token)
-						.or("sn").whitespaceWildcardsLike(token)
-						.or("samAccountName").whitespaceWildcardsLike(token))
+		AndFilter filter = Stream.of(query.trim().split("\\s+"))
+				.map(token -> query().where("givenName").like(token + '*')
+						.or("sn").like(token + '*')
+						.or("samAccountName").like(token + '*'))
 				.collect(AndFilter::new, (f, q) -> f.and(q.filter()), AndFilter::and);
 
 		if (log.isDebugEnabled())

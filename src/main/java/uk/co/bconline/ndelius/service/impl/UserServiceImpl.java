@@ -4,9 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import uk.co.bconline.ndelius.exception.AppException;
@@ -21,10 +18,7 @@ import uk.co.bconline.ndelius.service.UserService;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
 
@@ -35,7 +29,8 @@ import static java.util.Comparator.comparing;
 import static java.util.concurrent.CompletableFuture.*;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.core.NestedExceptionUtils.getMostSpecificCause;
-import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
+import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
+import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Slf4j
 @Service
@@ -76,10 +71,17 @@ public class UserServiceImpl implements UserService
 	{
 		if (StringUtils.isEmpty(query) || query.length() < 3) return emptyList();
 
-		val dbFuture = supplyAsync(() -> dbService.search(query, includeInactiveUsers));
-		val oidFuture = supplyAsync(() -> oidService.search(query));
-		val ad1Future = supplyAsync(() -> ad1Service.map(service -> service.search(query)).orElse(emptyList()));
-		val ad2Future = supplyAsync(() -> ad2Service.map(service -> service.search(query)).orElse(emptyList()));
+		Set<String> myDatasets = new HashSet<>();
+		if (!isNational()) {
+			// We only need to filter on datasets for non-national (local) users, so don't bother fetching them for national users
+			myDatasets.addAll(datasetService.getDatasetCodes(myUsername()));
+			myDatasets.add(oidService.getUserHomeArea(myUsername()));
+		}
+
+		val dbFuture = supplyAsync(() -> dbService.search(query, includeInactiveUsers, myDatasets));
+		val oidFuture = supplyAsync(() -> oidService.search(query, myDatasets));
+		val ad1Future = supplyAsync(() -> ad1Service.map(service -> service.search(query)).orElseGet(Collections::emptyList));
+		val ad2Future = supplyAsync(() -> ad2Service.map(service -> service.search(query)).orElseGet(Collections::emptyList));
 		Set<SearchResult> foundUsers;
 		try
 		{
@@ -98,19 +100,17 @@ public class UserServiceImpl implements UserService
 			throw new AppException(String.format("Unable to complete user search for %s", query), e);
 		}
 
-		val datasetsFilter = datasetsFilter();
 		val t = LocalDateTime.now();
 		val r = foundUsers.stream()
 				.sorted(comparing(SearchResult::getScore, Float::compare).reversed())
-				.filter(result -> datasetsFilter.test(result.getUsername()))
-				.filter(result -> includeInactiveUsers || result.getEndDate() == null || !result.getEndDate().isBefore(now()))
 				.peek(result -> log.debug("SearchResult: username={}, score={}", result.getUsername(), result.getScore()))
-				.skip((long) (page-1) * pageSize)
-				.limit(pageSize)
 				.map(SearchResult::getUsername)
 				.map(this::getSearchResult)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
+				.filter(result -> includeInactiveUsers || result.getEndDate() == null || !result.getEndDate().isBefore(now()))
+				.skip((long) (page-1) * pageSize)
+				.limit(pageSize)
 				.collect(toList());
 		log.debug("{}ms	Lookup each result", MILLIS.between(t, LocalDateTime.now()));
 		return r;
@@ -247,14 +247,10 @@ public class UserServiceImpl implements UserService
 
 	private Predicate<String> datasetsFilter()
 	{
-		val me = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		val isNational = me.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-			.anyMatch(NATIONAL_ACCESS::equals);
-		if (isNational) return (String username) -> true;
+		if (isNational()) return (String username) -> true;
 
-		val myUsername = me.getUsername();
-		val myDatasets = datasetService.getDatasetCodes(myUsername);
-		myDatasets.add(oidService.getUserHomeArea(myUsername));
+		val myDatasets = datasetService.getDatasetCodes(myUsername());
+		myDatasets.add(oidService.getUserHomeArea(myUsername()));
 
 		return (String username) -> {
 			val t = LocalDateTime.now();
