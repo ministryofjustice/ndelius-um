@@ -5,7 +5,6 @@ import lombok.val;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
 import uk.co.bconline.ndelius.model.ForbiddenResponse;
-import uk.co.bconline.ndelius.service.UserRoleService;
 
 import java.time.LocalDateTime;
 
@@ -30,14 +28,6 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 @Component
 public class AuthorisationHandler
 {
-	private final UserRoleService service;
-
-	@Autowired
-	public AuthorisationHandler(UserRoleService service)
-	{
-		this.service = service;
-	}
-
 	@Around("@annotation(interaction)")
 	public Object authorise(ProceedingJoinPoint joinPoint, Interaction interaction) throws Throwable
 	{
