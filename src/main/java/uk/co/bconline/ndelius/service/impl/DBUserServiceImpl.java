@@ -116,6 +116,7 @@ public class DBUserServiceImpl implements DBUserService
 
 		log.debug("Searching DB: {}", token);
 		val isOracle = datasourceUrl.startsWith("jdbc:oracle");
+		if (datasets == null || datasets.isEmpty()) datasets = null;
 		if (isNational()) {
 			return isOracle?
 					searchResultRepository.search(token, includeInactiveUsers).stream():
