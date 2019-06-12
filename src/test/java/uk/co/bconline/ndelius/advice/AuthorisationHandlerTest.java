@@ -9,7 +9,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.co.bconline.ndelius.advice.annotation.Interaction;
 import uk.co.bconline.ndelius.model.ForbiddenResponse;
-import uk.co.bconline.ndelius.service.UserRoleService;
 
 import java.lang.annotation.Annotation;
 
@@ -20,9 +19,8 @@ import static org.mockito.Mockito.*;
 @ContextConfiguration
 public class AuthorisationHandlerTest
 {
-	private UserRoleService service = mock(UserRoleService.class);
 	private ProceedingJoinPoint joinPoint = mock(ProceedingJoinPoint.class);
-	private AuthorisationHandler handler = new AuthorisationHandler(service);
+	private AuthorisationHandler handler = new AuthorisationHandler();
 
 	@Test
 	@WithMockUser
