@@ -15,17 +15,20 @@ import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.service.DBUserService;
 import uk.co.bconline.ndelius.service.DatasetService;
 import uk.co.bconline.ndelius.service.UserService;
+import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.time.LocalDate.now;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
+import static java.util.Optional.ofNullable;
 import static java.util.concurrent.CompletableFuture.*;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.core.NestedExceptionUtils.getMostSpecificCause;
@@ -48,6 +51,7 @@ public class UserServiceImpl implements UserService
 	private final Optional<AD2UserDetailsService> ad2Service;
 	private final DatasetService datasetService;
 	private final UserTransformer transformer;
+	private final SearchResultTransformer searchResultTransformer;
 
 	@Autowired
 	public UserServiceImpl(
@@ -56,7 +60,8 @@ public class UserServiceImpl implements UserService
 			Optional<AD1UserDetailsService> ad1Service,
 			Optional<AD2UserDetailsService> ad2Service,
 			DatasetService datasetService,
-			UserTransformer transformer)
+			UserTransformer transformer,
+			SearchResultTransformer searchResultTransformer)
 	{
 		this.dbService = dbService;
 		this.oidService = oidService;
@@ -64,6 +69,7 @@ public class UserServiceImpl implements UserService
 		this.ad2Service = ad2Service;
 		this.datasetService = datasetService;
 		this.transformer = transformer;
+		this.searchResultTransformer = searchResultTransformer;
 	}
 
 	@Override
@@ -79,59 +85,33 @@ public class UserServiceImpl implements UserService
 		}
 
 		val dbFuture = supplyAsync(() -> dbService.search(query, includeInactiveUsers, myDatasets));
-		val oidFuture = supplyAsync(() -> oidService.search(query, myDatasets));
-		val ad1Future = supplyAsync(() -> ad1Service.map(service -> service.search(query)).orElseGet(Collections::emptyList));
-		val ad2Future = supplyAsync(() -> ad2Service.map(service -> service.search(query)).orElseGet(Collections::emptyList));
-		Set<SearchResult> foundUsers;
+		val oidFuture = supplyAsync(() -> oidService.search(query, includeInactiveUsers, myDatasets));
+		val ad1Future = supplyAsync(() -> ad1Service.map(service -> service.search(query, "AD1")).orElseGet(Collections::emptyList));
+		val ad2Future = supplyAsync(() -> ad2Service.map(service -> service.search(query, "AD2")).orElseGet(Collections::emptyList));
+
 		try
 		{
-			foundUsers = allOf(dbFuture, oidFuture, ad1Future, ad2Future)
-					.thenApply(v -> {
-						Set<SearchResult> results = new HashSet<>();
-						results.addAll(dbFuture.join());
-						results.addAll(oidFuture.join());
-						results.addAll(ad1Future.join());
-						results.addAll(ad2Future.join());
-						return results;
-					}).get();
+			return allOf(oidFuture, dbFuture, ad1Future, ad2Future)
+					.thenApply(v -> Stream.of(oidFuture.join(), dbFuture.join(), ad1Future.join(), ad2Future.join())
+							.flatMap(Collection::stream)
+							.collect(HashMap<String, SearchResult>::new, (map, result) -> {
+								map.put(result.getUsername(), ofNullable(map.get(result.getUsername()))
+										.map(r -> searchResultTransformer.reduce(r, result))
+										.orElse(result));
+							}, HashMap::putAll)
+							.values()
+							.stream()
+							.filter(result -> includeInactiveUsers || result.getEndDate() == null || !result.getEndDate().isBefore(now()))
+							.sorted(comparing(SearchResult::getScore, Float::compare).reversed())
+							.skip((long) (page-1) * pageSize)
+							.limit(pageSize)
+							.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}", result.getUsername(), result.getScore(), result.getEndDate()))
+							.collect(toList()))
+					.get();
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
 			throw new AppException(String.format("Unable to complete user search for %s", query), e);
-		}
-
-		val t = LocalDateTime.now();
-		val r = foundUsers.stream()
-				.sorted(comparing(SearchResult::getScore, Float::compare).reversed())
-				.peek(result -> log.debug("SearchResult: username={}, score={}", result.getUsername(), result.getScore()))
-				.map(SearchResult::getUsername)
-				.map(this::getSearchResult)
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.filter(result -> includeInactiveUsers || result.getEndDate() == null || !result.getEndDate().isBefore(now()))
-				.skip((long) (page-1) * pageSize)
-				.limit(pageSize)
-				.collect(toList());
-		log.debug("{}ms	Lookup each result", MILLIS.between(t, LocalDateTime.now()));
-		return r;
-	}
-
-	public Optional<SearchResult> getSearchResult(String username)
-	{
-		val dbFuture = supplyAsync(() -> dbService.getUser(username).orElse(null));
-		val oidFuture = supplyAsync(() -> oidService.getBasicUser(username).orElse(null));
-		val ad1Future = supplyAsync(() -> ad1Service.flatMap(service -> service.getUser(username)).orElse(null));
-		val ad2Future = supplyAsync(() -> ad2Service.flatMap(service -> service.getUser(username)).orElse(null));
-
-		try
-		{
-			return allOf(dbFuture, oidFuture, ad1Future, ad2Future)
-					.thenApply(v -> transformer.mapToSearchResult(
-							dbFuture.join(), oidFuture.join(), ad1Future.join(), ad2Future.join())).get();
-		}
-		catch (InterruptedException | ExecutionException e)
-		{
-			throw new AppException(String.format("Unable to retrieve user details for %s", username), e);
 		}
 	}
 

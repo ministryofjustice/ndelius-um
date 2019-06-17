@@ -10,7 +10,7 @@ import java.util.Set;
 public interface OIDUserService
 {
 	boolean usernameExists(String username);
-	List<SearchResult> search(String query, Set<String> datasets);
+	List<SearchResult> search(String query, boolean includeInactiveUsers, Set<String> datasets);
 	Optional<OIDUser> getBasicUser(String username);
 	Optional<OIDUser> getUser(String username);
 	String getUserHomeArea(String username);

@@ -23,6 +23,7 @@ import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 import uk.co.bconline.ndelius.service.OIDUserService;
 import uk.co.bconline.ndelius.service.UserRoleService;
+import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +39,6 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
 import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
-import static uk.co.bconline.ndelius.util.LdapUtils.mapOIDStringToDate;
 import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 @Slf4j
@@ -57,18 +57,21 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	private final OIDUserPreferencesRepository preferencesRepository;
 	private final UserRoleService userRoleService;
 	private final LdapTemplate ldapTemplate;
+	private final SearchResultTransformer searchResultTransformer;
 
 	@Autowired
 	public OIDUserDetailsService(
 			OIDUserRepository userRepository,
 			OIDUserPreferencesRepository preferencesRepository,
 			UserRoleService userRoleService,
-			@Qualifier("oid") LdapTemplate ldapTemplate)
+			@Qualifier("oid") LdapTemplate ldapTemplate,
+			SearchResultTransformer searchResultTransformer)
 	{
 		this.userRepository = userRepository;
 		this.preferencesRepository = preferencesRepository;
 		this.userRoleService = userRoleService;
 		this.ldapTemplate = ldapTemplate;
+		this.searchResultTransformer = searchResultTransformer;
 	}
 
 	@Override
@@ -102,11 +105,11 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	 * @return a set of matching users from OID
 	 */
 	@Override
-	public List<SearchResult> search(String query, Set<String> datasets)
+	public List<SearchResult> search(String query, boolean includeInactiveUsers, Set<String> datasets)
 	{
 		// For a national search, we don't need to search LDAP as all the users will be returned by the DB search
 		// (We only ever need to search OID to find users that match on userHomeArea - as that attribute doesn't exist in the DB)
-		if (isNational()) return emptyList();
+		if (isNational() && !includeInactiveUsers) return emptyList();
 
 		// Build up tokenized filter on givenName (forenames), sn (surname) and cn (username)
 		AndFilter filter = Stream.of(query.trim().split("\\s+"))
@@ -133,11 +136,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 						.base(USER_BASE)
 						.filter(filter))
 				.spliterator(), true)
-				.map(u -> SearchResult.builder()
-						.username(u.getUsername())
-						.endDate(mapOIDStringToDate(useOracleAttributes? u.getOracleEndDate(): u.getEndDate()))
-						.score(deriveScore(query, u))
-						.build())
+				.map(u -> searchResultTransformer.map(u, deriveScore(query, u)))
 				.collect(toList());
 		log.debug("Found {} OID results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));
 		return results;

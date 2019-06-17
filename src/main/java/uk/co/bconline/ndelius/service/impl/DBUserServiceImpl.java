@@ -13,14 +13,17 @@ import uk.co.bconline.ndelius.model.entity.StaffEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.repository.db.*;
 import uk.co.bconline.ndelius.service.DBUserService;
+import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
+import static org.springframework.util.CollectionUtils.isEmpty;
 import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
 
 @Slf4j
@@ -35,6 +38,7 @@ public class DBUserServiceImpl implements DBUserService
 	private final SearchResultRepository searchResultRepository;
 	private final ProbationAreaUserRepository probationAreaUserRepository;
 	private final StaffTeamRepository staffTeamRepository;
+	private final SearchResultTransformer searchResultTransformer;
 
 	@Autowired
 	public DBUserServiceImpl(
@@ -42,13 +46,15 @@ public class DBUserServiceImpl implements DBUserService
 			StaffRepository staffRepository,
 			SearchResultRepository searchResultRepository,
 			ProbationAreaUserRepository probationAreaUserRepository,
-			StaffTeamRepository staffTeamRepository)
+			StaffTeamRepository staffTeamRepository,
+			SearchResultTransformer searchResultTransformer)
 	{
 		this.repository = repository;
 		this.staffRepository = staffRepository;
 		this.searchResultRepository = searchResultRepository;
 		this.probationAreaUserRepository = probationAreaUserRepository;
 		this.staffTeamRepository = staffTeamRepository;
+		this.searchResultTransformer = searchResultTransformer;
 	}
 
 	@Override
@@ -97,16 +103,9 @@ public class DBUserServiceImpl implements DBUserService
 				.collect(groupingBy(SearchResultEntity::getUsername))
 				.values()
 				.stream()
-				.map(list -> list.stream().reduce((a, b) -> SearchResultEntity.builder()
-						.username(a.getUsername())
-						.score(a.getScore() + b.getScore())
-						.build()))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.map(entity -> SearchResult.builder()
-						.username(entity.getUsername())
-						.score(entity.getScore())
-						.build())
+				.map(list -> list.stream().reduce(searchResultTransformer::reduce))
+				.filter(Optional::isPresent).map(Optional::get)
+				.map(searchResultTransformer::map)
 				.collect(toList());
 		log.debug("Found {} DB results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));
 		return results;
@@ -116,16 +115,9 @@ public class DBUserServiceImpl implements DBUserService
 
 		log.debug("Searching DB: {}", token);
 		val isOracle = datasourceUrl.startsWith("jdbc:oracle");
-		if (datasets == null || datasets.isEmpty()) datasets = null;
-		if (isNational()) {
-			return isOracle?
-					searchResultRepository.search(token, includeInactiveUsers).stream():
-					searchResultRepository.simpleSearch(token, includeInactiveUsers).stream();
-		} else {
-			return isOracle?
-					searchResultRepository.search(token, includeInactiveUsers, datasets).stream():
-					searchResultRepository.simpleSearch(token, includeInactiveUsers, datasets).stream();
-		}
+		return isOracle?
+				searchResultRepository.search(token, includeInactiveUsers, isNational(), isEmpty(datasets)? singleton(""): datasets).stream():
+				searchResultRepository.simpleSearch(token, includeInactiveUsers, isNational(), isEmpty(datasets)? singleton(""): datasets).stream();
 	}
 
 	@Override
