@@ -694,4 +694,21 @@ public class UserControllerTest
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.startDate", is("2000-01-01")));
 	}
+
+	@Test
+	public void localAdminCannotUpdateNationalAdmin() throws Exception
+	{
+		// Given I login as a local admin
+		String token = token(mvc, "test.user.local");
+
+		// When I attempt to update a national admin
+		mvc.perform(post("/api/user/test.user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser())))
+
+		// Then I should receive an error message
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error[*]", hasItem("Insufficient permissions to update National users")));
+	}
 }

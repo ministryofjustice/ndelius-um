@@ -3,9 +3,6 @@ package uk.co.bconline.ndelius.validator;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
@@ -20,7 +17,8 @@ import java.util.Objects;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toSet;
-import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
+import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
+import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Slf4j
 public class AssignableDatasetsValidator implements ConstraintValidator<AssignableDatasets, User>
@@ -37,10 +35,7 @@ public class AssignableDatasetsValidator implements ConstraintValidator<Assignab
 	@Override
 	public boolean isValid(User user, ConstraintValidatorContext context)
 	{
-		val myPrincipal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		val isNational = myPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-				.anyMatch(NATIONAL_ACCESS::equals);
-		if (isNational) return true;
+		if (isNational()) return true;
 
 		val newDatasets = ofNullable(user.getDatasets()).orElse(emptyList()).stream()
 				.filter(Objects::nonNull)
@@ -50,10 +45,10 @@ public class AssignableDatasetsValidator implements ConstraintValidator<Assignab
 
 		if (newDatasets.isEmpty()) return true;
 
-		val assignableDatasets = datasetService.getDatasets(myPrincipal.getUsername()).stream()
+		val assignableDatasets = datasetService.getDatasets(myUsername()).stream()
 				.map(Dataset::getCode)
 				.collect(toSet());
-		assignableDatasets.add(oidUserService.getUserHomeArea(myPrincipal.getUsername()));
+		assignableDatasets.add(oidUserService.getUserHomeArea(myUsername()));
 
 		dbUserService.getUser(ofNullable(user.getExistingUsername()).orElse(user.getUsername())).ifPresent(
 				u -> assignableDatasets.addAll(u.getDatasets().stream()

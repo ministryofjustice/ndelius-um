@@ -20,6 +20,7 @@ import java.util.List;
 @ValidDates
 @AssignableRoles
 @AssignableDatasets
+@RestrictNationalUsers
 @ConditionallyRequired(ifPopulated = "staffCode", required = "staffGrade")
 @ConditionallyRequired(ifPopulated = "staffGrade", required = "staffCode")
 @ConditionallyRequired(ifPopulated = "teams", required = "staffCode")
