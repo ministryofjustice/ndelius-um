@@ -11,7 +11,6 @@ import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
-
 import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
 
 @Configuration
@@ -29,9 +28,9 @@ public class OIDConfig extends LdapAutoConfiguration
 
 	@Override
 	@Bean("oidContextSource")
-	public ContextSource ldapContextSource()
+	public LdapContextSource ldapContextSource()
 	{
-		LdapContextSource ctxSource = (LdapContextSource) super.ldapContextSource();
+		LdapContextSource ctxSource = super.ldapContextSource();
 		ctxSource.setPooled(pooled);
 		return ctxSource;
 	}

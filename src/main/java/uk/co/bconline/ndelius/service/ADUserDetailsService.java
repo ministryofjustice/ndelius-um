@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.service;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.repository.ad.ADUserRepository;
+import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -31,6 +34,9 @@ public abstract class ADUserDetailsService implements UserDetailsService
 	private static final int DONT_EXPIRE_PASSWORD = 0x10000;
 
 	public abstract ADUserRepository getRepository();
+
+	@Autowired
+	private SearchResultTransformer searchResultTransformer;
 
 	@Override
 	public UserDetails loadUserByUsername(String username)
@@ -52,7 +58,7 @@ public abstract class ADUserDetailsService implements UserDetailsService
 		return r;
 	}
 
-	public List<SearchResult> search(String query)
+	public List<SearchResult> search(String query, String source)
 	{
 		AndFilter filter = Stream.of(query.trim().split("\\s+"))
 				.map(token -> query().where("givenName").like(token + '*')
@@ -72,10 +78,8 @@ public abstract class ADUserDetailsService implements UserDetailsService
 						.base(USER_BASE)
 						.filter(filter))
 				.spliterator(), true)
-				.map(u -> SearchResult.builder()
-						.username(u.getUsername())
-						.score(deriveScore(query, u))
-						.build())
+				.map(u -> searchResultTransformer.map(u, deriveScore(query, u)))
+				.map(result -> result.toBuilder().sources(singletonList(source)).build())
 				.collect(toList());
 		log.debug("Found {} AD results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));
 		return results;

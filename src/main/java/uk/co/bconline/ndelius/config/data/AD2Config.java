@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
-
+import org.springframework.ldap.core.support.LdapContextSource;
 import uk.co.bconline.ndelius.repository.ad.ad2.AD2UserRepository;
 
 @Configuration
@@ -27,7 +27,7 @@ public class AD2Config extends LdapAutoConfiguration
 
 	@Override
 	@Bean("ad2ContextSource")
-	public ContextSource ldapContextSource()
+	public LdapContextSource ldapContextSource()
 	{
 		return super.ldapContextSource();
 	}

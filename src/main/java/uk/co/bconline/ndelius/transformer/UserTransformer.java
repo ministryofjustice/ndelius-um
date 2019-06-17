@@ -5,7 +5,9 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import uk.co.bconline.ndelius.model.*;
+import uk.co.bconline.ndelius.model.Dataset;
+import uk.co.bconline.ndelius.model.ReferenceData;
+import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.*;
 import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.model.ldap.OIDRole;
@@ -14,7 +16,10 @@ import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.util.LdapUtils;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,6 +61,7 @@ public class UserTransformer
 	private final RoleTransformer roleTransformer;
 	private final DatasetTransformer datasetTransformer;
 	private final ReferenceDataTransformer referenceDataTransformer;
+	private final TeamTransformer teamTransformer;
 
 	@Autowired
 	public UserTransformer(
@@ -66,7 +72,8 @@ public class UserTransformer
 			RoleService roleService,
 			RoleTransformer roleTransformer,
 			DatasetTransformer datasetTransformer,
-			ReferenceDataTransformer referenceDataTransformer)
+			ReferenceDataTransformer referenceDataTransformer,
+			TeamTransformer teamTransformer)
 	{
 		this.teamService = teamService;
 		this.referenceDataService = referenceDataService;
@@ -76,19 +83,7 @@ public class UserTransformer
 		this.roleTransformer = roleTransformer;
 		this.datasetTransformer = datasetTransformer;
 		this.referenceDataTransformer = referenceDataTransformer;
-	}
-
-	public SearchResult map(User user)
-	{
-		return SearchResult.builder()
-				.username(user.getUsername())
-				.forenames(user.getForenames())
-				.surname(user.getSurname())
-				.teams(user.getTeams())
-				.staffCode(user.getStaffCode())
-				.endDate(user.getEndDate())
-				.sources(user.getSources())
-				.build();
+		this.teamTransformer = teamTransformer;
 	}
 
 	public Optional<User> map(UserEntity user)
@@ -110,7 +105,7 @@ public class UserTransformer
 						.orElse(null))
 				.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
 				.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElseGet(v::getEndDate))
-				.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(this::map).orElse(null))
+				.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(teamTransformer::map).orElse(null))
 				.createdAt(v.getCreatedAt())
 				.createdBy(ofNullable(v.getCreatedBy())
 						.map(c -> combineNames(c.getForename(), c.getForename2(), c.getSurname()))
@@ -176,47 +171,6 @@ public class UserTransformer
 		return r;
 	}
 
-	public Optional<SearchResult> mapToSearchResult(UserEntity dbUser, OIDUser oidUser, ADUser ad1User, ADUser ad2User)
-	{
-		val t = now();
-		val r = Stream.of(
-				ofNullable(oidUser).map(v -> User.builder()
-						.username(v.getUsername())
-						.forenames(v.getForenames())
-						.surname(v.getSurname())
-						.email(v.getEmail())
-						.endDate(mapOIDStringToDate(v.getEndDate()))
-						.sources(singletonList("OID"))
-						.build()),
-				ofNullable(dbUser).map(v -> User.builder()
-						.username(v.getUsername())
-						.forenames(combineNames(v.getForename(), v.getForename2()))
-						.surname(v.getSurname())
-						.staffCode(ofNullable(v.getStaff()).map(StaffEntity::getCode).orElse(null))
-						.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(this::map).orElse(null))
-						.endDate(v.getEndDate())
-						.sources(singletonList("DB"))
-						.build()),
-				ofNullable(ad1User).map(v -> User.builder()
-						.username(v.getUsername())
-						.forenames(v.getForename())
-						.surname(v.getSurname())
-						.sources(singletonList("AD1"))
-						.build()),
-				ofNullable(ad2User).map(v -> User.builder()
-						.username(v.getUsername())
-						.forenames(v.getForename())
-						.surname(v.getSurname())
-						.sources(singletonList("AD2"))
-						.build()))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.reduce(this::reduceUser)
-				.map(this::map);
-		log.trace("--{}ms	Map result", MILLIS.between(t, now()));
-		return r;
-	}
-
 	private User reduceUser(User a, User b)
 	{
 		return a.toBuilder()
@@ -240,16 +194,6 @@ public class UserTransformer
 				.updatedBy(ofNullable(a.getUpdatedBy()).orElseGet(b::getUpdatedBy))
 				.sources(Stream.concat(a.getSources().stream(), b.getSources().stream()).collect(toList()))
 				.build();
-	}
-
-	private List<Team> map(Collection<TeamEntity> teams)
-	{
-		return teams.stream()
-				.map(team -> Team.builder()
-						.code(team.getCode())
-						.description(team.getDescription())
-						.build())
-				.collect(toList());
 	}
 
 	public UserEntity mapToUserEntity(User user, UserEntity existingUser)

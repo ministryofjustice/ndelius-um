@@ -1,18 +1,17 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
+import lombok.*;
+import org.hibernate.annotations.Cache;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
-
-import org.hibernate.annotations.Cache;
-
-import lombok.*;
+import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
 @Getter
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "TEAM")
