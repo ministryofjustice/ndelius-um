@@ -13,8 +13,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -54,9 +53,7 @@ public class TeamControllerTest
 		mvc.perform(get("/api/teams")
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(2)))
-				.andExpect(jsonPath("$[0].code", equalTo("N01TST")))
-				.andExpect(jsonPath("$[1].code", equalTo("N02TST")));
+				.andExpect(jsonPath("$[*].code", hasItems("N01TST", "N02TST", "N03TST")));
 	}
 
 	@Test
