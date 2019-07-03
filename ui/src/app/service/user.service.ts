@@ -3,7 +3,7 @@ import {Observable} from 'rxjs/Observable';
 
 export abstract class UserService {
   abstract whoami(): Observable<User>;
-  abstract search(query: string, page: number, includeInactiveUsers: boolean): Observable<User[]>;
+  abstract search(query: string, page: number, pageSize: number, includeInactiveUsers: boolean): Observable<User[]>;
   abstract create(user: User): Observable<void>;
   abstract read(username: string): Observable<User>;
   abstract readByStaffCode(staffCode: string): Observable<User>;
