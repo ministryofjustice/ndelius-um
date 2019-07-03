@@ -100,7 +100,7 @@ public class SearchResultTransformer
 		if (b.getTeamCode() != null) b.getTeams().add(getTeam(b));
 		return a.toBuilder()
 				.teams(Stream.concat(a.getTeams().stream(), b.getTeams().stream()).collect(toSet()))
-				.score(a.getScore() + b.getScore())
+				.score(Math.max(a.getScore(), b.getScore()))
 				.build();
 	}
 
