@@ -34,13 +34,15 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"WHERE (?2 = 1 OR U.END_DATE IS NULL OR U.END_DATE >= SYSDATE) " +
 			"AND (?3 = 1 OR (SELECT COUNT(*) FROM PROBATION_AREA_USER WHERE ROWNUM = 1 AND USER_ID = U.USER_ID  " +
 			"    AND PROBATION_AREA_ID IN (SELECT PROBATION_AREA_ID FROM PROBATION_AREA WHERE CODE IN ?4)) > 0) " +
-			"AND(SOUNDEX(U.DISTINGUISHED_NAME) = SOUNDEX(?1) " +
+			"AND (SOUNDEX(U.DISTINGUISHED_NAME) = SOUNDEX(?1) " +
 			"    OR SOUNDEX(U.FORENAME) = SOUNDEX(?1) " +
 			"    OR SOUNDEX(U.FORENAME2) = SOUNDEX(?1) " +
 			"    OR SOUNDEX(U.SURNAME) = SOUNDEX(?1) " +
 			"    OR UPPER(S.OFFICER_CODE) LIKE '%'||UPPER(?1)||'%' " +
-			"    OR UPPER(T.CODE) LIKE '%'||UPPER(?1)||'%' " +
-			"    OR UPPER(T.DESCRIPTION) LIKE '%'||UPPER(?1)||'%') " +
+			"    OR S.STAFF_ID IN (SELECT STAFF_ID FROM STAFF_TEAM WHERE TEAM_ID IN ( " +
+			"        SELECT TEAM_ID FROM TEAM  " +
+			"        WHERE UPPER(CODE) LIKE '%'||UPPER(?1)||'%' " +
+			"        OR UPPER(DESCRIPTION) LIKE '%'||UPPER(?1)||'%'))) " +
 			"ORDER BY SCORE DESC",
 			nativeQuery = true)
 	List<SearchResultEntity> search(String query, boolean includeInactiveUsers, boolean national, Set<String> datasetCodes);
@@ -71,12 +73,14 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"AND (?3 = 1 OR (SELECT COUNT(*) FROM PROBATION_AREA_USER WHERE ROWNUM = 1 AND USER_ID = U.USER_ID  " +
 			"    AND PROBATION_AREA_ID IN (SELECT PROBATION_AREA_ID FROM PROBATION_AREA WHERE CODE IN ?4)) > 0) " +
 			"AND (UPPER(U.DISTINGUISHED_NAME) LIKE '%'||UPPER(?1)||'%' " +
-			"     OR UPPER(U.FORENAME) LIKE '%'||UPPER(?1)||'%' " +
-			"     OR UPPER(U.FORENAME2) LIKE '%'||UPPER(?1)||'%' " +
-			"     OR UPPER(U.SURNAME) LIKE '%'||UPPER(?1)||'%' " +
-			"     OR UPPER(S.OFFICER_CODE) LIKE '%'||UPPER(?1)||'%' " +
-			"     OR UPPER(T.CODE) LIKE '%'||UPPER(?1)||'%' " +
-			"     OR UPPER(T.DESCRIPTION) LIKE '%'||UPPER(?1)||'%') " +
+			"    OR UPPER(U.FORENAME) LIKE '%'||UPPER(?1)||'%' " +
+			"    OR UPPER(U.FORENAME2) LIKE '%'||UPPER(?1)||'%' " +
+			"    OR UPPER(U.SURNAME) LIKE '%'||UPPER(?1)||'%' " +
+			"    OR UPPER(S.OFFICER_CODE) LIKE '%'||UPPER(?1)||'%' " +
+			"    OR S.STAFF_ID IN (SELECT STAFF_ID FROM STAFF_TEAM WHERE TEAM_ID IN ( " +
+			"        SELECT TEAM_ID FROM TEAM  " +
+			"        WHERE UPPER(CODE) LIKE '%'||UPPER(?1)||'%' " +
+			"        OR UPPER(DESCRIPTION) LIKE '%'||UPPER(?1)||'%'))) " +
 			"ORDER BY SCORE DESC;",
 			nativeQuery = true)
 	List<SearchResultEntity> simpleSearch(String query, boolean includeInactiveUsers, boolean national, Set<String> datasetCodes);

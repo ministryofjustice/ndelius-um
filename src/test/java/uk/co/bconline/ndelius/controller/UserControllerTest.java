@@ -207,7 +207,36 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.username", equalTo("test.user")))
 				.andExpect(jsonPath("$.forenames", equalTo("Test")))		// From OID
 				.andExpect(jsonPath("$.surname", equalTo("User")))			// From OID
-				.andExpect(jsonPath("$.staffCode", equalTo("N01A001")));	// From DB
+				.andExpect(jsonPath("$.staffCode", equalTo("N01A001")))		// From DB
+				.andExpect(jsonPath("$.teams[*].code", hasItems("N01TST", "N02TST", "N03TST")));
+	}
+
+	@Test
+	public void combinedUserIsReturnedInSearchResults() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc))
+				.param("q", "test.user"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[0].username", equalTo("test.user")))
+				.andExpect(jsonPath("$[0].forenames", equalTo("Test")))
+				.andExpect(jsonPath("$[0].surname", equalTo("User")))
+				.andExpect(jsonPath("$[0].staffCode", equalTo("N01A001")))
+				.andExpect(jsonPath("$[0].teams[*].code", hasItems("N01TST", "N02TST", "N03TST")));
+	}
+
+	@Test
+	public void combinedUserIsReturnedInSearchResultsWhenSearchingByTeam() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc))
+				.param("q", "N03TST"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[0].username", equalTo("test.user")))
+				.andExpect(jsonPath("$[0].forenames", equalTo("Test")))
+				.andExpect(jsonPath("$[0].surname", equalTo("User")))
+				.andExpect(jsonPath("$[0].staffCode", equalTo("N01A001")))
+				.andExpect(jsonPath("$[0].teams[*].code", hasItems("N01TST", "N02TST", "N03TST")));
 	}
 
 	@Test

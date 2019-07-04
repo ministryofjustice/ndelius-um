@@ -1,13 +1,13 @@
 package uk.co.bconline.ndelius.transformer;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
-import uk.co.bconline.ndelius.model.entity.TeamEntity;
 import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 
@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 import static uk.co.bconline.ndelius.util.LdapUtils.mapOIDStringToDate;
 import static uk.co.bconline.ndelius.util.NameUtils.combineNames;
 
@@ -96,19 +95,11 @@ public class SearchResultTransformer
 
 	public SearchResultEntity reduce(SearchResultEntity a, SearchResultEntity b)
 	{
-		if (a.getTeamCode() != null) a.getTeams().add(getTeam(a));
-		if (b.getTeamCode() != null) b.getTeams().add(getTeam(b));
-		return a.toBuilder()
-				.teams(Stream.concat(a.getTeams().stream(), b.getTeams().stream()).collect(toSet()))
+		val reduced = a.toBuilder()
 				.score(a.getScore() + b.getScore())
 				.build();
-	}
-
-	public TeamEntity getTeam(SearchResultEntity entity)
-	{
-		return TeamEntity.builder()
-				.code(entity.getTeamCode())
-				.description(entity.getTeamDescription())
-				.build();
+		reduced.getTeams().addAll(a.getTeams());
+		reduced.getTeams().addAll(b.getTeams());
+		return reduced;
 	}
 }
