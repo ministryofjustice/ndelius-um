@@ -18,6 +18,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   @ViewChild('queryInput') queryInput: NgModel;
   query = '';
   page: number;
+  pageSize = 50;
   includeInactiveUsers = false;
 
   users: User[] = [];
@@ -37,6 +38,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       flatMap(params => forkJoin(of(++this.searchId), this.service.search(
         this.query = params.q,
         this.page = +params.page || 1,
+        this.pageSize,
         this.includeInactiveUsers
       )))
     ).subscribe(value => {
