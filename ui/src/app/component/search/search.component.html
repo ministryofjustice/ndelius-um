@@ -122,7 +122,7 @@
     <div class="btn-toolbar justify-content-center">
       <div class="btn-group">
         <button id="search-results-next" class="btn btn-outline-secondary"
-                [hidden]="users.length % 10 != 0 || hasMoreResults === false"
+                [hidden]="users.length % pageSize != 0 || hasMoreResults === false"
                 [disabled] = "searching"
                 (click)="nextPage()">
           {{searching ? 'Loading': 'Load more'}}

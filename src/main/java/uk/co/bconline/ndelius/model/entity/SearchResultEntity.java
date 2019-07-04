@@ -11,10 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
-
-import static java.util.Comparator.comparing;
 
 @Getter
 @Entity
@@ -56,5 +54,16 @@ public class SearchResultEntity
 
 	@Transient
 	@Builder.Default
-	private Set<TeamEntity> teams = new TreeSet<>(comparing(TeamEntity::getDescription));
+	private Set<TeamEntity> teams = new HashSet<>();
+
+	public Set<TeamEntity> getTeams()
+	{
+		if (teams.isEmpty() && teamCode != null) {
+			teams.add(TeamEntity.builder()
+					.code(teamCode)
+					.description(teamDescription)
+					.build());
+		}
+		return teams;
+	}
 }
