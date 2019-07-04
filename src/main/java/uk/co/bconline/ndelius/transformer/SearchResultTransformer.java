@@ -96,7 +96,7 @@ public class SearchResultTransformer
 	public SearchResultEntity reduce(SearchResultEntity a, SearchResultEntity b)
 	{
 		val reduced = a.toBuilder()
-				.score(a.getScore() + b.getScore())
+				.score(Math.max(a.getScore(), b.getScore()))
 				.build();
 		reduced.getTeams().addAll(a.getTeams());
 		reduced.getTeams().addAll(b.getTeams());
