@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Wither;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import java.util.Set;
 
 @Getter
 @Entity
+@Wither
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
