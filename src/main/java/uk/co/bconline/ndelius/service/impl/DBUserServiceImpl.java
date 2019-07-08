@@ -111,13 +111,19 @@ public class DBUserServiceImpl implements DBUserService
 		return results;
 	}
 
-	private Stream<SearchResultEntity> searchForToken(String token, boolean includeInactiveUsers, Set<String> datasets) {
-
+	private Stream<SearchResultEntity> searchForToken(String token, boolean includeInactiveUsers, Set<String> datasets)
+	{
 		log.debug("Searching DB: {}", token);
+		datasets = isEmpty(datasets)? singleton(""): datasets;
 		val isOracle = datasourceUrl.startsWith("jdbc:oracle");
-		return isOracle?
-				searchResultRepository.search(token, includeInactiveUsers, isNational(), isEmpty(datasets)? singleton(""): datasets).stream():
-				searchResultRepository.simpleSearch(token, includeInactiveUsers, isNational(), isEmpty(datasets)? singleton(""): datasets).stream();
+		return (isOracle?
+					searchResultRepository.search(token, includeInactiveUsers, isNational(), datasets):
+					searchResultRepository.simpleSearch(token, includeInactiveUsers, isNational(), datasets))
+				.stream()
+				.collect(groupingBy(SearchResultEntity::getUsername))
+				.values().stream()
+				.map(list -> list.stream().reduce(searchResultTransformer::reduceTeams))
+				.filter(Optional::isPresent).map(Optional::get);
 	}
 
 	@Override

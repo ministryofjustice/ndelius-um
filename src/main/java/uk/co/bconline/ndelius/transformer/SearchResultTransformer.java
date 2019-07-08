@@ -93,7 +93,7 @@ public class SearchResultTransformer
 				.build();
 	}
 
-	public SearchResultEntity reduce(SearchResultEntity a, SearchResultEntity b)
+	public SearchResultEntity reduceTeams(SearchResultEntity a, SearchResultEntity b)
 	{
 		val reduced = a.toBuilder()
 				.score(Math.max(a.getScore(), b.getScore()))
@@ -101,5 +101,10 @@ public class SearchResultTransformer
 		reduced.getTeams().addAll(a.getTeams());
 		reduced.getTeams().addAll(b.getTeams());
 		return reduced;
+	}
+
+	public SearchResultEntity reduce(SearchResultEntity a, SearchResultEntity b)
+	{
+		return a.withScore(a.getScore() + b.getScore());
 	}
 }
