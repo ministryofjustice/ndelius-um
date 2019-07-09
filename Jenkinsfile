@@ -12,11 +12,13 @@ pipeline {
         }
         stage('Assemble') {
             steps {
-                script {
-                    try {
-                        sh './gradlew clean assemble'
-                    } finally {
-                        junit '**/build/test-results/**/*.xml'
+                wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
+                    script {
+                        try {
+                            sh './gradlew clean build'
+                        } finally {
+                            junit '**/build/test-results/**/*.xml'
+                        }
                     }
                 }
             }
