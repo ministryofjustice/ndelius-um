@@ -48,16 +48,23 @@ However this will result in any issued tokens being invalidated after a restart.
 ## Running the API
 ### Run with the default profile
 By default, the app will run on http://localhost:8080. This can be overridden with the parameters `server.address` and 
-`server.port`
+`server.port`. A configuration file named `application.properties` should be provided with connection details etc - see
+[application-dev.yml](src/main/resources/application-dev.yml) for some example properties.
 ```bash
-java -jar build/libs/ndelius-um.jar
+java -jar build/libs/ndelius-um.jar --spring.config.location=file:/path/to/application.properties
 ```
 
 ### Run with the development profile
 Activating the `dev` profile will start the application in Basic Auth mode with 3 embedded LDAP servers to emulate OID 
-(port 3060) and the two Active Directory instances (ports 389, 390), as well as an embedded H2 database. 
+(port 3060) and the two Active Directory instances (ports 3061, 3062), as well as an embedded H2 database. 
+#### As a jar
 ```bash
 java -jar build/libs/ndelius-um.jar --spring.profiles.active=dev
+```
+#### Or in a docker container
+```bash
+docker build -t ndelius-um:latest .
+docker run -P --env PROFILE=dev ndelius-um:latest
 ```
 
 Once running, go to http://localhost:8080 in your browser and login with the credentials:
