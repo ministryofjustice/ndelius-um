@@ -17,7 +17,7 @@ import static java.util.Collections.emptyList;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @ToString(exclude = "password")
-@Entry(objectClasses = {"NDUser", "person", "top"})
+@Entry(objectClasses = {"NDUser", "inetOrgPerson", "top"})
 public final class OIDUser implements OIDUserHomeArea, UserDetails
 {
 	@Id
