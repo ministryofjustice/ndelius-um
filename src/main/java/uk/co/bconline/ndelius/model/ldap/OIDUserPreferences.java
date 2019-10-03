@@ -1,12 +1,11 @@
 package uk.co.bconline.ndelius.model.ldap;
 
-import javax.naming.Name;
-
-import org.springframework.ldap.odm.annotations.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.ldap.odm.annotations.*;
+
+import javax.naming.Name;
 
 @Getter
 @NoArgsConstructor
@@ -29,9 +28,6 @@ public final class OIDUserPreferences
 	@Transient
 	@DnAttribute(value="cn", index=0)
 	private String username;
-
-	@Attribute
-	private String area = "";
 
 	@Attribute
 	private String locale = "en";
