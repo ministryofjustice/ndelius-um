@@ -31,7 +31,7 @@ pipeline {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     deleteDir()
                     git url: 'git@github.com:ministryofjustice/ndelius-um', branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
-                    sshagent(credentials: ['hmpps_integration_test-key']) {
+                    sshagent(credentials: ['f44bc5f1-30bd-4ab9-ad61-cc32caf1562a']) {
                         sh './gradlew clean release -Prelease.releaseVersion=$version -Prelease.newVersion=$nextVersion -Prelease.useAutomaticVersion=true'
                     }
                 }
