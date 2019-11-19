@@ -15,6 +15,12 @@ pipeline {
         stage('Init') {
             steps {
                 slackSend(message: "Build started  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/master']],
+                    extensions: scm.extensions,
+                    userRemoteConfigs: scm.userRemoteConfigs
+                ])
             }
         }
         stage('Build') {
@@ -36,7 +42,7 @@ pipeline {
             }
         }
         stage('Push') {
-            when { branch 'master' }
+            when { branch 'release-job' }
             environment {
                 snapshotVersion = sh (script: 'source ./gradle.properties && echo "${version}"', returnStdout: true).trim()
             }
