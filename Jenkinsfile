@@ -29,7 +29,9 @@ pipeline {
             when { expression { params.version != 'latest' } }
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
-                    sh './gradlew clean release -Prelease.releaseVersion=$version -Prelease.newVersion=$nextVersion -Prelease.useAutomaticVersion=true'
+                    sshagent(credential: ['hmpps-jenkins-github-token']) {
+                        sh './gradlew clean release -Prelease.releaseVersion=$version -Prelease.newVersion=$nextVersion -Prelease.useAutomaticVersion=true'
+                    }
                 }
             }
         }
