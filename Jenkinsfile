@@ -15,10 +15,10 @@ pipeline {
         stage('Init') {
             steps {
                 slackSend(message: "Build started  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
-                checkout([
+                checkout(scm: [
                     $class: 'GitSCM',
-                    branches: [[name: '*/master']],
-                    extensions: scm.extensions,
+                    branches: [[name: 'master']],
+                    extensions: scm.extensions + [[$class: 'LocalBranch']],
                     userRemoteConfigs: scm.userRemoteConfigs
                 ])
             }
