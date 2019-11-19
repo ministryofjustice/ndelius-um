@@ -21,7 +21,7 @@ pipeline {
         stage('Build') {
             when { expression { params.version == 'latest' } }
             environment {
-              version = sh (script: '. gradle.properties && echo "${version}"', returnStdout: true).trim()
+                version = sh (script: 'ls -l; source ./gradle.properties && echo "${version}"', returnStdout: true).trim()
             }
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
