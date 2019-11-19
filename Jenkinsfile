@@ -17,7 +17,7 @@ pipeline {
                 slackSend(message: "Build started  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
                 checkout(scm: [
                     $class: 'GitSCM',
-                    branches: [[name: 'master']],
+                    branches: [[name: 'origin/master']],
                     extensions: scm.extensions + [[$class: 'LocalBranch'], [$class: 'WipeWorkspace']],
                     userRemoteConfigs: scm.userRemoteConfigs
                 ])
