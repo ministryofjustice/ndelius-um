@@ -30,7 +30,7 @@ pipeline {
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     sshagent(credentials: ['hmpps-jenkins-github-token']) {
-                        sh './gradlew clean release -Prelease.git.requireBranch=release-job -Prelease.releaseVersion=$version -Prelease.newVersion=$nextVersion -Prelease.useAutomaticVersion=true'
+                        sh './gradlew clean release -Prelease.git.requireBranch= -Prelease.releaseVersion=$version -Prelease.newVersion=$nextVersion -Prelease.useAutomaticVersion=true'
                     }
                 }
             }
