@@ -15,6 +15,12 @@ pipeline {
         stage('Init') {
             steps {
                 slackSend(message: "Build started  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
+                checkout(scm: [
+                    $class: 'GitSCM',
+                    branches: [[name: 'master']],
+                    extensions: scm.extensions + [[$class: 'LocalBranch'], [$class: 'WipeWorkspace']],
+                    userRemoteConfigs: scm.userRemoteConfigs
+                ])
             }
         }
         stage('Build') {
@@ -30,10 +36,7 @@ pipeline {
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     sshagent(credentials: ['hmpps-jenkins-github-token']) {
-                        dir('release') {
-                            git url: 'git@github.com:ministryofjustice/ndelius-um', branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
-                            sh './gradlew clean release -Prelease.releaseVersion=$version -Prelease.newVersion=$nextVersion -Prelease.useAutomaticVersion=true'
-                        }
+                        sh './gradlew clean release -Prelease.releaseVersion=$version -Prelease.newVersion=$nextVersion -Prelease.useAutomaticVersion=true'
                     }
                 }
             }
