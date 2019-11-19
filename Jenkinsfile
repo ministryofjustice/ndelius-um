@@ -5,7 +5,7 @@ pipeline {
     }
     triggers {
         cron('H */8 * * *')
-        pollSCM('* * * * *')
+        pollSCM('H/15 * * * *')
     }
     parameters {
         string(defaultValue: "latest", name: 'version', description: 'eg. 1.2.3, or latest for a snapshot build')
@@ -34,7 +34,7 @@ pipeline {
             }
         }
         stage('Push') {
-            when { branch 'release-job' }
+            when { branch 'master' }
             environment {
                 snapshotVersion = sh (script: 'source ./gradle.properties && echo "${version}"', returnStdout: true).trim()
             }
