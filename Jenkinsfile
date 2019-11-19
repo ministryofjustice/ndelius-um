@@ -35,7 +35,7 @@ pipeline {
             when { expression { params.version != 'latest' } }
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
-                    sshagent(credential: ['hmpps-jenkins-github-token']) {
+                    sshagent(credentials: ['hmpps-jenkins-github-token']) {
                         sh './gradlew clean release -Prelease.releaseVersion=$version -Prelease.newVersion=$nextVersion -Prelease.useAutomaticVersion=true'
                     }
                 }
