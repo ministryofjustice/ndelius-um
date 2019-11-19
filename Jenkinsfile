@@ -38,10 +38,10 @@ pipeline {
             }
         }
         stage('Push') {
-            when { branch 'master' }
+            when { branch 'release-job' }
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
-                    sh 'echo "Pushing ${version}...'
+                    sh 'echo "Pushing ${version}..."'
                     sh 'docker build -t 895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um:latest -t 895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um:$version --no-cache .'
                     sh 'aws ecr get-login --no-include-email --region eu-west-2 | source /dev/stdin'
                     sh 'docker push 895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um:$version'
