@@ -29,7 +29,9 @@ pipeline {
             when { expression { params.version != 'latest' } }
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
-                    sshagent(credentials: ['hmpps-jenkins-github-token']) {
+                    deleteDir()
+                    git url: 'git@github.com:ministryofjustice/ndelius-um', branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+                    sshagent(credentials: ['hmpps_integration_test-key']) {
                         sh './gradlew clean release -Prelease.releaseVersion=$version -Prelease.newVersion=$nextVersion -Prelease.useAutomaticVersion=true'
                     }
                 }
