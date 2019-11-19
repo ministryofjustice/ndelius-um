@@ -15,12 +15,6 @@ pipeline {
         stage('Init') {
             steps {
                 slackSend(message: "Build started  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
-                checkout(scm: [
-                    $class: 'GitSCM',
-                    branches: [[name: 'origin/master']],
-                    extensions: scm.extensions + [[$class: 'LocalBranch'], [$class: 'WipeWorkspace']],
-                    userRemoteConfigs: scm.userRemoteConfigs
-                ])
             }
         }
         stage('Build') {
@@ -36,7 +30,7 @@ pipeline {
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     sshagent(credentials: ['hmpps-jenkins-github-token']) {
-                        sh './gradlew clean release -Prelease.releaseVersion=$version -Prelease.newVersion=$nextVersion -Prelease.useAutomaticVersion=true'
+                        sh './gradlew clean release -Prelease.git.requireBranch=release-job -Prelease.releaseVersion=$version -Prelease.newVersion=$nextVersion -Prelease.useAutomaticVersion=true'
                     }
                 }
             }
