@@ -4,7 +4,6 @@ pipeline {
         disableConcurrentBuilds()
     }
     triggers {
-        cron('H */8 * * *')
         pollSCM('H/15 * * * *')
     }
     parameters {
