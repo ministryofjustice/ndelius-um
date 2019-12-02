@@ -34,15 +34,16 @@ springBoot {
 }
 
 node {
-	version = '8.10.0'
-	npmVersion = '5.6.0'
+	version = '12.13.1'
+	npmVersion = '6.12.1'
 	download = true
 }
 
-npm_install.args = ['ui', '--prefix=ui']
-npm_test.args = ['--prefix=ui']
-npm_test.dependsOn(npm_install)
-npm_run.args = ['build-prod', '--prefix=ui']
+npmInstall.workingDir = file("${project.projectDir}/ui")
+npm_test.workingDir = file("${project.projectDir}/ui")
+npm_test.dependsOn(npmInstall)
+npm_run.workingDir = file("${project.projectDir}/ui")
+npm_run.args = ['build-prod']
 npm_run.dependsOn(npm_test)
 processResources.dependsOn(npm_run)
 
