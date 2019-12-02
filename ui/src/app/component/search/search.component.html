@@ -69,7 +69,6 @@
               <th class="text-truncate">Staff Code</th>
               <th>Team(s)</th>
               <th *ngIf="includeInactiveUsers" class="text-nowrap">End Date</th>
-              <th colspan="3" class="text-right">Sources</th>
               <th></th>
             </tr>
           </thead>
@@ -88,28 +87,6 @@
                 <span *ngIf="user.teams != null && user.teams.length > 1">{{ user.teams.length }} teams</span>
               </td>
               <td title="End Date" *ngIf="includeInactiveUsers" class="text-nowrap">{{ user.endDate | date: 'dd/MM/yyyy' }}</td>
-              <td class="pl-1 pr-0 d-lg-none" colspan="3" style="width: 55px">
-                <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('AD1') === -1"
-                      title="TTP Active Directory">DOM1</span>
-                <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('AD2') === -1"
-                      title="Steria Active Directory">OMNI</span>
-                <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('DB') === -1 && user.sources.indexOf('OID') === -1"
-                      title="National Delius">NDelius</span>
-              </td>
-
-              <td class="pl-1 pr-0 d-none d-lg-table-cell" style="width: 55px">
-                <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('AD1') === -1"
-                      title="TTP Active Directory">DOM1</span>
-              </td>
-              <td class="pl-1 pr-0 d-none d-lg-table-cell" style="width: 55px">
-                <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('AD2') === -1"
-                      title="Steria Active Directory">OMNI</span>
-              </td>
-              <td class="pl-1 d-none d-lg-table-cell" style="width: 55px">
-                <span class="badge badge-pill badge-success w-100 font-weight-normal" [class.d-none]="user.sources.indexOf('DB') === -1 && user.sources.indexOf('OID') === -1"
-                      title="National Delius">NDelius</span>
-              </td>
-
               <td class="text-right">
                 <span class="oi oi-chevron-right"></span>
               </td>
