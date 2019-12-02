@@ -3,14 +3,12 @@ package uk.co.bconline.ndelius.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
-import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 import uk.co.bconline.ndelius.service.DBUserService;
 import uk.co.bconline.ndelius.service.DatasetService;
@@ -39,16 +37,8 @@ import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 @Service
 public class UserServiceImpl implements UserService
 {
-	@Value("${ad.primary.readonly:false}")
-	private boolean ad1IsReadonly;
-
-	@Value("${ad.secondary.readonly:false}")
-	private boolean ad2IsReadonly;
-
 	private final DBUserService dbService;
 	private final OIDUserDetailsService oidService;
-	private final Optional<AD1UserDetailsService> ad1Service;
-	private final Optional<AD2UserDetailsService> ad2Service;
 	private final DatasetService datasetService;
 	private final UserTransformer transformer;
 	private final SearchResultTransformer searchResultTransformer;
@@ -57,16 +47,12 @@ public class UserServiceImpl implements UserService
 	public UserServiceImpl(
 			DBUserService dbService,
 			OIDUserDetailsService oidService,
-			Optional<AD1UserDetailsService> ad1Service,
-			Optional<AD2UserDetailsService> ad2Service,
 			DatasetService datasetService,
 			UserTransformer transformer,
 			SearchResultTransformer searchResultTransformer)
 	{
 		this.dbService = dbService;
 		this.oidService = oidService;
-		this.ad1Service = ad1Service;
-		this.ad2Service = ad2Service;
 		this.datasetService = datasetService;
 		this.transformer = transformer;
 		this.searchResultTransformer = searchResultTransformer;
@@ -86,13 +72,11 @@ public class UserServiceImpl implements UserService
 
 		val dbFuture = supplyAsync(() -> dbService.search(query, includeInactiveUsers, myDatasets));
 		val oidFuture = supplyAsync(() -> oidService.search(query, includeInactiveUsers, myDatasets));
-		val ad1Future = supplyAsync(() -> ad1Service.map(service -> service.search(query, "AD1")).orElseGet(Collections::emptyList));
-		val ad2Future = supplyAsync(() -> ad2Service.map(service -> service.search(query, "AD2")).orElseGet(Collections::emptyList));
 
 		try
 		{
-			return allOf(oidFuture, dbFuture, ad1Future, ad2Future)
-					.thenApply(v -> Stream.of(oidFuture.join(), dbFuture.join(), ad1Future.join(), ad2Future.join())
+			return allOf(oidFuture, dbFuture)
+					.thenApply(v -> Stream.of(oidFuture.join(), dbFuture.join())
 							.flatMap(Collection::stream)
 							.collect(HashMap<String, SearchResult>::new, (map, result) -> {
 								map.put(result.getUsername(), ofNullable(map.get(result.getUsername()))
@@ -120,13 +104,11 @@ public class UserServiceImpl implements UserService
 	{
 		val dbFuture = supplyAsync(() -> dbService.usernameExists(username));
 		val oidFuture = supplyAsync(() -> oidService.usernameExists(username));
-		val ad1Future = supplyAsync(() -> ad1Service.map(service -> service.usernameExists(username)).orElse(false));
-		val ad2Future = supplyAsync(() -> ad2Service.map(service -> service.usernameExists(username)).orElse(false));
 
 		try
 		{
-			return allOf(dbFuture, oidFuture, ad1Future, ad2Future)
-					.thenApply(v -> dbFuture.join() || oidFuture.join() || ad1Future.join() || ad2Future.join()).get();
+			return allOf(dbFuture, oidFuture)
+					.thenApply(v -> dbFuture.join() || oidFuture.join()).get();
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
@@ -139,14 +121,12 @@ public class UserServiceImpl implements UserService
 	{
 		val dbFuture = supplyAsync(() -> dbService.getUser(username).orElse(null));
 		val oidFuture = supplyAsync(() -> oidService.getUser(username).orElse(null));
-		val ad1Future = supplyAsync(() -> ad1Service.flatMap(service -> service.getUser(username)).orElse(null));
-		val ad2Future = supplyAsync(() -> ad2Service.flatMap(service -> service.getUser(username)).orElse(null));
 
 		try
 		{
 			val datasetsFilter = datasetsFilter();
-			return allOf(dbFuture, oidFuture, ad1Future, ad2Future)
-					.thenApply(v -> transformer.combine(dbFuture.join(), oidFuture.join(), ad1Future.join(), ad2Future.join())).get()
+			return allOf(dbFuture, oidFuture)
+					.thenApply(v -> transformer.combine(dbFuture.join(), oidFuture.join())).get()
 					.filter(user -> datasetsFilter.test(user.getUsername()));
 		}
 		catch (InterruptedException | ExecutionException e)
@@ -166,16 +146,10 @@ public class UserServiceImpl implements UserService
 	{
 		val dbFuture = runAsync(() -> dbService.save(transformer.mapToUserEntity(user, new UserEntity())));
 		val oidFuture = runAsync(() -> oidService.save(transformer.mapToOIDUser(user, new OIDUser())));
-		val ad1Future = runAsync(() -> {
-			if (!ad1IsReadonly) ad1Service.ifPresent(service -> service.save(transformer.mapToAD1User(user, new ADUser())));
-		});
-		val ad2Future = runAsync(() -> {
-			if (!ad2IsReadonly) ad2Service.ifPresent(service -> service.save(transformer.mapToAD2User(user, new ADUser())));
-		});
 
 		try
 		{
-			allOf(dbFuture, oidFuture, ad1Future, ad2Future).get();
+			allOf(dbFuture, oidFuture).get();
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
@@ -200,24 +174,10 @@ public class UserServiceImpl implements UserService
 			val updatedUser = transformer.mapToOIDUser(user, existingUser);
 			oidService.save(user.getExistingUsername(), updatedUser);
 		});
-		val ad1Future = runAsync(() -> {
-			if (!ad1IsReadonly) ad1Service.ifPresent(service -> {
-				val existingUser = service.getUser(user.getExistingUsername()).orElse(new ADUser());
-				val updatedUser = transformer.mapToAD1User(user, existingUser);
-				service.save(updatedUser);
-			});
-		});
-		val ad2Future = runAsync(() -> {
-			if (!ad2IsReadonly) ad2Service.ifPresent(service -> {
-				val existingUser = service.getUser(user.getExistingUsername()).orElse(new ADUser());
-				val updatedUser = transformer.mapToAD2User(user, existingUser);
-				service.save(updatedUser);
-			});
-		});
 
 		try
 		{
-			allOf(dbFuture, oidFuture, ad1Future, ad2Future).get();
+			allOf(dbFuture, oidFuture).get();
 		}
 		catch (InterruptedException | ExecutionException e)
 		{

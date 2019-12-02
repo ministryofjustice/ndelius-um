@@ -16,36 +16,6 @@
       "description": "Name of the cookie used for storing the JWT token in the login response."
     },
     {
-      "name": "spnego.debug",
-      "type": "java.lang.Boolean",
-      "description": "Enable debug output during SPGNEGO authentication. It may also be useful to set 'logging.level.org.springframework.security.kerberos: DEBUG'."
-    },
-    {
-      "name": "spnego.enabled",
-      "type": "java.lang.Boolean",
-      "description": "Whether or not Kerberos/SPNEGO authentication against ad.primary is enabled for this environment. If disabled, Basic Authentication against oid will be used."
-    },
-    {
-      "name": "spnego.service-principal",
-      "type": "java.lang.String",
-      "description": "Service principal defined in Active Directory for this application. Used to verify Kerberos credentials."
-    },
-    {
-      "name": "spnego.keytab",
-      "type": "java.lang.String",
-      "description": "Filesystem location of the keytab file used for verification of Kerberos credentials."
-    },
-    {
-      "name": "ad.primary.principal.suffix",
-      "type": "java.lang.String",
-      "description": "Domain suffix to be applied to the userPrincipalName in Active Directory eg. JoeBlogs@suffix."
-    },
-    {
-      "name": "ad.secondary.principal.suffix",
-      "type": "java.lang.String",
-      "description": "Domain suffix to be applied to the userPrincipalName in Active Directory eg. JoeBlogs@suffix."
-    },
-    {
       "name": "oid.default-password",
       "type": "java.lang.String",
       "description": "Default SHA/SSHA hashed password to be used when creating users in OID."
@@ -54,16 +24,6 @@
       "name": "delius.secret",
       "type": "java.lang.String",
       "description": "Shared secret key between National Delius and UMT, to support delegated authentication via request parameters."
-    },
-    {
-      "name": "ad.primary.readonly",
-      "type": "java.lang.String",
-      "description": "Whether the primary Active Directory should be marked as readonly. If so, it won't be possible to update user forename/surname in AD."
-    },
-    {
-      "name": "ad.secondary.readonly",
-      "type": "java.lang.String",
-      "description": "Whether the secondary Active Directory should be marked as readonly. If so, it won't be possible to update user forename/surname in AD."
     },
     {
       "name": "cache.evict.delay",

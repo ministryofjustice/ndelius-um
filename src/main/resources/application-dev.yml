@@ -11,50 +11,21 @@ spring:
   jpa.hibernate.ddl-auto: create
   h2.console.enabled: true
 
+oid:
+  base: ou=Users,dc=bcl,dc=local
+  urls: ldap://localhost:3060
+  username: cn=admin
+  password: secret
+
 embedded:
   oid:
-    base-dn: cn=Users,dc=bcl,dc=local
+    base-dn: ${oid.base}
     credential:
-      username: cn=orcladmin
-      password: OIDmanager1
+      username: ${oid.username}
+      password: ${oid.password}
     ldif: classpath:ldif/oid.ldif
     port: 3060
     validation.enabled: false
-  ad:
-    primary:
-      base-dn: dc=ad1,dc=local
-      credential:
-        username: cn=Administrator,cn=Users,dc=ad1,dc=local
-        password: secret
-      ldif: classpath:ldif/ad1.ldif
-      port: 3061
-      validation.enabled: false
-    secondary:
-      base-dn: dc=ad2,dc=local
-      credential:
-        username: cn=Administrator,cn=Users,dc=ad2,dc=local
-        password: secret
-      ldif: classpath:ldif/ad2.ldif
-      port: 3062
-      validation.enabled: false
-
-oid:
-  base: cn=Users,dc=bcl,dc=local
-  urls: ldap://localhost:3060
-  username: cn=orcladmin
-  password: OIDmanager1
-
-ad:
-  primary:
-    base: ou=Users,dc=ad1,dc=local
-    urls: ldap://localhost:3061
-    username: cn=Administrator,cn=Users,dc=ad1,dc=local
-    password: secret
-  secondary:
-    base: ou=Users,dc=ad2,dc=local
-    urls: ldap://localhost:3062
-    username: cn=Administrator,cn=Users,dc=ad2,dc=local
-    password: secret
 
 logging.level:
   uk.co.bconline.ndelius: DEBUG

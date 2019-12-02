@@ -189,16 +189,6 @@ public class UserControllerTest
 	}
 
 	@Test
-	public void activeDirectorySearchMatchesForenameAndSurname() throws Exception
-	{
-		mvc.perform(get("/api/users")
-				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "Super User"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$[*].username", hasItem("Administrator")));
-	}
-
-	@Test
 	public void combinedUserIsReturned() throws Exception
 	{
 		mvc.perform(get("/api/user/test.user")

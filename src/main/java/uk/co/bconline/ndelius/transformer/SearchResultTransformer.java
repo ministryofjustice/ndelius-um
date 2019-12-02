@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
-import uk.co.bconline.ndelius.model.ldap.ADUser;
 import uk.co.bconline.ndelius.model.ldap.OIDUser;
 
 import java.util.stream.Stream;
@@ -53,16 +52,6 @@ public class SearchResultTransformer
 				.surname(user.getSurname())
 				.endDate(mapOIDStringToDate(useOracleAttributes? user.getOracleEndDate(): user.getEndDate()))
 				.sources(singletonList("OID"))
-				.score(score)
-				.build();
-	}
-
-	public SearchResult map(ADUser user, float score) {
-		return SearchResult.builder()
-				.username(user.getUsername())
-				.forenames(user.getForename())
-				.surname(user.getSurname())
-				.sources(singletonList("AD?"))
 				.score(score)
 				.build();
 	}

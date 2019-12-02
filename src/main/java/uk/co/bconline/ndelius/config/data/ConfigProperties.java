@@ -17,20 +17,6 @@ public class ConfigProperties
 		return new LdapProperties();
 	}
 
-	@Bean("ad1Properties")
-	@ConfigurationProperties("ad.primary")
-	public LdapProperties adTargetProperties()
-	{
-		return new LdapProperties();
-	}
-
-	@Bean("ad2Properties")
-	@ConfigurationProperties("ad.secondary")
-	public LdapProperties adSourceProperties()
-	{
-		return new LdapProperties();
-	}
-
 	@Primary
 	@Bean("ldapProperties")
 	public LdapProperties ldapProperties()
@@ -41,20 +27,6 @@ public class ConfigProperties
 	@Bean("embeddedOidProperties")
 	@ConfigurationProperties("embedded.oid")
 	public EmbeddedLdapProperties embeddedOidProperties()
-	{
-		return new EmbeddedLdapProperties();
-	}
-
-	@Bean("embeddedAd1Properties")
-	@ConfigurationProperties("embedded.ad.primary")
-	public EmbeddedLdapProperties embeddedAd1Properties()
-	{
-		return new EmbeddedLdapProperties();
-	}
-
-	@Bean("embeddedAd2Properties")
-	@ConfigurationProperties("embedded.ad.secondary")
-	public EmbeddedLdapProperties embeddedAd2Properties()
 	{
 		return new EmbeddedLdapProperties();
 	}
