@@ -1,14 +1,12 @@
-package uk.co.bconline.ndelius.model.ldap;
+package uk.co.bconline.ndelius.model.entry;
 
-import java.util.List;
-
-import javax.naming.Name;
-
+import lombok.*;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 
-import lombok.*;
+import javax.naming.Name;
+import java.util.List;
 
 @Getter
 @Builder
@@ -17,7 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString(of = {"name", "interactions"})
 @Entry(objectClasses = "top", base = "cn=ndRoleCatalogue")
-public final class OIDRole
+public final class RoleEntry
 {
 	@Id
 	private Name dn;

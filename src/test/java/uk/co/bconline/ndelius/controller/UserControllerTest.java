@@ -18,8 +18,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.OncePerRequestFilter;
 import uk.co.bconline.ndelius.model.*;
-import uk.co.bconline.ndelius.model.ldap.OIDUserPreferences;
-import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
+import uk.co.bconline.ndelius.model.entry.UserPreferencesEntry;
+import uk.co.bconline.ndelius.repository.ldap.UserPreferencesRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -59,7 +59,7 @@ public class UserControllerTest
 	private OncePerRequestFilter jwtAuthenticationFilter;
 
 	@Autowired
-	private OIDUserPreferencesRepository preferencesRepository;
+	private UserPreferencesRepository preferencesRepository;
 
 	private MockMvc mvc;
 
@@ -195,8 +195,8 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.username", equalTo("test.user")))
-				.andExpect(jsonPath("$.forenames", equalTo("Test")))		// From OID
-				.andExpect(jsonPath("$.surname", equalTo("User")))			// From OID
+				.andExpect(jsonPath("$.forenames", equalTo("Test")))		// From LDAP
+				.andExpect(jsonPath("$.surname", equalTo("User")))			// From LDAP
 				.andExpect(jsonPath("$.staffCode", equalTo("N01A001")))		// From DB
 				.andExpect(jsonPath("$.teams[*].code", hasItems("N01TST", "N02TST", "N03TST")));
 	}
@@ -413,7 +413,7 @@ public class UserControllerTest
 						.build())))
 				.andExpect(status().isCreated());
 
-		Optional<OIDUserPreferences> prefs = preferencesRepository.findOne(query()
+		Optional<UserPreferencesEntry> prefs = preferencesRepository.findOne(query()
 				.searchScope(SearchScope.ONELEVEL)
 				.base("cn=" + username)
 				.where("cn").is("UserPreferences"));

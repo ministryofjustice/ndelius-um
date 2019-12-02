@@ -1,7 +1,6 @@
 package uk.co.bconline.ndelius.config.data;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
 import org.springframework.boot.autoconfigure.ldap.LdapProperties;
 import org.springframework.context.annotation.Bean;
@@ -11,23 +10,23 @@ import org.springframework.data.ldap.repository.config.EnableLdapRepositories;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
-import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
+import uk.co.bconline.ndelius.repository.ldap.UserEntryRepository;
 
 @Configuration
-@EnableLdapRepositories(basePackageClasses = OIDUserRepository.class, ldapTemplateRef = "oid")
-public class OIDConfig extends LdapAutoConfiguration
+@EnableLdapRepositories(basePackageClasses = UserEntryRepository.class)
+public class LdapConfig extends LdapAutoConfiguration
 {
 	private final Boolean pooled;
 
 	@Autowired
-	public OIDConfig(@Qualifier("oidProperties") LdapProperties properties, Environment environment)
+	public LdapConfig(LdapProperties properties, Environment environment)
 	{
 		super(properties, environment);
 		pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
 	}
 
+	@Bean
 	@Override
-	@Bean("oidContextSource")
 	public LdapContextSource ldapContextSource()
 	{
 		LdapContextSource ctxSource = super.ldapContextSource();
@@ -35,8 +34,9 @@ public class OIDConfig extends LdapAutoConfiguration
 		return ctxSource;
 	}
 
-	@Bean("oid")
-	public LdapTemplate ldapTemplate(@Qualifier("oidContextSource") ContextSource contextSource)
+	@Bean
+	@Override
+	public LdapTemplate ldapTemplate(ContextSource contextSource)
 	{
 		return new LdapTemplate(contextSource);
 	}

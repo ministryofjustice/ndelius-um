@@ -6,15 +6,20 @@ import com.unboundid.ldap.listener.InMemoryListenerConfig;
 import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.schema.Schema;
 import com.unboundid.ldif.LDIFReader;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
+import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
+import org.springframework.boot.autoconfigure.ldap.LdapProperties;
 import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ConditionContext;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
@@ -32,12 +37,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * The built in unboundid embedded LDAP does not support alias dereferencing. This class is a customized version of
- * EmbeddedLdapAutoConfiguration to add a request interceptor, which will perform alias dereferencing in the embedded
- * LDAPs.
- */
-public abstract class AliasDereferencingEmbeddedLdap
+@Configuration
+@EnableConfigurationProperties({ LdapProperties.class, EmbeddedLdapProperties.class })
+@AutoConfigureBefore(LdapAutoConfiguration.class)
+@ConditionalOnClass(InMemoryDirectoryServer.class)
+@Conditional(EmbeddedAliasDereferencingLdapAutoConfiguration.EmbeddedLdapCondition.class)
+public class EmbeddedAliasDereferencingLdapAutoConfiguration
 {
 	private static final String PROPERTY_SOURCE_NAME = "ldap.ports";
 
@@ -46,7 +51,7 @@ public abstract class AliasDereferencingEmbeddedLdap
 
 	protected InMemoryDirectoryServer server;
 
-	public AliasDereferencingEmbeddedLdap(
+	public EmbeddedAliasDereferencingLdapAutoConfiguration(
 			EmbeddedLdapProperties embeddedProperties,
 			ConfigurableApplicationContext applicationContext)
 	{
@@ -54,6 +59,8 @@ public abstract class AliasDereferencingEmbeddedLdap
 		this.applicationContext = applicationContext;
 	}
 
+	@Bean
+	@Primary
 	public InMemoryDirectoryServer directoryServer() throws LDAPException, IOException
 	{
 		String[] baseDn = StringUtils.toStringArray(this.embeddedProperties.getBaseDn());

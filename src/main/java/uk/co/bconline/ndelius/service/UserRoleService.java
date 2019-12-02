@@ -1,13 +1,13 @@
 package uk.co.bconline.ndelius.service;
 
-import java.util.Set;
+import uk.co.bconline.ndelius.model.entry.RoleEntry;
 
-import uk.co.bconline.ndelius.model.ldap.OIDRole;
+import java.util.Set;
 
 public interface UserRoleService
 {
-	Set<OIDRole> getRolesICanAssign();
-	Set<OIDRole> getUserRoles(String username);
+	Set<RoleEntry> getRolesICanAssign();
+	Set<RoleEntry> getUserRoles(String username);
 	Set<String> getUserInteractions(String username);
-	void updateUserRoles(String username, Set<OIDRole> roles);
+	void updateUserRoles(String username, Set<RoleEntry> roles);
 }

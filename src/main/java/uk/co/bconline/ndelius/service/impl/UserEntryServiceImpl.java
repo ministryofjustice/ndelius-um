@@ -3,7 +3,6 @@ package uk.co.bconline.ndelius.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
@@ -16,12 +15,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import uk.co.bconline.ndelius.model.SearchResult;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
-import uk.co.bconline.ndelius.model.ldap.OIDUserPreferences;
-import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
-import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
-import uk.co.bconline.ndelius.repository.oid.OIDUserRepository;
-import uk.co.bconline.ndelius.service.OIDUserService;
+import uk.co.bconline.ndelius.model.entry.UserEntry;
+import uk.co.bconline.ndelius.model.entry.UserPreferencesEntry;
+import uk.co.bconline.ndelius.model.entry.projections.UserHomeAreaProjection;
+import uk.co.bconline.ndelius.repository.ldap.UserEntryRepository;
+import uk.co.bconline.ndelius.repository.ldap.UserPreferencesRepository;
+import uk.co.bconline.ndelius.service.UserEntryService;
 import uk.co.bconline.ndelius.service.UserRoleService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 
@@ -43,28 +42,28 @@ import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 @Slf4j
 @Service
-public class OIDUserDetailsService implements OIDUserService, UserDetailsService
+public class UserEntryServiceImpl implements UserEntryService, UserDetailsService
 {
-	private static final String USER_BASE = OIDUser.class.getAnnotation(Entry.class).base();
+	private static final String USER_BASE = UserEntry.class.getAnnotation(Entry.class).base();
 
-	@Value("${oid.base}")
-	private String oidBase;
+	@Value("${spring.ldap.base}")
+	private String ldapBase;
 
-	@Value("${oid.useOracleAttributes:#{true}}")
+	@Value("${spring.ldap.useOracleAttributes:#{true}}")
 	private boolean useOracleAttributes;
 
-	private final OIDUserRepository userRepository;
-	private final OIDUserPreferencesRepository preferencesRepository;
+	private final UserEntryRepository userRepository;
+	private final UserPreferencesRepository preferencesRepository;
 	private final UserRoleService userRoleService;
 	private final LdapTemplate ldapTemplate;
 	private final SearchResultTransformer searchResultTransformer;
 
 	@Autowired
-	public OIDUserDetailsService(
-			OIDUserRepository userRepository,
-			OIDUserPreferencesRepository preferencesRepository,
+	public UserEntryServiceImpl(
+			UserEntryRepository userRepository,
+			UserPreferencesRepository preferencesRepository,
 			UserRoleService userRoleService,
-			@Qualifier("oid") LdapTemplate ldapTemplate,
+			LdapTemplate ldapTemplate,
 			SearchResultTransformer searchResultTransformer)
 	{
 		this.userRepository = userRepository;
@@ -102,13 +101,13 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	 *
 	 * @param query space-delimited query string
 	 * @param datasets a set of dataset codes to search within
-	 * @return a set of matching users from OID
+	 * @return a set of matching users from LDAP
 	 */
 	@Override
 	public List<SearchResult> search(String query, boolean includeInactiveUsers, Set<String> datasets)
 	{
 		// For a national search, we don't need to search LDAP as all the users will be returned by the DB search
-		// (We only ever need to search OID to find users that match on userHomeArea - as that attribute doesn't exist in the DB)
+		// (We only ever need to search LDAP to find users that match on userHomeArea - as that attribute doesn't exist in the DB)
 		if (isNational() && !includeInactiveUsers) return emptyList();
 
 		// Build up tokenized filter on givenName (forenames), sn (surname) and cn (username)
@@ -126,7 +125,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		if (log.isDebugEnabled())
 		{
 			val filterString = filter.encode();
-			log.debug("Searching OID: {}", filterString);
+			log.debug("Searching LDAP: {}", filterString);
 		}
 
 		val t = LocalDateTime.now();
@@ -138,15 +137,15 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				.spliterator(), true)
 				.map(u -> searchResultTransformer.map(u, deriveScore(query, u)))
 				.collect(toList());
-		log.debug("Found {} OID results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));
+		log.debug("Found {} LDAP results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));
 		return results;
 	}
 
 	@Override
-	public Optional<OIDUser> getBasicUser(String username)
+	public Optional<UserEntry> getBasicUser(String username)
 	{
 		val t = LocalDateTime.now();
-		Optional<OIDUser> user = userRepository.findByUsername(username);
+		Optional<UserEntry> user = userRepository.findByUsername(username);
 		if (useOracleAttributes) {
 			user = user.map(u -> u.toBuilder()
 					.startDate(u.getOracleStartDate())
@@ -154,12 +153,12 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 					.oracleStartDate(null)
 					.oracleEndDate(null).build());
 		}
-		log.trace("--{}ms	OID lookup", MILLIS.between(t, LocalDateTime.now()));
+		log.trace("--{}ms	LDAP lookup", MILLIS.between(t, LocalDateTime.now()));
 		return user;
 	}
 
 	@Override
-	public Optional<OIDUser> getUser(String username)
+	public Optional<UserEntry> getUser(String username)
 	{
 		return getBasicUser(username)
 				.map(u -> u.toBuilder()
@@ -170,11 +169,11 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	@Override
 	public String getUserHomeArea(String username)
 	{
-		return userRepository.getOIDUserHomeAreaByUsername(username).map(OIDUserHomeArea::getHomeArea).orElse(null);
+		return userRepository.getUserHomeAreaProjectionByUsername(username).map(UserHomeAreaProjection::getHomeArea).orElse(null);
 	}
 
 	@Override
-	public void save(OIDUser user)
+	public void save(UserEntry user)
 	{
 		// Save user
 		log.debug("Saving user: {}", user.getUsername());
@@ -195,7 +194,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 				.where(OBJECTCLASS).isPresent()).isPresent())
 		{
 			log.debug("Creating user preferences");
-			preferencesRepository.save(new OIDUserPreferences(user.getUsername()));
+			preferencesRepository.save(new UserPreferencesEntry(user.getUsername()));
 		}
 
 		// Role associations
@@ -204,7 +203,7 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 	}
 
 	@Override
-	public void save(String existingUsername, OIDUser user)
+	public void save(String existingUsername, UserEntry user)
 	{
 		// Keep hold of the new username, if it's different we'll rename it later
 		val newUsername = user.getUsername();
@@ -218,12 +217,12 @@ public class OIDUserDetailsService implements OIDUserService, UserDetailsService
 		{
 			val oldDn = user.getDn();
 			val newDn = LdapNameBuilder.newInstance(getDn(newUsername)).build();
-			log.debug("Renaming OID entry from {} to {}", oldDn, newDn);
+			log.debug("Renaming LDAP entry from {} to {}", oldDn, newDn);
 			ldapTemplate.rename(oldDn, newDn);
 		}
 	}
 
-	private float deriveScore(String query, OIDUser u)
+	private float deriveScore(String query, UserEntry u)
 	{
 		return (float) Stream.of(query.split(" "))
 				.map(String::toLowerCase)

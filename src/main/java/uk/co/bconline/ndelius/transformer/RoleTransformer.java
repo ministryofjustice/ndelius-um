@@ -1,27 +1,26 @@
 package uk.co.bconline.ndelius.transformer;
 
-import java.util.ArrayList;
-
 import org.springframework.stereotype.Component;
-
 import uk.co.bconline.ndelius.model.Role;
-import uk.co.bconline.ndelius.model.ldap.OIDRole;
+import uk.co.bconline.ndelius.model.entry.RoleEntry;
+
+import java.util.ArrayList;
 
 @Component
 public class RoleTransformer
 {
-	public Role map(OIDRole oidRole)
+	public Role map(RoleEntry roleEntry)
 	{
 		return Role.builder()
-				.name(oidRole.getName())
-				.description(oidRole.getDescription())
-				.interactions(!oidRole.getInteractions().isEmpty()? new ArrayList<>(oidRole.getInteractions()): null)
+				.name(roleEntry.getName())
+				.description(roleEntry.getDescription())
+				.interactions(!roleEntry.getInteractions().isEmpty()? new ArrayList<>(roleEntry.getInteractions()): null)
 				.build();
 	}
 
-	public OIDRole map(Role role)
+	public RoleEntry map(Role role)
 	{
-		return OIDRole.builder()
+		return RoleEntry.builder()
 				.name(role.getName())
 				.description(role.getDescription())
 				.build();

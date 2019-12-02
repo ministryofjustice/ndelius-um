@@ -1,20 +1,18 @@
-package uk.co.bconline.ndelius.model.ldap;
+package uk.co.bconline.ndelius.model.entry;
 
-import java.util.Set;
-
-import javax.naming.Name;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 import org.springframework.ldap.odm.annotations.Transient;
 
-import lombok.Getter;
-import lombok.Setter;
+import javax.naming.Name;
+import java.util.Set;
 
 @Getter
 @Entry(objectClasses = {"NDRoleGroup", "top"}, base = "cn=ndRoleGroups")
-public final class OIDRoleGroup
+public final class RoleGroupEntry
 {
     @Id
     private Name dn;
@@ -24,5 +22,5 @@ public final class OIDRoleGroup
 
     @Setter
     @Transient
-    private Set<OIDRole> roles;
+    private Set<RoleEntry> roles;
 }

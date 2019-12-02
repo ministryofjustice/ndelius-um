@@ -1,20 +1,19 @@
-package uk.co.bconline.ndelius.model.ldap;
-
-import javax.naming.Name;
-
-import org.springframework.ldap.odm.annotations.*;
+package uk.co.bconline.ndelius.model.entry;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.ldap.odm.annotations.*;
+
+import javax.naming.Name;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entry(objectClasses = {"NDRoleAssociation", "alias", "top"})
-public final class OIDRoleAssociation
+public final class RoleAssociationEntry
 {
 	@Id
 	private Name dn;

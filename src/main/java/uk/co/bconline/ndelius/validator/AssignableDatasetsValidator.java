@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
-import uk.co.bconline.ndelius.service.DBUserService;
 import uk.co.bconline.ndelius.service.DatasetService;
-import uk.co.bconline.ndelius.service.OIDUserService;
+import uk.co.bconline.ndelius.service.UserEntityService;
+import uk.co.bconline.ndelius.service.UserEntryService;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -24,10 +24,10 @@ import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 public class AssignableDatasetsValidator implements ConstraintValidator<AssignableDatasets, User>
 {
 	@Autowired
-	private DBUserService dbUserService;
+	private UserEntityService userEntityService;
 
 	@Autowired
-	private OIDUserService oidUserService;
+	private UserEntryService userEntryService;
 
 	@Autowired
 	private DatasetService datasetService;
@@ -48,9 +48,9 @@ public class AssignableDatasetsValidator implements ConstraintValidator<Assignab
 		val assignableDatasets = datasetService.getDatasets(myUsername()).stream()
 				.map(Dataset::getCode)
 				.collect(toSet());
-		assignableDatasets.add(oidUserService.getUserHomeArea(myUsername()));
+		assignableDatasets.add(userEntryService.getUserHomeArea(myUsername()));
 
-		dbUserService.getUser(ofNullable(user.getExistingUsername()).orElse(user.getUsername())).ifPresent(
+		userEntityService.getUser(ofNullable(user.getExistingUsername()).orElse(user.getUsername())).ifPresent(
 				u -> assignableDatasets.addAll(u.getDatasets().stream()
 						.map(ProbationAreaEntity::getCode)
 						.collect(toSet())));

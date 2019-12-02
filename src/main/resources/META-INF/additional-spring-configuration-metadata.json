@@ -16,9 +16,9 @@
       "description": "Name of the cookie used for storing the JWT token in the login response."
     },
     {
-      "name": "oid.default-password",
+      "name": "spring.ldap.default-password",
       "type": "java.lang.String",
-      "description": "Default SHA/SSHA hashed password to be used when creating users in OID."
+      "description": "Default SHA/SSHA hashed password to be used when creating users in LDAP."
     },
     {
       "name": "delius.secret",
@@ -31,7 +31,7 @@
       "description": "How often the caches should be cleared, in milliseconds. Defaults to 24 hours."
     },
     {
-      "name": "oid.useOracleAttributes",
+      "name": "spring.ldap.useOracleAttributes",
       "type": "java.lang.Boolean",
       "default": true,
       "description": "Whether to use the 'orclActiveStartDate' and 'orclActiveEndDate' attributes instead of the 'startDate' and 'endDate' attributes in the User LDAP entry."

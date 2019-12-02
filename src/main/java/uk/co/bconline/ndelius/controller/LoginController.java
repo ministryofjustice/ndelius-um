@@ -1,7 +1,6 @@
 package uk.co.bconline.ndelius.controller;
 
-import java.util.Optional;
-
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -11,12 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import lombok.val;
 import uk.co.bconline.ndelius.model.TokenResponse;
 import uk.co.bconline.ndelius.model.User;
-import uk.co.bconline.ndelius.service.OIDUserService;
+import uk.co.bconline.ndelius.service.UserEntryService;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -25,13 +24,13 @@ public class LoginController
 	@Value("${jwt.expiry}")
 	private int expiry;
 
-	private final OIDUserService oidUserService;
+	private final UserEntryService userEntryService;
 	private final UserTransformer transformer;
 
 	@Autowired
-	public LoginController(OIDUserService oidUserService, UserTransformer transformer)
+	public LoginController(UserEntryService userEntryService, UserTransformer transformer)
 	{
-		this.oidUserService = oidUserService;
+		this.userEntryService = userEntryService;
 		this.transformer = transformer;
 	}
 
@@ -40,7 +39,7 @@ public class LoginController
 	{
 		 val username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 
-		 return oidUserService.getUser(username).flatMap(transformer::map);
+		 return userEntryService.getUser(username).flatMap(transformer::map);
 	}
 
 	@PostMapping("/login")

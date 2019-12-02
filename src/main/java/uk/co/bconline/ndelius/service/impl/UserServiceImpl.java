@@ -9,9 +9,10 @@ import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
-import uk.co.bconline.ndelius.service.DBUserService;
+import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.service.DatasetService;
+import uk.co.bconline.ndelius.service.UserEntityService;
+import uk.co.bconline.ndelius.service.UserEntryService;
 import uk.co.bconline.ndelius.service.UserService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
@@ -37,22 +38,22 @@ import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 @Service
 public class UserServiceImpl implements UserService
 {
-	private final DBUserService dbService;
-	private final OIDUserDetailsService oidService;
+	private final UserEntityService userEntityService;
+	private final UserEntryService userEntryService;
 	private final DatasetService datasetService;
 	private final UserTransformer transformer;
 	private final SearchResultTransformer searchResultTransformer;
 
 	@Autowired
 	public UserServiceImpl(
-			DBUserService dbService,
-			OIDUserDetailsService oidService,
+			UserEntityService userEntityService,
+			UserEntryService userEntryService,
 			DatasetService datasetService,
 			UserTransformer transformer,
 			SearchResultTransformer searchResultTransformer)
 	{
-		this.dbService = dbService;
-		this.oidService = oidService;
+		this.userEntityService = userEntityService;
+		this.userEntryService = userEntryService;
 		this.datasetService = datasetService;
 		this.transformer = transformer;
 		this.searchResultTransformer = searchResultTransformer;
@@ -67,16 +68,16 @@ public class UserServiceImpl implements UserService
 		if (!isNational()) {
 			// We only need to filter on datasets for non-national (local) users, so don't bother fetching them for national users
 			myDatasets.addAll(datasetService.getDatasetCodes(myUsername()));
-			myDatasets.add(oidService.getUserHomeArea(myUsername()));
+			myDatasets.add(userEntryService.getUserHomeArea(myUsername()));
 		}
 
-		val dbFuture = supplyAsync(() -> dbService.search(query, includeInactiveUsers, myDatasets));
-		val oidFuture = supplyAsync(() -> oidService.search(query, includeInactiveUsers, myDatasets));
+		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, myDatasets));
+		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, myDatasets));
 
 		try
 		{
-			return allOf(oidFuture, dbFuture)
-					.thenApply(v -> Stream.of(oidFuture.join(), dbFuture.join())
+			return allOf(ldapFuture, dbFuture)
+					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())
 							.flatMap(Collection::stream)
 							.collect(HashMap<String, SearchResult>::new, (map, result) -> {
 								map.put(result.getUsername(), ofNullable(map.get(result.getUsername()))
@@ -102,13 +103,13 @@ public class UserServiceImpl implements UserService
 	@Override
 	public boolean usernameExists(String username)
 	{
-		val dbFuture = supplyAsync(() -> dbService.usernameExists(username));
-		val oidFuture = supplyAsync(() -> oidService.usernameExists(username));
+		val dbFuture = supplyAsync(() -> userEntityService.usernameExists(username));
+		val ldapFuture = supplyAsync(() -> userEntryService.usernameExists(username));
 
 		try
 		{
-			return allOf(dbFuture, oidFuture)
-					.thenApply(v -> dbFuture.join() || oidFuture.join()).get();
+			return allOf(dbFuture, ldapFuture)
+					.thenApply(v -> dbFuture.join() || ldapFuture.join()).get();
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
@@ -119,14 +120,14 @@ public class UserServiceImpl implements UserService
 	@Override
 	public Optional<User> getUser(String username)
 	{
-		val dbFuture = supplyAsync(() -> dbService.getUser(username).orElse(null));
-		val oidFuture = supplyAsync(() -> oidService.getUser(username).orElse(null));
+		val dbFuture = supplyAsync(() -> userEntityService.getUser(username).orElse(null));
+		val ldapFuture = supplyAsync(() -> userEntryService.getUser(username).orElse(null));
 
 		try
 		{
 			val datasetsFilter = datasetsFilter();
-			return allOf(dbFuture, oidFuture)
-					.thenApply(v -> transformer.combine(dbFuture.join(), oidFuture.join())).get()
+			return allOf(dbFuture, ldapFuture)
+					.thenApply(v -> transformer.combine(dbFuture.join(), ldapFuture.join())).get()
 					.filter(user -> datasetsFilter.test(user.getUsername()));
 		}
 		catch (InterruptedException | ExecutionException e)
@@ -138,18 +139,18 @@ public class UserServiceImpl implements UserService
 	@Override
 	public Optional<User> getUserByStaffCode(String staffCode)
 	{
-		return dbService.getUserByStaffCode(staffCode).flatMap(transformer::map);
+		return userEntityService.getUserByStaffCode(staffCode).flatMap(transformer::map);
 	}
 
 	@Override
 	public void addUser(User user)
 	{
-		val dbFuture = runAsync(() -> dbService.save(transformer.mapToUserEntity(user, new UserEntity())));
-		val oidFuture = runAsync(() -> oidService.save(transformer.mapToOIDUser(user, new OIDUser())));
+		val dbFuture = runAsync(() -> userEntityService.save(transformer.mapToUserEntity(user, new UserEntity())));
+		val ldapFuture = runAsync(() -> userEntryService.save(transformer.mapToUserEntry(user, new UserEntry())));
 
 		try
 		{
-			allOf(dbFuture, oidFuture).get();
+			allOf(dbFuture, ldapFuture).get();
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
@@ -162,22 +163,22 @@ public class UserServiceImpl implements UserService
 	{
 		val dbFuture = runAsync(() -> {
 			log.debug("Fetching existing DB value");
-			val existingUser = dbService.getUser(user.getExistingUsername()).orElse(new UserEntity());
+			val existingUser = userEntityService.getUser(user.getExistingUsername()).orElse(new UserEntity());
 			log.debug("Transforming into DB user");
 			val updatedUser = transformer.mapToUserEntity(user, existingUser);
-			dbService.save(updatedUser);
+			userEntityService.save(updatedUser);
 		});
-		val oidFuture = runAsync(() -> {
-			log.debug("Fetching existing OID value");
-			val existingUser = oidService.getUser(user.getExistingUsername()).orElse(new OIDUser());
-			log.debug("Transforming into OID user");
-			val updatedUser = transformer.mapToOIDUser(user, existingUser);
-			oidService.save(user.getExistingUsername(), updatedUser);
+		val ldapFuture = runAsync(() -> {
+			log.debug("Fetching existing LDAP value");
+			val existingUser = userEntryService.getUser(user.getExistingUsername()).orElse(new UserEntry());
+			log.debug("Transforming into LDAP user");
+			val updatedUser = transformer.mapToUserEntry(user, existingUser);
+			userEntryService.save(user.getExistingUsername(), updatedUser);
 		});
 
 		try
 		{
-			allOf(dbFuture, oidFuture).get();
+			allOf(dbFuture, ldapFuture).get();
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
@@ -190,12 +191,12 @@ public class UserServiceImpl implements UserService
 		if (isNational()) return (String username) -> true;
 
 		val myDatasets = datasetService.getDatasetCodes(myUsername());
-		myDatasets.add(oidService.getUserHomeArea(myUsername()));
+		myDatasets.add(userEntryService.getUserHomeArea(myUsername()));
 
 		return (String username) -> {
 			val t = LocalDateTime.now();
 			val theirDatasets = datasetService.getDatasetCodes(username);
-			val theirHomeArea = oidService.getUserHomeArea(username);
+			val theirHomeArea = userEntryService.getUserHomeArea(username);
 			if (theirHomeArea != null) theirDatasets.add(theirHomeArea);
 			val r = theirDatasets.isEmpty() || myDatasets.stream().anyMatch(theirDatasets::contains);
 			log.trace("--{}ms	Dataset filter", MILLIS.between(t, LocalDateTime.now()));
