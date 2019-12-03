@@ -28,9 +28,9 @@ declare var Popper: any;
 })
 export class ItemSelectorComponent
     implements ControlValueAccessor, Validator, OnInit {
-  @ViewChild('filterControl') filterControl: ElementRef;
-  @ViewChild('toggleBtn') toggleBtn: ElementRef;
-  @ViewChild('dropdown') dropdown: ElementRef;
+  @ViewChild('filterControl', { static: true }) filterControl: ElementRef;
+  @ViewChild('toggleBtn', { static: true }) toggleBtn: ElementRef;
+  @ViewChild('dropdown', { static: true }) dropdown: ElementRef;
   @Input() id: string;
   @Input() selected: any;
   @Input() maxHeight = 'auto';
