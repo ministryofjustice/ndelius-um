@@ -37,6 +37,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The built in unboundid embedded LDAP does not support alias dereferencing. This class is a customized version of
+ * EmbeddedLdapAutoConfiguration to add a request interceptor, which will perform alias dereferencing in the embedded
+ * LDAPs.
+ *
+ * Note: This overrides the InMemoryDirectoryServer bean, which requires `spring.main.allow-bean-definition-overriding`
+ */
 @Configuration
 @EnableConfigurationProperties({ LdapProperties.class, EmbeddedLdapProperties.class })
 @AutoConfigureBefore(LdapAutoConfiguration.class)
