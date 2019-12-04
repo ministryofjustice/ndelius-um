@@ -495,7 +495,7 @@ public class UserControllerTest
 		String username = nextTestUsername();
 		User user = aValidUser().toBuilder()
 				.username(username)
-				.staffCode("ZZZA001")
+				.staffCode("N01A501")
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.build();
 
@@ -525,7 +525,7 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.username", is(username + "-renamed")))
-				.andExpect(jsonPath("$.staffCode", is("ZZZA001")));
+				.andExpect(jsonPath("$.staffCode", is("N01A501")));
 	}
 
 	@Test
@@ -534,14 +534,14 @@ public class UserControllerTest
 		String username1 = nextTestUsername();
 		User user1 = aValidUser().toBuilder()
 				.username(username1)
-				.staffCode("ZZZB001")
+				.staffCode("N01B501")
 				.staffGrade(ReferenceData.builder().code("GRADE1").description("Grade 1").build())
 				.teams(singletonList(Team.builder().code("N01TST").build()))
 				.build();
 		String username2 = nextTestUsername();
 		User user2 = aValidUser().toBuilder()
 				.username(username2)
-				.staffCode("ZZZB002")
+				.staffCode("N01B502")
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.teams(singletonList(Team.builder().code("N02TST").build()))
 				.build();
@@ -565,7 +565,7 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user2.toBuilder()
-						.staffCode("ZZZB001")
+						.staffCode("N01B501")
 						.staffGrade(ReferenceData.builder().code("GRADE1").description("Grade 1").build())
 						.teams(singletonList(Team.builder().code("N01TST").build()))
 						.build())))
@@ -575,7 +575,7 @@ public class UserControllerTest
 		mvc.perform(get("/api/user/" + username2)
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.staffCode", is("ZZZB001")))
+				.andExpect(jsonPath("$.staffCode", is("N01B501")))
 				.andExpect(jsonPath("$.staffGrade.code", is("GRADE1")))
 				.andExpect(jsonPath("$.teams[*]", hasSize(1)))
 				.andExpect(jsonPath("$.teams[0].code", is("N01TST")));
@@ -729,5 +729,18 @@ public class UserControllerTest
 		// Then I should receive an error message
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.error[*]", hasItem("Insufficient permissions to update National users")));
+	}
+
+	@Test
+	public void staffCodePrefixMustBeAValidProviderCode() throws Exception
+	{
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token(mvc))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.staffCode("ZZZA001").build())))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error[*]", hasItem("Staff Code prefix should correspond to a valid provider code")));
 	}
 }
