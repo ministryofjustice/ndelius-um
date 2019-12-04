@@ -1,22 +1,19 @@
 package uk.co.bconline.ndelius.config.security;
 
-import static org.springframework.http.HttpMethod.OPTIONS;
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-
 import uk.co.bconline.ndelius.security.filter.BasicAuthFilter;
+
+import static org.springframework.http.HttpMethod.OPTIONS;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Order(3)
 @Configuration
-@ConditionalOnProperty(name = "spnego.enabled", havingValue = "false", matchIfMissing = true)
 public class BasicAuthConfig extends WebSecurityConfigurerAdapter
 {
 	private final BasicAuthFilter filter;

@@ -1,10 +1,10 @@
-package uk.co.bconline.ndelius.model.ldap;
+package uk.co.bconline.ndelius.model.entry;
 
 import lombok.*;
 import org.springframework.ldap.odm.annotations.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import uk.co.bconline.ndelius.model.ldap.projections.OIDUserHomeArea;
+import uk.co.bconline.ndelius.model.entry.projections.UserHomeAreaProjection;
 
 import javax.naming.Name;
 import java.util.Collection;
@@ -18,7 +18,7 @@ import static java.util.Collections.emptyList;
 @Builder(toBuilder = true)
 @ToString(exclude = "password")
 @Entry(objectClasses = {"NDUser", "inetOrgPerson", "top"})
-public final class OIDUser implements OIDUserHomeArea, UserDetails
+public final class UserEntry implements UserHomeAreaProjection, UserDetails
 {
 	@Id
 	private Name dn;
@@ -64,7 +64,7 @@ public final class OIDUser implements OIDUserHomeArea, UserDetails
 	private String endDate;
 
 	@Transient
-	private Set<OIDRole> roles;
+	private Set<RoleEntry> roles;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities()

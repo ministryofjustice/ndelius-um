@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public interface DBUserService
+public interface UserEntityService
 {
 	Long getMyUserId();
 	boolean usernameExists(String username);

@@ -12,7 +12,7 @@ import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.repository.db.*;
-import uk.co.bconline.ndelius.service.DBUserService;
+import uk.co.bconline.ndelius.service.UserEntityService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 
 import java.time.LocalDateTime;
@@ -28,7 +28,7 @@ import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
 
 @Slf4j
 @Service
-public class DBUserServiceImpl implements DBUserService
+public class UserEntityServiceImpl implements UserEntityService
 {
 	@Value("${spring.datasource.url}")
 	private String datasourceUrl;
@@ -41,7 +41,7 @@ public class DBUserServiceImpl implements DBUserService
 	private final SearchResultTransformer searchResultTransformer;
 
 	@Autowired
-	public DBUserServiceImpl(
+	public UserEntityServiceImpl(
 			UserEntityRepository repository,
 			StaffRepository staffRepository,
 			SearchResultRepository searchResultRepository,

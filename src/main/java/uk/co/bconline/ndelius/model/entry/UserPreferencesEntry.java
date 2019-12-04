@@ -1,4 +1,4 @@
-package uk.co.bconline.ndelius.model.ldap;
+package uk.co.bconline.ndelius.model.entry;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +11,9 @@ import javax.naming.Name;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entry(objectClasses = {"UserPreferences", "top"})
-public final class OIDUserPreferences
+public final class UserPreferencesEntry
 {
-	public OIDUserPreferences(String username)
+	public UserPreferencesEntry(String username)
 	{
 		this.username = username;
 	}

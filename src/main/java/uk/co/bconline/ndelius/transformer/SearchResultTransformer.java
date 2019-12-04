@@ -8,22 +8,21 @@ import org.springframework.stereotype.Component;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
-import uk.co.bconline.ndelius.model.ldap.ADUser;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.model.entry.UserEntry;
 
 import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
-import static uk.co.bconline.ndelius.util.LdapUtils.mapOIDStringToDate;
+import static uk.co.bconline.ndelius.util.LdapUtils.mapLdapStringToDate;
 import static uk.co.bconline.ndelius.util.NameUtils.combineNames;
 
 @Slf4j
 @Component
 public class SearchResultTransformer
 {
-	@Value("${oid.useOracleAttributes:#{true}}")
+	@Value("${spring.ldap.useOracleAttributes:#{true}}")
 	private boolean useOracleAttributes;
 
 	private final TeamTransformer teamTransformer;
@@ -46,23 +45,13 @@ public class SearchResultTransformer
 				.build();
 	}
 
-	public SearchResult map(OIDUser user, float score) {
+	public SearchResult map(UserEntry user, float score) {
 		return SearchResult.builder()
 				.username(user.getUsername())
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
-				.endDate(mapOIDStringToDate(useOracleAttributes? user.getOracleEndDate(): user.getEndDate()))
-				.sources(singletonList("OID"))
-				.score(score)
-				.build();
-	}
-
-	public SearchResult map(ADUser user, float score) {
-		return SearchResult.builder()
-				.username(user.getUsername())
-				.forenames(user.getForename())
-				.surname(user.getSurname())
-				.sources(singletonList("AD?"))
+				.endDate(mapLdapStringToDate(useOracleAttributes? user.getOracleEndDate(): user.getEndDate()))
+				.sources(singletonList("LDAP"))
 				.score(score)
 				.build();
 	}

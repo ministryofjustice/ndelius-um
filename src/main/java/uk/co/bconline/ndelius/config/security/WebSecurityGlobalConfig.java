@@ -22,7 +22,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.bconline.ndelius.security.filter.BasicAuthFilter;
 import uk.co.bconline.ndelius.security.handler.LoginHandler;
-import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
+import uk.co.bconline.ndelius.service.impl.UserEntryServiceImpl;
 import uk.co.bconline.ndelius.util.LdapUtils;
 
 @Configuration
@@ -30,8 +30,8 @@ import uk.co.bconline.ndelius.util.LdapUtils;
 public class WebSecurityGlobalConfig extends WebSecurityConfigurerAdapter
 {
 	@Autowired
-	public void configureGlobal(OIDUserDetailsService userDetailsService,
-			AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception
+	public void configureGlobal(UserEntryServiceImpl userDetailsService,
+								AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception
 	{
 		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 		authenticationManagerBuilder

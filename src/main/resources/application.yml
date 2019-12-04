@@ -9,7 +9,9 @@ jwt:
 
 cache.evict.delay: 86400000 # = 24*60*60*1000 = 24 hours
 
-oid.base-environment:
+spring.main.allow-bean-definition-overriding: true  # This allows us to override the embedded LDAP with our alias-dereferencing version
+
+spring.ldap.base-environment:
   java.naming.ldap.derefAliases: never
   com.sun.jndi.ldap.connect.pool: true
 

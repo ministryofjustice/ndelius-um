@@ -8,10 +8,10 @@ import org.springframework.ldap.query.SearchScope;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import uk.co.bconline.ndelius.model.ldap.OIDRole;
-import uk.co.bconline.ndelius.model.ldap.OIDRoleAssociation;
-import uk.co.bconline.ndelius.repository.oid.OIDRoleAssociationRepository;
-import uk.co.bconline.ndelius.repository.oid.OIDRoleRepository;
+import uk.co.bconline.ndelius.model.entry.RoleAssociationEntry;
+import uk.co.bconline.ndelius.model.entry.RoleEntry;
+import uk.co.bconline.ndelius.repository.ldap.RoleAssociationRepository;
+import uk.co.bconline.ndelius.repository.ldap.RoleRepository;
 import uk.co.bconline.ndelius.service.RoleService;
 import uk.co.bconline.ndelius.service.UserRoleService;
 
@@ -36,17 +36,17 @@ import static uk.co.bconline.ndelius.util.NameUtils.join;
 public class UserRoleServiceImpl implements UserRoleService
 {
 	private final RoleService roleService;
-	private final OIDRoleRepository roleRepository;
-	private final OIDRoleAssociationRepository roleAssociationRepository;
+	private final RoleRepository roleRepository;
+	private final RoleAssociationRepository roleAssociationRepository;
 
-	@Value("${oid.base}")
-	private String oidBase;
+	@Value("${spring.ldap.base}")
+	private String ldapBase;
 
 	@Autowired
 	public UserRoleServiceImpl(
 			RoleService roleService,
-			OIDRoleRepository roleRepository,
-			OIDRoleAssociationRepository roleAssociationRepository)
+			RoleRepository roleRepository,
+			RoleAssociationRepository roleAssociationRepository)
 	{
 		this.roleService = roleService;
 		this.roleRepository = roleRepository;
@@ -54,7 +54,7 @@ public class UserRoleServiceImpl implements UserRoleService
 	}
 
 	@Override
-	public Set<OIDRole> getRolesICanAssign()
+	public Set<RoleEntry> getRolesICanAssign()
 	{
 		val myInteractions = SecurityContextHolder.getContext().getAuthentication()
 				.getAuthorities().stream()
@@ -80,7 +80,7 @@ public class UserRoleServiceImpl implements UserRoleService
 	}
 
 	@Override
-	public Set<OIDRole> getUserRoles(String username)
+	public Set<RoleEntry> getUserRoles(String username)
 	{
 		val t = LocalDateTime.now();
 		val r = stream(roleRepository.findAll(query()
@@ -90,7 +90,7 @@ public class UserRoleServiceImpl implements UserRoleService
                 .or(OBJECTCLASS).is("NDRoleAssociation")).spliterator(), true)
 				.map(role -> roleService.getRole(role.getName()).orElse(role))
 				.collect(toSet());
-		log.trace("--{}ms	OID lookup user roles", MILLIS.between(t, LocalDateTime.now()));
+		log.trace("--{}ms	LDAP lookup user roles", MILLIS.between(t, LocalDateTime.now()));
 		return r;
 	}
 
@@ -103,19 +103,19 @@ public class UserRoleServiceImpl implements UserRoleService
 				.base(join(",", "cn=" + username, USER_BASE))
 				.where("cn").like("UMBT*")
 				.or("cn").like("UABT*")).spliterator(), true)
-				.map(OIDRole::getName)
+				.map(RoleEntry::getName)
 				.map(roleService::getRole)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
-				.map(OIDRole::getInteractions)
+				.map(RoleEntry::getInteractions)
 				.flatMap(List::stream)
 				.collect(toSet());
-		log.trace("--{}ms	OID lookup user interactions", MILLIS.between(t, LocalDateTime.now()));
+		log.trace("--{}ms	LDAP lookup user interactions", MILLIS.between(t, LocalDateTime.now()));
 		return r;
 	}
 
 	@Override
-	public void updateUserRoles(String username, Set<OIDRole> roles)
+	public void updateUserRoles(String username, Set<RoleEntry> roles)
 	{
 		log.debug("Deleting existing role associations");
 		roleRepository.deleteAll(roleRepository.findAll(query()
@@ -127,11 +127,11 @@ public class UserRoleServiceImpl implements UserRoleService
 		log.debug("Saving new role associations");
 		ofNullable(roles).ifPresent(r ->
 				roleAssociationRepository.saveAll(r.stream()
-						.map(OIDRole::getName)
-						.map(name -> OIDRoleAssociation.builder()
+						.map(RoleEntry::getName)
+						.map(name -> RoleAssociationEntry.builder()
 								.name(name)
 								.username(username)
-								.aliasedObjectName(join(",", "cn=" + name, ROLE_BASE, oidBase))
+								.aliasedObjectName(join(",", "cn=" + name, ROLE_BASE, ldapBase))
 								.build())
 						.collect(toList())));
 	}

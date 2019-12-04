@@ -1,13 +1,13 @@
 package uk.co.bconline.ndelius.service;
 
+import uk.co.bconline.ndelius.model.entry.RoleEntry;
+
 import java.util.Optional;
 import java.util.Set;
 
-import uk.co.bconline.ndelius.model.ldap.OIDRole;
-
 public interface RoleService
 {
-	Set<OIDRole> getAllRoles();
-	Optional<OIDRole> getRole(String role);
-	Set<OIDRole> getRolesInGroup(String group);
+	Set<RoleEntry> getAllRoles();
+	Optional<RoleEntry> getRole(String role);
+	Set<RoleEntry> getRolesInGroup(String group);
 }

@@ -17,7 +17,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class LdapUtils
 {
 	private static final Logger log = LoggerFactory.getLogger(LdapUtils.class);
-	private static final String OID_DATE_FORMAT = "yyyyMMdd'000000Z'";
+	private static final String LDAP_DATE_FORMAT = "yyyyMMdd'000000Z'";
 
 	public static final String OBJECTCLASS = "objectclass";
 
@@ -44,17 +44,17 @@ public class LdapUtils
 		return new LdapShaPasswordEncoder().encode(password);
 	}
 
-	public static LocalDate mapOIDStringToDate(String oidDateString)
+	public static LocalDate mapLdapStringToDate(String ldapDateString)
 	{
-		return ofNullable(oidDateString)
-				.map(s -> LocalDate.parse(s.substring(0, 8), ofPattern(OID_DATE_FORMAT.substring(0, 8))))
+		return ofNullable(ldapDateString)
+				.map(s -> LocalDate.parse(s.substring(0, 8), ofPattern(LDAP_DATE_FORMAT.substring(0, 8))))
 				.orElse(null);
 	}
 
-	public static String mapToOIDString(LocalDate date)
+	public static String mapToLdapString(LocalDate date)
 	{
 		return ofNullable(date)
-				.map(d -> d.format(ofPattern(OID_DATE_FORMAT)))
+				.map(d -> d.format(ofPattern(LDAP_DATE_FORMAT)))
 				.orElse(null);
 	}
 }
