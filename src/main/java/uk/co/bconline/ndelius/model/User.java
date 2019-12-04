@@ -52,8 +52,8 @@ public class User
 	@NotNull
 	private Boolean privateSector;
 
-	@Pattern(regexp = "^$|^[A-Z0-9]{3}[A-Z][0-9]{3}$",
-			message = "must consist of 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001")
+	@Pattern(regexp = "^$|^[A-Z0-9]{7}$",
+			message = "must consist of 7 alphanumeric characters, however the recommended format is 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001")
 	private String staffCode;
 
 	@Valid
