@@ -250,14 +250,28 @@ public class UserValidationTest
 	public void testInvalidStaffCodePattern()
 	{
 		User user = aValidUser().toBuilder()
-				.staffCode("N01AAAA")
+				.staffCode("N01-AAA")
 				.staffGrade(ReferenceData.builder().code("GRADE1").build())
 				.build();
 
 		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
 
 		assertThat(constraintViolations, hasSize(1));
-		assertThat(constraintViolations, hasItem(hasProperty("message", is("must consist of 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001"))));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("must consist of 7 alphanumeric characters, however the recommended format is 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001"))));
+	}
+
+	@Test
+	public void testInvalidStaffCodePrefix()
+	{
+		User user = aValidUser().toBuilder()
+				.staffCode("ZZZA001")
+				.staffGrade(ReferenceData.builder().code("GRADE1").build())
+				.build();
+
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+
+		assertThat(constraintViolations, hasSize(1));
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("prefix should correspond to a valid provider code"))));
 	}
 
 	@Test
