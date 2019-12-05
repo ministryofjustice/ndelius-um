@@ -5,8 +5,8 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.co.bconline.ndelius.model.Role;
 import uk.co.bconline.ndelius.model.User;
-import uk.co.bconline.ndelius.model.ldap.OIDRole;
-import uk.co.bconline.ndelius.service.OIDUserService;
+import uk.co.bconline.ndelius.model.entry.RoleEntry;
+import uk.co.bconline.ndelius.service.UserEntryService;
 import uk.co.bconline.ndelius.service.UserRoleService;
 
 import javax.validation.ConstraintValidator;
@@ -20,7 +20,7 @@ import static java.util.stream.Collectors.toSet;
 public class AssignableRolesValidator implements ConstraintValidator<AssignableRoles, User>
 {
 	@Autowired
-	private OIDUserService userService;
+	private UserEntryService userService;
 
 	@Autowired
 	private UserRoleService userRoleService;
@@ -35,9 +35,9 @@ public class AssignableRolesValidator implements ConstraintValidator<AssignableR
 		if (newRoles.isEmpty()) return true;
 
 		val assignableRoles = userRoleService.getRolesICanAssign().stream()
-				.map(OIDRole::getName).collect(toSet());
+				.map(RoleEntry::getName).collect(toSet());
 		userService.getUser(ofNullable(user.getExistingUsername()).orElse(user.getUsername()))
-				.ifPresent(u -> assignableRoles.addAll(u.getRoles().stream().map(OIDRole::getName).collect(toSet())));
+				.ifPresent(u -> assignableRoles.addAll(u.getRoles().stream().map(RoleEntry::getName).collect(toSet())));
 
 		return assignableRoles.containsAll(newRoles);
 	}

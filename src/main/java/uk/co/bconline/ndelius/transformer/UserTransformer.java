@@ -9,9 +9,8 @@ import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.ReferenceData;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.*;
-import uk.co.bconline.ndelius.model.ldap.ADUser;
-import uk.co.bconline.ndelius.model.ldap.OIDRole;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.model.entry.RoleEntry;
+import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.util.LdapUtils;
 
@@ -30,33 +29,21 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.springframework.util.StringUtils.isEmpty;
-import static uk.co.bconline.ndelius.util.LdapUtils.mapOIDStringToDate;
-import static uk.co.bconline.ndelius.util.LdapUtils.mapToOIDString;
+import static uk.co.bconline.ndelius.util.LdapUtils.mapLdapStringToDate;
+import static uk.co.bconline.ndelius.util.LdapUtils.mapToLdapString;
 import static uk.co.bconline.ndelius.util.NameUtils.*;
 
 @Slf4j
 @Component
 public class UserTransformer
 {
-	@Value("${ad.primary.principal.suffix:}")
-	private String ad1PrincipalSuffix;
-
-	@Value("${ad.secondary.principal.suffix:}")
-	private String ad2PrincipalSuffix;
-
-	@Value("${ad.primary.readonly:false}")
-	private boolean ad1IsReadonly;
-
-	@Value("${ad.secondary.readonly:false}")
-	private boolean ad2IsReadonly;
-
-	@Value("${oid.default-password:#{null}}")
+	@Value("${spring.ldap.default-password:#{null}}")
 	private String defaultPassword;
 
 	private final TeamService teamService;
 	private final ReferenceDataService referenceDataService;
 	private final DatasetService datasetService;
-	private final DBUserService dbUserService;
+	private final UserEntityService userEntityService;
 	private final RoleService roleService;
 	private final RoleTransformer roleTransformer;
 	private final DatasetTransformer datasetTransformer;
@@ -68,7 +55,7 @@ public class UserTransformer
 			TeamService teamService,
 			ReferenceDataService referenceDataService,
 			DatasetService datasetService,
-			DBUserService dbUserService,
+			UserEntityService userEntityService,
 			RoleService roleService,
 			RoleTransformer roleTransformer,
 			DatasetTransformer datasetTransformer,
@@ -78,7 +65,7 @@ public class UserTransformer
 		this.teamService = teamService;
 		this.referenceDataService = referenceDataService;
 		this.datasetService = datasetService;
-		this.dbUserService = dbUserService;
+		this.userEntityService = userEntityService;
 		this.roleService = roleService;
 		this.roleTransformer = roleTransformer;
 		this.datasetTransformer = datasetTransformer;
@@ -118,10 +105,10 @@ public class UserTransformer
 				.build());
 	}
 
-	public Optional<User> map(OIDUser user)
+	public Optional<User> map(UserEntry user)
 	{
 		LocalDateTime t = now();
-		val allRoles = roleService.getAllRoles().stream().map(OIDRole::getName).collect(toSet());
+		val allRoles = roleService.getAllRoles().stream().map(RoleEntry::getName).collect(toSet());
 		log.trace("--{}ms	Get all roles for mapping", MILLIS.between(t, now()));
 		return ofNullable(user).map(v -> User.builder()
 				.username(v.getUsername())
@@ -130,40 +117,24 @@ public class UserTransformer
 				.email(v.getEmail())
 				.privateSector("private".equalsIgnoreCase(v.getSector()))
 				.homeArea(datasetService.getDatasetByCode(v.getHomeArea()).orElse(null))
-				.startDate(mapOIDStringToDate(v.getStartDate()))
-				.endDate(mapOIDStringToDate(v.getEndDate()))
+				.startDate(mapLdapStringToDate(v.getStartDate()))
+				.endDate(mapLdapStringToDate(v.getEndDate()))
 				.roles(ofNullable(v.getRoles())
 						.map(l -> l.stream().filter(role -> allRoles.contains(role.getName())))
 						.map(transactions -> transactions
 								.map(roleTransformer::map)
-								.peek(role -> {
-									// Disable add-user if either AD is in readonly mode
-									if ((ad1IsReadonly || ad2IsReadonly) && role.getInteractions() != null)
-										role.getInteractions().remove("UMBI003");
-								})
 								.collect(toList()))
 						.orElse(null))
-				.sources(singletonList("OID"))
+				.sources(singletonList("LDAP"))
 				.build());
 	}
 
-	public Optional<User> map(ADUser user)
-	{
-		return ofNullable(user).map(v -> User.builder()
-				.username(v.getUsername())
-				.forenames(v.getForename())
-				.surname(v.getSurname())
-				.build());
-	}
-
-	public Optional<User> combine(UserEntity dbUser, OIDUser oidUser, ADUser ad1User, ADUser ad2User)
+	public Optional<User> combine(UserEntity dbUser, UserEntry userEntry)
 	{
 		val t = now();
 		val r = Stream.of(
-				map(oidUser),
-				map(dbUser),
-				map(ad1User).map(u -> u.toBuilder().sources(singletonList("AD1")).build()),
-				map(ad2User).map(u -> u.toBuilder().sources(singletonList("AD2")).build()))
+				map(userEntry),
+				map(dbUser))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.reduce(this::reduceUser);
@@ -198,7 +169,7 @@ public class UserTransformer
 
 	public UserEntity mapToUserEntity(User user, UserEntity existingUser)
 	{
-		val myUserId = dbUserService.getMyUserId();
+		val myUserId = userEntityService.getMyUserId();
 		val staff = mapToStaffEntity(user, ofNullable(existingUser.getStaff()).orElse(new StaffEntity()));
 		val entity = existingUser.toBuilder()
 				.username(user.getUsername())
@@ -238,11 +209,11 @@ public class UserTransformer
 
 	public StaffEntity mapToStaffEntity(User user, StaffEntity existingStaff)
 	{
-		val myUserId = dbUserService.getMyUserId();
+		val myUserId = userEntityService.getMyUserId();
 		if (user.getStaffCode() != null && !user.getStaffCode().equals(existingStaff.getCode()))
 		{
 			// staff code has changed, fetch the new staff record to reassign it to this user
-			existingStaff = dbUserService.getUserByStaffCode(user.getStaffCode())
+			existingStaff = userEntityService.getUserByStaffCode(user.getStaffCode())
 					.map(UserEntity::getStaff).orElse(new StaffEntity());
 		}
 		val entity = existingStaff.toBuilder()
@@ -286,7 +257,7 @@ public class UserTransformer
 		return entity;
 	}
 
-	public OIDUser mapToOIDUser(User user, OIDUser existingUser)
+	public UserEntry mapToUserEntry(User user, UserEntry existingUser)
 	{
 		return existingUser.toBuilder()
 				.username(user.getUsername())
@@ -297,36 +268,14 @@ public class UserTransformer
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
 				.email(user.getEmail())
-				.startDate(mapToOIDString(user.getStartDate()))
-				.endDate(mapToOIDString(user.getEndDate()))
+				.startDate(mapToLdapString(user.getStartDate()))
+				.endDate(mapToLdapString(user.getEndDate()))
 				.sector(user.getPrivateSector()? "private": "public")
 				.homeArea(ofNullable(user.getHomeArea()).map(Dataset::getCode).orElse(null))
 				.roles(ofNullable(user.getRoles()).map(list -> list.stream()
 						.map(roleTransformer::map)
 						.collect(toSet()))
 						.orElseGet(Collections::emptySet))
-				.build();
-	}
-
-	public ADUser mapToAD2User(User user, ADUser existingUser)
-	{
-		return existingUser.toBuilder()
-				.username(user.getUsername())
-				.userPrincipalName(user.getUsername() + ad2PrincipalSuffix)
-				.forename(user.getForenames())
-				.surname(user.getSurname())
-				.displayName(combineNames(user.getForenames(), user.getSurname()))
-				.build();
-	}
-
-	public ADUser mapToAD1User(User user, ADUser existingUser)
-	{
-		return existingUser.toBuilder()
-				.username(user.getUsername())
-				.userPrincipalName(user.getUsername() + ad1PrincipalSuffix)
-				.forename(user.getForenames())
-				.surname(user.getSurname())
-				.displayName(combineNames(user.getForenames(), user.getSurname()))
 				.build();
 	}
 }

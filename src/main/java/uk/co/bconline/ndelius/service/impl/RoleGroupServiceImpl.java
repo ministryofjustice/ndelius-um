@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.RoleGroup;
-import uk.co.bconline.ndelius.model.ldap.OIDRole;
-import uk.co.bconline.ndelius.repository.oid.OIDRoleGroupRepository;
+import uk.co.bconline.ndelius.model.entry.RoleEntry;
+import uk.co.bconline.ndelius.repository.ldap.RoleGroupRepository;
 import uk.co.bconline.ndelius.service.RoleGroupService;
 import uk.co.bconline.ndelius.service.RoleService;
 import uk.co.bconline.ndelius.transformer.RoleGroupTransformer;
@@ -20,16 +20,16 @@ import static java.util.stream.StreamSupport.stream;
 @Service
 public class RoleGroupServiceImpl implements RoleGroupService
 {
-    private final OIDRoleGroupRepository oidRoleGroupRepository;
+    private final RoleGroupRepository roleGroupRepository;
     private final RoleGroupTransformer roleGroupTransformer;
 	private final RoleService roleService;
 
     @Autowired
     public RoleGroupServiceImpl(
-    		OIDRoleGroupRepository oidRoleGroupRepository,
+    		RoleGroupRepository roleGroupRepository,
 			RoleGroupTransformer roleGroupTransformer,
 			RoleService roleService){
-        this.oidRoleGroupRepository = oidRoleGroupRepository;
+        this.roleGroupRepository = roleGroupRepository;
         this.roleGroupTransformer = roleGroupTransformer;
 		this.roleService = roleService;
     }
@@ -38,7 +38,7 @@ public class RoleGroupServiceImpl implements RoleGroupService
 	@Cacheable(value = "roleGroups", key = "'all'")
     public List<RoleGroup> getRoleGroups()
     {
-        return stream(oidRoleGroupRepository.findAll().spliterator(), true)
+        return stream(roleGroupRepository.findAll().spliterator(), true)
                 .map(roleGroupTransformer::map)
                 .collect(toList());
     }
@@ -47,10 +47,10 @@ public class RoleGroupServiceImpl implements RoleGroupService
 	@Cacheable(value = "roleGroups")
     public Optional<RoleGroup> getRoleGroup(String name)
 	{
-        return oidRoleGroupRepository.findByName(name)
+        return roleGroupRepository.findByName(name)
 				.map(g -> {
 					g.setRoles(roleService.getRolesInGroup(g.getName()).parallelStream()
-							.map(OIDRole::getName)
+							.map(RoleEntry::getName)
 							.map(roleService::getRole)
 							.filter(Optional::isPresent).map(Optional::get)
 							.collect(toSet()));

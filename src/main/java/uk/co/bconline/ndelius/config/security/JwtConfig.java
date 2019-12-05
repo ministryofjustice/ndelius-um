@@ -17,7 +17,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import uk.co.bconline.ndelius.security.filter.DelegatedAuthFilter;
 import uk.co.bconline.ndelius.security.filter.JwtAuthFilter;
 import uk.co.bconline.ndelius.security.handler.LoginHandler;
-import uk.co.bconline.ndelius.service.impl.OIDUserDetailsService;
+import uk.co.bconline.ndelius.service.UserEntryService;
 import uk.co.bconline.ndelius.util.JwtHelper;
 
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
@@ -33,18 +33,18 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 	private final JwtHelper jwtHelper;
 	private final RequestMatcher loginRequestMatcher;
 	private final LoginHandler loginHandler;
-	private final OIDUserDetailsService oidUserDetailsService;
+	private final UserEntryService userEntryService;
 
 	@Autowired
 	public JwtConfig(JwtHelper jwtHelper,
 					 RequestMatcher loginRequestMatcher,
 					 LoginHandler loginHandler,
-					 OIDUserDetailsService oidUserDetailsService)
+					 UserEntryService userEntryService)
 	{
 		this.jwtHelper = jwtHelper;
 		this.loginRequestMatcher = loginRequestMatcher;
 		this.loginHandler = loginHandler;
-		this.oidUserDetailsService = oidUserDetailsService;
+		this.userEntryService = userEntryService;
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class JwtConfig extends WebSecurityConfigurerAdapter
 	@Bean
 	public JwtAuthFilter jwtAuthenticationFilter()
 	{
-		return new JwtAuthFilter(jwtHelper, loginHandler, jwtEntryPoint(), loginRequestMatcher, oidUserDetailsService);
+		return new JwtAuthFilter(jwtHelper, loginHandler, jwtEntryPoint(), loginRequestMatcher, userEntryService);
 	}
 
 	@Bean

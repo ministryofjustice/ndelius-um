@@ -9,7 +9,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.co.bconline.ndelius.model.auth.UserInteraction;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.security.handler.LoginHandler;
 import uk.co.bconline.ndelius.util.JwtHelper;
 
@@ -33,9 +33,9 @@ public class LoginHandlerTest
 	@Test
 	public void cookieIsCreatedOnSuccessfulLogin()
 	{
-		OIDUser oidUser = new OIDUser();
-		oidUser.setUsername("test.user");
-		AuthenticationToken authentication = new AuthenticationToken(oidUser, null);
+		UserEntry userEntry = new UserEntry();
+		userEntry.setUsername("test.user");
+		AuthenticationToken authentication = new AuthenticationToken(userEntry, null);
 
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		handler.onAuthenticationSuccess(null, response, authentication);
@@ -48,9 +48,9 @@ public class LoginHandlerTest
 	@Test
 	public void cookieContainsAllowedUserInteractions()
 	{
-		OIDUser oidUser = new OIDUser();
-		oidUser.setUsername("test.user");
-		AuthenticationToken authentication = new AuthenticationToken(oidUser, null);
+		UserEntry userEntry = new UserEntry();
+		userEntry.setUsername("test.user");
+		AuthenticationToken authentication = new AuthenticationToken(userEntry, null);
 
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		handler.onAuthenticationSuccess(null, response, authentication);

@@ -1,13 +1,13 @@
 package uk.co.bconline.ndelius.util;
 
 import org.springframework.ldap.odm.annotations.Entry;
-import uk.co.bconline.ndelius.model.ldap.OIDRole;
-import uk.co.bconline.ndelius.model.ldap.OIDUser;
+import uk.co.bconline.ndelius.model.entry.RoleEntry;
+import uk.co.bconline.ndelius.model.entry.UserEntry;
 
 public class Constants {
 	// LDAP Bases
-	public static final String ROLE_BASE = OIDRole.class.getAnnotation(Entry.class).base();
-	public static final String USER_BASE = OIDUser.class.getAnnotation(Entry.class).base();
+	public static final String ROLE_BASE = RoleEntry.class.getAnnotation(Entry.class).base();
+	public static final String USER_BASE = UserEntry.class.getAnnotation(Entry.class).base();
 
 	// Business interactions
 	public static final String PUBLIC_ACCESS = "UABI020";

@@ -15,7 +15,7 @@ import {Team} from '../../model/team';
   templateUrl: './search.component.html'
 })
 export class SearchComponent implements OnInit, AfterViewInit {
-  @ViewChild('queryInput') queryInput: NgModel;
+  @ViewChild('queryInput', { static: false }) queryInput: NgModel;
   query = '';
   page: number;
   pageSize = 50;

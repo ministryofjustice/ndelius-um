@@ -18,8 +18,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.OncePerRequestFilter;
 import uk.co.bconline.ndelius.model.*;
-import uk.co.bconline.ndelius.model.ldap.OIDUserPreferences;
-import uk.co.bconline.ndelius.repository.oid.OIDUserPreferencesRepository;
+import uk.co.bconline.ndelius.model.entry.UserPreferencesEntry;
+import uk.co.bconline.ndelius.repository.ldap.UserPreferencesRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -59,7 +59,7 @@ public class UserControllerTest
 	private OncePerRequestFilter jwtAuthenticationFilter;
 
 	@Autowired
-	private OIDUserPreferencesRepository preferencesRepository;
+	private UserPreferencesRepository preferencesRepository;
 
 	private MockMvc mvc;
 
@@ -189,24 +189,14 @@ public class UserControllerTest
 	}
 
 	@Test
-	public void activeDirectorySearchMatchesForenameAndSurname() throws Exception
-	{
-		mvc.perform(get("/api/users")
-				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "Super User"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$[*].username", hasItem("Administrator")));
-	}
-
-	@Test
 	public void combinedUserIsReturned() throws Exception
 	{
 		mvc.perform(get("/api/user/test.user")
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.username", equalTo("test.user")))
-				.andExpect(jsonPath("$.forenames", equalTo("Test")))		// From OID
-				.andExpect(jsonPath("$.surname", equalTo("User")))			// From OID
+				.andExpect(jsonPath("$.forenames", equalTo("Test")))		// From LDAP
+				.andExpect(jsonPath("$.surname", equalTo("User")))			// From LDAP
 				.andExpect(jsonPath("$.staffCode", equalTo("N01A001")))		// From DB
 				.andExpect(jsonPath("$.teams[*].code", hasItems("N01TST", "N02TST", "N03TST")));
 	}
@@ -423,7 +413,7 @@ public class UserControllerTest
 						.build())))
 				.andExpect(status().isCreated());
 
-		Optional<OIDUserPreferences> prefs = preferencesRepository.findOne(query()
+		Optional<UserPreferencesEntry> prefs = preferencesRepository.findOne(query()
 				.searchScope(SearchScope.ONELEVEL)
 				.base("cn=" + username)
 				.where("cn").is("UserPreferences"));
@@ -505,7 +495,7 @@ public class UserControllerTest
 		String username = nextTestUsername();
 		User user = aValidUser().toBuilder()
 				.username(username)
-				.staffCode("ZZZA001")
+				.staffCode("N01A501")
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.build();
 
@@ -535,7 +525,7 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.username", is(username + "-renamed")))
-				.andExpect(jsonPath("$.staffCode", is("ZZZA001")));
+				.andExpect(jsonPath("$.staffCode", is("N01A501")));
 	}
 
 	@Test
@@ -544,14 +534,14 @@ public class UserControllerTest
 		String username1 = nextTestUsername();
 		User user1 = aValidUser().toBuilder()
 				.username(username1)
-				.staffCode("ZZZB001")
+				.staffCode("N01B501")
 				.staffGrade(ReferenceData.builder().code("GRADE1").description("Grade 1").build())
 				.teams(singletonList(Team.builder().code("N01TST").build()))
 				.build();
 		String username2 = nextTestUsername();
 		User user2 = aValidUser().toBuilder()
 				.username(username2)
-				.staffCode("ZZZB002")
+				.staffCode("N01B502")
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.teams(singletonList(Team.builder().code("N02TST").build()))
 				.build();
@@ -575,7 +565,7 @@ public class UserControllerTest
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user2.toBuilder()
-						.staffCode("ZZZB001")
+						.staffCode("N01B501")
 						.staffGrade(ReferenceData.builder().code("GRADE1").description("Grade 1").build())
 						.teams(singletonList(Team.builder().code("N01TST").build()))
 						.build())))
@@ -585,7 +575,7 @@ public class UserControllerTest
 		mvc.perform(get("/api/user/" + username2)
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.staffCode", is("ZZZB001")))
+				.andExpect(jsonPath("$.staffCode", is("N01B501")))
 				.andExpect(jsonPath("$.staffGrade.code", is("GRADE1")))
 				.andExpect(jsonPath("$.teams[*]", hasSize(1)))
 				.andExpect(jsonPath("$.teams[0].code", is("N01TST")));
@@ -739,5 +729,18 @@ public class UserControllerTest
 		// Then I should receive an error message
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.error[*]", hasItem("Insufficient permissions to update National users")));
+	}
+
+	@Test
+	public void staffCodePrefixMustBeAValidProviderCode() throws Exception
+	{
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token(mvc))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.staffCode("ZZZA001").build())))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error[*]", hasItem("Staff Code prefix should correspond to a valid provider code")));
 	}
 }
