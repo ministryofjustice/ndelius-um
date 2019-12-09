@@ -38,8 +38,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
 import static uk.co.bconline.ndelius.test.util.CustomMatchers.isWithin;
+import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 import static uk.co.bconline.ndelius.test.util.UserUtils.aValidUser;
 import static uk.co.bconline.ndelius.test.util.UserUtils.nextTestUsername;
 

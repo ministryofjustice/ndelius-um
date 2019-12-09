@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.co.bconline.ndelius.test.util.AuthUtils.token;
+import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 
 @SpringBootTest
 @ActiveProfiles("test")
