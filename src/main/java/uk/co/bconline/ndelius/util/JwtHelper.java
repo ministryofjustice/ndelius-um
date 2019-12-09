@@ -40,6 +40,9 @@ public class JwtHelper
 	@Value("${jwt.cookie}")
 	private String cookieName;
 
+	@Value("${jwt.secure:#{true}}")
+	private boolean cookieIsSecure;
+
 	@PostConstruct
 	public void generateSecret()
 	{
@@ -90,6 +93,7 @@ public class JwtHelper
 	public Cookie createCookie(String token)
 	{
 		val cookie = new Cookie(cookieName, token);
+		cookie.setSecure(cookieIsSecure);
 		cookie.setHttpOnly(true);
 		cookie.setPath("/");
 		return cookie;
