@@ -19,7 +19,8 @@ import uk.co.bconline.ndelius.transformer.UserTransformer;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletionException;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -92,9 +93,9 @@ public class UserServiceImpl implements UserService
 							.limit(pageSize)
 							.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}", result.getUsername(), result.getScore(), result.getEndDate()))
 							.collect(toList()))
-					.get();
+					.join();
 		}
-		catch (InterruptedException | ExecutionException e)
+		catch (CancellationException | CompletionException e)
 		{
 			throw new AppException(String.format("Unable to complete user search for %s", query), e);
 		}
@@ -109,9 +110,10 @@ public class UserServiceImpl implements UserService
 		try
 		{
 			return allOf(dbFuture, ldapFuture)
-					.thenApply(v -> dbFuture.join() || ldapFuture.join()).get();
+					.thenApply(v -> dbFuture.join() || ldapFuture.join())
+					.join();
 		}
-		catch (InterruptedException | ExecutionException e)
+		catch (CancellationException | CompletionException e)
 		{
 			throw new AppException(String.format("Unable to check whether user exists with username %s", username), e);
 		}
@@ -127,10 +129,11 @@ public class UserServiceImpl implements UserService
 		{
 			val datasetsFilter = datasetsFilter();
 			return allOf(dbFuture, ldapFuture)
-					.thenApply(v -> transformer.combine(dbFuture.join(), ldapFuture.join())).get()
+					.thenApply(v -> transformer.combine(dbFuture.join(), ldapFuture.join()))
+					.join()
 					.filter(user -> datasetsFilter.test(user.getUsername()));
 		}
-		catch (InterruptedException | ExecutionException e)
+		catch (CancellationException | CompletionException e)
 		{
 			throw new AppException(String.format("Unable to retrieve user details for %s", username), e);
 		}
@@ -150,9 +153,9 @@ public class UserServiceImpl implements UserService
 
 		try
 		{
-			allOf(dbFuture, ldapFuture).get();
+			allOf(dbFuture, ldapFuture).join();
 		}
-		catch (InterruptedException | ExecutionException e)
+		catch (CancellationException | CompletionException e)
 		{
 			throw new AppException(String.format("Unable to create user (%s)", getMostSpecificCause(e).getMessage()), e);
 		}
@@ -178,9 +181,9 @@ public class UserServiceImpl implements UserService
 
 		try
 		{
-			allOf(dbFuture, ldapFuture).get();
+			allOf(dbFuture, ldapFuture).join();
 		}
-		catch (InterruptedException | ExecutionException e)
+		catch (CancellationException | CompletionException e)
 		{
 			throw new AppException(String.format("Unable to update user (%s)", getMostSpecificCause(e).getMessage()), e);
 		}
