@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import uk.co.bconline.ndelius.exception.AppException;
-import uk.co.bconline.ndelius.exception.NotFoundException;
 import uk.co.bconline.ndelius.model.ErrorResponse;
 
 import javax.validation.ConstraintViolationException;
@@ -61,15 +60,6 @@ public class ControllerExceptionHandler
 					}
 				})
 				.collect(toList()));
-	}
-
-	@ExceptionHandler
-	@ResponseBody
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public ErrorResponse handle(NotFoundException exception) {
-		log.debug("Returning 404 response", exception);
-		if (exception.getMessage() == null) return null;
-		return new ErrorResponse(exception.getMessage());
 	}
 
 	@ExceptionHandler
