@@ -80,11 +80,10 @@ public class UserServiceImpl implements UserService
 			return allOf(ldapFuture, dbFuture)
 					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())
 							.flatMap(Collection::stream)
-							.collect(HashMap<String, SearchResult>::new, (map, result) -> {
-								map.put(result.getUsername(), ofNullable(map.get(result.getUsername()))
-										.map(r -> searchResultTransformer.reduce(r, result))
-										.orElse(result));
-							}, HashMap::putAll)
+							.collect(HashMap<String, SearchResult>::new, (map, result) -> map.put(result.getUsername(),
+									ofNullable(map.get(result.getUsername()))
+											.map(r -> searchResultTransformer.reduce(r, result))
+											.orElse(result)), HashMap::putAll)
 							.values()
 							.stream()
 							.filter(result -> includeInactiveUsers || result.getEndDate() == null || !result.getEndDate().isBefore(now()))
