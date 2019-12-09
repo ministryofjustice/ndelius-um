@@ -1,16 +1,15 @@
 package uk.co.bconline.ndelius.validator;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import lombok.val;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import lombok.val;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class DateRangeValidator implements ConstraintValidator<DateRange, LocalDate>
 {
-	private final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
 
 	private DateRange constraint;
 

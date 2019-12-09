@@ -1,9 +1,11 @@
 package uk.co.bconline.ndelius.util;
 
+import lombok.experimental.UtilityClass;
 import org.springframework.ldap.odm.annotations.Entry;
 import uk.co.bconline.ndelius.model.entry.RoleEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 
+@UtilityClass
 public class Constants {
 	// LDAP Bases
 	public static final String ROLE_BASE = RoleEntry.class.getAnnotation(Entry.class).base();
