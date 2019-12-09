@@ -2,9 +2,11 @@ package uk.co.bconline.ndelius.model.entity;
 
 import lombok.*;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
@@ -18,7 +20,7 @@ import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 @Cache(usage = READ_ONLY)
 @ToString(exclude = "staffLinks")
 @EqualsAndHashCode(exclude = "staffLinks")
-public class TeamEntity
+public class TeamEntity implements Serializable
 {
 	public TeamEntity(Long id)
 	{
@@ -38,12 +40,12 @@ public class TeamEntity
 	private String description;
 
 	@Column(name = "START_DATE")
-	@Temporal(TemporalType.DATE)
-	private Date startDate;
+	@Type(type = "java.time.LocalDate")
+	private LocalDate startDate;
 
 	@Column(name = "END_DATE")
-	@Temporal(TemporalType.DATE)
-	private Date endDate;
+	@Type(type = "java.time.LocalDate")
+	private LocalDate endDate;
 
 	@ManyToOne
 	@JoinColumn(name = "PROBATION_AREA_ID", insertable = false, updatable = false)

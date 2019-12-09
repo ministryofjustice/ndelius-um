@@ -1,19 +1,19 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
-
-import javax.persistence.*;
-
+import lombok.Getter;
 import org.hibernate.annotations.Cache;
 
-import lombok.Getter;
+import javax.persistence.*;
+import java.io.Serializable;
+
+import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
 @Getter
 @Entity
 @Cache(usage = READ_ONLY)
 @Table(name = "R_REFERENCE_DATA_MASTER")
 @SequenceGenerator(name = "REFERENCE_DATA_MASTER_ID_SEQ", sequenceName = "REFERENCE_DATA_MASTER_ID_SEQ", allocationSize = 1)
-public class ReferenceDataMasterEntity 
+public class ReferenceDataMasterEntity implements Serializable
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "REFERENCE_DATA_MASTER_ID_SEQ")

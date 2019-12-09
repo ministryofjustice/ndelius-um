@@ -1,15 +1,15 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
-
-import javax.persistence.*;
-
-import org.hibernate.annotations.Cache;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cache;
+
+import javax.persistence.*;
+import java.io.Serializable;
+
+import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
 @Getter
 @Entity
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Cache(usage = READ_ONLY)
 @Table(name = "ORGANISATION")
-public class OrganisationEntity
+public class OrganisationEntity implements Serializable
 {
 	public OrganisationEntity(Long id)
 	{

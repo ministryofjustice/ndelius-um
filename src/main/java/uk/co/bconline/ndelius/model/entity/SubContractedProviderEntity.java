@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "SC_PROVIDER")
-public class SubContractedProviderEntity
+public class SubContractedProviderEntity implements Serializable
 {
 	public SubContractedProviderEntity(Long id)
 	{

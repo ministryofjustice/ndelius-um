@@ -1,13 +1,13 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "STAFF_TEAM")
-public class StaffTeamEntity
+public class StaffTeamEntity implements Serializable
 {
 	@EmbeddedId
 	private StaffTeamId id;
