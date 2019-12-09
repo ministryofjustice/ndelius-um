@@ -5,6 +5,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -24,7 +25,7 @@ import static org.hibernate.annotations.NotFoundAction.IGNORE;
 @Builder(toBuilder = true)
 @ToString(exclude = {"teamLinks", "user"})
 @EqualsAndHashCode(exclude = {"teamLinks", "user"})
-public class StaffEntity
+public class StaffEntity implements Serializable
 {
 	@Id
 	@Column(name = "STAFF_ID")
