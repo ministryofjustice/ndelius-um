@@ -60,6 +60,10 @@ pipeline {
         always {
             junit 'build/test-results/**/*.xml'
             archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
+            publishHTML target: [reportName : 'API Test Report', reportDir: 'build/reports/tests/test']
+            publishHTML target: [reportName : 'API Coverage Report', reportDir: 'build/reports/coverage/test']
+            publishHTML target: [reportName : 'UI Test Report', reportDir: 'build/reports/tests/ui-test']
+            publishHTML target: [reportName : 'UI Coverage Report', reportDir: 'build/reports/coverage/ui-test']
             deleteDir()
         }
         success {

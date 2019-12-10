@@ -5,7 +5,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-public class AuthUtils
+public class TokenUtils
 {
 	public static String token(MockMvc mvc) throws Exception
 	{

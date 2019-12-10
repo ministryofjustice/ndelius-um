@@ -1,3 +1,4 @@
+// Build dependencies
 buildscript {
 	ext {
 		springBootVersion = '2.1.5.RELEASE'
@@ -8,12 +9,13 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath("com.moowork.gradle:gradle-node-plugin:1.2.0")
-		classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2")
-		classpath("net.researchgate:gradle-release:2.6.0")
+		classpath("com.moowork.gradle:gradle-node-plugin:1.3.1")
+		classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.8")
+		classpath("net.researchgate:gradle-release:2.8.1")
 	}
 }
 
+// Build plugins
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'jacoco'
@@ -23,22 +25,23 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.moowork.node'
 apply plugin: 'net.researchgate.release'
 
+// Java
 sourceCompatibility = 1.8
-
 sourceSets {
     main.resources.srcDirs 'src/main/resources', 'ui/dist'
 }
 
+// Spring Boot
 springBoot {
 	buildInfo()
 }
 
+// Node/NPM
 node {
 	version = '12.13.1'
 	npmVersion = '6.12.1'
 	download = true
 }
-
 npmInstall.workingDir = file("${project.projectDir}/ui")
 npm_test.workingDir = file("${project.projectDir}/ui")
 npm_test.dependsOn(npmInstall)
@@ -47,10 +50,17 @@ npm_run.args = ['build-prod']
 npm_run.dependsOn(npm_test)
 processResources.dependsOn(npm_run)
 
+// Jacoco test coverage
+jacoco.toolVersion '0.8.5'
+jacocoTestReport.reports.html.destination file("${buildDir}/reports/coverage/test")
+plugins.withType(JacocoPlugin) {
+	tasks['test'].finalizedBy jacocoTestReport
+}
+
+// Project dependencies
 repositories {
 	mavenCentral()
 }
-
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-security')

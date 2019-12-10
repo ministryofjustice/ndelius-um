@@ -3,5 +3,3 @@ spring.profiles.include: dev
 jwt:
   cookie: my-cookie
   secret: secret
-
-spnego.enabled: false

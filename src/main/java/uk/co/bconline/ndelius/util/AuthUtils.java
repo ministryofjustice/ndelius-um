@@ -1,8 +1,6 @@
 package uk.co.bconline.ndelius.util;
 
 import lombok.experimental.UtilityClass;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,8 +12,6 @@ import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 @UtilityClass
 public class AuthUtils
 {
-	private static final Logger log = LoggerFactory.getLogger(AuthUtils.class);
-
 	public static UserDetails me()
 	{
 		return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

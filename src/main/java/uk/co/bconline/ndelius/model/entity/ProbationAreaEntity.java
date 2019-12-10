@@ -1,24 +1,24 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import uk.co.bconline.ndelius.model.entity.converter.YNConverter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
-@Data
 @Entity
-@Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Cache(usage = READ_ONLY)
 @Table(name = "PROBATION_AREA")
-@ToString(exclude = "userLinks")
 @EqualsAndHashCode(exclude = "userLinks")
-public class ProbationAreaEntity
+public class ProbationAreaEntity implements Serializable
 {
 	public ProbationAreaEntity(Long id)
 	{

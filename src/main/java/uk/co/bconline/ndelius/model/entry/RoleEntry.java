@@ -6,6 +6,7 @@ import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 
 import javax.naming.Name;
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
@@ -15,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(of = {"name", "interactions"})
 @Entry(objectClasses = "top", base = "cn=ndRoleCatalogue")
-public final class RoleEntry
+public final class RoleEntry implements Serializable
 {
 	@Id
 	private Name dn;

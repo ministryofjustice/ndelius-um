@@ -5,6 +5,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -24,13 +25,8 @@ import static org.hibernate.annotations.NotFoundAction.IGNORE;
 @Table(name = "USER_")
 @Builder(toBuilder = true)
 @EqualsAndHashCode(exclude = {"probationAreaLinks", "createdBy", "updatedBy"})
-public class UserEntity
+public class UserEntity implements Serializable
 {
-	public UserEntity(Long id)
-	{
-		this.id = id;
-	}
-
 	@Id
 	@Column(name = "USER_ID")
 	@GeneratedValue(generator = "USER_ID_SEQ")

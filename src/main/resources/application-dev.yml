@@ -1,6 +1,9 @@
 spring.profiles.include: default
 
-jwt.secret: changeme
+jwt:
+  secret: ThisIsASecretKey
+  secure: false
+
 delius.secret: ThisIsASecretKey
 
 spring:
