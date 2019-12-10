@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {User} from '../../model/user';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {debounceTime, distinctUntilChanged, flatMap, map} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, filter, flatMap, map} from 'rxjs/operators';
 import {UserService} from '../../service/user.service';
 import {Observable} from 'rxjs/Observable';
 import {AuthorisationService} from '../../service/impl/authorisation.service';
@@ -92,7 +92,7 @@ export class UserComponent implements OnInit {
         this.homeAreaChanged();
         setTimeout(() => {
           this.staffCodeControl.valueChanges
-            .pipe(debounceTime(500), distinctUntilChanged())
+            .pipe(debounceTime(500), distinctUntilChanged(), filter(val => val != null))
             .subscribe(() => this.staffCodeChanged());
         });
       });
