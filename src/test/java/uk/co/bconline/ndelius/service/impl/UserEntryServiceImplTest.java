@@ -19,7 +19,7 @@ import static org.junit.Assert.assertFalse;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class OIDUserDetailsServiceTest
+public class UserEntryServiceImplTest
 {
 	@Autowired
 	private UserEntryServiceImpl service;
@@ -38,11 +38,11 @@ public class OIDUserDetailsServiceTest
 	}
 
 	@Test
-	public void retrieveOIDUser()
+	public void retrieveUserEntry()
 	{
-		service.getUser("test.user").ifPresent(oidUser -> {
-			assertEquals("Test", oidUser.getForenames());
-			assertEquals("User", oidUser.getSurname());
+		service.getUser("test.user").ifPresent(entry -> {
+			assertEquals("Test", entry.getForenames());
+			assertEquals("User", entry.getSurname());
 		});
 	}
 }
