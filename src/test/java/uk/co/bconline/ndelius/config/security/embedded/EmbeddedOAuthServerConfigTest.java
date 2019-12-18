@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("embedded-oauth")
-@SpringBootTest({"spring.ldap.urls=ldap://localhost:3061", "spring.ldap.embedded.port=3061"})
+@SpringBootTest({"spring.ldap.urls=ldap://localhost:3061", "spring.ldap.embedded.port=3061", "spring.redis.port=6380"})
 public class EmbeddedOAuthServerConfigTest {
 
 	@Autowired
