@@ -18,8 +18,14 @@
     {
       "name": "spring.ldap.useOracleAttributes",
       "type": "java.lang.Boolean",
-      "default": true,
+      "defaultValue": true,
       "description": "Whether to use the 'orclActiveStartDate' and 'orclActiveEndDate' attributes instead of the 'startDate' and 'endDate' attributes in the User LDAP entry."
+    },
+    {
+      "name": "spring.redis.embedded",
+      "type": "java.lang.Boolean",
+      "defaultValue": false,
+      "description": "Whether to enable the in-memory Redis server on port ${spring.redis.port} for the OAuth token store."
     }
   ]
 }
