@@ -1,16 +1,16 @@
 package uk.co.bconline.ndelius.config.security;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-
 import org.junit.Test;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class WebSecurityGlobalConfigTest
+import java.util.Arrays;
+
+import static org.junit.Assert.assertTrue;
+
+public class PasswordEncoderTest
 {
-	private PasswordEncoder passwordEncoder = new WebSecurityGlobalConfig().passwordEncoder();
+	private PasswordEncoder passwordEncoder = new ResourceServerConfig().passwordEncoder();
 
 	@Test
 	public void oidPasswordFormatCanBeMatched()

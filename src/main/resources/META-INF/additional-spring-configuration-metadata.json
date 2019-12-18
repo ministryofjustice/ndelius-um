@@ -1,27 +1,6 @@
 {
   "properties": [
     {
-      "name": "jwt.secret",
-      "type": "java.lang.String",
-      "description": "Secret key used for signing JWT tokens."
-    },
-    {
-      "name": "jwt.expiry",
-      "type": "java.lang.Integer",
-      "description": "JWT token expiry in minutes."
-    },
-    {
-      "name": "jwt.cookie",
-      "type": "java.lang.String",
-      "description": "Name of the cookie used for storing the JWT token in the login response."
-    },
-    {
-      "name": "jwt.secure",
-      "type": "java.lang.Boolean",
-      "defaultValue": true,
-      "description": "Whether the JWT cookie should have the Secure attribute set. This ensures the cookie will only be sent over HTTPS connections."
-    },
-    {
       "name": "spring.ldap.default-password",
       "type": "java.lang.String",
       "description": "Default SHA/SSHA hashed password to be used when creating users in LDAP."

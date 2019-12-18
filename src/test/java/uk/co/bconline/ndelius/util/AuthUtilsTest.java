@@ -1,27 +1,33 @@
 package uk.co.bconline.ndelius.util;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.*;
 
-@WithMockUser
-@ContextConfiguration
 @RunWith(SpringRunner.class)
 public class AuthUtilsTest
 {
+	@Before
+	public void user()
+	{
+		SecurityContextHolder.getContext()
+				.setAuthentication(new TestingAuthenticationToken("user", "password", "ROLE_USER"));
+	}
+
 	@Test
 	public void returnsUserDetailsFromSecurityContext()
 	{
-		UserDetails me = AuthUtils.me();
-		assertEquals("user", me.getUsername());
-		assertEquals("password", me.getPassword());
+		Authentication me = AuthUtils.me();
+		assertEquals("user", me.getPrincipal());
+		assertEquals("password", me.getCredentials());
 	}
 
 	@Test
@@ -43,9 +49,10 @@ public class AuthUtilsTest
 	}
 
 	@Test
-	@WithMockUser(authorities = "UABI025")
 	public void checkNationalAccessIsTrue()
 	{
+		SecurityContextHolder.getContext()
+				.setAuthentication(new TestingAuthenticationToken("user", "password", "UABI025"));
 		assertTrue(AuthUtils.isNational());
 	}
 }

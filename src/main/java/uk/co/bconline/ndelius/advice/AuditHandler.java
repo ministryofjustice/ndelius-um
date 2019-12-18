@@ -1,31 +1,31 @@
 package uk.co.bconline.ndelius.advice;
 
-import static org.springframework.security.core.context.SecurityContextHolder.getContext;
-
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.core.annotation.Order;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import uk.co.bconline.ndelius.advice.annotation.Interaction;
+import java.util.regex.Pattern;
 
-@Slf4j(topic = "audit")
-@Order(2)
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
+
 @Aspect
 @Component
+@Slf4j(topic = "audit")
 public class AuditHandler
 {
-	@Around("@annotation(interaction)")
-	public Object audit(ProceedingJoinPoint joinPoint, Interaction interaction) throws Throwable
+	@Around("@annotation(preauthorize)")
+	public Object audit(ProceedingJoinPoint joinPoint, PreAuthorize preauthorize) throws Throwable
 	{
-		if (interaction.audited())
+		val matcher = Pattern.compile("#oauth2\\.hasScope\\('(.*)'\\)").matcher(preauthorize.value());
+		if (matcher.find())
 		{
-			val user = (UserDetails) getContext().getAuthentication().getPrincipal();
-			log.info("{} {} {}", user.getUsername(), interaction.value(), joinPoint.getArgs());
+			val username = getContext().getAuthentication().getPrincipal();
+			val interaction = matcher.group(1);
+			log.info("{} {} {}", username, interaction, joinPoint.getArgs());
 		}
 		return joinPoint.proceed();
 	}

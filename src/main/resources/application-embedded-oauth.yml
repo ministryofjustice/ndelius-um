@@ -1,0 +1,37 @@
+spring.profiles.include: dev
+
+security.oauth2.embedded:
+  enabled: true
+  clients:
+    - id: test.user
+      secret: secret
+      authorized-grant-types:
+        - client_credentials
+        - refresh_token
+      scopes:
+        - UMBI001
+        - UMBI002
+        - UMBI003
+        - UMBI004
+        - UMBI005
+        - UMBI006
+        - UMBI007
+        - UMBI008
+        - UMBI009
+        - UMBI010
+        - UMBI011
+        - UMBI012
+        - UABI021
+        - UABI022
+        - UABI023
+        - UABI024
+        - UABI025
+        - UABI026
+      auto-approve: true
+    - id: another.user
+      secret: secret
+      authorized-grant-types:
+       - client_credentials
+      scopes:
+       - UMBI001
+      auto-approve: true

@@ -1,24 +1,23 @@
 package uk.co.bconline.ndelius.controller;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
-
-import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import uk.co.bconline.ndelius.advice.annotation.Interaction;
 import uk.co.bconline.ndelius.model.RoleGroup;
 import uk.co.bconline.ndelius.service.UserRoleGroupService;
+
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @Validated
@@ -34,15 +33,15 @@ public class RoleGroupController
 		this.roleGroupService = roleGroupService;
 	}
 
-	@Interaction("UMBI007")
 	@GetMapping(path="/rolegroups")
+	@PreAuthorize("#oauth2.hasScope('UMBI007')")
 	public ResponseEntity<List<RoleGroup>> getRoleGroups()
 	{
 		val roleGroups = roleGroupService.getAssignableRoleGroups();
 		return roleGroups.iterator().hasNext() ? new ResponseEntity<>(roleGroups, OK) : new ResponseEntity<>(NOT_FOUND);
 	}
 
-	@Interaction("UMBI007")
+	@PreAuthorize("#oauth2.hasScope('UMBI007')")
 	@GetMapping(path="/rolegroup/{rolegroupname}")
 	public ResponseEntity<RoleGroup> getRoleGroup(final @PathVariable("rolegroupname") String roleGroupName)
 	{

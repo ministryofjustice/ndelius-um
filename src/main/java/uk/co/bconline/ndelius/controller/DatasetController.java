@@ -4,12 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.co.bconline.ndelius.advice.annotation.Interaction;
 import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.service.DatasetService;
 
@@ -32,21 +32,21 @@ public class DatasetController
 		this.datasetService = datasetService;
 	}
 
-	@Interaction("UMBI006")
+	@PreAuthorize("#oauth2.hasScope('UMBI006')")
 	@GetMapping(value = "/datasets", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Dataset>> getDatasets()
 	{
 		return ok(datasetService.getDatasets());
 	}
 
-	@Interaction("UMBI006")
+	@PreAuthorize("#oauth2.hasScope('UMBI006')")
 	@GetMapping(value = "/establishments", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Dataset>> getEstablishments()
 	{
 		return ok(datasetService.getEstablishments());
 	}
 
-	@Interaction("UMBI006")
+	@PreAuthorize("#oauth2.hasScope('UMBI006')")
 	@GetMapping(value = "/dataset/{datasetCode}/nextStaffCode", produces = MediaType.TEXT_PLAIN_VALUE)
 	public ResponseEntity<String> getNextStaffCode(@PathVariable("datasetCode") String datasetCode)
 	{
@@ -54,7 +54,7 @@ public class DatasetController
 		return ok(datasetService.getNextStaffCode(datasetCode));
 	}
 
-	@Interaction("UMBI006")
+	@PreAuthorize("#oauth2.hasScope('UMBI006')")
 	@GetMapping(value = "/dataset/{datasetCode}/subContractedProviders", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Dataset>> getSubContractedProviders(@PathVariable("datasetCode") String datasetCode)
 	{

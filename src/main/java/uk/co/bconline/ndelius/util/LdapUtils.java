@@ -1,10 +1,9 @@
 package uk.co.bconline.ndelius.util;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import net.bytebuddy.utility.RandomString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 
 import java.time.LocalDate;
@@ -13,10 +12,10 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Optional.ofNullable;
 import static org.springframework.util.StringUtils.isEmpty;
 
+@Slf4j
 @UtilityClass
 public class LdapUtils
 {
-	private static final Logger log = LoggerFactory.getLogger(LdapUtils.class);
 	private static final String LDAP_DATE_FORMAT = "yyyyMMdd'000000Z'";
 
 	public static final String OBJECTCLASS = "objectclass";
