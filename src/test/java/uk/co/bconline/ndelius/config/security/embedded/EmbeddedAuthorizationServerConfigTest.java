@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @ActiveProfiles("embedded-oauth")
 @SpringBootTest({"spring.ldap.urls=ldap://localhost:3061", "spring.ldap.embedded.port=3061", "spring.redis.port=6380"})
-public class EmbeddedOAuthServerConfigTest {
+public class EmbeddedAuthorizationServerConfigTest {
 
 	@Autowired
 	private WebApplicationContext context;
@@ -53,7 +53,7 @@ public class EmbeddedOAuthServerConfigTest {
 	public void canAuthenticateAsTestUser() throws Exception
 	{
 		String token = JsonPath.read(mvc.perform(post("/oauth/token")
-				.with(httpBasic("test.user", "secret"))
+				.with(httpBasic("test.client", "secret"))
 				.param("grant_type", "client_credentials")
 				.param("grant_type", "refresh_token")
 				.param("scope", "UMBI001"))
@@ -67,14 +67,14 @@ public class EmbeddedOAuthServerConfigTest {
 		mvc.perform(get("/api/whoami")
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("username", is("test.user")));
+				.andExpect(jsonPath("username", is("test.client")));
 	}
 
 	@Test
-	public void canAuthenticateAsAnotherUser() throws Exception
+	public void canAuthenticateAsAnotherClient() throws Exception
 	{
 		String token = JsonPath.read(mvc.perform(post("/oauth/token")
-				.with(httpBasic("another.user", "secret"))
+				.with(httpBasic("another.client", "secret"))
 				.param("grant_type", "client_credentials")
 				.param("scope", "UMBI001"))
 				.andExpect(status().isOk())

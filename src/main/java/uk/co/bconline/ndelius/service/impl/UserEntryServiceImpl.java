@@ -74,9 +74,9 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username)
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
 	{
-		return getBasicUser(username)
+		return getUser(username)
 				.orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
 	}
 

@@ -1,7 +1,12 @@
 dn: ou=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: organizationalUnit
-cn: NDProd
+ou: Users
+
+dn: cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: javaContainer
+cn: EISUsers
 
 dn:cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 description:RBAC v3.8.1
@@ -39,6 +44,69 @@ UIBusinessInteractionCollection: UMBI007
 UIBusinessInteractionCollection: UMBI008
 UIBusinessInteractionCollection: UMBI009
 UIBusinessInteractionCollection: UMBI011
+
+dn: cn=test.server.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+objectclass: NDClient
+cn: test.server.client
+uid: test.server.client
+givenName: Test Server
+sn: Client
+mail: test.server.client@test.com
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test back-end client for OAuth client_credentials flow
+resourceId: oauth-resource
+registeredRedirectUri: https://example.com/login-success
+authorizedGrantType: client_credentials
+
+dn: cn=UMBT002,cn=test.server.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UMBT002
+aliasedObjectName: cn=UMBT002,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+objectclass: NDClient
+cn: test.web.client
+uid: test.web.client
+givenName: Test Web
+sn: Client
+mail: test.web.client@test.com
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test front-end client for OAuth authorization_code and implicit flow
+resourceId: oauth-resource
+registeredRedirectUri: https://example.com/login-success
+authorizedGrantType: authorization_code
+authorizedGrantType: implicit
+
+dn: cn=UMBT001,cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UMBT001
+aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=delius,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+objectclass: NDClient
+cn: delius
+uid: delius
+givenName: National
+sn: Delius
+userHomeArea: N01
+description: Delius client to support pre-authenticated grant-type
+resourceId: oauth-resource
+authorizedGrantType: preauthenticated
 
 dn: cn=test.user,ou=Users,dc=bcl,dc=local
 objectclass: top

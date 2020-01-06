@@ -8,12 +8,10 @@ import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.bconline.ndelius.util.LdapUtils;
-
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.OPTIONS;
 
 @Configuration
 @EnableResourceServer
@@ -23,12 +21,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 		http.authorizeRequests()
-				.antMatchers(OPTIONS).permitAll()
-				.antMatchers(GET, "/actuator/**").permitAll()
-				.antMatchers(GET, "/swagger-resources/**", "/swagger-ui.html", "/swagger.json").permitAll()
-				.anyRequest().authenticated()
-			.and().headers().frameOptions().disable()
-			.and().csrf().disable();
+				.mvcMatchers("/api/**").authenticated()
+				.and().headers().frameOptions().disable()
+				.and().csrf().disable();
 	}
 
 	@Bean
@@ -41,6 +36,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 						.allowCredentials(true);
 			}
 		};
+	}
+
+	@Override
+	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+		resources.resourceId("oauth-resource");
 	}
 
 	@Bean

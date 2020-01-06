@@ -3,7 +3,7 @@ spring.profiles.include: dev
 security.oauth2.embedded:
   enabled: true
   clients:
-    - id: test.user
+    - id: test.client
       secret: secret
       authorized-grant-types:
         - client_credentials
@@ -28,7 +28,7 @@ security.oauth2.embedded:
         - UABI025
         - UABI026
       auto-approve: true
-    - id: another.user
+    - id: another.client
       secret: secret
       authorized-grant-types:
        - client_credentials

@@ -2,15 +2,18 @@ package uk.co.bconline.ndelius.model.entry;
 
 import lombok.*;
 import org.springframework.ldap.odm.annotations.*;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import uk.co.bconline.ndelius.model.auth.UserInteraction;
 import uk.co.bconline.ndelius.model.entry.projections.UserHomeAreaProjection;
 
 import javax.naming.Name;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
-import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toSet;
 
 @Getter
 @NoArgsConstructor
@@ -67,9 +70,15 @@ public final class UserEntry implements UserHomeAreaProjection, UserDetails
 	private Set<RoleEntry> roles;
 
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities()
+	public Collection<UserInteraction> getAuthorities()
 	{
-		return emptyList();
+		return ofNullable(roles)
+				.map(r -> r.parallelStream()
+						.map(RoleEntry::getInteractions)
+						.flatMap(List::stream)
+						.map(UserInteraction::new)
+						.collect(toSet()))
+				.orElseGet(Collections::emptySet);
 	}
 
 	@Override

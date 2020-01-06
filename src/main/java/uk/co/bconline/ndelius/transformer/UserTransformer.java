@@ -9,6 +9,7 @@ import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.ReferenceData;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.*;
+import uk.co.bconline.ndelius.model.entry.ClientEntry;
 import uk.co.bconline.ndelius.model.entry.RoleEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.service.*;
@@ -102,6 +103,23 @@ public class UserTransformer
 						.map(u -> combineNames(u.getForename(), u.getForename2(), u.getSurname()))
 						.orElse(null))
 				.sources(singletonList("DB"))
+				.build());
+	}
+
+	public Optional<User> map(ClientEntry client)
+	{
+		LocalDateTime t = now();
+		val allRoles = roleService.getAllRoles().stream().map(RoleEntry::getName).collect(toSet());
+		log.trace("--{}ms	Get all roles for mapping", MILLIS.between(t, now()));
+		return ofNullable(client).map(v -> User.builder()
+				.username(v.getClientId())
+				.roles(ofNullable(v.getRoles())
+						.map(l -> l.stream().filter(role -> allRoles.contains(role.getName())))
+						.map(transactions -> transactions
+								.map(roleTransformer::map)
+								.collect(toList()))
+						.orElse(null))
+				.sources(singletonList("LDAP"))
 				.build());
 	}
 

@@ -12,8 +12,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,7 +22,7 @@ import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class ResourceServerConfigTest
+public class AuthorizationServerConfigTest
 {
 	@Autowired
 	private WebApplicationContext context;
@@ -46,30 +44,7 @@ public class ResourceServerConfigTest
 	{
 		mvc.perform(post("/oauth/token"))
 				.andExpect(status().isUnauthorized())
-				.andExpect(header().string("WWW-Authenticate", "Basic realm=\"ndelius-oauth\""));
-	}
-
-	@Test
-	public void invalidCredentialsReturnsUnauthorized() throws Exception
-	{
-		mvc.perform(post("/oauth/token")
-				.with(httpBasic("INVALID", "INVALID"))
-				.param("grant_type", "client_credentials")
-				.param("scope", "UMBI001"))
-				.andExpect(status().isUnauthorized())
-				.andExpect(header().string("WWW-Authenticate", "Basic realm=\"ndelius-oauth\""));
-	}
-
-	@Test
-	public void successfulLoginReturnsBearerToken() throws Exception
-	{
-		mvc.perform(post("/oauth/token")
-				.with(httpBasic("test.user", "secret"))
-				.param("grant_type", "client_credentials")
-				.param("scope", "UMBI001"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("token_type", is("bearer")))
-				.andExpect(jsonPath("access_token", notNullValue()));
+				.andExpect(header().string("WWW-Authenticate", "Basic realm=\"ndelius-clients\""));
 	}
 
 	@Test
