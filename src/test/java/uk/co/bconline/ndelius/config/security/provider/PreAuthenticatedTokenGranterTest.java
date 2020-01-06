@@ -45,7 +45,7 @@ public class PreAuthenticatedTokenGranterTest {
 	@Test
 	public void canLoginWithEncryptedRequestParams() throws Exception {
 		mvc.perform(post("/oauth/token")
-				.with(httpBasic("delius", ""))
+				.with(httpBasic("NDelius", ""))
 				.param("u", encrypt("test.user", "ThisIsASecretKey"))
 				.param("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
 				.param("grant_type", "preauthenticated")
@@ -58,7 +58,7 @@ public class PreAuthenticatedTokenGranterTest {
 	@Test
 	public void missingTimestampIsUnauthorized() throws Exception {
 		mvc.perform(post("/oauth/token")
-				.with(httpBasic("delius", ""))
+				.with(httpBasic("NDelius", ""))
 				.param("u", encrypt("test.user", "ThisIsASecretKey"))
 				.param("grant_type", "preauthenticated")
 				.param("scope", "UMBI001"))
@@ -68,7 +68,7 @@ public class PreAuthenticatedTokenGranterTest {
 	@Test
 	public void timestampOutOfDateIsUnauthorized() throws Exception {
 		mvc.perform(post("/oauth/token")
-				.with(httpBasic("delius", ""))
+				.with(httpBasic("NDelius", ""))
 				.param("u", encrypt("test.user", "ThisIsASecretKey"))
 				.param("t", encrypt(String.valueOf(now().minus(2, HOURS).toEpochMilli()), "ThisIsASecretKey"))
 				.param("grant_type", "preauthenticated")
@@ -79,7 +79,7 @@ public class PreAuthenticatedTokenGranterTest {
 	@Test
 	public void incorrectKeyIsUnauthorized() throws Exception {
 		mvc.perform(post("/oauth/token")
-				.with(httpBasic("delius", ""))
+				.with(httpBasic("NDelius", ""))
 				.param("u", encrypt("test.user", "INVALID-KEY"))
 				.param("t", encrypt(String.valueOf(now().toEpochMilli()), "INVALID-KEY"))
 				.param("grant_type", "preauthenticated")

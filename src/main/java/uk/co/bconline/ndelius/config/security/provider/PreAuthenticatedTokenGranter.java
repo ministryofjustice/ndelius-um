@@ -40,7 +40,7 @@ public class PreAuthenticatedTokenGranter extends AbstractTokenGranter {
 	protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest)
 	{
 		Map<String, String> params = tokenRequest.getRequestParameters();
-		if (!"delius".equals(client.getClientId())) {
+		if (!"NDelius".equals(client.getClientId())) {
 			val e = new UnapprovedClientAuthenticationException("Pre-authenticated flow is only supported for client_id=delius");
 			log.debug(e.getMessage(), e);
 			throw e;

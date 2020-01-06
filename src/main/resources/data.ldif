@@ -95,17 +95,17 @@ objectclass: NDRoleAssociation
 cn: UMBT001
 aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
-dn: cn=delius,cn=EISUsers,ou=Users,dc=bcl,dc=local
+dn: cn=NDelius,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: inetOrgPerson
 objectclass: NDUser
 objectclass: NDClient
-cn: delius
-uid: delius
+cn: NDelius
+uid: NDelius
 givenName: National
 sn: Delius
 userHomeArea: N01
-description: Delius client to support pre-authenticated grant-type
+description: National Delius client to support pre-authenticated grant-type
 resourceId: oauth-resource
 authorizedGrantType: preauthenticated
 authorizedGrantType: refresh_token

@@ -49,7 +49,7 @@ public class ClientEntryServiceImpl implements ClientDetailsService, ClientRegis
 	{
 		return getBasicClient(clientId)
 				.map(u -> u.toBuilder()
-						.roles("delius".equals(clientId)?
+						.roles("NDelius".equals(clientId)?
 								roleService.getAllRoles():
 								userRoleService.getUserRoles(clientId + ",cn=EISUsers"))
 						.build());
