@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.provider.*;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.entry.ClientEntry;
 import uk.co.bconline.ndelius.repository.ldap.ClientEntryRepository;
+import uk.co.bconline.ndelius.service.RoleService;
 import uk.co.bconline.ndelius.service.UserRoleService;
 
 import java.time.LocalDateTime;
@@ -23,14 +24,17 @@ public class ClientEntryServiceImpl implements ClientDetailsService, ClientRegis
 {
 	private final ClientEntryRepository clientEntryRepository;
 	private final UserRoleService userRoleService;
+	private final RoleService roleService;
 
 	@Autowired
 	public ClientEntryServiceImpl(
 			ClientEntryRepository clientEntryRepository,
-			UserRoleService userRoleService)
+			UserRoleService userRoleService,
+			RoleService roleService)
 	{
 		this.clientEntryRepository = clientEntryRepository;
 		this.userRoleService = userRoleService;
+		this.roleService = roleService;
 	}
 
 	public Optional<ClientEntry> getBasicClient(String clientId)
@@ -45,7 +49,9 @@ public class ClientEntryServiceImpl implements ClientDetailsService, ClientRegis
 	{
 		return getBasicClient(clientId)
 				.map(u -> u.toBuilder()
-						.roles(userRoleService.getUserRoles(clientId + ",cn=EISUsers"))
+						.roles("delius".equals(clientId)?
+								roleService.getAllRoles():
+								userRoleService.getUserRoles(clientId + ",cn=EISUsers"))
 						.build());
 	}
 

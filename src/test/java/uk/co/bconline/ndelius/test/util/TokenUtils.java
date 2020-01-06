@@ -16,7 +16,7 @@ public class TokenUtils
 {
 	public static String token(MockMvc mvc) throws Exception
 	{
-		return token(mvc, "test.user");
+		return authCodeToken(mvc, "test.user");
 	}
 
 	public static String token(MockMvc mvc, String username) throws Exception

@@ -86,6 +86,7 @@ resourceId: oauth-resource
 registeredRedirectUri: https://example.com/login-success
 authorizedGrantType: authorization_code
 authorizedGrantType: implicit
+authorizedGrantType: refresh_token
 
 dn: cn=UMBT001,cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top
@@ -107,6 +108,7 @@ userHomeArea: N01
 description: Delius client to support pre-authenticated grant-type
 resourceId: oauth-resource
 authorizedGrantType: preauthenticated
+authorizedGrantType: refresh_token
 
 dn: cn=test.user,ou=Users,dc=bcl,dc=local
 objectclass: top
