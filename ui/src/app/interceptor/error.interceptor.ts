@@ -11,7 +11,6 @@ import {Injectable} from '@angular/core';
 import {tap} from 'rxjs/operators';
 import {AppComponent} from '../component/app/app.component';
 import {environment} from '../../environments/environment';
-import {OAuthService} from 'angular-oauth2-oidc';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -57,7 +56,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     505 : 'HTTP Version Not Supported'
   };
 
-  constructor(private oauthService: OAuthService) {}
+  constructor() {}
 
   static parseErrorResponse(res: HttpErrorResponse): string {
     let error: string = res.error ? JSON.stringify(res.error) : '';
