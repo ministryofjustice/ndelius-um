@@ -84,6 +84,7 @@ userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test front-end client for OAuth authorization_code and implicit flow
 resourceId: oauth-resource
 registeredRedirectUri: https://example.com/login-success
+registeredRedirectUri: /login-success
 authorizedGrantType: authorization_code
 authorizedGrantType: implicit
 authorizedGrantType: refresh_token
@@ -94,6 +95,37 @@ objectclass: alias
 objectclass: NDRoleAssociation
 cn: UMBT001
 aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=UserManagement-UI,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+objectclass: NDClient
+cn: delius
+uid: delius
+givenName: National
+sn: Delius
+userHomeArea: N01
+description: Front-end web client for the user management tool
+resourceId: oauth-resource
+authorizedGrantType: authorization_code
+authorizedGrantType: refresh_token
+registeredRedirectUri: /umt/
+registeredRedirectUri: http://localhost:4200/umt/
+
+dn: cn=UMBT001,cn=UserManagement-UI,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UMBT001
+aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=UMBT002,cn=UserManagement-UI,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UMBT002
+aliasedObjectName: cn=UMBT002,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
 dn: cn=NDelius,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top

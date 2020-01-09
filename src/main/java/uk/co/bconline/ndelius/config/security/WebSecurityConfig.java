@@ -23,7 +23,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// This ensures the user is prompted for Basic auth when they are directed to /oauth/authorize by a client
 		httpSecurity.authorizeRequests()
 				.mvcMatchers(GET, "/oauth/authorize").authenticated()
-				.and()
-				.httpBasic().realmName("ndelius-users");
+				.and().cors()
+				.and().httpBasic().realmName("ndelius-users");
 	}
 }

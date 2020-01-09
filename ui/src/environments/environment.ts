@@ -2,11 +2,28 @@
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import {AuthConfig} from 'angular-oauth2-oidc';
+
+const authConfig: AuthConfig = {
+  clientId: 'UserManagement-UI',
+  dummyClientSecret: '',
+  scope: '', // request all user management interactions
+  resource: 'oauth-resource',
+  responseType: 'code',
+  useHttpBasicAuth: true,
+  oidc: false,
+  requireHttps: false,
+  loginUrl: 'http://localhost:8080/umt/oauth/authorize',
+  tokenEndpoint: 'http://localhost:8080/umt/oauth/token',
+  redirectUri: window.location.origin + '/umt/',
+};
+
 export const environment = {
   production: false,
   api: {
     baseurl: 'http://localhost:8080/umt/api/'
-  }
+  },
+  authConfig: authConfig
 };
 
 /*

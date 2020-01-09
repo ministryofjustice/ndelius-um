@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../service/user.service';
 import {NavigationStart, Router} from '@angular/router';
 import {AuthorisationService} from '../../service/impl/authorisation.service';
+import {OAuthService} from 'angular-oauth2-oidc';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +16,10 @@ export class AppComponent implements OnInit {
   title = 'User Management';
   loaded: boolean;
 
-  constructor(private service: UserService, public auth: AuthorisationService, private router: Router) {}
+  constructor(private service: UserService,
+              public auth: AuthorisationService,
+              private router: Router,
+              private oauthService: OAuthService) {}
 
   static error(message: string) {
     AppComponent.globalMessage = message;
@@ -36,10 +41,13 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.service.whoami().subscribe(me => {
-      this.auth.me = me;
-      this.loaded = true;
-    });
+    // Login if required, then fetch current user details
+    this.oauthService.configure(environment.authConfig);
+    this.oauthService.tryLoginCodeFlow()
+      .then(_ => this.service.whoami().subscribe(me => {
+        this.auth.me = me;
+        this.loaded = true;
+      }));
 
     this.router.routeReuseStrategy.shouldReuseRoute = (future, curr) => {
       return future.routeConfig === curr.routeConfig

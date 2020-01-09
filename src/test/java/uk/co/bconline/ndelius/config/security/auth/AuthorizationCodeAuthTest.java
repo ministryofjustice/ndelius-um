@@ -58,7 +58,8 @@ public class AuthorizationCodeAuthTest
 		mvc.perform(get("/oauth/authorize")
 				.with(httpBasic("test.user", "secret"))
 				.param("client_id", "test.web.client")
-				.param("response_type", "code"))
+				.param("response_type", "code")
+				.param("redirect_uri", "https://example.com/login-success"))
 				.andExpect(status().isFound())
 				.andExpect(header().string("Location", containsString("?code=")));
 	}
@@ -84,7 +85,8 @@ public class AuthorizationCodeAuthTest
 		mvc.perform(post("/oauth/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.param("code", authCode)
-				.param("grant_type", "authorization_code"))
+				.param("grant_type", "authorization_code")
+				.param("redirect_uri", "https://example.com/login-success"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("token_type", is("bearer")))
 				.andExpect(jsonPath("access_token", notNullValue()));
@@ -97,5 +99,17 @@ public class AuthorizationCodeAuthTest
 				.header("Authorization", "Bearer " + authCodeToken(mvc, "test.user")))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("username", is("test.user")));
+	}
+
+	@Test
+	public void pathBasedRedirectUriCanBeUsed() throws Exception
+	{
+		mvc.perform(get("/oauth/authorize")
+				.with(httpBasic("test.user", "secret"))
+				.param("client_id", "test.web.client")
+				.param("redirect_uri", "/login-success")
+				.param("response_type", "code"))
+				.andExpect(status().isFound())
+				.andExpect(header().string("Location", startsWith("/login-success")));
 	}
 }

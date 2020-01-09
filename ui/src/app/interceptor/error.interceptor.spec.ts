@@ -29,7 +29,7 @@ describe('ErrorInterceptor', () => {
     const message = ErrorInterceptor.parseErrorResponse(new HttpErrorResponse({
       status: 401
     }));
-    expect(message).toEqual('<h5>401 Unauthorized</h5>Session expired. Please refresh the page to login again.');
+    expect(message).toEqual('<h5>401 Unauthorized</h5>Your session has expired. Please login again.');
   });
 
   it('should parse authorisation failures', () => {

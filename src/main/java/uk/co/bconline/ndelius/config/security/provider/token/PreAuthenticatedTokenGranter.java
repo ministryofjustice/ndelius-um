@@ -1,4 +1,4 @@
-package uk.co.bconline.ndelius.config.security.provider;
+package uk.co.bconline.ndelius.config.security.provider.token;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;

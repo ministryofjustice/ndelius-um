@@ -57,7 +57,8 @@ public class ImplicitAuthTest
 		mvc.perform(get("/oauth/authorize")
 				.with(httpBasic("test.user", "secret"))
 				.param("client_id", "test.web.client")
-				.param("response_type", "token"))
+				.param("response_type", "token")
+				.param("redirect_uri", "https://example.com/login-success"))
 				.andExpect(status().isFound())
 				.andExpect(header().string("Location", containsString("#access_token=")));
 	}

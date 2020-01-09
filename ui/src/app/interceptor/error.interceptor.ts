@@ -4,13 +4,14 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-  HttpResponseBase,
+  HttpResponseBase
 } from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {Injectable} from '@angular/core';
 import {tap} from 'rxjs/operators';
 import {AppComponent} from '../component/app/app.component';
 import {environment} from '../../environments/environment';
+import {OAuthService} from 'angular-oauth2-oidc';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -56,7 +57,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     505 : 'HTTP Version Not Supported'
   };
 
-  constructor() {}
+  constructor(private oauthService: OAuthService) {}
 
   static parseErrorResponse(res: HttpErrorResponse): string {
     let error: string = res.error ? JSON.stringify(res.error) : '';
@@ -65,7 +66,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       header = 'Validation Errors';
     }
     if (res.status === 401) {
-      error = 'Session expired. Please refresh the page to login again.';
+      error = 'Your session has expired. Please login again.';
     } else if (res.status === 403) {
       error = 'Access denied.' + (res.error.requiredRoles instanceof Array ? ' Missing roles: ' + res.error.requiredRoles.join(', ') : '');
     } else if (res.error != null && res.error.error instanceof Array) {
@@ -79,6 +80,12 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(tap(() => {}, (res: HttpResponseBase) => {
       if (res instanceof HttpErrorResponse
         && req.url.indexOf(environment.api.baseurl + 'staff/') === -1) {
+
+        if (res.status === 401 && window.location.hash.indexOf('error') === -1) {
+          // Attempt to get login on 401 Unauthorized error
+          this.oauthService.initCodeFlow();
+        }
+
         AppComponent.error(ErrorInterceptor.parseErrorResponse(res));
         window.scrollTo(0, 0);
       }

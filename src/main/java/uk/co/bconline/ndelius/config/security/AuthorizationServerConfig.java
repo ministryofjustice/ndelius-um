@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.config.security;
 
+import lombok.val;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +19,13 @@ import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
-import uk.co.bconline.ndelius.config.security.provider.PreAuthenticatedTokenGranter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import uk.co.bconline.ndelius.config.security.provider.code.RedisAuthorizationCodeServices;
+import uk.co.bconline.ndelius.config.security.provider.endpoint.PathMatchRedirectResolver;
+import uk.co.bconline.ndelius.config.security.provider.token.PreAuthenticatedTokenGranter;
 
 import static java.util.Arrays.asList;
 
@@ -35,19 +41,22 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	private final UserDetailsService userDetailsService;
 	private final RedisConnectionFactory redisConnectionFactory;
 	private final PasswordEncoder passwordEncoder;
+	private final PathMatchRedirectResolver pathMatchRedirectResolver;
 
 	public AuthorizationServerConfig(
 			AuthenticationManager authenticationManager,
 			@Qualifier("clientEntryServiceImpl") ClientDetailsService clientDetailsService,
 			@Qualifier("userEntryServiceImpl") UserDetailsService userDetailsService,
 			RedisConnectionFactory redisConnectionFactory,
-			PasswordEncoder passwordEncoder
+			PasswordEncoder passwordEncoder,
+			PathMatchRedirectResolver pathMatchRedirectResolver
 	) {
 		this.authenticationManager = authenticationManager;
 		this.clientDetailsService = clientDetailsService;
 		this.userDetailsService = userDetailsService;
 		this.redisConnectionFactory = redisConnectionFactory;
 		this.passwordEncoder = passwordEncoder;
+		this.pathMatchRedirectResolver = pathMatchRedirectResolver;
 	}
 
 	@Override
@@ -56,7 +65,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.userDetailsService(userDetailsService)
 				.tokenStore(redisTokenStore())
 				.authorizationCodeServices(redisAuthorizationCodeServices())
-				.tokenGranter(tokenGranter(endpoints));
+				.tokenGranter(tokenGranter(endpoints))
+				.redirectResolver(pathMatchRedirectResolver);
 	}
 
 	@Override
@@ -64,7 +74,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		security.realm("ndelius-clients")
 				.passwordEncoder(passwordEncoder)
 				.tokenKeyAccess("permitAll()")
-				.checkTokenAccess("isAuthenticated()");
+				.checkTokenAccess("isAuthenticated()")
+				.addTokenEndpointAuthenticationFilter(new CorsFilter(corsConfigurationSource()));
 	}
 
 	@Override
@@ -87,5 +98,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		return new CompositeTokenGranter(asList(endpoints.getTokenGranter(),
 				new PreAuthenticatedTokenGranter(endpoints.getTokenServices(), endpoints.getClientDetailsService(),
 						endpoints.getOAuth2RequestFactory(), deliusSecret)));
+	}
+
+	private CorsConfigurationSource corsConfigurationSource() {
+		val source = new UrlBasedCorsConfigurationSource();
+		val config = new CorsConfiguration();
+		config.addAllowedOrigin("*");
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("POST");
+		source.registerCorsConfiguration("/**", config);
+		return source;
 	}
 }

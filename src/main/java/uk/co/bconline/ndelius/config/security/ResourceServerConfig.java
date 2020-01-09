@@ -13,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.bconline.ndelius.util.LdapUtils;
 
+import static org.springframework.web.cors.CorsConfiguration.ALL;
+
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
@@ -22,6 +24,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 		http.authorizeRequests()
 				.mvcMatchers("/api/**").authenticated()
+				.and().cors()
 				.and().headers().frameOptions().disable()
 				.and().csrf().disable();
 	}
@@ -32,7 +35,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-						.allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE", "HEAD")
+						.allowedMethods(ALL)
 						.allowCredentials(true);
 			}
 		};
