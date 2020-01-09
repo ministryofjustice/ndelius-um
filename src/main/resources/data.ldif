@@ -101,10 +101,10 @@ objectclass: top
 objectclass: inetOrgPerson
 objectclass: NDUser
 objectclass: NDClient
-cn: delius
-uid: delius
-givenName: National
-sn: Delius
+cn: UserManagement-UI
+uid: UserManagement-UI
+givenName: UserManagement-UI
+sn: UserManagement-UI
 userHomeArea: N01
 description: Front-end web client for the user management tool
 resourceId: oauth-resource

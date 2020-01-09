@@ -3,7 +3,6 @@ import {UserService} from '../../service/user.service';
 import {NavigationStart, Router} from '@angular/router';
 import {AuthorisationService} from '../../service/impl/authorisation.service';
 import {OAuthService, UrlHelperService} from 'angular-oauth2-oidc';
-import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -41,27 +40,13 @@ export class AppComponent implements OnInit {
     AppComponent.globalMessage = null;
   }
 
-  private loadUser() {
-    this.service.whoami().subscribe(me => {
-      this.auth.me = me;
-      this.loaded = true;
-    });
-  }
-
   ngOnInit() {
-    // Login using OAuth if required
-    this.oauthService.configure(environment.authConfig);
-    if (!this.oauthService.hasValidAccessToken()) {
-      if (!this.urlHelper.parseQueryString(location.search.replace(/^\?/, '')).hasOwnProperty('code')) {
-        // Get authorization code first
-        this.oauthService.initCodeFlow();
-      } else {
-        // Then get access token and reload the page
-        this.oauthService.tryLoginCodeFlow().then(_ => location.reload());
-      }
+    if (this.oauthService.hasValidAccessToken()) {
+      // If we have a valid token, load the current user details
+      this.auth.loadUser().subscribe(() => this.loaded = true);
     } else {
-      // Once we have a valid token, load the current user details
-      this.loadUser();
+      // Otherwise, perform login
+      this.auth.login();
     }
 
     this.router.routeReuseStrategy.shouldReuseRoute = (future, curr) => {

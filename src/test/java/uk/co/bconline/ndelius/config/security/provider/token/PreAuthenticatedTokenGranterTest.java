@@ -1,4 +1,4 @@
-package uk.co.bconline.ndelius.config.security.provider;
+package uk.co.bconline.ndelius.config.security.provider.token;
 
 import org.junit.Before;
 import org.junit.Test;
