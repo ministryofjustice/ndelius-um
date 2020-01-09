@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../service/user.service';
 import {NavigationStart, Router} from '@angular/router';
 import {AuthorisationService} from '../../service/impl/authorisation.service';
-import {OAuthService} from 'angular-oauth2-oidc';
+import {OAuthService, UrlHelperService} from 'angular-oauth2-oidc';
 import {environment} from '../../../environments/environment';
 
 @Component({
@@ -19,7 +19,8 @@ export class AppComponent implements OnInit {
   constructor(private service: UserService,
               public auth: AuthorisationService,
               private router: Router,
-              private oauthService: OAuthService) {}
+              private oauthService: OAuthService,
+              private urlHelper: UrlHelperService) {}
 
   static error(message: string) {
     AppComponent.globalMessage = message;
@@ -40,14 +41,28 @@ export class AppComponent implements OnInit {
     AppComponent.globalMessage = null;
   }
 
+  private loadUser() {
+    this.service.whoami().subscribe(me => {
+      this.auth.me = me;
+      this.loaded = true;
+    });
+  }
+
   ngOnInit() {
-    // Login if required, then fetch current user details
+    // Login using OAuth if required
     this.oauthService.configure(environment.authConfig);
-    this.oauthService.tryLoginCodeFlow()
-      .then(_ => this.service.whoami().subscribe(me => {
-        this.auth.me = me;
-        this.loaded = true;
-      }));
+    if (!this.oauthService.hasValidAccessToken()) {
+      if (!this.urlHelper.parseQueryString(location.search.replace(/^\?/, '')).hasOwnProperty('code')) {
+        // Get authorization code first
+        this.oauthService.initCodeFlow();
+      } else {
+        // Then get access token and reload the page
+        this.oauthService.tryLoginCodeFlow().then(_ => location.reload());
+      }
+    } else {
+      // Once we have a valid token, load the current user details
+      this.loadUser();
+    }
 
     this.router.routeReuseStrategy.shouldReuseRoute = (future, curr) => {
       return future.routeConfig === curr.routeConfig

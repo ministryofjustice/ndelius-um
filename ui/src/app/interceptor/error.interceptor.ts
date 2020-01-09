@@ -80,12 +80,6 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(tap(() => {}, (res: HttpResponseBase) => {
       if (res instanceof HttpErrorResponse
         && req.url.indexOf(environment.api.baseurl + 'staff/') === -1) {
-
-        if (res.status === 401 && window.location.hash.indexOf('error') === -1) {
-          // Attempt to get login on 401 Unauthorized error
-          this.oauthService.initCodeFlow();
-        }
-
         AppComponent.error(ErrorInterceptor.parseErrorResponse(res));
         window.scrollTo(0, 0);
       }
