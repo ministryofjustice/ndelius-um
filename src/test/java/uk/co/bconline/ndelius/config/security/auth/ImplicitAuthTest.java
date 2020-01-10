@@ -59,7 +59,7 @@ public class ImplicitAuthTest
 				.param("client_id", "test.web.client")
 				.param("response_type", "token")
 				.param("redirect_uri", "https://example.com/login-success"))
-				.andExpect(status().isFound())
+				.andExpect(status().isSeeOther())
 				.andExpect(header().string("Location", containsString("#access_token=")));
 	}
 

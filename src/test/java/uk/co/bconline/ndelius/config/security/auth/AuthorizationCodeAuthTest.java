@@ -60,7 +60,7 @@ public class AuthorizationCodeAuthTest
 				.param("client_id", "test.web.client")
 				.param("response_type", "code")
 				.param("redirect_uri", "https://example.com/login-success"))
-				.andExpect(status().isFound())
+				.andExpect(status().isSeeOther())
 				.andExpect(header().string("Location", containsString("?code=")));
 	}
 
@@ -109,7 +109,7 @@ public class AuthorizationCodeAuthTest
 				.param("client_id", "test.web.client")
 				.param("redirect_uri", "/login-success")
 				.param("response_type", "code"))
-				.andExpect(status().isFound())
+				.andExpect(status().isSeeOther())
 				.andExpect(header().string("Location", startsWith("/login-success")));
 	}
 }
