@@ -58,7 +58,7 @@ mail: test.server.client@test.com
 userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test back-end client for OAuth client_credentials flow
-resourceId: oauth-resource
+resourceId: delius
 registeredRedirectUri: https://example.com/login-success
 authorizedGrantType: client_credentials
 
@@ -82,7 +82,7 @@ mail: test.web.client@test.com
 userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test front-end client for OAuth authorization_code and implicit flow
-resourceId: oauth-resource
+resourceId: NDelius
 registeredRedirectUri: https://example.com/login-success
 registeredRedirectUri: /login-success
 authorizedGrantType: authorization_code
@@ -107,7 +107,7 @@ givenName: UserManagement-UI
 sn: UserManagement-UI
 userHomeArea: N01
 description: Front-end web client for the user management tool
-resourceId: oauth-resource
+resourceId: NDelius
 authorizedGrantType: authorization_code
 authorizedGrantType: refresh_token
 registeredRedirectUri: /umt/
@@ -138,7 +138,7 @@ givenName: National
 sn: Delius
 userHomeArea: N01
 description: National Delius client to support pre-authenticated grant-type
-resourceId: oauth-resource
+resourceId: NDelius
 authorizedGrantType: preauthenticated
 authorizedGrantType: refresh_token
 
