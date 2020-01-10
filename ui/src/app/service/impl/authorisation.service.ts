@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Role} from '../../model/role';
 import {User} from '../../model/user';
 import {tap} from 'rxjs/operators';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpErrorResponse} from '@angular/common/http';
 import {UserService} from '../user.service';
 import {OAuthService, UrlHelperService} from 'angular-oauth2-oidc';
 import {Observable} from 'rxjs';
@@ -18,16 +18,20 @@ export class AuthorisationService {
   static ADD_USER_ROLE = 'UMBI003';
   static UPDATE_USER_ROLE = 'UMBI004';
 
-  private initialQueryParams;
+  private readonly initialQueryParams;
 
   constructor(
     private userService: UserService,
     private oauthService: OAuthService,
-    private urlHelper: UrlHelperService,
-    private http: HttpClient
+    private urlHelper: UrlHelperService
   ) {
     this.initialQueryParams = this.urlHelper.parseQueryString(location.search.replace(/^\?/, ''));
     this.oauthService.configure({customQueryParams: this.initialQueryParams, ...environment.authConfig});
+    this.oauthService.setStorage({
+      getItem: (key: string) => sessionStorage.getItem('umt_' + key),
+      removeItem: (key: string) => sessionStorage.removeItem('umt_' + key),
+      setItem: (key: string, value: string) => sessionStorage.setItem('umt_' + key, value)
+    });
   }
 
   hasRole(role: string): boolean {
@@ -56,7 +60,7 @@ export class AuthorisationService {
     return this.canUpdateUser();
   }
 
-  loadUser(): Observable<unknown> {
+  loadUser(): Observable<User> {
     return this.userService.whoami()
       .pipe(tap(
         (me: User) => AuthorisationService.me = me,
@@ -68,7 +72,7 @@ export class AuthorisationService {
         }));
   }
 
-  login() {
+  login(): void {
     // Login using OAuth if required
     if (!this.oauthService.hasValidAccessToken()) {
       if (this.initialQueryParams.hasOwnProperty('u') && this.initialQueryParams.hasOwnProperty('t')) {
