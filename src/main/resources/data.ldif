@@ -58,7 +58,7 @@ mail: test.server.client@test.com
 userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test back-end client for OAuth client_credentials flow
-resourceId: delius
+resourceId: NDelius
 registeredRedirectUri: https://example.com/login-success
 authorizedGrantType: client_credentials
 
