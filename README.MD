@@ -1,6 +1,12 @@
 # NDelius User Management Tool
 Developed by [Unilink](https://www.unilink.com) using Angular and Spring Boot to enable NPS-ICT and CRC admins to effectively create and maintain user accounts in the National Delius application, and to allow external services to securely authenticate Probation staff.
-These user accounts are currently stored in an LDAP cluster (for authentication, user preferences and functional authorisation), and an Oracle database (data authorisation and caseload management).
+User accounts are stored across an LDAP cluster (for authentication, user preferences and functional authorisation), and an Oracle database (for data authorisation and caseload management). 
+
+* [Demo Application](https://umt-dev.bconline.co.uk/umt/)
+  * username=test.user
+  * password=secret
+* [API Documentation](https://umt-dev.bconline.co.uk/umt/swagger-ui.html)
+
 
 ## Build
 ### Dependencies
@@ -79,10 +85,20 @@ Currently the NDelius application authenticates against the LDAP directly, and t
 This means that when NDelius redirects to external applications, users would have to reauthenticate against the OAuth identity provider.
 
 To improve user experience, the `preauthenticated` grant type has been introduced. 
-This works by allowing NDelius to pass the signed/encrypted username to the application, which can then be used for password-less authentication for a limited period of time. 
-When NDelius constructs the URL for the external service, it will append two request parameters:
-* `u` - The username of the authenticated user, encrypted using a symmetric secret key
-* `t` - The timestamp of when the URL was constructed, also encrypted
+This works by allowing NDelius to pass the signed/encrypted username to the external application as a request parameter, which can then be used for password-less authentication for a limited period of time. 
+When NDelius constructs the URL for the external service, it will append two parameters:
+* `u` - The username of the authenticated user
+* `t` - The timestamp of when the URL was constructed
 
-These two parameters should then be passed to the `/oauth/token` endpoint with `grant_type=preauthenticated` and `client_id=NDelius`.
-The parameters will be verified for authenticity using the configured `delius.secret` key, and an OAuth2 `access_token` will be returned.
+Both parameters will be encrypted by NDelius using a symmetric key that is shared between NDelius and UMT (configured using `delius.secret`).
+
+These two parameters should then be provided to the `/oauth/token` endpoint with `grant_type=preauthenticated` and `client_id=NDelius`.
+The parameters will be verified for authenticity using the configured `delius.secret` key, and an OAuth2 access token will be returned on success.
+
+For example,
+```shell script
+> curl -X POST -u NDelius: "http://localhost:8080/umt/oauth/token?u=${encryptedUsername}&t=${encryptedTimestamp}&client_id=NDelius&grant_type=preauthenticated&scope=UMBI001"
+< {"token_type":"bearer","access_token":"...","refresh_token":"...","expires_in":43199,"scope":"UMBI001"}
+```
+
+For more details on how this is implemented, see [PreAuthenticatedTokenGranter.java](src/main/java/uk/co/bconline/ndelius/config/security/provider/token/PreAuthenticatedTokenGranter.java).
