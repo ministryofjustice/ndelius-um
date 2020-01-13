@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;
 
-import static org.springframework.security.core.context.SecurityContextHolder.getContext;
+import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Aspect
 @Component
@@ -23,9 +23,8 @@ public class AuditHandler
 		val matcher = Pattern.compile("#oauth2\\.hasScope\\('(.*)'\\)").matcher(preauthorize.value());
 		if (matcher.find())
 		{
-			val username = getContext().getAuthentication().getPrincipal();
 			val interaction = matcher.group(1);
-			log.info("{} {} {}", username, interaction, joinPoint.getArgs());
+			log.info("{} {} {}", myUsername(), interaction, joinPoint.getArgs());
 		}
 		return joinPoint.proceed();
 	}
