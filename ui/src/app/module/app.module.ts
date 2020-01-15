@@ -7,7 +7,6 @@ import {AppComponent} from '../component/app/app.component';
 import {SearchComponent} from '../component/search/search.component';
 import {UserComponent} from '../component/user/user.component';
 import {AppRoutingModule} from './app.routing.module';
-import {LoginInterceptor} from '../interceptor/login.interceptor';
 import {environment} from '../../environments/environment';
 import {RestUserService} from '../service/impl/rest.user.service';
 import {UserService} from '../service/user.service';
@@ -25,6 +24,7 @@ import {OrganisationService} from '../service/organisation.service';
 import {RestOrganisationService} from '../service/impl/rest.organisation.service';
 import {StaffGradeService} from '../service/staff-grade.service';
 import {RestStaffGradeService} from '../service/impl/rest.staff-grade.service';
+import {OAuthModule} from 'angular-oauth2-oidc';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,17 @@ import {RestStaffGradeService} from '../service/impl/rest.staff-grade.service';
     MessageComponent,
     ItemSelectorComponent,
     DateComponent],
-  imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    OAuthModule.forRoot({
+      resourceServer: {
+        allowedUrls: [environment.api.baseurl],
+        sendAccessToken: true
+      }
+    })],
   providers: [
     {provide: UserService, useClass: RestUserService},
     {provide: RoleService, useClass: RestRoleService},
@@ -43,7 +53,6 @@ import {RestStaffGradeService} from '../service/impl/rest.staff-grade.service';
     {provide: OrganisationService, useClass: RestOrganisationService},
     {provide: StaffGradeService, useClass: RestStaffGradeService},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
-    ...(environment.production ? [] : [{provide: HTTP_INTERCEPTORS, useClass: LoginInterceptor, multi: true}])
   ],
   bootstrap: [AppComponent]
 })

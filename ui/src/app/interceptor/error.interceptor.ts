@@ -4,7 +4,7 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-  HttpResponseBase,
+  HttpResponseBase
 } from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {Injectable} from '@angular/core';
@@ -65,7 +65,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       header = 'Validation Errors';
     }
     if (res.status === 401) {
-      error = 'Session expired. Please refresh the page to login again.';
+      error = 'Your session has expired. Please login again.';
     } else if (res.status === 403) {
       error = 'Access denied.' + (res.error.requiredRoles instanceof Array ? ' Missing roles: ' + res.error.requiredRoles.join(', ') : '');
     } else if (res.error != null && res.error.error instanceof Array) {

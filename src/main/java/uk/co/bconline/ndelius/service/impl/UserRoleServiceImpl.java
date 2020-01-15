@@ -39,7 +39,7 @@ public class UserRoleServiceImpl implements UserRoleService
 	private final RoleRepository roleRepository;
 	private final RoleAssociationRepository roleAssociationRepository;
 
-	@Value("${spring.ldap.base}")
+	@Value("${spring.ldap.base:${spring.ldap.embedded.base-dn}}")
 	private String ldapBase;
 
 	@Autowired
@@ -101,8 +101,7 @@ public class UserRoleServiceImpl implements UserRoleService
 		val r = stream(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
 				.base(join(",", "cn=" + username, USER_BASE))
-				.where("cn").like("UMBT*")
-				.or("cn").like("UABT*")).spliterator(), true)
+				.where("objectclass").isPresent()).spliterator(), true)
 				.map(RoleEntry::getName)
 				.map(roleService::getRole)
 				.filter(Optional::isPresent)

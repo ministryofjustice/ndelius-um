@@ -1,16 +1,25 @@
 package uk.co.bconline.ndelius.config.security;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 
-import org.junit.Test;
-import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import static org.junit.Assert.assertTrue;
 
-public class WebSecurityGlobalConfigTest
+@SpringBootTest
+@ActiveProfiles("test")
+@RunWith(SpringRunner.class)
+public class PasswordEncoderTest
 {
-	private PasswordEncoder passwordEncoder = new WebSecurityGlobalConfig().passwordEncoder();
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Test
 	public void oidPasswordFormatCanBeMatched()

@@ -4,10 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import uk.co.bconline.ndelius.advice.annotation.Interaction;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.UserService;
@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.springframework.http.ResponseEntity.*;
+import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Slf4j
 @Validated
@@ -29,15 +30,19 @@ import static org.springframework.http.ResponseEntity.*;
 public class UserController
 {
 	private final UserService userService;
+	private final LoginController loginController;
 
 	@Autowired
-	public UserController(UserService userService)
+	public UserController(
+			UserService userService,
+			LoginController loginController)
 	{
 		this.userService = userService;
+		this.loginController = loginController;
 	}
 
-	@Interaction("UMBI001")
 	@GetMapping("/users")
+	@PreAuthorize("#oauth2.hasScope('UMBI001')")
 	public ResponseEntity<List<SearchResult>> search(
 			@RequestParam("q") String query,
 			@Min(1) @RequestParam(value = "page", defaultValue = "1") Integer page,
@@ -47,8 +52,8 @@ public class UserController
 		return ok(userService.search(query, page, pageSize, includeInactiveUsers));
 	}
 
-	@Interaction("UMBI002")
 	@GetMapping(path="/user/{username}")
+	@PreAuthorize("#oauth2.hasScope('UMBI002')")
 	public ResponseEntity<User> getUser(@PathVariable("username") String username)
 	{
 		return userService.getUser(username)
@@ -56,8 +61,8 @@ public class UserController
 				.orElse(notFound().build());
 	}
 
-	@Interaction("UMBI002")
 	@GetMapping(path="/staff/{staffCode}")
+	@PreAuthorize("#oauth2.hasScope('UMBI002')")
 	public ResponseEntity<User> getUserByStaffCode(@PathVariable("staffCode") String staffCode)
 	{
 		return userService.getUserByStaffCode(staffCode)
@@ -66,9 +71,9 @@ public class UserController
 	}
 
 	@Transactional
-	@Interaction("UMBI003")
 	@PostMapping(path="/user")
 	@UsernameMustNotAlreadyExist
+	@PreAuthorize("#oauth2.hasScope('UMBI003')")
 	public ResponseEntity addUser(@RequestBody User user) throws URISyntaxException
 	{
 		userService.addUser(user);
@@ -76,9 +81,9 @@ public class UserController
 	}
 
 	@Transactional
-	@Interaction("UMBI004")
-	@PostMapping(path="/user/{username}")
 	@NewUsernameMustNotAlreadyExist
+	@PostMapping(path="/user/{username}")
+	@PreAuthorize("#oauth2.hasScope('UMBI004')")
 	public ResponseEntity updateUser(@RequestBody User user, @PathVariable("username") String username)
 	{
 		if (!userService.usernameExists(username))
@@ -89,6 +94,10 @@ public class UserController
 		{
 			user.setExistingUsername(username);
 			userService.updateUser(user);
+			if (username.equals(myUsername()) && !username.equals(user.getUsername())) {
+				log.debug("Username has changed! Revoking access token for {}", username);
+				loginController.revokeToken();
+			}
 			return noContent().build();
 		}
 	}

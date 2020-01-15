@@ -1,5 +1,1 @@
 spring.profiles.include: dev
-
-jwt:
-  cookie: my-cookie
-  secret: secret

@@ -5,13 +5,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import uk.co.bconline.ndelius.model.auth.UserInteraction;
-import uk.co.bconline.ndelius.model.auth.UserPrincipal;
-import uk.co.bconline.ndelius.security.AuthenticationToken;
 import uk.co.bconline.ndelius.service.RoleService;
 import uk.co.bconline.ndelius.service.UserService;
 
@@ -44,9 +43,7 @@ public class UserValidationTest
 	public void user()
 	{
 		SecurityContextHolder.getContext()
-				.setAuthentication(new AuthenticationToken(UserPrincipal.builder()
-						.username("test.user")
-						.build(), ""));
+				.setAuthentication(new TestingAuthenticationToken("test.user", "secret"));
 	}
 
 	@Test
@@ -423,11 +420,9 @@ public class UserValidationTest
 	public void nationalUserCanAssignNationalRole()
 	{
 		SecurityContextHolder.getContext()
-				.setAuthentication(new AuthenticationToken(UserPrincipal.builder()
-						.username("test.user")
+				.setAuthentication(new TestingAuthenticationToken("test.user", "secret",
 						// Note: the National Role is marked as sector:public - so we need to also have the Public Role
-						.authorities(asList(new UserInteraction(NATIONAL_ACCESS), new UserInteraction(PUBLIC_ACCESS)))
-						.build(), ""));
+						asList(new UserInteraction(NATIONAL_ACCESS), new UserInteraction(PUBLIC_ACCESS))));
 
 		User user = aValidUser().toBuilder()
 				.roles(singletonList(Role.builder()
@@ -469,10 +464,8 @@ public class UserValidationTest
 	public void nationalUserCanAssignAnyDataset()
 	{
 		SecurityContextHolder.getContext()
-				.setAuthentication(new AuthenticationToken(UserPrincipal.builder()
-						.username("test.user")
-						.authorities(singletonList(new UserInteraction(NATIONAL_ACCESS)))
-						.build(), ""));
+				.setAuthentication(new TestingAuthenticationToken("test.user", "secret",
+						singletonList(new UserInteraction(NATIONAL_ACCESS))));
 
 		User user = aValidUser().toBuilder()
 				.datasets(singletonList(Dataset.builder()

@@ -1,32 +1,30 @@
 spring.profiles.include: default
 
-jwt:
-  secret: ThisIsASecretKey
-  secure: false
-
 delius.secret: ThisIsASecretKey
 
 spring:
+  jpa.hibernate.ddl-auto: create
+  h2.console.enabled: true
   datasource:
     url: 'jdbc:h2:mem:testdb;Mode=Oracle'
     type: com.zaxxer.hikari.HikariDataSource
     hikari.leak-detection-threshold: 20000
-  jpa.hibernate.ddl-auto: create
-  h2.console.enabled: true
-
-spring.ldap:
-  base: ou=Users,dc=bcl,dc=local
-  urls: ldap://localhost:3060
-  username: cn=admin
-  password: secret
-  embedded:
-    base-dn: ${spring.ldap.base}
-    credential:
-      username: ${spring.ldap.username}
-      password: ${spring.ldap.password}
-    ldif: classpath:data.ldif
-    port: 3060
-    validation.enabled: false
+  ldap:
+    base: ou=Users,dc=bcl,dc=local
+    urls: ldap://localhost:3060
+    username: cn=admin
+    password: secret
+    embedded:
+      base-dn: ${spring.ldap.base}
+      credential:
+        username: ${spring.ldap.username}
+        password: ${spring.ldap.password}
+      ldif: classpath:data.ldif
+      port: 3060
+      validation.enabled: false
+  redis:
+    embedded: true
+    port: 6379
 
 logging.level:
   uk.co.bconline.ndelius: DEBUG

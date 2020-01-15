@@ -9,14 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.ldap.query.SearchScope;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.OncePerRequestFilter;
 import uk.co.bconline.ndelius.model.*;
 import uk.co.bconline.ndelius.model.entry.UserPreferencesEntry;
 import uk.co.bconline.ndelius.repository.ldap.UserPreferencesRepository;
@@ -34,6 +32,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -53,12 +52,6 @@ public class UserControllerTest
 	private WebApplicationContext context;
 
 	@Autowired
-	private BasicAuthenticationFilter basicAuthenticationFilter;
-
-	@Autowired
-	private OncePerRequestFilter jwtAuthenticationFilter;
-
-	@Autowired
 	private UserPreferencesRepository preferencesRepository;
 
 	private MockMvc mvc;
@@ -68,8 +61,7 @@ public class UserControllerTest
 	{
 		mvc = MockMvcBuilders
 				.webAppContextSetup(context)
-				.addFilter(jwtAuthenticationFilter)
-				.addFilter(basicAuthenticationFilter)
+				.apply(springSecurity())
 				.alwaysDo(print())
 				.build();
 	}
@@ -649,9 +641,7 @@ public class UserControllerTest
 
 		mvc.perform(get("/api/whoami")
 				.header("Authorization", "Bearer " + token))
-				.andExpect(status().isUnauthorized())
-				.andExpect(cookie().value("my-cookie", isEmptyOrNullString()))
-				.andExpect(cookie().maxAge("my-cookie", is(0)));
+				.andExpect(status().isUnauthorized());
 	}
 
 	@Test

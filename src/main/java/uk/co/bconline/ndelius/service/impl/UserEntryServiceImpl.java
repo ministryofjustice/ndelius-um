@@ -46,7 +46,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 {
 	private static final String USER_BASE = UserEntry.class.getAnnotation(Entry.class).base();
 
-	@Value("${spring.ldap.base}")
+	@Value("${spring.ldap.base:${spring.ldap.embedded.base-dn}}")
 	private String ldapBase;
 
 	@Value("${spring.ldap.useOracleAttributes:#{true}}")
@@ -74,9 +74,9 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username)
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
 	{
-		return getBasicUser(username)
+		return getUser(username)
 				.orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
 	}
 

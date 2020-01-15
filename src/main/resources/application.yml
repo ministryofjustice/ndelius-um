@@ -3,10 +3,6 @@ spring.application.name: ndelius-um
 server.servlet.context-path: /umt
 spring.resources.static-locations: classpath:/ui
 
-jwt:
-  cookie: AUTH-TOKEN
-  expiry: 30
-
 cache.evict.delay: 86400000 # = 24*60*60*1000 = 24 hours
 
 spring.main.allow-bean-definition-overriding: true  # This allows us to override the embedded LDAP with our alias-dereferencing version

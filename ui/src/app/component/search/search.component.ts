@@ -63,11 +63,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   search() {
-    this.router.navigate(['/search'], {queryParams: {q: this.query, t: new Date().getTime()}});
+    this.router.navigate(['/search'], {queryParams: {q: this.query, timestamp: new Date().getTime()}});
   }
 
   nextPage() {
-    this.router.navigate(['/search'], {queryParams: {q: this.query, page: this.page + 1, t: new Date().getTime()}});
+    this.router.navigate(['/search'], {queryParams: {q: this.query, page: this.page + 1, timestamp: new Date().getTime()}});
   }
 
   clearRecentUsers() {
