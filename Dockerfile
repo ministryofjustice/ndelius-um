@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:8-jre
 WORKDIR /app
 COPY build/libs/bcl-ndelius-um*.jar /app/app.jar
 EXPOSE 8080
