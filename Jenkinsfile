@@ -20,7 +20,7 @@ pipeline {
             when { expression { params.version == 'latest' } }
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
-                    sh './gradlew clean build'
+                    sh './gradlew clean build --info'
                 }
             }
         }

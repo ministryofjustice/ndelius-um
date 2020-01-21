@@ -39,7 +39,7 @@ public class UserRoleServiceImpl implements UserRoleService
 	private final RoleRepository roleRepository;
 	private final RoleAssociationRepository roleAssociationRepository;
 
-	@Value("${spring.ldap.base:${spring.ldap.embedded.base-dn}}")
+	@Value("${spring.ldap.base}")
 	private String ldapBase;
 
 	@Autowired

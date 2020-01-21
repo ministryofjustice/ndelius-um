@@ -29,7 +29,7 @@ public class RoleServiceImpl implements RoleService
 
 	private final RoleRepository roleRepository;
 
-	@Value("${spring.ldap.base:${spring.ldap.embedded.base-dn}}")
+	@Value("${spring.ldap.base}")
 	private String ldapBase;
 
 	@Autowired
