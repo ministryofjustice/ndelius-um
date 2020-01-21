@@ -46,20 +46,20 @@ public class RoleGroupControllerTest
                 .header("Authorization", "Bearer " + token(mvc)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", not(empty())))
-                .andExpect(jsonPath("$[*].name", hasItem("AP Manager")));
+                .andExpect(jsonPath("$[*].name", hasItem("Read Only User")));
     }
 
     @Test
     public void transactionGroupIsReturned() throws Exception
     {
-        mvc.perform(get("/api/rolegroup/AP Manager")
+        mvc.perform(get("/api/rolegroup/Read Only User")
                 .header("Authorization", "Bearer " + token(mvc)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", not(empty())))
-                .andExpect(jsonPath("$.name", is("AP Manager")))
+                .andExpect(jsonPath("$.name", is("Read Only User")))
                 .andExpect(jsonPath("$.roles", not(empty())))
-                .andExpect(jsonPath("$.roles[*].name", hasItem("CABT011")))
-                .andExpect(jsonPath("$.roles[*].description", hasItem("Manage Case Allocation & Transfer")));
+                .andExpect(jsonPath("$.roles[*].name", hasItem("CLBT007")))
+                .andExpect(jsonPath("$.roles[*].description", hasItem("Enhanced Search Contact Log")));
     }
 
 }
