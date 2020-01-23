@@ -25,6 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and().authorizeRequests()
 				.anyRequest().authenticated()
 				.and().formLogin().loginPage("/login").permitAll()
-				.and().httpBasic().realmName("ndelius-users");
+				.and().httpBasic().realmName("ndelius-users")
+				.and().headers().frameOptions().disable();
 	}
 }
