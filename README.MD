@@ -80,6 +80,22 @@ OAuth clients are registered in the LDAP under the `cn=EISUsers` container, with
 
 The front-end application authenticates with the back-end using the [Authorization Code](https://oauth.net/2/grant-types/authorization-code/) flow as the UserManagement-UI client, by making use of the [angular-oauth2-oidc](https://github.com/manfredsteyer/angular-oauth2-oidc) library.
 
+The following commands show how you can authenticate a user (`test.user`) as a client (`test.web.client`), using the Authorization Code flow.
+```shell script
+# User gets an authorization code
+> curl -X GET -u 'test.user:secret' 'http://localhost:8080/umt/oauth/authorize?client_id=test.web.client&response_type=code&redirect_uri=/login-success'
+< 303 See Other: /login-success?code=<auth_code>
+
+# Client swaps the authorization code for an access token
+> curl -X POST -u 'test.web.client:secret' 'http://localhost:8080/umt/oauth/token?code=<auth_code>&grant_type=authorization_code&redirect_uri=/login-success'
+< {"access_token":"<token>", ...}
+
+# Client sends the access token in the Authoriation header to access API resources
+> curl -X GET -H 'Authorization: Bearer <token>' 'http://localhost:8080/umt/api/whoami'
+< {"username": "test.user", ...}
+```
+See [AuthorizationCodeAuthTest.java](src/test/java/uk/co/bconline/ndelius/config/security/auth/AuthorizationCodeAuthTest.java).
+
 ### Preauthenticated grant
 Currently the NDelius application authenticates against the LDAP directly, and this authentication can't be shared with other services. 
 This means that when NDelius redirects to external applications, users would have to reauthenticate against the OAuth identity provider.
