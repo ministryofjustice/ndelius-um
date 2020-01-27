@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.exceptions.UnapprovedClientAuthenticationException;
 import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
@@ -12,6 +11,7 @@ import org.springframework.security.oauth2.provider.token.AuthorizationServerTok
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.util.StringUtils;
+import uk.co.bconline.ndelius.model.auth.UserInteraction;
 
 import java.time.Instant;
 import java.util.Map;
@@ -19,6 +19,7 @@ import java.util.Map;
 import static java.lang.Long.parseLong;
 import static java.time.Instant.now;
 import static java.time.temporal.ChronoUnit.HOURS;
+import static java.util.stream.Collectors.toSet;
 import static uk.co.bconline.ndelius.util.EncryptionUtils.decrypt;
 
 @Slf4j
@@ -70,7 +71,11 @@ public class PreAuthenticatedTokenGranter extends AbstractTokenGranter {
 			throw e;
 		}
 
-		Authentication user = new UsernamePasswordAuthenticationToken(username, null, null);
+		val grantedAuthorities = client.getScope().stream()
+				.filter(tokenRequest.getScope()::contains)
+				.map(UserInteraction::new)
+				.collect(toSet());
+		val user = new UsernamePasswordAuthenticationToken(username, null, grantedAuthorities);
 		return new OAuth2Authentication(tokenRequest.createOAuth2Request(client), user);
 	}
 }

@@ -5,8 +5,6 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.query.SearchScope;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.entry.RoleAssociationEntry;
 import uk.co.bconline.ndelius.model.entry.RoleEntry;
@@ -27,6 +25,7 @@ import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static uk.co.bconline.ndelius.util.AuthUtils.myInteractions;
 import static uk.co.bconline.ndelius.util.Constants.*;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
 import static uk.co.bconline.ndelius.util.NameUtils.join;
@@ -56,10 +55,7 @@ public class UserRoleServiceImpl implements UserRoleService
 	@Override
 	public Set<RoleEntry> getRolesICanAssign()
 	{
-		val myInteractions = SecurityContextHolder.getContext().getAuthentication()
-				.getAuthorities().stream()
-				.map(GrantedAuthority::getAuthority)
-				.collect(toSet());
+		val myInteractions = myInteractions().collect(toSet());
 		val privateAccess = myInteractions.contains(PRIVATE_ACCESS);
 		val publicAccess = myInteractions.contains(PUBLIC_ACCESS);
 		val nationalAccess = myInteractions.contains(NATIONAL_ACCESS);

@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.util;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +15,7 @@ import java.util.stream.Stream;
 
 import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 
+@Slf4j
 @UtilityClass
 public class AuthUtils
 {
@@ -58,6 +60,7 @@ public class AuthUtils
 
 	public static boolean isNational()
 	{
+		log.debug("Checking national access (UABI025), interactions={}", myInteractions());
 		return myInteractions().anyMatch(NATIONAL_ACCESS::equals);
 	}
 }

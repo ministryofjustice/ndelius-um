@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.Dataset;
@@ -18,6 +19,7 @@ import static java.util.stream.Collectors.toSet;
 import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
 import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
+@Slf4j
 @Service
 public class DatasetServiceImpl implements DatasetService
 {
@@ -41,11 +43,13 @@ public class DatasetServiceImpl implements DatasetService
 	{
 		if (isNational()) {
 			// If I am a national access user, return all datasets
+			log.debug("National user, fetching all datasets");
 			return repository.findAllSelectableNonEstablishments().stream()
 					.map(transformer::map)
 					.collect(toList());
 		} else {
 			// If I am not a national access user, only return datasets that are already assigned to my user
+			log.debug("Non-national user, fetching user datasets for {}", myUsername());
 			return getDatasets(myUsername());
 		}
 	}

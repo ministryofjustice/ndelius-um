@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
@@ -25,6 +23,7 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
 import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
+import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Slf4j
 @Service
@@ -81,16 +80,10 @@ public class UserEntityServiceImpl implements UserEntityService
 				s.getUser().iterator().next());
 	}
 
-	private Long getUserId(String username)
-	{
-		return repository.getUserId(username).orElse(null);
-	}
-
 	@Override
 	public Long getMyUserId()
 	{
-		val username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-		return getUserId(username);
+		return repository.getUserId(myUsername()).orElse(null);
 	}
 
 	@Override
