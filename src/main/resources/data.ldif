@@ -170,6 +170,27 @@ objectclass: NDRoleAssociation
 cn: UMBT002
 aliasedObjectName: cn=UMBT002,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
+dn: cn=UABT0050,cn=UserManagement-UI,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UABT0050
+aliasedObjectName: cn=UABT0050,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=UABT0051,cn=UserManagement-UI,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UABT0051
+aliasedObjectName: cn=UABT0051,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=UABT0052,cn=UserManagement-UI,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UABT0052
+aliasedObjectName: cn=UABT0052,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
 dn: cn=NDelius,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: inetOrgPerson

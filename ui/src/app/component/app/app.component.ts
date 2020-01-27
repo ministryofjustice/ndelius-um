@@ -41,6 +41,13 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    const params = this.urlHelper.parseQueryString(location.search.replace(/^\?/, ''));
+    if (params.hasOwnProperty('error')) {
+      AppComponent.error(params['error_description'] + ' (' + params['error'] + ')');
+      this.loaded = true;
+      return;
+    }
+
     if (this.oauthService.hasValidAccessToken()) {
       // If we have a valid token, load the current user details
       this.auth.loadUser().subscribe(() => this.loaded = true);
