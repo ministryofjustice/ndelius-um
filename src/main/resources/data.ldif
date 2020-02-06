@@ -139,6 +139,27 @@ objectclass: NDRoleAssociation
 cn: SPGADBT005
 aliasedObjectName: cn=SPGADBT005,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
+dn: cn=GDPRBT001,cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT001
+aliasedObjectName: cn=GDPRBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=GDPRBT002,cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT002
+aliasedObjectName: cn=GDPRBT002,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=GDPRBT003,cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT003
+aliasedObjectName: cn=GDPRBT003,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
 dn: cn=UserManagement-UI,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: inetOrgPerson
