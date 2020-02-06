@@ -90,6 +90,13 @@ objectclass: NDRoleAssociation
 cn: SPGADBT005
 aliasedObjectName: cn=SPGADBT005,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
+dn: cn=GDPRBT001,cn=test.server.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT001
+aliasedObjectName: cn=GDPRBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
 dn: cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: inetOrgPerson
@@ -154,6 +161,77 @@ cn: GDPRBT002
 aliasedObjectName: cn=GDPRBT002,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
 dn: cn=GDPRBT003,cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT003
+aliasedObjectName: cn=GDPRBT003,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=test.gdpr.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+objectclass: NDClient
+cn: test.gdpr.client
+uid: test.gdpr.client
+givenName: Test GDPR
+sn: Client
+mail: test.gdpr.client@test.com
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test front-end client for OAuth authorization_code and implicit flow
+resourceId: NDelius
+registeredRedirectUri: https://example.com/login-success
+registeredRedirectUri: /login-success
+registeredRedirectUri: http://localhost:4200/gdpr/homepage
+registeredRedirectUri: http://localhost:4200/homepage
+authorizedGrantType: authorization_code
+authorizedGrantType: implicit
+authorizedGrantType: refresh_token
+
+dn: cn=UMBT001,cn=test.gdpr.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UMBT001
+aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=APBT001,cn=test.gdpr.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: APBT001
+aliasedObjectName: cn=APBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=APBT002,cn=test.gdpr.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: APBT002
+aliasedObjectName: cn=APBT002,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=SPGADBT005,cn=test.gdpr.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: SPGADBT005
+aliasedObjectName: cn=SPGADBT005,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=GDPRBT001,cn=test.gdpr.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT001
+aliasedObjectName: cn=GDPRBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=GDPRBT002,cn=test.gdpr.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT002
+aliasedObjectName: cn=GDPRBT002,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=GDPRBT003,cn=test.gdpr.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: alias
 objectclass: NDRoleAssociation
@@ -10385,9 +10463,9 @@ level3:false
 uibusinessinteractioncollection:GDPRBI001
 uibusinessinteractioncollection:GDPRBI002
 uibusinessinteractioncollection:GDPRBI003
-uibusinessinteractioncollection:duplicates:view
-uibusinessinteractioncollection:duplicates:review
-uibusinessinteractioncollection:duplicates:manage
+uibusinessinteractioncollection:gdpr-duplicates:view
+uibusinessinteractioncollection:gdpr-duplicates:review
+uibusinessinteractioncollection:gdpr-duplicates:manage
 objectclass:NDRole
 objectclass:top
 cn:GDPRBT001
@@ -10401,10 +10479,10 @@ uibusinessinteractioncollection:GDPRBI004
 uibusinessinteractioncollection:GDPRBI005
 uibusinessinteractioncollection:GDPRBI006
 uibusinessinteractioncollection:GDPRBI007
-uibusinessinteractioncollection:deletions:view
-uibusinessinteractioncollection:deletions:review
-uibusinessinteractioncollection:deletions:resolve
-uibusinessinteractioncollection:deletions:manage
+uibusinessinteractioncollection:gdpr-deletions:view
+uibusinessinteractioncollection:gdpr-deletions:review
+uibusinessinteractioncollection:gdpr-deletions:resolve
+uibusinessinteractioncollection:gdpr-deletions:manage
 objectclass:NDRole
 objectclass:top
 cn:GDPRBT002
@@ -10417,9 +10495,9 @@ level3:false
 uibusinessinteractioncollection:GDPRBI008
 uibusinessinteractioncollection:GDPRBI009
 uibusinessinteractioncollection:GDPRBI010
-uibusinessinteractioncollection:retention:view
-uibusinessinteractioncollection:retention:review
-uibusinessinteractioncollection:retention:manage
+uibusinessinteractioncollection:gdpr-retention:view
+uibusinessinteractioncollection:gdpr-retention:review
+uibusinessinteractioncollection:gdpr-retention:manage
 objectclass:NDRole
 objectclass:top
 cn:GDPRBT003
