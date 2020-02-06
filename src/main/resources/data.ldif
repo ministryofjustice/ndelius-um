@@ -193,7 +193,6 @@ registeredRedirectUri: https://example.com/login-success
 registeredRedirectUri: /login-success
 registeredRedirectUri: http://localhost:4200/gdpr/homepage
 registeredRedirectUri: http://localhost:4200/homepage
-registeredRedirectUri: http://localhost:4200/aptracker-api/errors
 authorizedGrantType: preauthenticated
 authorizedGrantType: authorization_code
 authorizedGrantType: implicit
