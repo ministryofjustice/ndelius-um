@@ -10502,6 +10502,106 @@ objectclass:NDRole
 objectclass:top
 cn:GDPRBT003
 
+dn:cn=GDPRBTX01,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:GDPR Retention:View
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:gdpr-retention:view
+objectclass:NDRole
+objectclass:top
+cn:GDPRBTX01
+
+dn:cn=GDPRBTX02,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:GDPR Retention:Review
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:gdpr-retention:review
+objectclass:NDRole
+objectclass:top
+cn:GDPRBTX02
+
+dn:cn=GDPRBTX03,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:GDPR Retention:Manage
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:gdpr-retention:manage
+objectclass:NDRole
+objectclass:top
+cn:GDPRBTX03
+
+dn:cn=GDPRBTX04,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:GDPR Duplicates:View
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:gdpr-duplicates:view
+objectclass:NDRole
+objectclass:top
+cn:GDPRBTX04
+
+dn:cn=GDPRBTX05,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:GDPR Duplicates:Review
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:gdpr-duplicates:review
+objectclass:NDRole
+objectclass:top
+cn:GDPRBTX05
+
+dn:cn=GDPRBTX06,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:GDPR Retention:Manage
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:gdpr-duplicates:manage
+objectclass:NDRole
+objectclass:top
+cn:GDPRBTX06
+
+dn:cn=GDPRBTX07,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:GDPR Deletions:View
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:gdpr-deletions:view
+objectclass:NDRole
+objectclass:top
+cn:GDPRBTX07
+
+dn:cn=GDPRBTX08,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:GDPR Deletions:Review
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:gdpr-deletions:review
+objectclass:NDRole
+objectclass:top
+cn:GDPRBTX08
+
+dn:cn=GDPRBTX09,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:GDPR Deletions:Manage
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:gdpr-deletions:manage
+objectclass:NDRole
+objectclass:top
+cn:GDPRBTX09
+
+dn:cn=GDPRBTX10,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:GDPR Deletions:Resolve
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:gdpr-deletions:resolve
+objectclass:NDRole
+objectclass:top
+cn:GDPRBTX10
+
 dn:cn=LHDCBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 description:HDC Digital View Only
 level1:true
