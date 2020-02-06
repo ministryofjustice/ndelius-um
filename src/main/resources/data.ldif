@@ -174,7 +174,7 @@ objectclass: NDUser
 objectclass: NDClient
 cn: test.gdpr.client
 uid: test.gdpr.client
-givenName: Test Web
+givenName: Test GDPR
 sn: Client
 mail: test.gdpr.client@test.com
 userHomeArea: N01
@@ -231,7 +231,7 @@ objectclass: NDRoleAssociation
 cn: GDPRBT002
 aliasedObjectName: cn=GDPRBT002,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
-dn: cn=GDPRBT003,cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+dn: cn=GDPRBT003,cn=test.gdpr.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: alias
 objectclass: NDRoleAssociation
