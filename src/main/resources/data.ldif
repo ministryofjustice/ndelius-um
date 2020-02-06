@@ -259,6 +259,7 @@ sn: UserManagement-UI
 userHomeArea: N01
 description: Front-end web client for the user management tool
 resourceId: NDelius
+authorizedGrantType: preauthenticated
 authorizedGrantType: authorization_code
 authorizedGrantType: refresh_token
 registeredRedirectUri: /umt/
