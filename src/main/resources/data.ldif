@@ -10364,6 +10364,9 @@ level3:false
 uibusinessinteractioncollection:GDPRBI001
 uibusinessinteractioncollection:GDPRBI002
 uibusinessinteractioncollection:GDPRBI003
+uibusinessinteractioncollection:duplicates:view
+uibusinessinteractioncollection:duplicates:review
+uibusinessinteractioncollection:duplicates:manage
 objectclass:NDRole
 objectclass:top
 cn:GDPRBT001
@@ -10377,6 +10380,10 @@ uibusinessinteractioncollection:GDPRBI004
 uibusinessinteractioncollection:GDPRBI005
 uibusinessinteractioncollection:GDPRBI006
 uibusinessinteractioncollection:GDPRBI007
+uibusinessinteractioncollection:deletions:view
+uibusinessinteractioncollection:deletions:review
+uibusinessinteractioncollection:deletions:resolve
+uibusinessinteractioncollection:deletions:manage
 objectclass:NDRole
 objectclass:top
 cn:GDPRBT002
@@ -10389,6 +10396,9 @@ level3:false
 uibusinessinteractioncollection:GDPRBI008
 uibusinessinteractioncollection:GDPRBI009
 uibusinessinteractioncollection:GDPRBI010
+uibusinessinteractioncollection:retention:view
+uibusinessinteractioncollection:retention:review
+uibusinessinteractioncollection:retention:manage
 objectclass:NDRole
 objectclass:top
 cn:GDPRBT003
