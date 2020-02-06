@@ -90,6 +90,13 @@ objectclass: NDRoleAssociation
 cn: SPGADBT005
 aliasedObjectName: cn=SPGADBT005,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
+dn: cn=GDPRBT001,cn=test.server.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT001
+aliasedObjectName: cn=GDPRBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
 dn: cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: inetOrgPerson
