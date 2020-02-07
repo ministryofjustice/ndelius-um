@@ -185,6 +185,7 @@ registeredRedirectUri: https://example.com/login-success
 registeredRedirectUri: /login-success
 registeredRedirectUri: http://localhost:4200/gdpr/homepage
 registeredRedirectUri: http://localhost:4200/homepage
+registeredRedirectUri: http://nd-systest-nt01.bcl.local/homepage
 authorizedGrantType: authorization_code
 authorizedGrantType: implicit
 authorizedGrantType: refresh_token
