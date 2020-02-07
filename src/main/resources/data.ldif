@@ -114,6 +114,7 @@ resourceId: NDelius
 registeredRedirectUri: https://example.com/login-success
 registeredRedirectUri: /login-success
 registeredRedirectUri: http://localhost:4200/aptracker-api/errors
+authorizedGrantType: preauthenticated
 authorizedGrantType: authorization_code
 authorizedGrantType: implicit
 authorizedGrantType: refresh_token
@@ -145,6 +146,13 @@ objectclass: alias
 objectclass: NDRoleAssociation
 cn: SPGADBT005
 aliasedObjectName: cn=SPGADBT005,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=CWBT001,cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: CWBT001
+aliasedObjectName: cn=CWBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
 dn: cn=GDPRBT001,cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top
@@ -185,6 +193,7 @@ registeredRedirectUri: https://example.com/login-success
 registeredRedirectUri: /login-success
 registeredRedirectUri: http://localhost:4200/gdpr/homepage
 registeredRedirectUri: http://localhost:4200/homepage
+authorizedGrantType: preauthenticated
 authorizedGrantType: authorization_code
 authorizedGrantType: implicit
 authorizedGrantType: refresh_token
@@ -250,6 +259,7 @@ sn: UserManagement-UI
 userHomeArea: N01
 description: Front-end web client for the user management tool
 resourceId: NDelius
+authorizedGrantType: preauthenticated
 authorizedGrantType: authorization_code
 authorizedGrantType: refresh_token
 registeredRedirectUri: /umt/
@@ -289,21 +299,6 @@ objectclass: alias
 objectclass: NDRoleAssociation
 cn: UABT0052
 aliasedObjectName: cn=UABT0052,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
-
-dn: cn=NDelius,cn=EISUsers,ou=Users,dc=bcl,dc=local
-objectclass: top
-objectclass: inetOrgPerson
-objectclass: NDUser
-objectclass: NDClient
-cn: NDelius
-uid: NDelius
-givenName: National
-sn: Delius
-userHomeArea: N01
-description: National Delius client to support pre-authenticated grant-type
-resourceId: NDelius
-authorizedGrantType: preauthenticated
-authorizedGrantType: refresh_token
 
 dn: cn=test.user,ou=Users,dc=bcl,dc=local
 objectclass: top

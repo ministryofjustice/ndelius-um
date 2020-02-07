@@ -69,7 +69,7 @@ public class RefreshTokenAuthTest
 	public void preAuthenticatedTokenCanBeRefreshed() throws Exception
 	{
 		String refreshToken = JsonPath.read(mvc.perform(post("/oauth/token")
-				.with(httpBasic("NDelius", ""))
+				.with(httpBasic("test.web.client", "secret"))
 				.param("u", encrypt("test.user", "ThisIsASecretKey"))
 				.param("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
 				.param("grant_type", "preauthenticated"))
@@ -79,7 +79,7 @@ public class RefreshTokenAuthTest
 				.getContentAsString(), "refresh_token");
 
 		mvc.perform(post("/oauth/token")
-				.with(httpBasic("NDelius", ""))
+				.with(httpBasic("test.web.client", "secret"))
 				.param("grant_type", "refresh_token")
 				.param("refresh_token", refreshToken))
 				.andExpect(status().isOk())
