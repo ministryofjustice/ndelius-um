@@ -78,6 +78,20 @@ public class AuthorizationCodeAuthTest
 	}
 
 	@Test
+	public void userScopesAreReturnedCorrectly() throws Exception {
+		String authCode = getAuthCode(mvc, "test.user");
+		mvc.perform(post("/oauth/token")
+				.with(httpBasic("test.web.client", "secret"))
+				.param("code", authCode)
+				.param("grant_type", "authorization_code")
+				.param("redirect_uri", "https://example.com/login-success")
+				.param("scope", "UMBI001 CWBI006"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("scope", containsString("UMBI001")))
+				.andExpect(jsonPath("scope", not(containsString("CWBI006"))));
+	}
+
+	@Test
 	public void authorizationCodeCanBeSwappedForAccessToken() throws Exception
 	{
 		String authCode = getAuthCode(mvc, "test.user");

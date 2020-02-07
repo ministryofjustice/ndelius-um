@@ -77,7 +77,6 @@ export class AuthorisationService {
     if (!this.oauthService.hasValidAccessToken()) {
       if (this.initialQueryParams.hasOwnProperty('u') && this.initialQueryParams.hasOwnProperty('t')) {
         // We have delius request params, use preauthenticated OAuth flow
-        this.oauthService.clientId = 'NDelius';
         this.oauthService.customQueryParams['grant_type'] = 'preauthenticated';
         this.oauthService.fetchTokenUsingPasswordFlow(null, null).then(_ => location.reload());
       } else if (!this.initialQueryParams.hasOwnProperty('code')) {

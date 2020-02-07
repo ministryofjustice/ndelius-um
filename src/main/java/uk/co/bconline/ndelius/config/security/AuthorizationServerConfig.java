@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.web.cors.CorsConfiguration;
@@ -66,7 +67,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.tokenStore(redisTokenStore())
 				.authorizationCodeServices(redisAuthorizationCodeServices())
 				.tokenGranter(tokenGranter(endpoints))
-				.redirectResolver(pathMatchRedirectResolver);
+				.redirectResolver(pathMatchRedirectResolver)
+				.requestFactory(requestFactory());
 	}
 
 	@Override
@@ -84,6 +86,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	}
 
 	@Bean
+	public DefaultOAuth2RequestFactory requestFactory() {
+		val requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
+		requestFactory.setCheckUserScopes(true);
+		return requestFactory;
+	}
+
+	@Bean
 	public TokenStore redisTokenStore() {
 		return new RedisTokenStore(redisConnectionFactory);
 	}
@@ -97,7 +106,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		// Append the token granter for the 'preauthenticated' grant_type to the list of oauth token granters
 		return new CompositeTokenGranter(asList(endpoints.getTokenGranter(),
 				new PreAuthenticatedTokenGranter(endpoints.getTokenServices(), endpoints.getClientDetailsService(),
-						endpoints.getOAuth2RequestFactory(), deliusSecret)));
+						userDetailsService, endpoints.getOAuth2RequestFactory(), deliusSecret)));
 	}
 
 	private CorsConfigurationSource corsConfigurationSource() {
