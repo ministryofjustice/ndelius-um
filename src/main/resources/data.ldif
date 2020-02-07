@@ -194,6 +194,7 @@ registeredRedirectUri: /login-success
 registeredRedirectUri: http://localhost:4200/gdpr/homepage
 registeredRedirectUri: http://localhost:4200/homepage
 registeredRedirectUri: http://nd-systest-nt01.bcl.local/homepage
+registeredRedirectUri: http://nd-systest-nt01/homepage
 authorizedGrantType: preauthenticated
 authorizedGrantType: authorization_code
 authorizedGrantType: implicit
@@ -300,6 +301,42 @@ objectclass: alias
 objectclass: NDRoleAssociation
 cn: UABT0052
 aliasedObjectName: cn=UABT0052,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=test.user.gdpr,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+cn: test.user.gdpr
+uid: test.user.gdpr
+givenName: Test
+sn: User
+mail: test.user.gdpr@test.com
+startDate: 20000102000000
+orclActiveStartDate: 20000101000000
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test user for basic authentication (password=secret)
+
+dn: cn=GDPRBT001,cn=test.user.gdpr,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT001
+aliasedObjectName: cn=GDPRBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=GDPRBT002,cn=test.user.gdpr,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT002
+aliasedObjectName: cn=GDPRBT002,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=GDPRBT003,cn=test.user.gdpr,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT003
+aliasedObjectName: cn=GDPRBT003,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
 dn: cn=test.user,ou=Users,dc=bcl,dc=local
 objectclass: top
