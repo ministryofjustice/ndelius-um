@@ -338,6 +338,13 @@ objectclass: NDRoleAssociation
 cn: GDPRBT003
 aliasedObjectName: cn=GDPRBT003,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
+dn: cn=GDPRBT004,cn=test.user.gdpr,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT004
+aliasedObjectName: cn=GDPRBT004,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
 dn: cn=test.user,ou=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: inetOrgPerson
@@ -10534,6 +10541,17 @@ uibusinessinteractioncollection:gdpr-retention:manage
 objectclass:NDRole
 objectclass:top
 cn:GDPRBT003
+
+dn:cn=GDPRBT004,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:GDPR Destruction
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:GDPRBI011
+uibusinessinteractioncollection:gdpr-destruction:manage
+objectclass:NDRole
+objectclass:top
+cn:GDPRBT004
 
 dn:cn=GDPRBTX01,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 description:GDPR Retention:View
