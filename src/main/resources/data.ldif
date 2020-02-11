@@ -10635,6 +10635,16 @@ objectclass:NDRole
 objectclass:top
 cn:GDPRBTX10
 
+dn:cn=GDPRBTX11,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:GDPR Destruction:Manage
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:gdpr-destruction:manage
+objectclass:NDRole
+objectclass:top
+cn:GDPRBTX11
+
 dn:cn=LHDCBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 description:HDC Digital View Only
 level1:true
