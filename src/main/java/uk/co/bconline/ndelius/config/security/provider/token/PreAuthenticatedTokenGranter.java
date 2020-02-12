@@ -71,7 +71,7 @@ public class PreAuthenticatedTokenGranter extends AbstractTokenGranter {
 		}
 
 		val user = userDetailsService.loadUserByUsername(username);
-		val authenticationToken = new UsernamePasswordAuthenticationToken(username, null, user.getAuthorities());
+		val authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
 		// We have to manually do the user scope filtering here, as the `checkUserScopes` flag would only work if we
 		// overrode the TokenEndpointAuthenticationFilter::extractCredentials method to include a special case for the
 		// preauthenticated grant (as well as the existing password grant)
