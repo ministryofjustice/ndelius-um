@@ -10,6 +10,6 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, Long>
 {
     Optional<UserEntity> findFirstByUsernameIgnoreCase(String username);
     boolean existsByUsernameIgnoreCase(String username);
-    @Query("SELECT u.id FROM UserEntity u WHERE u.username = ?1")
+    @Query("SELECT u.id FROM UserEntity u WHERE lower(u.username) = lower(?1)")
 	Optional<Long> getUserId(String username);
 }
