@@ -249,6 +249,13 @@ objectclass: NDRoleAssociation
 cn: GDPRBT003
 aliasedObjectName: cn=GDPRBT003,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
+dn: cn=GDPRBT004,cn=test.gdpr.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: GDPRBT004
+aliasedObjectName: cn=GDPRBT004,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
 dn: cn=UserManagement-UI,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: inetOrgPerson
