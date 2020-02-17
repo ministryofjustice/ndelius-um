@@ -44,15 +44,12 @@ public class UserRoleGroupServiceImpl implements UserRoleGroupService
     }
 
     @Override
-    public Optional<RoleGroup> getRoleGroup(String name)
-	{
+	public Optional<RoleGroup> getRoleGroup(String name) {
 		val rolesICanAssign = userRoleService.getRolesICanAssign().stream().map(RoleEntry::getName).collect(toSet());
-        return roleGroupService.getRoleGroup(name)
-				.map(g -> {
-					g.setRoles(g.getRoles().stream()
-							.filter(role -> rolesICanAssign.contains(role.getName()))
-							.collect(toList()));
-					return g;
-				});
-    }
+		return roleGroupService.getRoleGroup(name).map(g -> RoleGroup.builder()
+				.name(g.getName())
+				.roles(g.getRoles().stream()
+						.filter(role -> rolesICanAssign.contains(role.getName()))
+						.collect(toList())).build());
+	}
 }
