@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toSet;
 import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 
 @Slf4j
@@ -60,7 +61,7 @@ public class AuthUtils
 
 	public static boolean isNational()
 	{
-		log.debug("Checking national access (UABI025), interactions={}", myInteractions());
+		log.debug("Checking national access (UABI025), interactions={}", myInteractions().collect(toSet()));
 		return myInteractions().anyMatch(NATIONAL_ACCESS::equals);
 	}
 }
