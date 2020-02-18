@@ -272,11 +272,13 @@
             <div *ngIf="userWithStaffCode != null" class="text-muted small">
               <ng-container *ngIf="userWithStaffCode.username != null && userWithStaffCode.username != user.username">
                 Warning: This staff code already belongs to <strong>{{ userWithStaffCode.username }}</strong> ({{ userWithStaffCode.forenames }} {{ userWithStaffCode.surname }}).
-                Applying this value will cause the link to be removed from <strong>{{ userWithStaffCode.username }}</strong> and applied to <strong>{{ user.username }}</strong>.
+                Saving this value will cause the staff record to be unlinked from <strong>{{ userWithStaffCode.username }}</strong> and linked to <strong>{{ user.username }}</strong>.
+                This means that any existing values for Staff Grade, Sub-Contracted Provider and Teams that are associated with <strong>{{ user.username }}</strong>, will be overwritten by those of <strong>{{ userWithStaffCode.username }}</strong>.
               </ng-container>
               <ng-container *ngIf="userWithStaffCode != null && userWithStaffCode.username == null">
                 Warning: A staff record already exists for this staff code, but has not been linked to a user.
-                Applying this value will cause the existing staff record to be linked to <strong>{{ user.username }}</strong>.
+                Saving this value will cause the existing staff record to be linked to <strong>{{ user.username }}</strong>.
+                This means that any existing values for Staff Grade, Sub-Contracted Provider and Teams that are associated with <strong>{{ user.username }}</strong>, will be overwritten by those associated with the existing record.
               </ng-container>
             </div>
           </div>
