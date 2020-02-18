@@ -66,7 +66,7 @@ pipeline {
                         AWS_SECRET_ACCESS_KEY="`echo \$creds | jq -r '.Credentials.SecretAccessKey'`"
                         AWS_SESSION_TOKEN="`echo \$creds | jq -r '.Credentials.SessionToken'`"
                         echo "Starting deployment..."
-                        aws ecs update-service --cluster del-delius-ecscluster-private-ecs --service del-test-usermanagement-service --force-new-deployment
+                        aws ecs update-service --region eu-west-2 --cluster del-delius-ecscluster-private-ecs --service del-test-usermanagement-service --force-new-deployment
                     '''
                 }
             }
