@@ -55,6 +55,22 @@ pipeline {
                 }
             }
         }
+        stage('Deploy') {
+            when { branch 'feature/auto-deploy' }
+            steps {
+                wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
+                    sh '''
+                        echo "Assuming role in Test account..."
+                        creds=`aws sts assume-role --role-arn arn:aws:iam::728765553488:role/terraform --role-session-name deploy-usermanagement-\$RANDOM`
+                        AWS_ACCESS_KEY_ID="`echo \$creds | jq -r '.Credentials.AccessKeyId'`"
+                        AWS_SECRET_ACCESS_KEY="`echo \$creds | jq -r '.Credentials.SecretAccessKey'`"
+                        AWS_SESSION_TOKEN="`echo \$creds | jq -r '.Credentials.SessionToken'`"
+                        echo "Starting deployment..."
+                        aws ecs update-service --cluster del-delius-ecscluster-private-ecs --service del-test-usermanagement-service --force-new-deployment
+                    '''
+                }
+            }
+        }
     }
     post {
         always {
