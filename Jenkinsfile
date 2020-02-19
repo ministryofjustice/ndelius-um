@@ -56,7 +56,7 @@ pipeline {
             }
         }
         stage('Deploy') {
-            when { branch 'feature/auto-deploy' }
+            when { branch 'master' }
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     sh '''
