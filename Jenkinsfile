@@ -62,9 +62,10 @@ pipeline {
                     sh '''
                         echo "Assuming role in Test account..."
                         creds=`aws sts assume-role --role-arn arn:aws:iam::728765553488:role/terraform --role-session-name deploy-usermanagement-\$RANDOM`
-                        AWS_ACCESS_KEY_ID="`echo \$creds | jq -r '.Credentials.AccessKeyId'`"
-                        AWS_SECRET_ACCESS_KEY="`echo \$creds | jq -r '.Credentials.SecretAccessKey'`"
-                        AWS_SESSION_TOKEN="`echo \$creds | jq -r '.Credentials.SessionToken'`"
+                        export AWS_ACCESS_KEY_ID="`echo \$creds | jq -r '.Credentials.AccessKeyId'`"
+                        export AWS_SECRET_ACCESS_KEY="`echo \$creds | jq -r '.Credentials.SecretAccessKey'`"
+                        export AWS_SESSION_TOKEN="`echo \$creds | jq -r '.Credentials.SessionToken'`"
+                        aws sts get-caller-identity
                         echo "Starting deployment..."
                         aws ecs update-service --region eu-west-2 --cluster del-delius-ecscluster-private-ecs --service del-test-usermanagement-service --force-new-deployment
                     '''
