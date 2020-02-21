@@ -24,9 +24,17 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.view.RedirectView;
 import uk.co.bconline.ndelius.config.security.provider.code.RedisAuthorizationCodeServices;
 import uk.co.bconline.ndelius.config.security.provider.endpoint.PathMatchRedirectResolver;
 import uk.co.bconline.ndelius.config.security.provider.token.PreAuthenticatedTokenGranter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import static java.util.Arrays.asList;
 
@@ -68,7 +76,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.authorizationCodeServices(redisAuthorizationCodeServices())
 				.tokenGranter(tokenGranter(endpoints))
 				.redirectResolver(pathMatchRedirectResolver)
-				.requestFactory(requestFactory());
+				.requestFactory(requestFactory())
+				.addInterceptor(invalidateSessionInterceptor());
 	}
 
 	@Override
@@ -100,6 +109,31 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Bean
 	public RedisAuthorizationCodeServices redisAuthorizationCodeServices() {
 		return new RedisAuthorizationCodeServices(redisConnectionFactory);
+	}
+
+	/*
+	 * This interceptor is used to clear the session on the authorization server after logging in via the login form.
+	 *
+	 * See: https://github.com/spring-projects/spring-security-oauth/issues/140
+	 */
+	@Bean
+	public HandlerInterceptor invalidateSessionInterceptor() {
+		return new HandlerInterceptorAdapter() {
+			@Override
+			public void postHandle(HttpServletRequest request,
+								   HttpServletResponse response, Object handler,
+								   ModelAndView modelAndView) {
+				if (modelAndView != null && modelAndView.getView() instanceof RedirectView) {
+					val url = ((RedirectView) modelAndView.getView()).getUrl();
+					if (url != null && (url.contains("code=") || url.contains("error="))) {
+						HttpSession session = request.getSession(false);
+						if (session != null) {
+							session.invalidate();
+						}
+					}
+				}
+			}
+		};
 	}
 
 	private TokenGranter tokenGranter(final AuthorizationServerEndpointsConfigurer endpoints) {
