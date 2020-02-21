@@ -26,6 +26,7 @@ export class AuthorisationService {
     private urlHelper: UrlHelperService
   ) {
     this.initialQueryParams = this.urlHelper.parseQueryString(location.search.replace(/^\?/, ''));
+    delete this.initialQueryParams[''];
     this.oauthService.configure({customQueryParams: this.initialQueryParams, ...environment.authConfig});
     this.oauthService.setStorage({
       getItem: (key: string) => sessionStorage.getItem('umt_' + key),
