@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 
 import java.util.stream.Stream;
 
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toSet;
 import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 
@@ -27,13 +28,17 @@ public class AuthUtils
 
 	public static String myUsername()
 	{
-		val principal = me().getPrincipal();
-		if (principal instanceof UserDetails) {
-			return ((UserDetails) principal).getUsername();
-		} else if (principal instanceof ClientDetails) {
-			return ((ClientDetails) principal).getClientId();
-		}
-		return (String) principal;
+		return ofNullable(me())
+				.map(me -> {
+					val principal = me().getPrincipal();
+					if (principal instanceof UserDetails) {
+						return ((UserDetails) principal).getUsername();
+					} else if (principal instanceof ClientDetails) {
+						return ((ClientDetails) principal).getClientId();
+					}
+					return (String) principal;
+				})
+				.orElse("UNKNOWN");
 	}
 
 	public static boolean isClient()
