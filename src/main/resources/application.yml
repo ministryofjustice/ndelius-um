@@ -11,6 +11,9 @@ spring.ldap.base-environment:
   java.naming.ldap.derefAliases: never
   com.sun.jndi.ldap.connect.pool: true
 
+spring.session.store-type: redis
+spring.data.redis.repositories.enabled: false
+
 management.endpoints.web.exposure.include: ["health", "info", "metrics"]
 management.endpoint.health.show-details: always
 
