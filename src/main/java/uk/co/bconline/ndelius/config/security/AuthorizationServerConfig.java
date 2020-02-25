@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.config.security;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -20,6 +21,7 @@ import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -109,6 +111,21 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Bean
 	public RedisAuthorizationCodeServices redisAuthorizationCodeServices() {
 		return new RedisAuthorizationCodeServices(redisConnectionFactory);
+	}
+
+	/*
+	 * By default Spring updates the Redis configuration to enable 'notify-keyspace-events' for session expiration.
+	 * However in secure environments, the Redis CONFIG endpoints are disabled. In this scenario the configuration
+	 * should be updated ourselves and the Spring auto-configuration should be disabled.
+	 *
+	 * This bean allows us to conditionally disable the Spring auto-configuration.
+	 *
+	 * See: https://github.com/spring-projects/spring-session/issues/124
+	 */
+	@Bean
+	@ConditionalOnProperty("redis.configure.no-op")
+	public static ConfigureRedisAction configureRedisAction() {
+		return ConfigureRedisAction.NO_OP;
 	}
 
 	/*
