@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import uk.co.bconline.ndelius.exception.AppException;
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService
 	private final DatasetService datasetService;
 	private final UserTransformer transformer;
 	private final SearchResultTransformer searchResultTransformer;
+	private final TaskExecutor taskExecutor;
 
 	@Autowired
 	public UserServiceImpl(
@@ -51,13 +53,15 @@ public class UserServiceImpl implements UserService
 			UserEntryService userEntryService,
 			DatasetService datasetService,
 			UserTransformer transformer,
-			SearchResultTransformer searchResultTransformer)
+			SearchResultTransformer searchResultTransformer,
+			TaskExecutor taskExecutor)
 	{
 		this.userEntityService = userEntityService;
 		this.userEntryService = userEntryService;
 		this.datasetService = datasetService;
 		this.transformer = transformer;
 		this.searchResultTransformer = searchResultTransformer;
+		this.taskExecutor = taskExecutor;
 	}
 
 	@Override
@@ -72,8 +76,8 @@ public class UserServiceImpl implements UserService
 			myDatasets.add(userEntryService.getUserHomeArea(myUsername()));
 		}
 
-		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, myDatasets));
-		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, myDatasets));
+		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, myDatasets), taskExecutor);
+		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, myDatasets), taskExecutor);
 
 		try
 		{
@@ -103,8 +107,8 @@ public class UserServiceImpl implements UserService
 	@Override
 	public boolean usernameExists(String username)
 	{
-		val dbFuture = supplyAsync(() -> userEntityService.usernameExists(username));
-		val ldapFuture = supplyAsync(() -> userEntryService.usernameExists(username));
+		val dbFuture = supplyAsync(() -> userEntityService.usernameExists(username), taskExecutor);
+		val ldapFuture = supplyAsync(() -> userEntryService.usernameExists(username), taskExecutor);
 
 		try
 		{
@@ -121,8 +125,8 @@ public class UserServiceImpl implements UserService
 	@Override
 	public Optional<User> getUser(String username)
 	{
-		val dbFuture = supplyAsync(() -> userEntityService.getUser(username).orElse(null));
-		val ldapFuture = supplyAsync(() -> userEntryService.getUser(username).orElse(null));
+		val dbFuture = supplyAsync(() -> userEntityService.getUser(username).orElse(null), taskExecutor);
+		val ldapFuture = supplyAsync(() -> userEntryService.getUser(username).orElse(null), taskExecutor);
 
 		try
 		{
@@ -147,8 +151,8 @@ public class UserServiceImpl implements UserService
 	@Override
 	public void addUser(User user)
 	{
-		val dbFuture = runAsync(() -> userEntityService.save(transformer.mapToUserEntity(user, new UserEntity())));
-		val ldapFuture = runAsync(() -> userEntryService.save(transformer.mapToUserEntry(user, new UserEntry())));
+		val dbFuture = runAsync(() -> userEntityService.save(transformer.mapToUserEntity(user, new UserEntity())), taskExecutor);
+		val ldapFuture = runAsync(() -> userEntryService.save(transformer.mapToUserEntry(user, new UserEntry())), taskExecutor);
 
 		try
 		{
@@ -169,14 +173,14 @@ public class UserServiceImpl implements UserService
 			log.debug("Transforming into DB user");
 			val updatedUser = transformer.mapToUserEntity(user, existingUser);
 			userEntityService.save(updatedUser);
-		});
+		}, taskExecutor);
 		val ldapFuture = runAsync(() -> {
 			log.debug("Fetching existing LDAP value");
 			val existingUser = userEntryService.getUser(user.getExistingUsername()).orElse(new UserEntry());
 			log.debug("Transforming into LDAP user");
 			val updatedUser = transformer.mapToUserEntry(user, existingUser);
 			userEntryService.save(user.getExistingUsername(), updatedUser);
-		});
+		}, taskExecutor);
 
 		try
 		{
