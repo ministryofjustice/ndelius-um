@@ -282,7 +282,7 @@ public class UserTransformer
 				.uid(user.getUsername())
 				.password(ofNullable(existingUser.getPassword())
 						.map(LdapUtils::fixPassword)
-						.orElse(ofNullable(defaultPassword).orElseGet(LdapUtils::randomPassword)))
+						.orElseGet(() -> ofNullable(defaultPassword).orElseGet(LdapUtils::randomPassword)))
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
 				.email(user.getEmail())
