@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface UserEntityService
 {
-	Long getMyUserId();
+	long getMyUserId();
 	boolean usernameExists(String username);
 	Optional<UserEntity> getUser(String username);
 	Optional<UserEntity> getUserByStaffCode(String staffCode);

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
@@ -81,18 +82,21 @@ public class UserEntityServiceImpl implements UserEntityService
 	}
 
 	@Override
-	public Long getMyUserId()
+	public long getMyUserId()
 	{
-		return repository.getUserId(myUsername()).orElse(null);
+		val username = myUsername();
+		return repository.getUserId(username).orElseThrow(() ->
+				new UsernameNotFoundException(String.format("Unable to find Entity ID for user '%s'", username)));
 	}
 
 	@Override
 	public List<SearchResult> search(String searchTerm, boolean includeInactiveUsers, Set<String> datasets)
 	{
 		val t = LocalDateTime.now();
+		val isNational = isNational();
 		val results = Arrays.stream(searchTerm.trim().split("\\s+"))
 				.parallel()
-				.flatMap(token -> searchForToken(token, includeInactiveUsers, datasets))
+				.flatMap(token -> searchForToken(token, includeInactiveUsers, isNational, datasets))
 				.collect(groupingBy(SearchResultEntity::getUsername))
 				.values()
 				.stream()
@@ -104,14 +108,14 @@ public class UserEntityServiceImpl implements UserEntityService
 		return results;
 	}
 
-	private Stream<SearchResultEntity> searchForToken(String token, boolean includeInactiveUsers, Set<String> datasets)
+	private Stream<SearchResultEntity> searchForToken(String token, boolean includeInactiveUsers, boolean isNational, Set<String> datasets)
 	{
 		log.debug("Searching DB: {}", token);
 		datasets = isEmpty(datasets)? singleton(""): datasets;
 		val isOracle = datasourceUrl.startsWith("jdbc:oracle");
 		return (isOracle?
-					searchResultRepository.search(token, includeInactiveUsers, isNational(), datasets):
-					searchResultRepository.simpleSearch(token, includeInactiveUsers, isNational(), datasets))
+					searchResultRepository.search(token, includeInactiveUsers, isNational, datasets):
+					searchResultRepository.simpleSearch(token, includeInactiveUsers, isNational, datasets))
 				.stream()
 				.collect(groupingBy(SearchResultEntity::getUsername))
 				.values().stream()
