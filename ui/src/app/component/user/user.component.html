@@ -26,7 +26,7 @@
           <div class="col-sm-4">
             <input #username="ngModel" id="username" name="username" [(ngModel)]="user.username"
                    class="form-control" [readonly]="mode == 'View'"
-                   autocomplete="off" required pattern="^[a-zA-Z0-9_\-.']*$"
+                   autocomplete="off" auto-focus required pattern="^[a-zA-Z0-9_\-.']*$"
                    maxlength="60" aria-describedby="username-warning"/>
             <div *ngIf="username.invalid && username.dirty" class="text-danger">
               <small *ngIf="username.errors['required']">

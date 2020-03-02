@@ -76,11 +76,11 @@ Alternatively, look at [application-dev.yml](src/main/resources/application-dev.
 ## Authentication
 The User Management Tool acts as an [OAuth2](https://oauth.net/2/) identity provider for National Delius, and supports the `implicit`, `authorization_code`, `client_credentials` and `refresh_token` grant types as well as a custom `preauthenticated` grant type.
 
-OAuth clients are registered in the LDAP under the `cn=EISUsers` container, with scopes being defined by the Delius roles assigned to them.
+OAuth clients are registered in the LDAP under the `cn=EISUsers` container, with scopes being defined by the Delius roles assigned to them. To register a new client, follow the instructions in the [hmpps-ndelius-rbac]() repository.
 
 The front-end application authenticates with the back-end using the [Authorization Code](https://oauth.net/2/grant-types/authorization-code/) flow as the UserManagement-UI client, by making use of the [angular-oauth2-oidc](https://github.com/manfredsteyer/angular-oauth2-oidc) library.
 
-The following commands show how you can authenticate a user (`test.user`) as a client (`test.web.client`), using the Authorization Code flow.
+The following commands show how you can authenticate as a user (`test.user`) to authorize a client (`test.web.client`), using the Authorization Code flow.
 ```shell script
 # User gets an authorization code
 > curl -X GET -u 'test.user:secret' 'http://localhost:8080/umt/oauth/authorize?client_id=test.web.client&response_type=code&redirect_uri=/login-success'
@@ -108,12 +108,12 @@ When NDelius constructs the URL for the external service, it will append two par
 
 Both parameters will be encrypted by NDelius using a symmetric key that is shared between NDelius and UMT (configured using `delius.secret`).
 
-These two parameters should then be provided to the `/oauth/token` endpoint with `grant_type=preauthenticated` and `client_id=NDelius`.
+These two parameters should then be provided to the `/oauth/token` endpoint with `grant_type=preauthenticated`.
 The parameters will be verified for authenticity using the configured `delius.secret` key, and an OAuth2 access token will be returned on success.
 
 For example,
 ```shell script
-> curl -X POST -u NDelius: "http://localhost:8080/umt/oauth/token?u=${encryptedUsername}&t=${encryptedTimestamp}&client_id=NDelius&grant_type=preauthenticated&scope=UMBI001"
+> curl -X POST -u test.web.client:secret "http://localhost:8080/umt/oauth/token?u=${encryptedUsername}&t=${encryptedTimestamp}&client_id=test.web.client&grant_type=preauthenticated&scope=UMBI001"
 < {"token_type":"bearer","access_token":"...","refresh_token":"...","expires_in":43199,"scope":"UMBI001"}
 ```
 

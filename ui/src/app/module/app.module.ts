@@ -25,6 +25,7 @@ import {RestOrganisationService} from '../service/impl/rest.organisation.service
 import {StaffGradeService} from '../service/staff-grade.service';
 import {RestStaffGradeService} from '../service/impl/rest.staff-grade.service';
 import {OAuthModule} from 'angular-oauth2-oidc';
+import {AutoFocusDirective} from '../directive/auto-focus.directive';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,9 @@ import {OAuthModule} from 'angular-oauth2-oidc';
     UserComponent,
     MessageComponent,
     ItemSelectorComponent,
-    DateComponent],
+    DateComponent,
+    AutoFocusDirective,
+  ],
   imports: [
     BrowserModule,
     FormsModule,
