@@ -303,10 +303,10 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.roles", hasSize(1)))
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT001")))
 				.andExpect(jsonPath("$.roles[0].interactions", hasItem("UMBI001")))
-//				.andExpect(jsonPath("$.createdBy", is("Test User")))
-				.andExpect(jsonPath("$.createdAt", isWithin(5, SECONDS).of(now())))
-//				.andExpect(jsonPath("$.updatedBy", is("Test User")))
-				.andExpect(jsonPath("$.updatedAt", isWithin(5, SECONDS).of(now())));
+				.andExpect(jsonPath("$.created.username", is("test.user")))
+				.andExpect(jsonPath("$.created.at", isWithin(5, SECONDS).of(now())))
+				.andExpect(jsonPath("$.updated.username", is("test.user")))
+				.andExpect(jsonPath("$.updated.at", isWithin(5, SECONDS).of(now())));
 	}
 
 	@Test
@@ -389,8 +389,8 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.teams[*].code", hasItem("N02TST")))
 				.andExpect(jsonPath("$.roles", hasSize(1)))
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT002")))
-				.andExpect(jsonPath("$.createdAt", not(isWithin(5, SECONDS).of(now()))))
-				.andExpect(jsonPath("$.updatedAt", isWithin(5, SECONDS).of(now())));
+				.andExpect(jsonPath("$.created.at", not(isWithin(5, SECONDS).of(now()))))
+				.andExpect(jsonPath("$.updated.at", isWithin(5, SECONDS).of(now())));
 	}
 
 	@Test
@@ -689,10 +689,8 @@ public class UserControllerTest
 		mvc.perform(get("/api/user/test.user")
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.createdBy", is(nullValue())))
-				.andExpect(jsonPath("$.createdAt", is(nullValue())))
-				.andExpect(jsonPath("$.updatedBy", is(nullValue())))
-				.andExpect(jsonPath("$.updatedAt", is(nullValue())));
+				.andExpect(jsonPath("$.created", is(nullValue())))
+				.andExpect(jsonPath("$.updated", is(nullValue())));
 	}
 
 	@Test
