@@ -323,13 +323,15 @@
       </section>
       <hr/>
       <div class="text-muted small pb-4 float-sm-left">
-        <div id="updated-details" *ngIf="user.updatedBy != null && user.updatedAt != null">
+        <div id="updated-details" *ngIf="user.updated != null">
           <small class="oi oi-pencil"></small>
-          Updated by {{user.updatedBy}} on {{user.updatedAt | date: 'dd/MM/yyyy'}} at {{user.updatedAt | date: 'HH:mm'}}
+          Updated by <a routerLink="/user/{{ user.updated.username }}">{{ user.updated.forenames }} {{ user.updated.surname }}</a>
+          on {{ user.updated.at | date: 'dd/MM/yyyy' }} at {{ user.updated.at | date: 'HH:mm' }}
         </div>
-        <div id="created-details" *ngIf="user.createdBy != null && user.createdAt != null">
+        <div id="created-details" *ngIf="user.created != null">
           <small class="oi oi-plus"></small>
-          Created by {{user.createdBy}} on {{user.createdAt | date: 'dd/MM/yyyy'}} at {{user.createdAt | date: 'HH:mm'}}
+          Created by <a routerLink="/user/{{ user.created.username }}">{{ user.created.forenames }} {{ user.created.surname }}</a>
+          on {{ user.created.at | date: 'dd/MM/yyyy' }} at {{ user.created.at | date: 'HH:mm' }}
         </div>
       </div>
       <div class="btn-toolbar pb-4 float-sm-right">

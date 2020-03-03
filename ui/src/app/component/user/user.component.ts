@@ -71,11 +71,9 @@ export class UserComponent implements OnInit {
             if (query.copy != null) {
               this.mode = 'Add';
               return this.userService.read(query.copy).pipe(map(user => {
-                user.username = null;
-                user.staffCode = null;
-                user.staffGrade = null;
-                user.teams = null;
-                user.subContractedProvider = null;
+                // Clear out the details we don't want to copy to the new user
+                user.username = user.staffCode = user.staffGrade = user.teams = user.subContractedProvider
+                    = user.created = user.updated = null;
                 return user;
               }));
             } else {

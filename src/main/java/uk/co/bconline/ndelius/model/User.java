@@ -9,8 +9,9 @@ import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
+
+import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
 
 @Getter
 @ToString
@@ -83,17 +84,11 @@ public class User
 
 	private Dataset subContractedProvider;
 
-	@ApiModelProperty(readOnly = true)
-	private String createdBy;
+	@ApiModelProperty(accessMode = READ_ONLY)
+	private Modification created;
 
-	@ApiModelProperty(readOnly = true)
-	private LocalDateTime createdAt;
-
-	@ApiModelProperty(readOnly = true)
-	private String updatedBy;
-
-	@ApiModelProperty(readOnly = true)
-	private LocalDateTime updatedAt;
+	@ApiModelProperty(accessMode = READ_ONLY)
+	private Modification updated;
 
 	@JsonIgnore
 	private List<String> sources;

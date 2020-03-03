@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.co.bconline.ndelius.model.Dataset;
+import uk.co.bconline.ndelius.model.Modification;
 import uk.co.bconline.ndelius.model.ReferenceData;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.*;
@@ -94,14 +95,8 @@ public class UserTransformer
 				.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
 				.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElseGet(v::getEndDate))
 				.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(teamTransformer::map).orElse(null))
-				.createdAt(v.getCreatedAt())
-				.createdBy(ofNullable(v.getCreatedBy())
-						.map(c -> combineNames(c.getForename(), c.getForename2(), c.getSurname()))
-						.orElse(null))
-				.updatedAt(v.getUpdatedAt())
-				.updatedBy(ofNullable(v.getUpdatedBy())
-						.map(u -> combineNames(u.getForename(), u.getForename2(), u.getSurname()))
-						.orElse(null))
+				.created(map(v.getCreatedBy(), v.getCreatedAt()))
+				.updated(map(v.getUpdatedBy(), v.getUpdatedAt()))
 				.sources(singletonList("DB"))
 				.build());
 	}
@@ -177,10 +172,8 @@ public class UserTransformer
 				.subContractedProvider(ofNullable(a.getSubContractedProvider()).orElseGet(b::getSubContractedProvider))
 				.roles(ofNullable(a.getRoles()).orElseGet(b::getRoles))
 				.email(ofNullable(a.getEmail()).orElseGet(b::getEmail))
-				.createdAt(ofNullable(a.getCreatedAt()).orElseGet(b::getCreatedAt))
-				.createdBy(ofNullable(a.getCreatedBy()).orElseGet(b::getCreatedBy))
-				.updatedAt(ofNullable(a.getUpdatedAt()).orElseGet(b::getUpdatedAt))
-				.updatedBy(ofNullable(a.getUpdatedBy()).orElseGet(b::getUpdatedBy))
+				.created(ofNullable(a.getCreated()).orElseGet(b::getCreated))
+				.updated(ofNullable(a.getUpdated()).orElseGet(b::getUpdated))
 				.sources(Stream.concat(a.getSources().stream(), b.getSources().stream()).collect(toList()))
 				.build();
 	}
@@ -294,6 +287,16 @@ public class UserTransformer
 						.map(roleTransformer::map)
 						.collect(toSet()))
 						.orElseGet(Collections::emptySet))
+				.build();
+	}
+
+	public Modification map(UserEntity modifiedBy, LocalDateTime modifiedAt) {
+		if (modifiedAt == null || modifiedBy == null) return null;
+		return Modification.builder()
+				.forenames(combineNames(modifiedBy.getForename()))
+				.surname(modifiedBy.getSurname())
+				.username(modifiedBy.getUsername())
+				.at(modifiedAt)
 				.build();
 	}
 }
