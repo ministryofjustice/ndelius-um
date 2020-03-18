@@ -11,7 +11,7 @@ import javax.naming.Name;
 import java.util.Set;
 
 @Getter
-@Entry(objectClasses = {"NDRoleGroup", "top"}, base = "cn=ndRoleGroups")
+@Entry(objectClasses = {"NDRoleGroup", "top"}, base = "delius.ldap.base.role-groups")
 public final class RoleGroupEntry
 {
     @Id

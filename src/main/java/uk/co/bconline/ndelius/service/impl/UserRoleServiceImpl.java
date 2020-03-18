@@ -41,6 +41,12 @@ public class UserRoleServiceImpl implements UserRoleService
 	@Value("${spring.ldap.base}")
 	private String ldapBase;
 
+	@Value("${delius.ldap.base.users}")
+	private String usersBase;
+
+	@Value("${delius.ldap.base.roles}")
+	private String rolesBase;
+
 	@Autowired
 	public UserRoleServiceImpl(
 			RoleService roleService,
@@ -81,7 +87,7 @@ public class UserRoleServiceImpl implements UserRoleService
 		val t = LocalDateTime.now();
 		val r = stream(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
-				.base(join(",", "cn=" + username, USER_BASE))
+				.base(join(",", "cn=" + username, usersBase))
                 .where(OBJECTCLASS).is("NDRole")
                 .or(OBJECTCLASS).is("NDRoleAssociation")).spliterator(), true)
 				.map(role -> roleService.getRole(role.getName()).orElse(role))
@@ -96,7 +102,7 @@ public class UserRoleServiceImpl implements UserRoleService
 		val t = LocalDateTime.now();
 		val r = stream(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
-				.base(join(",", "cn=" + username, USER_BASE))
+				.base(join(",", "cn=" + username, usersBase))
 				.where("objectclass").isPresent()).spliterator(), true)
 				.map(RoleEntry::getName)
 				.map(roleService::getRole)
@@ -115,7 +121,7 @@ public class UserRoleServiceImpl implements UserRoleService
 		log.debug("Deleting existing role associations");
 		roleRepository.deleteAll(roleRepository.findAll(query()
 				.searchScope(SearchScope.ONELEVEL)
-				.base(join(",", "cn=" + username, USER_BASE))
+				.base(join(",", "cn=" + username, usersBase))
 				.where(OBJECTCLASS).is("NDRole")
 				.or(OBJECTCLASS).is("NDRoleAssociation")));
 
@@ -126,7 +132,7 @@ public class UserRoleServiceImpl implements UserRoleService
 						.map(name -> RoleAssociationEntry.builder()
 								.name(name)
 								.username(username)
-								.aliasedObjectName(join(",", "cn=" + name, ROLE_BASE, ldapBase))
+								.aliasedObjectName(join(",", "cn=" + name, rolesBase, ldapBase))
 								.build())
 						.collect(toList())));
 	}

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.OrFilter;
-import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -44,10 +43,12 @@ import static uk.co.bconline.ndelius.util.NameUtils.join;
 @Service
 public class UserEntryServiceImpl implements UserEntryService, UserDetailsService
 {
-	private static final String USER_BASE = UserEntry.class.getAnnotation(Entry.class).base();
 
 	@Value("${spring.ldap.base}")
 	private String ldapBase;
+
+	@Value("${delius.ldap.base.users}")
+	private String usersBase;
 
 	@Value("${spring.ldap.useOracleAttributes:#{true}}")
 	private boolean useOracleAttributes;
@@ -132,7 +133,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 		val results = stream(userRepository
 				.findAll(query()
 						.searchScope(ONELEVEL)
-						.base(USER_BASE)
+						.base(usersBase)
 						.filter(filter))
 				.spliterator(), true)
 				.map(u -> searchResultTransformer.map(u, deriveScore(query, u)))
@@ -236,6 +237,6 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 
 	private String getDn(String username)
 	{
-		return join(",", "cn=" + username, USER_BASE);
+		return join(",", "cn=" + username, usersBase);
 	}
 }

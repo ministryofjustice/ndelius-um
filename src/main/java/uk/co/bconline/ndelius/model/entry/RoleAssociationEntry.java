@@ -12,7 +12,7 @@ import javax.naming.Name;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entry(objectClasses = {"NDRoleAssociation", "alias", "top"})
+@Entry(objectClasses = {"NDRoleAssociation", "alias", "top"}, base = "delius.ldap.base.users")
 public final class RoleAssociationEntry
 {
 	@Id

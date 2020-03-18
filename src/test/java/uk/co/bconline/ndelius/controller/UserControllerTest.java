@@ -407,7 +407,7 @@ public class UserControllerTest
 
 		Optional<UserPreferencesEntry> prefs = preferencesRepository.findOne(query()
 				.searchScope(SearchScope.ONELEVEL)
-				.base("cn=" + username)
+				.base("cn=" + username + ",ou=Users")
 				.where("cn").is("UserPreferences"));
 		assertTrue(prefs.isPresent());
 		assertEquals("NRO16", prefs.get().getMostRecentlyViewedOffenders());
