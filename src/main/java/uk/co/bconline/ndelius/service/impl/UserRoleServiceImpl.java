@@ -15,7 +15,7 @@ import uk.co.bconline.ndelius.service.UserRoleService;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
@@ -84,6 +84,7 @@ public class UserRoleServiceImpl implements UserRoleService
 				.base(join(",", "cn=" + username, USER_BASE))
                 .where(OBJECTCLASS).is("NDRole")
                 .or(OBJECTCLASS).is("NDRoleAssociation")).spliterator(), true)
+				.filter(Objects::nonNull)
 				.map(role -> roleService.getRole(role.getName()).orElse(role))
 				.collect(toSet());
 		log.trace("--{}ms	LDAP lookup user roles", MILLIS.between(t, LocalDateTime.now()));
@@ -94,14 +95,7 @@ public class UserRoleServiceImpl implements UserRoleService
 	public Set<String> getUserInteractions(String username)
 	{
 		val t = LocalDateTime.now();
-		val r = stream(roleRepository.findAll(query()
-				.searchScope(ONELEVEL)
-				.base(join(",", "cn=" + username, USER_BASE))
-				.where("objectclass").isPresent()).spliterator(), true)
-				.map(RoleEntry::getName)
-				.map(roleService::getRole)
-				.filter(Optional::isPresent)
-				.map(Optional::get)
+		val r = getUserRoles(username).stream()
 				.map(RoleEntry::getInteractions)
 				.flatMap(List::stream)
 				.collect(toSet());
