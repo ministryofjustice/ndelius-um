@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Optionals;
 import org.springframework.ldap.query.SearchScope;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.entry.RoleAssociationEntry;
@@ -15,7 +16,6 @@ import uk.co.bconline.ndelius.service.UserRoleService;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
@@ -106,8 +106,7 @@ public class UserRoleServiceImpl implements UserRoleService
 				.where("objectclass").isPresent()).spliterator(), true)
 				.map(RoleEntry::getName)
 				.map(roleService::getRole)
-				.filter(Optional::isPresent)
-				.map(Optional::get)
+				.flatMap(Optionals::toStream)
 				.map(RoleEntry::getInteractions)
 				.flatMap(List::stream)
 				.collect(toSet());

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Optionals;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.SearchResult;
@@ -101,7 +102,7 @@ public class UserEntityServiceImpl implements UserEntityService
 				.values()
 				.stream()
 				.map(list -> list.stream().reduce(searchResultTransformer::reduce))
-				.filter(Optional::isPresent).map(Optional::get)
+				.flatMap(Optionals::toStream)
 				.map(searchResultTransformer::map)
 				.collect(toList());
 		log.debug("Found {} DB results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));
@@ -120,7 +121,7 @@ public class UserEntityServiceImpl implements UserEntityService
 				.collect(groupingBy(SearchResultEntity::getUsername))
 				.values().stream()
 				.map(list -> list.stream().reduce(searchResultTransformer::reduceTeams))
-				.filter(Optional::isPresent).map(Optional::get);
+				.flatMap(Optionals::toStream);
 	}
 
 	@Override
