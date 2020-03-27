@@ -54,11 +54,10 @@ public class GroupControllerTest
 	@Test
 	public void topLevelGroupIsReturned() throws Exception
 	{
-		mvc.perform(get("/api/group/Group 1")
+		mvc.perform(get("/api/group/Top-Level Group")
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.description", is("Reporting Group 1")))
-				.andExpect(jsonPath("$.members", hasItem("test.user")));
+				.andExpect(jsonPath("$.description", is("Top-Level Group")));
 	}
 
 	@Test
@@ -68,7 +67,19 @@ public class GroupControllerTest
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.description", is("Fileshare Group 1")))
+				.andExpect(jsonPath("$.type", equalToIgnoringCase("Fileshare")))
 				.andExpect(jsonPath("$.members", hasItem("test.user")))
 				.andExpect(jsonPath("$.members", hasItem("Joe.Bloggs")));
+	}
+
+	@Test
+	public void reportingGroupIsReturned() throws Exception
+	{
+		mvc.perform(get("/api/group/ndmis-reporting/Group 1")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.description", is("Reporting Group 1")))
+				.andExpect(jsonPath("$.type", equalToIgnoringCase("NDMIS-Reporting")))
+				.andExpect(jsonPath("$.members", hasItem("test.user")));
 	}
 }

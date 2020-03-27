@@ -19,6 +19,7 @@ public class GroupTransformer
 	{
 		return Group.builder()
 				.name(entry.getName())
+				.type(entry.getType())
 				.description(entry.getDescription())
 				.build();
 	}

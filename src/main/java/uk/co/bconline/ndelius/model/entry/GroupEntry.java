@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.ldap.odm.annotations.Attribute;
+import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 
@@ -22,7 +23,10 @@ public final class GroupEntry implements Serializable {
 	@Attribute(name = "cn")
 	private String name;
 
-	@Attribute(name = "description")
+	@DnAttribute(value = "ou", index = 1)
+	private String type;
+
+	@Attribute
 	private String description;
 
 	@Attribute(name = "member")
