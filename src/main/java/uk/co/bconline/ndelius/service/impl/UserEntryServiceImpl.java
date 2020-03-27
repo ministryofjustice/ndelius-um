@@ -19,6 +19,7 @@ import uk.co.bconline.ndelius.model.entry.UserPreferencesEntry;
 import uk.co.bconline.ndelius.model.entry.projections.UserHomeAreaProjection;
 import uk.co.bconline.ndelius.repository.ldap.UserEntryRepository;
 import uk.co.bconline.ndelius.repository.ldap.UserPreferencesRepository;
+import uk.co.bconline.ndelius.service.GroupService;
 import uk.co.bconline.ndelius.service.UserEntryService;
 import uk.co.bconline.ndelius.service.UserRoleService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
@@ -56,6 +57,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	private final UserEntryRepository userRepository;
 	private final UserPreferencesRepository preferencesRepository;
 	private final UserRoleService userRoleService;
+	private final GroupService groupService;
 	private final LdapTemplate ldapTemplate;
 	private final SearchResultTransformer searchResultTransformer;
 
@@ -64,12 +66,14 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 			UserEntryRepository userRepository,
 			UserPreferencesRepository preferencesRepository,
 			UserRoleService userRoleService,
+			GroupService groupService,
 			LdapTemplate ldapTemplate,
 			SearchResultTransformer searchResultTransformer)
 	{
 		this.userRepository = userRepository;
 		this.preferencesRepository = preferencesRepository;
 		this.userRoleService = userRoleService;
+		this.groupService = groupService;
 		this.ldapTemplate = ldapTemplate;
 		this.searchResultTransformer = searchResultTransformer;
 	}
@@ -163,7 +167,8 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	{
 		return getBasicUser(username)
 				.map(u -> u.toBuilder()
-						.roles(userRoleService.getUserRoles(username))
+						.roles(userRoleService.getUserRoles(u.getUsername()))
+						.groups(groupService.getGroups(u.getGroupNames()))
 						.build());
 	}
 

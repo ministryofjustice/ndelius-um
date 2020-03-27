@@ -82,6 +82,8 @@ public class User
 
 	private List<Role> roles;
 
+	private List<Group> groups;
+
 	private Dataset subContractedProvider;
 
 	@ApiModelProperty(accessMode = READ_ONLY)

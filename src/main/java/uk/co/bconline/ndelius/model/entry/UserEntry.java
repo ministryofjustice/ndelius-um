@@ -65,6 +65,12 @@ public final class UserEntry implements UserHomeAreaProjection, UserDetails {
 	@Attribute(name = "endDate")
 	private String endDate;
 
+	@Attribute(name = "memberOf")
+	private Set<Name> groupNames;
+
+	@Transient
+	private Set<GroupEntry> groups;
+
 	@Transient
 	private Set<RoleEntry> roles;
 

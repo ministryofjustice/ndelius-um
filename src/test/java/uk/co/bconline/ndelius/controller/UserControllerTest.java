@@ -731,4 +731,13 @@ public class UserControllerTest
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.error[*]", hasItem("Staff Code prefix should correspond to a valid provider code")));
 	}
+
+	@Test
+	public void groupsAreReturned() throws Exception
+	{
+		mvc.perform(get("/api/user/test.user")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.groups", hasSize(3)));
+	}
 }
