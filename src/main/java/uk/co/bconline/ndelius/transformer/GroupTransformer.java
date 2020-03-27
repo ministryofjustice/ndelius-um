@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.transformer;
 
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Component;
 import uk.co.bconline.ndelius.model.Group;
 import uk.co.bconline.ndelius.model.entry.GroupEntry;
@@ -19,6 +20,16 @@ public class GroupTransformer
 		return Group.builder()
 				.name(entry.getName())
 				.description(entry.getDescription())
+				.build();
+	}
+
+	public Group mapWithMembers(GroupEntry entry)
+	{
+		return map(entry).toBuilder()
+				.members(entry.getMembers().stream()
+						.map(member -> LdapUtils.getStringValue(member, "cn"))
+						.sorted()
+						.collect(toList()))
 				.build();
 	}
 

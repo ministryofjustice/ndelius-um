@@ -4,6 +4,7 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Optionals;
+import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.entry.GroupEntry;
@@ -12,6 +13,7 @@ import uk.co.bconline.ndelius.service.GroupService;
 
 import javax.naming.Name;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
@@ -22,6 +24,9 @@ public class GroupServiceImpl implements GroupService {
 
 	@Value("${spring.ldap.base}")
 	private String ldapBase;
+
+	@Value("${delius.ldap.base.groups}")
+	private String groupsBase;
 
 	private final GroupRepository groupRepository;
 
@@ -34,6 +39,18 @@ public class GroupServiceImpl implements GroupService {
 	public Set<GroupEntry> getGroups() {
 		return stream(groupRepository.findAll().spliterator(), false)
 				.collect(toSet());
+	}
+
+	@Override
+	public Optional<GroupEntry> getGroup(String name) {
+		Name groupName = LdapNameBuilder.newInstance(groupsBase).add("cn", name).build();
+		return groupRepository.findById(groupName);
+	}
+
+	@Override
+	public Optional<GroupEntry> getGroup(String type, String name) {
+		Name groupName = LdapNameBuilder.newInstance(groupsBase).add("ou", type).add("cn", name).build();
+		return groupRepository.findById(groupName);
 	}
 
 	@Override

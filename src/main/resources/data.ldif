@@ -507,6 +507,8 @@ givenName: Joe
 sn: Bloggs
 userHomeArea: N02
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+memberOf: cn=Group 2,ou=Groups,dc=bcl,dc=local
+memberOf: cn=Group 3,ou=Groups,dc=bcl,dc=local
 
 dn: cn=UMBT002,cn=Joe.Bloggs,ou=Users,dc=bcl,dc=local
 objectclass: top
@@ -2755,6 +2757,7 @@ description: Fileshare Group 1
 objectclass: groupOfNames
 member: cn=placeholder
 member: cn=test.user,ou=Users,dc=bcl,dc=local
+member: cn=Joe.Bloggs,ou=Users,dc=bcl,dc=local
 
 dn: cn=Group 2,ou=Fileshare,ou=Groups,dc=bcl,dc=local
 cn: Group 2
