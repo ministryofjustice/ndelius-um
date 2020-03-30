@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
 
@@ -27,8 +28,7 @@ import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
 @ConditionallyRequired(ifPopulated = "teams", required = "staffCode")
 @ConditionallyRequired(ifPopulated = "subContractedProvider", required = "staffCode")
 @ConditionallyRequired(ifPopulated = "staffCode", required = "startDate")
-public class User
-{
+public class User {
 	@NotBlank
 	@Size(max = 60)
 	@Pattern(regexp = "^[a-zA-Z0-9_\\-.']*$",
@@ -61,6 +61,8 @@ public class User
 	@Valid
 	private ReferenceData staffGrade;
 
+	private Dataset subContractedProvider;
+
 	@NotNull
 	private Dataset homeArea;
 
@@ -70,21 +72,16 @@ public class User
 	@DateRange
 	private LocalDate endDate;
 
-	@Valid
-	private List<Team> teams;
+	private List<@Valid Team> teams;
 
-	@Valid
 	@NotEmpty
-	private List<Dataset> datasets;
+	private List<@Valid Dataset> datasets;
 
-	@Valid
-	private List<Dataset> establishments;
+	private List<@Valid Dataset> establishments;
 
-	private List<Role> roles;
+	private List<@Valid Role> roles;
 
-	private List<Group> groups;
-
-	private Dataset subContractedProvider;
+	private Map<String, List<@Valid Group>> groups;
 
 	@ApiModelProperty(accessMode = READ_ONLY)
 	private Modification created;

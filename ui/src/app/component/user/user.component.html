@@ -137,15 +137,15 @@
         <hr>
         <div class="form-group row">
           <label [for]="'role-groups-toggle-btn'" class="col-sm-2 col-form-label">Role Groups</label>
-          <div class="col-sm-{{selectedGroups != null && selectedGroups.length != 0 && mode !== 'View'? '3  pr-sm-0': 4}}">
+          <div class="col-sm-{{selectedRoleGroups != null && selectedRoleGroups.length != 0 && mode !== 'View'? '3  pr-sm-0': 4}}">
             <item-selector id="role-groups" #roleGroupField multiple="true" maxHeight="300px"
-                           [(selected)]="selectedGroups"
+                           [(selected)]="selectedRoleGroups"
                            [available]="roleGroups"
                            [readonly]="mode === 'View'"
                            [labelMapper]="nameToLabel"></item-selector>
           </div>
-          <div class="col-sm-1 pl-sm-1" *ngIf="selectedGroups != null && selectedGroups.length != 0 && mode !== 'View'">
-            <button class="btn btn-sm btn-outline-secondary w-100 py-2" (click)="addGroup()"
+          <div class="col-sm-1 pl-sm-1" *ngIf="selectedRoleGroups != null && selectedRoleGroups.length != 0 && mode !== 'View'">
+            <button class="btn btn-sm btn-outline-secondary w-100 py-2" (click)="applyRoleGroup()"
                     title="Apply selected role groups to this user"
                     type="button">
               <span class="d-none d-lg-inline">Apply</span>
@@ -235,6 +235,33 @@
                 *Sector is required
               </small>
             </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label [for]="'home-area-toggle-btn'" class="col-sm-2 col-form-label"
+                 title="Use this field to control access to the folders within the NextCloud File Share application. Leave blank if you're unsure of the user's required level of access.">
+            File Shares
+          </label>
+          <div class="col-sm-4">
+            <item-selector id="fileshare-groups" name="fileshare-groups" maxHeight="300px" multiple="true"
+                           [(ngModel)]="user.groups['Fileshare']"
+                           [(selected)]="user.groups['Fileshare']"
+                           [available]="fileshareGroups"
+                           [readonly]="mode === 'View'"
+                           [labelMapper]="descriptionToLabel"></item-selector>
+          </div>
+          <label [for]="'sector-toggle-btn'" class="col-sm-2 col-form-label"
+                 title="Select the groups to assign to the user in the NDelius MIS Reporting tool. Leave blank if you're unsure of the user's required level of access.">
+            Reporting
+          </label>
+          <div class="col-sm-4">
+            <item-selector id="reporting-groups" name="reporting-groups" multiple="true"
+                           [(ngModel)]="user.groups['NDMIS-Reporting']"
+                           [(selected)]="user.groups['NDMIS-Reporting']"
+                           [available]="reportingGroups"
+                           [readonly]="mode === 'View'"
+                           [alignRight]="true"
+                           [labelMapper]="descriptionToLabel"></item-selector>
           </div>
         </div>
       </section>

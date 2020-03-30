@@ -4,6 +4,7 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Optionals;
+import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
+import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
 
 @Service
 public class GroupServiceImpl implements GroupService {
@@ -38,6 +40,14 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public Set<GroupEntry> getGroups() {
 		return stream(groupRepository.findAll().spliterator(), false)
+				.collect(toSet());
+	}
+
+	@Override
+	public Set<GroupEntry> getGroups(String type) {
+		return stream(groupRepository.findAll(LdapQueryBuilder.query()
+				.base(LdapNameBuilder.newInstance(groupsBase).add("ou", type).build())
+				.where(OBJECTCLASS).is("groupOfNames")).spliterator(), false)
 				.collect(toSet());
 	}
 

@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Before;
 import org.junit.Test;
@@ -341,10 +342,8 @@ public class UserControllerTest
 				.roles(singletonList(Role.builder()
 						.name("UMBT001")
 						.build()))
-				.groups(singletonList(Group.builder()
-						.name("Group 1")
-						.type("Fileshare")
-						.build()))
+				.groups(ImmutableMap.of(
+						"Fileshare", singletonList(Group.builder().name("Group 1").type("Fileshare").build())))
 				.build();
 
 		// Create user
@@ -377,9 +376,9 @@ public class UserControllerTest
 						.homeArea(Dataset.builder().code("N01").build())
 						.privateSector(false)
 						.roles(singletonList(Role.builder().name("UMBT002").build()))
-						.groups(asList(
-								Group.builder().name("Group 2").type("Fileshare").build(),
-								Group.builder().name("Group 1").type("NDMIS-Reporting").build()))
+						.groups(ImmutableMap.of(
+								"Fileshare", singletonList(Group.builder().name("Group 2").type("Fileshare").build()),
+								"NDMIS-Reporting", singletonList(Group.builder().name("Group 1").type("NDMIS-Reporting").build())))
 						.build())))
 				.andExpect(status().isNoContent());
 
@@ -399,8 +398,10 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.teams[*].code", hasItem("N02TST")))
 				.andExpect(jsonPath("$.roles", hasSize(1)))
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT002")))
-				.andExpect(jsonPath("$.groups", hasSize(2)))
-				.andExpect(jsonPath("$.groups[*].name", hasItems("Group 1", "Group 2")))
+				.andExpect(jsonPath("$.groups.Fileshare", hasSize(1)))
+				.andExpect(jsonPath("$.groups.NDMIS-Reporting", hasSize(1)))
+				.andExpect(jsonPath("$.groups.Fileshare[0].name", is("Group 2")))
+				.andExpect(jsonPath("$.groups.NDMIS-Reporting[0].name", is("Group 1")))
 				.andExpect(jsonPath("$.created.at", not(isWithin(5, SECONDS).of(now()))))
 				.andExpect(jsonPath("$.updated.at", isWithin(5, SECONDS).of(now())));
 	}
@@ -750,6 +751,51 @@ public class UserControllerTest
 		mvc.perform(get("/api/user/test.user")
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.groups", hasSize(3)));
+				.andExpect(jsonPath("$.groups.Fileshare", hasSize(1)))
+				.andExpect(jsonPath("$.groups.NDMIS-Reporting", hasSize(2)));
+	}
+
+	@Test
+	public void groupsWithNoNameAreRejected() throws Exception
+	{
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token(mvc))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.groups(ImmutableMap.of(
+								"Fileshare", singletonList(Group.builder().build())
+						)).build())))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error[*]", hasItem("Name must not be blank")));
+	}
+
+	@Test
+	public void groupsWithNoTypeAreRejected() throws Exception
+	{
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token(mvc))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.groups(ImmutableMap.of(
+								"Fileshare", singletonList(Group.builder().name("NO-TYPE!").build())
+						)).build())))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error[*]", hasItem("Type must not be blank")));
+	}
+
+	@Test
+	public void rolesWithNoNameAreRejected() throws Exception
+	{
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token(mvc))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.roles(singletonList(Role.builder().build()))
+						.build())))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error[*]", hasItem("Name must not be blank")));
 	}
 }

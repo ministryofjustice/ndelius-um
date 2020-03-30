@@ -145,7 +145,7 @@ public class UserTransformer
 								.map(roleTransformer::map)
 								.collect(toList()))
 						.orElse(null))
-				.groups(groupTransformer.map(v.getGroups()))
+				.groups(groupTransformer.groupedByType(v.getGroups()))
 				.sources(singletonList("LDAP"))
 				.build());
 	}
@@ -294,7 +294,7 @@ public class UserTransformer
 						.map(roleTransformer::map)
 						.collect(toSet()))
 						.orElseGet(Collections::emptySet))
-				.groupNames(groupTransformer.mapToNames(user.getGroups(), groupsBase))
+				.groupNames(groupTransformer.mapToNames(groupTransformer.collate(user.getGroups()), groupsBase))
 				.build();
 	}
 

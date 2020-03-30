@@ -18,6 +18,8 @@ import {StaffGradeService} from '../../service/staff-grade.service';
 import {AppComponent} from '../app/app.component';
 import {NgForm, NgModel} from '@angular/forms';
 import {RecentUsersUtils} from '../../util/recent-users.utils';
+import {Group} from '../../model/group';
+import {GroupService} from '../../service/group.service';
 
 @Component({
   selector: 'user',
@@ -38,7 +40,9 @@ export class UserComponent implements OnInit {
   establishments: Dataset[];
   roles: Role[];
   roleGroups: RoleGroup[];
-  selectedGroups: RoleGroup[];
+  selectedRoleGroups: RoleGroup[];
+  fileshareGroups: Group[];
+  reportingGroups: Group[];
   staffGrades: StaffGrade[];
   subContractedProviders: Dataset[];
   userWithStaffCode: User;
@@ -52,6 +56,7 @@ export class UserComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private roleService: RoleService,
+    private groupService: GroupService,
     private datasetService: DatasetService,
     private teamService: TeamService,
     private organisationService: OrganisationService,
@@ -101,6 +106,11 @@ export class UserComponent implements OnInit {
 
     this.roleService.roles().subscribe(roles => this.addSelectableRoles(roles));
 
+    this.groupService.groups().subscribe((groups: Group[]) => {
+      this.fileshareGroups = groups.filter(group => group.type.toLowerCase() === 'fileshare');
+      this.reportingGroups = groups.filter(group => group.type.toLowerCase() === 'ndmis-reporting');
+    });
+
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {
       this.datasets = datasets;
       if (this.user != null && this.user.datasets == null) { this.user.datasets = []; }
@@ -121,11 +131,11 @@ export class UserComponent implements OnInit {
     this.roles.push(...roles.filter(role => this.roles.map(r => r.name).indexOf(role.name) === -1));
   }
 
-  addGroup(): void {
-    if (this.selectedGroups != null) {
+  applyRoleGroup(): void {
+    if (this.selectedRoleGroups != null) {
       if (this.user.roles == null) { this.user.roles = []; }
-      this.selectedGroups.forEach(selectedGroup => {
-        this.roleService.group(selectedGroup.name).subscribe(group => {
+      this.selectedRoleGroups.forEach(selectedRoleGroup => {
+        this.roleService.group(selectedRoleGroup.name).subscribe(group => {
           const userRoleNames = this.user.roles.map(r => r.name);
           this.user.roles.push(...group.roles.filter(role => userRoleNames.indexOf(role.name) === -1));
           this.rolesControl.control.markAsDirty();
@@ -223,6 +233,10 @@ export class UserComponent implements OnInit {
 
   nameToLabel(item: {name: string}): string {
     return item.name;
+  }
+
+  descriptionToLabel(item: {description: string}): string {
+    return item.description;
   }
 
   sectorToLabel(item: boolean): string {

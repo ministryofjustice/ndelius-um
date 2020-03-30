@@ -1,12 +1,12 @@
 package uk.co.bconline.ndelius.model;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import lombok.*;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Getter
 @Builder
@@ -16,7 +16,7 @@ import lombok.*;
 @JsonInclude(NON_NULL)
 public final class Role
 {
-	private String name;
+	private @NotBlank String name;
 	private String description;
 	private List<String> interactions;
 }

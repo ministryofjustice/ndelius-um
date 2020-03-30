@@ -52,6 +52,17 @@ public class GroupControllerTest
 	}
 
 	@Test
+	public void groupsCanBeFilteredByType() throws Exception
+	{
+		mvc.perform(get("/api/groups/fileshare")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", not(empty())))
+				.andExpect(jsonPath("$[*].description", hasItem("Fileshare Group 1")))
+				.andExpect(jsonPath("$[*].description", not(hasItem("Reporting Group 1"))));
+	}
+
+	@Test
 	public void topLevelGroupIsReturned() throws Exception
 	{
 		mvc.perform(get("/api/group/Top-Level Group")
