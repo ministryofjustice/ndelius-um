@@ -43,13 +43,18 @@ public class GroupServiceImpl implements GroupService {
 
 	@Override
 	public Optional<GroupEntry> getGroup(String name) {
-		Name groupName = LdapNameBuilder.newInstance(groupsBase).add("cn", name).build();
+		Name groupName = LdapNameBuilder.newInstance(groupsBase)
+				.add("cn", name)
+				.build();
 		return groupRepository.findById(groupName);
 	}
 
 	@Override
 	public Optional<GroupEntry> getGroup(String type, String name) {
-		Name groupName = LdapNameBuilder.newInstance(groupsBase).add("ou", type).add("cn", name).build();
+		Name groupName = LdapNameBuilder.newInstance(groupsBase)
+				.add("ou", type)
+				.add("cn", name)
+				.build();
 		return groupRepository.findById(groupName);
 	}
 

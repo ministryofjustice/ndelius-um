@@ -341,8 +341,13 @@ public class UserControllerTest
 				.roles(singletonList(Role.builder()
 						.name("UMBT001")
 						.build()))
+				.groups(singletonList(Group.builder()
+						.name("Group 1")
+						.type("Fileshare")
+						.build()))
 				.build();
 
+		// Create user
 		mvc.perform(post("/api/user")
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -352,6 +357,7 @@ public class UserControllerTest
 
 		Thread.sleep(5000); // small wait to test the difference in created/updated date
 
+		// Update user
 		mvc.perform(post("/api/user/" + username)
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -371,9 +377,13 @@ public class UserControllerTest
 						.homeArea(Dataset.builder().code("N01").build())
 						.privateSector(false)
 						.roles(singletonList(Role.builder().name("UMBT002").build()))
+						.groups(asList(
+								Group.builder().name("Group 2").type("Fileshare").build(),
+								Group.builder().name("Group 1").type("NDMIS-Reporting").build()))
 						.build())))
 				.andExpect(status().isNoContent());
 
+		// Get user (to check changes)
 		mvc.perform(get("/api/user/" + username)
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
@@ -389,6 +399,8 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.teams[*].code", hasItem("N02TST")))
 				.andExpect(jsonPath("$.roles", hasSize(1)))
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT002")))
+				.andExpect(jsonPath("$.groups", hasSize(2)))
+				.andExpect(jsonPath("$.groups[*].name", hasItems("Group 1", "Group 2")))
 				.andExpect(jsonPath("$.created.at", not(isWithin(5, SECONDS).of(now()))))
 				.andExpect(jsonPath("$.updated.at", isWithin(5, SECONDS).of(now())));
 	}
