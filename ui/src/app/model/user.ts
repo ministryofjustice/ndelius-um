@@ -18,10 +18,7 @@ export class User {
   datasets: Dataset[];
   establishments: Dataset[];
   roles: Role[];
-  groups: {
-    'Fileshare': Group[],
-    'NDMIS-Reporting': Group[],
-  };
+  groups: { [key: string]: Group[] } = {};
   subContractedProvider: Dataset;
   startDate: Date = new Date();
   endDate: Date;
