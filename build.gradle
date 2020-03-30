@@ -1,15 +1,12 @@
 // Build dependencies
 buildscript {
-	ext {
-		springBootVersion = '2.1.5.RELEASE'
-	}
 	repositories {
 		mavenCentral()
 		gradlePluginPortal()
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath("com.moowork.gradle:gradle-node-plugin:1.3.1")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.5.RELEASE")
+		classpath("com.github.node-gradle:gradle-node-plugin:2.2.3")
 		classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.8")
 		classpath("net.researchgate:gradle-release:2.8.1")
 	}
@@ -22,13 +19,16 @@ apply plugin: 'jacoco'
 apply plugin: 'org.sonarqube'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'com.moowork.node'
+apply plugin: 'com.github.node-gradle.node'
 apply plugin: 'net.researchgate.release'
 
 // Java
 sourceCompatibility = 1.8
 sourceSets {
-    main.resources.srcDirs 'src/main/resources', 'ui/dist'
+    main.resources.srcDirs 'ui/dist'
+}
+clean {
+	delete 'ui/dist'
 }
 
 // Spring Boot
@@ -38,17 +38,15 @@ springBoot {
 
 // Node/NPM
 node {
-	version = '12.13.1'
-	npmVersion = '6.12.1'
+	version = '12.16.1'
+	npmVersion = '6.13.4'
 	download = true
+	nodeModulesDir = file('ui')
 }
-npmInstall.workingDir = file("${project.projectDir}/ui")
-npm_test.workingDir = file("${project.projectDir}/ui")
-npm_test.dependsOn(npmInstall)
-npm_run.workingDir = file("${project.projectDir}/ui")
-npm_run.args = ['build-prod']
-npm_run.dependsOn(npm_test)
-processResources.dependsOn(npm_run)
+npm_run_build.dependsOn(npmInstall)
+npm_run_build.args = ['--prod']
+processResources.dependsOn(npm_run_build)
+test.dependsOn(npm_test)
 
 // Jacoco test coverage
 jacoco.toolVersion '0.8.5'
@@ -62,26 +60,27 @@ repositories {
 	mavenCentral()
 }
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('org.springframework.boot:spring-boot-starter-data-ldap')
-	compile('org.springframework.boot:spring-boot-starter-data-redis')
-	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-security')
-	compile('org.springframework.session:spring-session-data-redis')
-	compile('org.springframework.security.oauth:spring-security-oauth2:2.3.8.RELEASE')
-	compile('org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.2.RELEASE')
-	compile('com.unboundid:unboundid-ldapsdk')
-	compile('it.ozimov:embedded-redis:0.7.2')
-	compile('io.springfox:springfox-swagger2:2.9.2')
-	compile('io.springfox:springfox-swagger-ui:2.9.2')
-	runtime('org.springframework.boot:spring-boot-devtools')
-	runtime('com.h2database:h2')
-	runtime files('lib/ojdbc8-12.2.0.1.jar')
-	compileOnly('org.projectlombok:lombok')
-	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
-	testCompile('org.springframework.security:spring-security-test')
+	implementation 		'org.springframework.boot:spring-boot-starter-web'
+	implementation 		'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 		'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 		'org.springframework.boot:spring-boot-starter-data-ldap'
+	implementation 		'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 		'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 		'org.springframework.boot:spring-boot-starter-security'
+	implementation 		'org.springframework.session:spring-session-data-redis'
+	implementation 		'org.springframework.security.oauth:spring-security-oauth2:2.3.8.RELEASE'
+	implementation 		'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.2.RELEASE'
+	implementation 		'com.unboundid:unboundid-ldapsdk'
+	implementation 		'it.ozimov:embedded-redis:0.7.2'
+	implementation 		'io.springfox:springfox-swagger2:2.9.2'
+	implementation 		'io.springfox:springfox-swagger-ui:2.9.2'
+	compileOnly 		'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	runtimeOnly		 	'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 		'com.h2database:h2'
+	runtimeOnly 		files('lib/ojdbc8-12.2.0.1.jar')
+	testImplementation 	'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 	'org.springframework.restdocs:spring-restdocs-mockmvc'
+	testImplementation 	'org.springframework.security:spring-security-test'
 }
