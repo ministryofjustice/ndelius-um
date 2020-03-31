@@ -36,10 +36,10 @@ npm_run_build.args = ['--prod']
 processResources.dependsOn(npm_run_build)
 test.dependsOn(npm_test)
 sourceSets {
-    main.resources.srcDirs 'ui/dist'
+	main.resources.srcDirs 'ui/dist'
 }
 clean {
-    delete 'ui/dist'
+	delete 'ui/dist'
 }
 
 // Jacoco test coverage

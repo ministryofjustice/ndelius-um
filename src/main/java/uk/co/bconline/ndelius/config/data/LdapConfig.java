@@ -1,6 +1,6 @@
 package uk.co.bconline.ndelius.config.data;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.val;
 import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
 import org.springframework.boot.autoconfigure.ldap.LdapProperties;
 import org.springframework.context.annotation.Bean;
@@ -16,20 +16,12 @@ import uk.co.bconline.ndelius.repository.ldap.UserEntryRepository;
 @EnableLdapRepositories(basePackageClasses = UserEntryRepository.class)
 public class LdapConfig extends LdapAutoConfiguration
 {
-	private final Boolean pooled;
-
-	@Autowired
-	public LdapConfig(LdapProperties properties, Environment environment)
-	{
-		super(properties, environment);
-		pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
-	}
-
 	@Bean
 	@Override
-	public LdapContextSource ldapContextSource()
+	public LdapContextSource ldapContextSource(LdapProperties properties, Environment environment)
 	{
-		LdapContextSource ctxSource = super.ldapContextSource();
+		val ctxSource = super.ldapContextSource(properties, environment);
+		val pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
 		ctxSource.setPooled(pooled);
 		return ctxSource;
 	}
