@@ -266,7 +266,7 @@
             <div *ngIf="staffCode.dirty && staffCode.invalid && staffCode.errors['pattern']" class="text-danger small">
               *Staff code should consist of 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001.
             </div>
-            <div *ngIf="staffCode.dirty && staffCode.valid && user.staffCode != null && !user.staffCode?.match('[A-Z0-9]{3}[A-Z][0-9]{3}')" class="text-muted small">
+            <div *ngIf="staffCode.dirty && staffCode.valid && user.staffCode != null && user.staffCode != '' && !user.staffCode?.match('[A-Z0-9]{3}[A-Z][0-9]{3}')" class="text-muted small">
               Warning: Staff code does not match the recommended format of 3 alphanumeric characters followed by one letter and three numbers (eg. XXXA001).
             </div>
             <div *ngIf="userWithStaffCode != null" class="text-muted small">
