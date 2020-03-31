@@ -20,4 +20,4 @@ management.endpoint.health.show-details: always
 logging.level:
   org.springframework.web: ERROR
 
-logging.path: ./log/
+logging.file.path: ./log/
