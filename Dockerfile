@@ -1,6 +1,6 @@
 FROM openjdk:8-jre
 WORKDIR /app
-COPY build/libs/bcl-ndelius-um*.jar /app/app.jar
+COPY build/libs/*.jar /app/app.jar
 EXPOSE 8080
 HEALTHCHECK CMD wget --quiet --tries=1 --spider http://localhost:8080/umt/actuator/health
 ENV PROFILE=default
