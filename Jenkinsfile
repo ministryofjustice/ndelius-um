@@ -78,7 +78,7 @@ pipeline {
         stage('Deploy to Dev') {
             when { branch 'master' }
             steps {
-                deploy('728765553488', 'del-delius-ecscluster-private-ecs', 'del-test-usermanagement-service')
+                deploy('723123699647', 'dlc-delius-ecscluster-private-ecs', 'dlc-dev-usermanagement-service')
             }
         }
         stage('Deploy to Test') {
