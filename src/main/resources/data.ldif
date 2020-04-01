@@ -295,6 +295,7 @@ authorizedGrantType: authorization_code
 authorizedGrantType: refresh_token
 registeredRedirectUri: /umt/
 registeredRedirectUri: http://localhost:4200/umt/
+registeredRedirectUri: http://localhost:8080/umt/
 
 dn: cn=UMBT001,cn=UserManagement-UI,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top

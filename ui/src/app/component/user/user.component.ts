@@ -29,9 +29,9 @@ import {GroupService} from '../../service/group.service';
 export class UserComponent implements OnInit {
   loaded: boolean;
   saving: boolean;
-  @ViewChild('form', { static: false }) form: NgForm;
-  @ViewChild('rolesControl', { static: false }) rolesControl: NgModel;
-  @ViewChild('staffCode', { static: false }) staffCodeControl: NgModel;
+  @ViewChild('form') form: NgForm;
+  @ViewChild('rolesControl') rolesControl: NgModel;
+  @ViewChild('staffCode') staffCodeControl: NgModel;
   mode: string;
   params: Params;
   user: User;

@@ -26,20 +26,17 @@ import uk.co.bconline.ndelius.util.ReflectionUtils;
 @EnableLdapRepositories(basePackageClasses = UserEntryRepository.class)
 public class LdapConfig extends LdapAutoConfiguration {
 	private final Environment environment;
-	private final Boolean pooled;
 
 	@Autowired
-	public LdapConfig(LdapProperties properties, Environment environment) {
-		super(properties, environment);
+	public LdapConfig(Environment environment) {
 		this.environment = environment;
-		this.pooled = Boolean.parseBoolean(properties.getBaseEnvironment()
-				.getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
 	}
 
 	@Bean
 	@Override
-	public LdapContextSource ldapContextSource() {
-		LdapContextSource ctxSource = super.ldapContextSource();
+	public LdapContextSource ldapContextSource(LdapProperties properties, Environment environment) {
+		val ctxSource = super.ldapContextSource(properties, environment);
+		val pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
 		ctxSource.setPooled(pooled);
 		return ctxSource;
 	}
@@ -75,7 +72,7 @@ public class LdapConfig extends LdapAutoConfiguration {
 			attributes.put("base", newBase);
 			val newAnnotation = AnnotationUtils.synthesizeAnnotation(attributes, Entry.class, entryClass);
 			ReflectionUtils.replaceClassLevelAnnotation(entryClass, Entry.class, newAnnotation);
-			log.debug("Updated base for {} to '{}'", entryClass, entryClass.getAnnotation(Entry.class).base());
+			log.info("Updated base for {} to '{}'", entryClass, entryClass.getAnnotation(Entry.class).base());
 		}
 	}
 }
