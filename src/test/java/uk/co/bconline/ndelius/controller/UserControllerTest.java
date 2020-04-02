@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Before;
 import org.junit.Test;
@@ -341,8 +342,11 @@ public class UserControllerTest
 				.roles(singletonList(Role.builder()
 						.name("UMBT001")
 						.build()))
+				.groups(ImmutableMap.of(
+						"Fileshare", singletonList(Group.builder().name("Group 1").type("Fileshare").build())))
 				.build();
 
+		// Create user
 		mvc.perform(post("/api/user")
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -352,6 +356,7 @@ public class UserControllerTest
 
 		Thread.sleep(5000); // small wait to test the difference in created/updated date
 
+		// Update user
 		mvc.perform(post("/api/user/" + username)
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -371,9 +376,13 @@ public class UserControllerTest
 						.homeArea(Dataset.builder().code("N01").build())
 						.privateSector(false)
 						.roles(singletonList(Role.builder().name("UMBT002").build()))
+						.groups(ImmutableMap.of(
+								"Fileshare", singletonList(Group.builder().name("Group 2").type("Fileshare").build()),
+								"NDMIS-Reporting", singletonList(Group.builder().name("Group 1").type("NDMIS-Reporting").build())))
 						.build())))
 				.andExpect(status().isNoContent());
 
+		// Get user (to check changes)
 		mvc.perform(get("/api/user/" + username)
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
@@ -389,6 +398,10 @@ public class UserControllerTest
 				.andExpect(jsonPath("$.teams[*].code", hasItem("N02TST")))
 				.andExpect(jsonPath("$.roles", hasSize(1)))
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT002")))
+				.andExpect(jsonPath("$.groups.Fileshare", hasSize(1)))
+				.andExpect(jsonPath("$.groups.NDMIS-Reporting", hasSize(1)))
+				.andExpect(jsonPath("$.groups.Fileshare[0].name", is("Group 2")))
+				.andExpect(jsonPath("$.groups.NDMIS-Reporting[0].name", is("Group 1")))
 				.andExpect(jsonPath("$.created.at", not(isWithin(5, SECONDS).of(now()))))
 				.andExpect(jsonPath("$.updated.at", isWithin(5, SECONDS).of(now())));
 	}
@@ -407,7 +420,7 @@ public class UserControllerTest
 
 		Optional<UserPreferencesEntry> prefs = preferencesRepository.findOne(query()
 				.searchScope(SearchScope.ONELEVEL)
-				.base("cn=" + username)
+				.base("cn=" + username + ",ou=Users")
 				.where("cn").is("UserPreferences"));
 		assertTrue(prefs.isPresent());
 		assertEquals("NRO16", prefs.get().getMostRecentlyViewedOffenders());
@@ -730,5 +743,59 @@ public class UserControllerTest
 						.staffCode("ZZZA001").build())))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.error[*]", hasItem("Staff Code prefix should correspond to a valid provider code")));
+	}
+
+	@Test
+	public void groupsAreReturned() throws Exception
+	{
+		mvc.perform(get("/api/user/test.user")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.groups.Fileshare", hasSize(1)))
+				.andExpect(jsonPath("$.groups.NDMIS-Reporting", hasSize(2)));
+	}
+
+	@Test
+	public void groupsWithNoNameAreRejected() throws Exception
+	{
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token(mvc))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.groups(ImmutableMap.of(
+								"Fileshare", singletonList(Group.builder().build())
+						)).build())))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error[*]", hasItem("Name must not be blank")));
+	}
+
+	@Test
+	public void groupsWithNoTypeAreRejected() throws Exception
+	{
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token(mvc))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.groups(ImmutableMap.of(
+								"Fileshare", singletonList(Group.builder().name("NO-TYPE!").build())
+						)).build())))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error[*]", hasItem("Type must not be blank")));
+	}
+
+	@Test
+	public void rolesWithNoNameAreRejected() throws Exception
+	{
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token(mvc))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.roles(singletonList(Role.builder().build()))
+						.build())))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error[*]", hasItem("Name must not be blank")));
 	}
 }

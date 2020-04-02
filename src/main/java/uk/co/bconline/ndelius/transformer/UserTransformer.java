@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Optionals;
 import org.springframework.stereotype.Component;
 import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.Modification;
@@ -42,6 +43,9 @@ public class UserTransformer
 	@Value("${spring.ldap.default-password:#{null}}")
 	private String defaultPassword;
 
+	@Value("${delius.ldap.base.groups}")
+	private String groupsBase;
+
 	private final TeamService teamService;
 	private final ReferenceDataService referenceDataService;
 	private final DatasetService datasetService;
@@ -51,6 +55,7 @@ public class UserTransformer
 	private final DatasetTransformer datasetTransformer;
 	private final ReferenceDataTransformer referenceDataTransformer;
 	private final TeamTransformer teamTransformer;
+	private final GroupTransformer groupTransformer;
 
 	@Autowired
 	public UserTransformer(
@@ -62,7 +67,8 @@ public class UserTransformer
 			RoleTransformer roleTransformer,
 			DatasetTransformer datasetTransformer,
 			ReferenceDataTransformer referenceDataTransformer,
-			TeamTransformer teamTransformer)
+			TeamTransformer teamTransformer,
+			GroupTransformer groupTransformer)
 	{
 		this.teamService = teamService;
 		this.referenceDataService = referenceDataService;
@@ -73,6 +79,7 @@ public class UserTransformer
 		this.datasetTransformer = datasetTransformer;
 		this.referenceDataTransformer = referenceDataTransformer;
 		this.teamTransformer = teamTransformer;
+		this.groupTransformer = groupTransformer;
 	}
 
 	public Optional<User> map(UserEntity user)
@@ -138,6 +145,7 @@ public class UserTransformer
 								.map(roleTransformer::map)
 								.collect(toList()))
 						.orElse(null))
+				.groups(groupTransformer.groupedByType(v.getGroups()))
 				.sources(singletonList("LDAP"))
 				.build());
 	}
@@ -148,8 +156,7 @@ public class UserTransformer
 		val r = Stream.of(
 				map(userEntry),
 				map(dbUser))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
+				.flatMap(Optionals::toStream)
 				.reduce(this::reduceUser);
 		log.trace("--{}ms	Combine results", MILLIS.between(t, now()));
 		return r;
@@ -287,6 +294,7 @@ public class UserTransformer
 						.map(roleTransformer::map)
 						.collect(toSet()))
 						.orElseGet(Collections::emptySet))
+				.groupNames(groupTransformer.mapToNames(groupTransformer.collate(user.getGroups()), groupsBase))
 				.build();
 	}
 

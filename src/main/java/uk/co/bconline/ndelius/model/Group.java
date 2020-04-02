@@ -9,14 +9,15 @@ import java.util.List;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Getter
-@Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(NON_NULL)
-public final class Role
+@Builder(toBuilder = true)
+public final class Group
 {
 	private @NotBlank String name;
+	private @NotBlank String type;
 	private String description;
-	private List<String> interactions;
+	private List<String> members;
 }

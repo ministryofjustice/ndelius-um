@@ -1,7 +1,10 @@
 package uk.co.bconline.ndelius.model.entry;
 
 import lombok.*;
-import org.springframework.ldap.odm.annotations.*;
+import org.springframework.ldap.odm.annotations.Attribute;
+import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.odm.annotations.Transient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import uk.co.bconline.ndelius.model.auth.UserInteraction;
@@ -17,7 +20,7 @@ import static java.util.stream.Collectors.toSet;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @ToString(exclude = "clientSecret")
-@Entry(objectClasses = {"NDClient", "inetOrgPerson", "top"}, base = "cn=EISUsers")
+@Entry(objectClasses = {"NDClient", "inetOrgPerson", "top"}, base = "delius.ldap.base.clients")
 public final class ClientEntry implements ClientDetails
 {
 	@Id
@@ -25,7 +28,6 @@ public final class ClientEntry implements ClientDetails
 
 	@Setter
 	@Attribute(name="cn")
-	@DnAttribute(value="cn", index=1)
 	private String clientId;
 
 	@Attribute(name="userPassword")

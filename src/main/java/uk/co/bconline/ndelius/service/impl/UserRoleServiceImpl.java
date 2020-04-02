@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Optionals;
 import org.springframework.ldap.query.SearchScope;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.entry.RoleAssociationEntry;
@@ -40,6 +41,12 @@ public class UserRoleServiceImpl implements UserRoleService
 
 	@Value("${spring.ldap.base}")
 	private String ldapBase;
+
+	@Value("${delius.ldap.base.users}")
+	private String usersBase;
+
+	@Value("${delius.ldap.base.roles}")
+	private String rolesBase;
 
 	@Autowired
 	public UserRoleServiceImpl(
@@ -81,7 +88,7 @@ public class UserRoleServiceImpl implements UserRoleService
 		val t = LocalDateTime.now();
 		val r = stream(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
-				.base(join(",", "cn=" + username, USER_BASE))
+				.base(join(",", "cn=" + username, usersBase))
                 .where(OBJECTCLASS).is("NDRole")
                 .or(OBJECTCLASS).is("NDRoleAssociation")).spliterator(), true)
 				.filter(Objects::nonNull)
@@ -109,7 +116,7 @@ public class UserRoleServiceImpl implements UserRoleService
 		log.debug("Deleting existing role associations");
 		roleRepository.deleteAll(roleRepository.findAll(query()
 				.searchScope(SearchScope.ONELEVEL)
-				.base(join(",", "cn=" + username, USER_BASE))
+				.base(join(",", "cn=" + username, usersBase))
 				.where(OBJECTCLASS).is("NDRole")
 				.or(OBJECTCLASS).is("NDRoleAssociation")));
 
@@ -120,7 +127,7 @@ public class UserRoleServiceImpl implements UserRoleService
 						.map(name -> RoleAssociationEntry.builder()
 								.name(name)
 								.username(username)
-								.aliasedObjectName(join(",", "cn=" + name, ROLE_BASE, ldapBase))
+								.aliasedObjectName(join(",", "cn=" + name, rolesBase, ldapBase))
 								.build())
 						.collect(toList())));
 	}

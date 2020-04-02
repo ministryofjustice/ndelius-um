@@ -10,7 +10,7 @@ import javax.naming.Name;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entry(objectClasses = {"UserPreferences", "top"})
+@Entry(objectClasses = {"UserPreferences", "top"}, base = "delius.ldap.base.users")
 public final class UserPreferencesEntry
 {
 	public UserPreferencesEntry(String username)

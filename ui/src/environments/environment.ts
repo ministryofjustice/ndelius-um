@@ -9,7 +9,7 @@ const authConfig: AuthConfig = {
   dummyClientSecret: '',
   scope:
     // User management interactions (eg. add/update user):
-    'UMBI001 UMBI002 UMBI003 UMBI004 UMBI005 UMBI006 UMBI007 UMBI008 UMBI009 UMBI010 UMBI011 ' +
+    'UMBI001 UMBI002 UMBI003 UMBI004 UMBI005 UMBI006 UMBI007 UMBI008 UMBI009 UMBI010 UMBI011 UMBI012 ' +
     // Role management interactions (eg. public/private/national admin):
     'UABI020 UABI021 UABI022 UABI023 UABI024 UABI025 UABI026',
   resource: 'NDelius',

@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.util.Optionals;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.RoleGroup;
 import uk.co.bconline.ndelius.model.entry.RoleEntry;
@@ -52,7 +53,7 @@ public class RoleGroupServiceImpl implements RoleGroupService
 					g.setRoles(roleService.getRolesInGroup(g.getName()).parallelStream()
 							.map(RoleEntry::getName)
 							.map(roleService::getRole)
-							.filter(Optional::isPresent).map(Optional::get)
+							.flatMap(Optionals::toStream)
 							.collect(toSet()));
 					return g;
 				})

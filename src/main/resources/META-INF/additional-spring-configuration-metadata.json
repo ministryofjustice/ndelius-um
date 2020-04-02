@@ -11,6 +11,31 @@
       "description": "Shared secret key between National Delius and UMT, to support delegated authentication via request parameters."
     },
     {
+      "name": "delius.ldap.base.users",
+      "type": "java.lang.String",
+      "description": "Base entry for Users in the LDAP."
+    },
+    {
+      "name": "delius.ldap.base.groups",
+      "type": "java.lang.String",
+      "description": "Base entry for Groups in the LDAP."
+    },
+    {
+      "name": "delius.ldap.base.clients",
+      "type": "java.lang.String",
+      "description": "Base entry for OAuth Clients in the LDAP."
+    },
+    {
+      "name": "delius.ldap.base.roles",
+      "type": "java.lang.String",
+      "description": "Base entry for the Role Catalogue in the LDAP."
+    },
+    {
+      "name": "delius.ldap.base.role-groups",
+      "type": "java.lang.String",
+      "description": "Base entry for the RoleGroup Catalogue in the LDAP."
+    },
+    {
       "name": "cache.evict.delay",
       "type": "java.lang.String",
       "description": "How often the caches should be cleared, in milliseconds. Defaults to 24 hours."

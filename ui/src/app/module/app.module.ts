@@ -26,6 +26,8 @@ import {StaffGradeService} from '../service/staff-grade.service';
 import {RestStaffGradeService} from '../service/impl/rest.staff-grade.service';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {AutoFocusDirective} from '../directive/auto-focus.directive';
+import {GroupService} from '../service/group.service';
+import {RestGroupService} from '../service/impl/rest.group.service';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,7 @@ import {AutoFocusDirective} from '../directive/auto-focus.directive';
   providers: [
     {provide: UserService, useClass: RestUserService},
     {provide: RoleService, useClass: RestRoleService},
+    {provide: GroupService, useClass: RestGroupService},
     {provide: DatasetService, useClass: RestDatasetService},
     {provide: TeamService, useClass: RestTeamService},
     {provide: OrganisationService, useClass: RestOrganisationService},

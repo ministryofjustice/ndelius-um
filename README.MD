@@ -65,13 +65,17 @@ Note: This expects the back-end to also be running on http://localhost:8080/umt.
 ## Configure
 The application is configured with [conventional Spring parameters](https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html).
 
+See [application-example.yml](src/main/resources/application-example.yml) for an example configuration file. 
+Alternatively, look at [application-dev.yml](src/main/resources/application-dev.yml) to see how the app can be configured with in-memory datasources (see: [Dev Profile](#dev-profile))
+
 ### Data Sources
 * `spring.datasource` defines the Database connection, which is used for user, staff and dataset access information.
 * `spring.ldap` defines the LDAP connection, which contains user authentication, role-based access control (RBAC), and NDelius user preferences.
 * `spring.redis` defines the Redis connection details, which is used for storing OAuth2 access tokens and authorisation codes.
 
-See [application-example.yml](src/main/resources/application-example.yml) for an example of how these can be configured. 
-Alternatively, look at [application-dev.yml](src/main/resources/application-dev.yml) to see how the app can be configured with in-memory datasources (see: [Dev Profile](#dev-profile))
+### Custom configuration items
+* `delius.secret` is a shared secret key between this application and Delius to support authenticating users who have already logged in to Delius (See [Preauthenticated grant](#Preauthenticated grant)).
+* `delius.ldap.base.*` defines the base context where users, roles, groups etc are stored within the Delius LDAP.
 
 ## Authentication
 The User Management Tool acts as an [OAuth2](https://oauth.net/2/) identity provider for National Delius, and supports the `implicit`, `authorization_code`, `client_credentials` and `refresh_token` grant types as well as a custom `preauthenticated` grant type.

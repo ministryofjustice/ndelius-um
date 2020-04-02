@@ -5,10 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.entry.RoleEntry;
-import uk.co.bconline.ndelius.model.entry.RoleGroupEntry;
 import uk.co.bconline.ndelius.repository.ldap.RoleRepository;
 import uk.co.bconline.ndelius.service.RoleService;
 
@@ -24,13 +22,16 @@ import static uk.co.bconline.ndelius.util.NameUtils.join;
 @Service
 public class RoleServiceImpl implements RoleService
 {
-	private static final String ROLE_BASE = RoleEntry.class.getAnnotation(Entry.class).base();
-	private static final String GROUP_BASE = RoleGroupEntry.class.getAnnotation(Entry.class).base();
-
 	private final RoleRepository roleRepository;
 
 	@Value("${spring.ldap.base}")
 	private String ldapBase;
+
+	@Value("${delius.ldap.base.roles}")
+	private String rolesBase;
+
+	@Value("${delius.ldap.base.role-groups}")
+	private String roleGroupsBase;
 
 	@Autowired
 	public RoleServiceImpl(
@@ -45,7 +46,7 @@ public class RoleServiceImpl implements RoleService
 	{
 		return Sets.newHashSet(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
-				.base(ROLE_BASE)
+				.base(rolesBase)
 				.where(OBJECTCLASS).is("NDRole")
 				.or(OBJECTCLASS).is("NDRoleAssociation")));
 	}
@@ -63,7 +64,7 @@ public class RoleServiceImpl implements RoleService
 	{
 		return Sets.newHashSet(roleRepository.findAll(query()
 				.searchScope(ONELEVEL)
-				.base(join(",", "cn=" + group, GROUP_BASE))
+				.base(join(",", "cn=" + group, roleGroupsBase))
 				.where(OBJECTCLASS).is("NDRole")
 				.or(OBJECTCLASS).is("NDRoleAssociation")));
 	}
