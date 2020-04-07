@@ -255,7 +255,7 @@
             Reporting
           </label>
           <div class="col-sm-4">
-            <item-selector id="reporting-groups" name="reporting-groups" multiple="true"
+            <item-selector id="reporting-groups" name="reporting-groups" maxHeight="300px" multiple="true"
                            [(ngModel)]="user.groups['NDMIS-Reporting']"
                            [(selected)]="user.groups['NDMIS-Reporting']"
                            [available]="reportingGroups"
