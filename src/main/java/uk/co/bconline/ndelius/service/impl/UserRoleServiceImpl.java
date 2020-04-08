@@ -16,7 +16,6 @@ import uk.co.bconline.ndelius.service.UserRoleService;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
@@ -44,6 +43,9 @@ public class UserRoleServiceImpl implements UserRoleService
 
 	@Value("${delius.ldap.base.users}")
 	private String usersBase;
+
+	@Value("${delius.ldap.base.clients}")
+	private String clientsBase;
 
 	@Value("${delius.ldap.base.roles}")
 	private String rolesBase;
@@ -85,14 +87,24 @@ public class UserRoleServiceImpl implements UserRoleService
 	@Override
 	public Set<RoleEntry> getUserRoles(String username)
 	{
+		return getAssignedRoles(username, usersBase);
+	}
+
+	@Override
+	public Set<RoleEntry> getClientRoles(String clientId)
+	{
+		return getAssignedRoles(clientId, clientsBase);
+	}
+
+	private Set<RoleEntry> getAssignedRoles(String id, String base)
+	{
 		val t = LocalDateTime.now();
-		val r = stream(roleRepository.findAll(query()
+		val r = stream(roleAssociationRepository.findAll(query()
 				.searchScope(ONELEVEL)
-				.base(join(",", "cn=" + username, usersBase))
-                .where(OBJECTCLASS).is("NDRole")
-                .or(OBJECTCLASS).is("NDRoleAssociation")).spliterator(), true)
-				.filter(Objects::nonNull)
-				.map(role -> roleService.getRole(role.getName()).orElse(role))
+				.base(join(",", "cn=" + id, base))
+				.where(OBJECTCLASS).is("NDRoleAssociation")).spliterator(), true)
+				.map(roleService::dereference)
+				.flatMap(Optionals::toStream)
 				.collect(toSet());
 		log.trace("--{}ms	LDAP lookup user roles", MILLIS.between(t, LocalDateTime.now()));
 		return r;
@@ -114,11 +126,15 @@ public class UserRoleServiceImpl implements UserRoleService
 	public void updateUserRoles(String username, Set<RoleEntry> roles)
 	{
 		log.debug("Deleting existing role associations");
+		roleAssociationRepository.deleteAll(roleAssociationRepository.findAll(query()
+				.searchScope(SearchScope.ONELEVEL)
+				.base(join(",", "cn=" + username, usersBase))
+				.where(OBJECTCLASS).is("NDRoleAssociation")));
+		log.debug("Deleting any existing invalid role associations (non-aliases)");
 		roleRepository.deleteAll(roleRepository.findAll(query()
 				.searchScope(SearchScope.ONELEVEL)
 				.base(join(",", "cn=" + username, usersBase))
-				.where(OBJECTCLASS).is("NDRole")
-				.or(OBJECTCLASS).is("NDRoleAssociation")));
+				.where(OBJECTCLASS).is("NDRole")));
 
 		log.debug("Saving new role associations");
 		ofNullable(roles).ifPresent(r ->
