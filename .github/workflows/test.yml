@@ -17,10 +17,10 @@ jobs:
             ${{ runner.os }}-node-
       - name: Cache gradle dependencies
         uses: actions/cache@v1
-          with:
-            path: ~/.gradle/caches
-            key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-            restore-keys: |
-              ${{ runner.os }}-gradle-
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       - name: Run tests
         run: ./gradlew clean test --info
