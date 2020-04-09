@@ -2,10 +2,8 @@ package uk.co.bconline.ndelius.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.util.Optionals;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.RoleGroup;
-import uk.co.bconline.ndelius.model.entry.RoleEntry;
 import uk.co.bconline.ndelius.repository.ldap.RoleGroupRepository;
 import uk.co.bconline.ndelius.service.RoleGroupService;
 import uk.co.bconline.ndelius.service.RoleService;
@@ -15,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 
 @Service
@@ -49,14 +46,7 @@ public class RoleGroupServiceImpl implements RoleGroupService
     public Optional<RoleGroup> getRoleGroup(String name)
 	{
         return roleGroupRepository.findByName(name)
-				.map(g -> {
-					g.setRoles(roleService.getRolesInGroup(g.getName()).parallelStream()
-							.map(RoleEntry::getName)
-							.map(roleService::getRole)
-							.flatMap(Optionals::toStream)
-							.collect(toSet()));
-					return g;
-				})
+				.map(g -> g.toBuilder().roles(roleService.getRolesInGroup(g.getName())).build())
 				.map(roleGroupTransformer::map);
     }
 }

@@ -45,7 +45,7 @@ public class ClientEntryServiceImpl implements ClientDetailsService
 	{
 		return getBasicClient(clientId)
 				.map(u -> u.toBuilder()
-						.roles(userRoleService.getUserRoles(clientId + ",cn=EISUsers"))
+						.roles(userRoleService.getClientRoles(clientId))
 						.build());
 	}
 

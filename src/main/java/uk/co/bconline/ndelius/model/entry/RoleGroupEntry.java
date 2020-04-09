@@ -1,7 +1,9 @@
 package uk.co.bconline.ndelius.model.entry;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
@@ -11,7 +13,10 @@ import javax.naming.Name;
 import java.util.Set;
 
 @Getter
-@Entry(objectClasses = {"NDRoleGroup", "top"}, base = "delius.ldap.base.role-groups")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Entry(objectClasses = {"NDRoleGroup"}, base = "delius.ldap.base.role-groups")
 public final class RoleGroupEntry
 {
     @Id
@@ -20,7 +25,6 @@ public final class RoleGroupEntry
     @Attribute(name="cn")
     private String name;
 
-    @Setter
     @Transient
     private Set<RoleEntry> roles;
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(of = {"name", "interactions"})
-@Entry(objectClasses = "top", base = "delius.ldap.base.roles")
+@Entry(objectClasses = "NDRole", base = "delius.ldap.base.roles")
 public final class RoleEntry implements Serializable
 {
 	@Id
@@ -23,9 +23,6 @@ public final class RoleEntry implements Serializable
 
 	@Attribute(name="cn")
 	private String name;
-
-	@Attribute(name="aliasedObjectName")
-	private String aliasedObjectName;
 
 	@Attribute(name="description")
 	private String description;
