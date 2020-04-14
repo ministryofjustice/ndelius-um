@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.model.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import uk.co.bconline.ndelius.model.entity.converter.YNConverter;
 
@@ -17,6 +18,7 @@ import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 @NoArgsConstructor
 @Cache(usage = READ_ONLY)
 @Table(name = "PROBATION_AREA")
+@ToString(of = {"code", "description"})
 @EqualsAndHashCode(exclude = "userLinks")
 public class ProbationAreaEntity implements Serializable
 {
