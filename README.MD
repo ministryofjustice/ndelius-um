@@ -80,7 +80,7 @@ Alternatively, look at [application-dev.yml](src/main/resources/application-dev.
 ## Authentication
 The User Management Tool acts as an [OAuth2](https://oauth.net/2/) identity provider for National Delius, and supports the `implicit`, `authorization_code`, `client_credentials` and `refresh_token` grant types as well as a custom `preauthenticated` grant type.
 
-OAuth clients are registered in the LDAP under the `cn=EISUsers` container, with scopes being defined by the Delius roles assigned to them. To register a new client, follow the instructions in the [hmpps-ndelius-rbac]() repository.
+OAuth clients are registered in the LDAP under the `cn=EISUsers` container, with scopes being defined by the Delius roles assigned to them. To register a new client, follow the instructions in the [hmpps-ndelius-rbac](https://github.com/ministryofjustice/hmpps-ndelius-rbac#service-users--clients) repository.
 
 The front-end application authenticates with the back-end using the [Authorization Code](https://oauth.net/2/grant-types/authorization-code/) flow as the UserManagement-UI client, by making use of the [angular-oauth2-oidc](https://github.com/manfredsteyer/angular-oauth2-oidc) library.
 
