@@ -1,9 +1,9 @@
-name: Run tests
+name: Check code quality
 
 on: push
 
 jobs:
-  test:
+  lint-typescript:
     runs-on: ubuntu-latest
 
     steps:
