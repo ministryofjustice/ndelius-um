@@ -15,7 +15,7 @@ describe('AuthorisationService', () => {
       providers: [AuthorisationService, {provide: UserService, useClass: RestUserService}],
       imports: [HttpClientTestingModule, OAuthModule.forRoot()],
     });
-    service = TestBed.get(AuthorisationService);
+    service = TestBed.inject(AuthorisationService);
   });
 
   it('should reflect the correct roles for my user', () => {

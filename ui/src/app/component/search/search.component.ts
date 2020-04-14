@@ -35,12 +35,12 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.route.queryParams.pipe(
       filter(params => params.q != null && params.q !== ''),
       tap(() => this.searching = true),
-      flatMap(params => forkJoin(of(++this.searchId), this.service.search(
+      flatMap(params => forkJoin([of(++this.searchId), this.service.search(
         this.query = params.q,
         this.page = +params.page || 1,
         this.pageSize,
         this.includeInactiveUsers
-      )))
+      )]))
     ).subscribe(value => {
       const id = value[0];
       const users: User[] = value[1];
