@@ -20,6 +20,8 @@ import {NgForm, NgModel} from '@angular/forms';
 import {RecentUsersUtils} from '../../util/recent-users.utils';
 import {GroupService} from '../../service/group.service';
 import {LabelMappingUtils} from '../../util/label-mapping.utils';
+import {Groups} from '../../model/groups';
+import {Group} from '../../model/group';
 
 @Component({
   selector: 'user',
@@ -41,8 +43,7 @@ export class UserComponent implements OnInit {
   roles: Role[];
   roleGroups: RoleGroup[];
   selectedRoleGroups: RoleGroup[];
-  fileshareGroups: Group[];
-  reportingGroups: Group[];
+  groups: Groups;
   staffGrades: StaffGrade[];
   subContractedProviders: Dataset[];
   userWithStaffCode: User;
@@ -98,7 +99,7 @@ export class UserComponent implements OnInit {
         setTimeout(() => {
           this.staffCodeControl.valueChanges
             .pipe(debounceTime(500), distinctUntilChanged(), filter(val => val != null))
-            .subscribe(() => this.staffCodeChanged());
+            .subscribe(this.staffCodeChanged);
         });
       });
 
@@ -108,9 +109,16 @@ export class UserComponent implements OnInit {
 
     this.roleService.roles().subscribe(roles => this.addSelectableRoles(roles));
 
-    this.groupService.groups().subscribe((groups: Group[]) => {
-      this.fileshareGroups = groups.filter(group => group.type.toLowerCase() === 'fileshare');
-      this.reportingGroups = groups.filter(group => group.type.toLowerCase() === 'ndmis-reporting');
+    this.groupService.groups().subscribe((groups: Groups) => {
+      // only show groups that are also assigned to the logged in user, unless they have national access
+      if (!this.auth.isNational()) {
+        for (const key of Object.keys(new Groups())) {
+          const myGroups = this.auth.me.groups[key];
+          groups[key] = groups[key].filter((g1: Group) => myGroups.some(g2 => g1.name === g2.name));
+        }
+      }
+
+      this.groups = groups;
     });
 
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {

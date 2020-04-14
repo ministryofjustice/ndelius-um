@@ -21,6 +21,7 @@ import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
 @Builder(toBuilder = true)
 @ValidDates
 @AssignableRoles
+@AssignableGroups
 @AssignableDatasets
 @RestrictNationalUsers
 @ConditionallyRequired(ifPopulated = "staffCode", required = "staffGrade")

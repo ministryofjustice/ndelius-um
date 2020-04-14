@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.service;
 
 import uk.co.bconline.ndelius.model.SearchResult;
+import uk.co.bconline.ndelius.model.entry.GroupEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public interface UserEntryService
 	Optional<UserEntry> getBasicUser(String username);
 	Optional<UserEntry> getUser(String username);
 	String getUserHomeArea(String username);
+	Set<GroupEntry> getUserGroups(String username);
 	void save(UserEntry user);
 	void save(String username, UserEntry user);
 }

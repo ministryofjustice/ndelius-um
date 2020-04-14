@@ -238,27 +238,27 @@
           </div>
         </div>
         <div class="form-group row">
-          <label [for]="'home-area-toggle-btn'" class="col-sm-2 col-form-label"
+          <label [for]="'fileshare-groups-toggle-btn'" class="col-sm-2 col-form-label"
                  title="Use this field to control access to the folders within the NextCloud File Share application. Leave blank if you're unsure of the user's required level of access.">
             File Shares
           </label>
           <div class="col-sm-4">
             <item-selector id="fileshare-groups" name="fileshare-groups" maxHeight="300px" multiple="true"
-                           [(ngModel)]="user.groups['Fileshare']"
-                           [(selected)]="user.groups['Fileshare']"
-                           [available]="fileshareGroups"
+                           [(ngModel)]="user.groups && user.groups.Fileshare"
+                           [(selected)]="user.groups && user.groups.Fileshare"
+                           [available]="groups && groups.Fileshare"
                            [readonly]="mode === 'View'"
                            [labelMapper]="LabelMappingUtils.descriptionToLabel"></item-selector>
           </div>
-          <label [for]="'sector-toggle-btn'" class="col-sm-2 col-form-label"
+          <label [for]="'reporting-groups-toggle-btn'" class="col-sm-2 col-form-label"
                  title="Select the groups to assign to the user in the NDelius MIS Reporting tool. Leave blank if you're unsure of the user's required level of access.">
             Reporting
           </label>
           <div class="col-sm-4">
             <item-selector id="reporting-groups" name="reporting-groups" maxHeight="300px" multiple="true"
-                           [(ngModel)]="user.groups['NDMIS-Reporting']"
-                           [(selected)]="user.groups['NDMIS-Reporting']"
-                           [available]="reportingGroups"
+                           [(ngModel)]="user.groups && user.groups['NDMIS-Reporting']"
+                           [(selected)]="user.groups && user.groups['NDMIS-Reporting']"
+                           [available]="groups && groups['NDMIS-Reporting']"
                            [readonly]="mode === 'View'"
                            [alignRight]="true"
                            [labelMapper]="LabelMappingUtils.descriptionToLabel"></item-selector>

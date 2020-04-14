@@ -1,6 +1,6 @@
 import {Observable} from 'rxjs/Observable';
-import {Group} from '../model/group';
+import {Groups} from '../model/groups';
 
 export abstract class GroupService {
-  abstract groups(): Observable<Group[]>;
+  abstract groups(): Observable<Groups>;
 }

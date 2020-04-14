@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import uk.co.bconline.ndelius.model.SearchResult;
+import uk.co.bconline.ndelius.model.entry.GroupEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.model.entry.UserPreferencesEntry;
 import uk.co.bconline.ndelius.model.entry.projections.UserHomeAreaProjection;
@@ -32,6 +33,7 @@ import java.util.stream.Stream;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -175,7 +177,16 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	@Override
 	public String getUserHomeArea(String username)
 	{
-		return userRepository.getUserHomeAreaProjectionByUsername(username).map(UserHomeAreaProjection::getHomeArea).orElse(null);
+		return userRepository.getUserHomeAreaProjectionByUsername(username)
+				.map(UserHomeAreaProjection::getHomeArea).orElse(null);
+	}
+
+	@Override
+	public Set<GroupEntry> getUserGroups(String username)
+	{
+		return getBasicUser(username)
+				.map(u -> groupService.getGroups(u.getGroupNames()))
+				.orElse(emptySet());
 	}
 
 	@Override

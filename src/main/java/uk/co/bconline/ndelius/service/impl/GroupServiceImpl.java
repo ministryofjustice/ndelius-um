@@ -14,9 +14,11 @@ import uk.co.bconline.ndelius.service.GroupService;
 
 import javax.naming.Name;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
@@ -38,9 +40,9 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public Set<GroupEntry> getGroups() {
+	public Map<String, Set<GroupEntry>> getGroups() {
 		return stream(groupRepository.findAll().spliterator(), false)
-				.collect(toSet());
+				.collect(groupingBy(GroupEntry::getType, toSet()));
 	}
 
 	@Override
