@@ -24,8 +24,8 @@ describe('AuthorisationService', () => {
     service.me.roles[0].interactions = [];
     service.me.roles[0].interactions.push('my-role-1', 'my-role-2');
 
-    expect(service.hasRole('my-role-1')).toBeTruthy();
-    expect(service.hasRole('my-role-2')).toBeTruthy();
-    expect(service.hasRole('my-role-3')).toBeFalsy();
+    expect(service.hasInteraction('my-role-1')).toBeTruthy();
+    expect(service.hasInteraction('my-role-2')).toBeTruthy();
+    expect(service.hasInteraction('my-role-3')).toBeFalsy();
   });
 });

@@ -3,7 +3,7 @@ import {Dataset} from './dataset';
 import {Team} from './team';
 import {StaffGrade} from './staff-grade';
 import {Modification} from './modification';
-import {Group} from './group';
+import {Groups} from './groups';
 
 export class User {
   username: string;
@@ -18,7 +18,7 @@ export class User {
   datasets: Dataset[];
   establishments: Dataset[];
   roles: Role[];
-  groups: { [key: string]: Group[] } = {};
+  groups: Groups = new Groups();
   subContractedProvider: Dataset;
   startDate: Date = new Date();
   endDate: Date;

@@ -1,5 +1,7 @@
 package uk.co.bconline.ndelius.transformer;
 
+import com.google.common.collect.ImmutableMap;
+import lombok.val;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Component;
@@ -32,6 +34,13 @@ public class GroupTransformer
 						.sorted()
 						.collect(toList()))
 				.build();
+	}
+
+	public Map<String, List<Group>> map(Map<String, Set<GroupEntry>> entryMap)
+	{
+		val builder = ImmutableMap.<String, List<Group>>builder();
+		entryMap.forEach((key, value) -> builder.put(key, this.map(value)));
+		return builder.build();
 	}
 
 	public List<Group> map(Collection<GroupEntry> entries)

@@ -15,6 +15,7 @@ import uk.co.bconline.ndelius.service.GroupService;
 import uk.co.bconline.ndelius.transformer.GroupTransformer;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -37,7 +38,7 @@ public class GroupController {
 
 	@GetMapping("/groups")
 	@PreAuthorize("#oauth2.hasScope('UMBI012')")
-	public ResponseEntity<List<Group>> getGroups() {
+	public ResponseEntity<Map<String, List<Group>>> getGroups() {
 		return ok(groupTransformer.map(groupService.getGroups()));
 	}
 

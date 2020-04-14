@@ -46,9 +46,9 @@ public class GroupControllerTest
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", not(empty())))
-				.andExpect(jsonPath("$[*].description", hasItem("Reporting Group 1")))
-				.andExpect(jsonPath("$[*].description", hasItem("Reporting Group 2")))
-				.andExpect(jsonPath("$[*].description", hasItem("Fileshare Group 1")));
+				.andExpect(jsonPath("$['NDMIS-Reporting'][*].description", hasItem("Reporting Group 1")))
+				.andExpect(jsonPath("$['NDMIS-Reporting'][*].description", hasItem("Reporting Group 2")))
+				.andExpect(jsonPath("$['Fileshare'][*].description", hasItem("Fileshare Group 1")));
 	}
 
 	@Test

@@ -18,8 +18,10 @@ import {StaffGradeService} from '../../service/staff-grade.service';
 import {AppComponent} from '../app/app.component';
 import {NgForm, NgModel} from '@angular/forms';
 import {RecentUsersUtils} from '../../util/recent-users.utils';
-import {Group} from '../../model/group';
 import {GroupService} from '../../service/group.service';
+import {LabelMappingUtils} from '../../util/label-mapping.utils';
+import {Groups} from '../../model/groups';
+import {Group} from '../../model/group';
 
 @Component({
   selector: 'user',
@@ -41,8 +43,7 @@ export class UserComponent implements OnInit {
   roles: Role[];
   roleGroups: RoleGroup[];
   selectedRoleGroups: RoleGroup[];
-  fileshareGroups: Group[];
-  reportingGroups: Group[];
+  groups: Groups;
   staffGrades: StaffGrade[];
   subContractedProviders: Dataset[];
   userWithStaffCode: User;
@@ -50,6 +51,8 @@ export class UserComponent implements OnInit {
   generatingStaffCode: boolean;
   globalMinDate: Date = new Date(1900, 0, 1);
   globalMaxDate: Date = new Date(2099, 11, 31);
+
+  LabelMappingUtils = LabelMappingUtils;
 
   constructor(
     private route: ActivatedRoute,
@@ -96,7 +99,7 @@ export class UserComponent implements OnInit {
         setTimeout(() => {
           this.staffCodeControl.valueChanges
             .pipe(debounceTime(500), distinctUntilChanged(), filter(val => val != null))
-            .subscribe(() => this.staffCodeChanged());
+            .subscribe(this.staffCodeChanged);
         });
       });
 
@@ -106,9 +109,16 @@ export class UserComponent implements OnInit {
 
     this.roleService.roles().subscribe(roles => this.addSelectableRoles(roles));
 
-    this.groupService.groups().subscribe((groups: Group[]) => {
-      this.fileshareGroups = groups.filter(group => group.type.toLowerCase() === 'fileshare');
-      this.reportingGroups = groups.filter(group => group.type.toLowerCase() === 'ndmis-reporting');
+    this.groupService.groups().subscribe((groups: Groups) => {
+      // only show groups that are also assigned to the logged in user, unless they have national access
+      if (!this.auth.isNational()) {
+        for (const key of Object.keys(new Groups())) {
+          const myGroups = this.auth.me.groups[key];
+          groups[key] = groups[key].filter((g1: Group) => myGroups.some(g2 => g1.name === g2.name));
+        }
+      }
+
+      this.groups = groups;
     });
 
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {
@@ -221,26 +231,6 @@ export class UserComponent implements OnInit {
     } else {
       console.error('Unsupported mode', this.mode);
     }
-  }
-
-  codeDescriptionToLabel(item: {code: string, description: string}): string {
-    return (item.description != null ? item.description + ' - ' : '') + item.code;
-  }
-
-  nameDescriptionToLabel(item: {name: string, description: string}): string {
-    return (item.description != null ? item.description + ' - ' : '') + item.name;
-  }
-
-  nameToLabel(item: {name: string}): string {
-    return item.name;
-  }
-
-  descriptionToLabel(item: {description: string}): string {
-    return item.description;
-  }
-
-  sectorToLabel(item: boolean): string {
-    return item ? 'Private' : 'Public';
   }
 
   generateStaffCode(): void {

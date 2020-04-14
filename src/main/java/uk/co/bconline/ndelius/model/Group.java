@@ -14,6 +14,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @AllArgsConstructor
 @JsonInclude(NON_NULL)
 @Builder(toBuilder = true)
+@EqualsAndHashCode(of = {"name", "type"})
 public final class Group
 {
 	private @NotBlank String name;

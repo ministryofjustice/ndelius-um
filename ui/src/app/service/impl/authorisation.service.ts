@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {Role} from '../../model/role';
 import {User} from '../../model/user';
 import {tap} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -17,6 +16,7 @@ export class AuthorisationService {
   static GET_USER_ROLE = 'UMBI002';
   static ADD_USER_ROLE = 'UMBI003';
   static UPDATE_USER_ROLE = 'UMBI004';
+  static NATIONAL_USER_ROLE = 'UABT0050';
 
   private readonly initialQueryParams;
 
@@ -35,26 +35,36 @@ export class AuthorisationService {
     });
   }
 
+  hasInteraction(interaction: string): boolean {
+    return [].concat(...AuthorisationService.me.roles
+      .map(r => (r.interactions || [])))
+      .includes(interaction);
+  }
+
   hasRole(role: string): boolean {
     return AuthorisationService.me.roles
-      .filter((t: Role) => (t.interactions || []).indexOf(role) !== -1)
-      .length > 0;
+      .map(r => r.name)
+      .includes(role);
+  }
+
+  isNational(): boolean {
+    return this.hasRole(AuthorisationService.NATIONAL_USER_ROLE);
   }
 
   canAddUser(): boolean {
-    return this.hasRole(AuthorisationService.ADD_USER_ROLE);
+    return this.hasInteraction(AuthorisationService.ADD_USER_ROLE);
   }
 
   canGetUser(): boolean {
-    return this.hasRole(AuthorisationService.GET_USER_ROLE);
+    return this.hasInteraction(AuthorisationService.GET_USER_ROLE);
   }
 
   canSearch(): boolean {
-    return this.hasRole(AuthorisationService.SEARCH_USER_ROLE);
+    return this.hasInteraction(AuthorisationService.SEARCH_USER_ROLE);
   }
 
   canUpdateUser(): boolean {
-    return this.hasRole(AuthorisationService.UPDATE_USER_ROLE);
+    return this.hasInteraction(AuthorisationService.UPDATE_USER_ROLE);
   }
 
   canMigrateUsers(): boolean {
