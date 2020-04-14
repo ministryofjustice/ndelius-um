@@ -18,8 +18,9 @@ import {StaffGradeService} from '../../service/staff-grade.service';
 import {AppComponent} from '../app/app.component';
 import {NgForm, NgModel} from '@angular/forms';
 import {RecentUsersUtils} from '../../util/recent-users.utils';
-import {Group} from '../../model/group';
+import {Groups} from '../../model/groups';
 import {GroupService} from '../../service/group.service';
+import {LabelMappingUtils} from '../../util/label-mapping.utils';
 
 @Component({
   selector: 'user',
@@ -50,6 +51,8 @@ export class UserComponent implements OnInit {
   generatingStaffCode: boolean;
   globalMinDate: Date = new Date(1900, 0, 1);
   globalMaxDate: Date = new Date(2099, 11, 31);
+
+  LabelMappingUtils = LabelMappingUtils;
 
   constructor(
     private route: ActivatedRoute,
@@ -221,26 +224,6 @@ export class UserComponent implements OnInit {
     } else {
       console.error('Unsupported mode', this.mode);
     }
-  }
-
-  codeDescriptionToLabel(item: {code: string, description: string}): string {
-    return (item.description != null ? item.description + ' - ' : '') + item.code;
-  }
-
-  nameDescriptionToLabel(item: {name: string, description: string}): string {
-    return (item.description != null ? item.description + ' - ' : '') + item.name;
-  }
-
-  nameToLabel(item: {name: string}): string {
-    return item.name;
-  }
-
-  descriptionToLabel(item: {description: string}): string {
-    return item.description;
-  }
-
-  sectorToLabel(item: boolean): string {
-    return item ? 'Private' : 'Public';
   }
 
   generateStaffCode(): void {

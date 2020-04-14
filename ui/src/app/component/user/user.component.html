@@ -142,7 +142,7 @@
                            [(selected)]="selectedRoleGroups"
                            [available]="roleGroups"
                            [readonly]="mode === 'View'"
-                           [labelMapper]="nameToLabel"></item-selector>
+                           [labelMapper]="LabelMappingUtils.nameToLabel"></item-selector>
           </div>
           <div class="col-sm-1 pl-sm-1" *ngIf="selectedRoleGroups != null && selectedRoleGroups.length != 0 && mode !== 'View'">
             <button class="btn btn-sm btn-outline-secondary w-100 py-2" (click)="applyRoleGroup()"
@@ -160,8 +160,8 @@
                            [available]="roles"
                            [readonly]="mode === 'View'"
                            [alignRight]="true"
-                           [labelMapper]="nameDescriptionToLabel"
-                           [idMapper]="nameToLabel"></item-selector>
+                           [labelMapper]="LabelMappingUtils.nameDescriptionToLabel"
+                           [idMapper]="LabelMappingUtils.nameToLabel"></item-selector>
           </div>
         </div>
         <div class="form-group row">
@@ -173,7 +173,7 @@
                            [(selected)]="user.datasets" (selectedChange)="datasetsChanged()"
                            [available]="datasets"
                            [readonly]="mode === 'View'"
-                           [labelMapper]="codeDescriptionToLabel">
+                           [labelMapper]="LabelMappingUtils.codeDescriptionToLabel">
             </item-selector>
             <div *ngIf="datasetsList.dirty && datasetsList.invalid" class=text-danger>
               <small *ngIf="datasetsList.errors['invalid']">
@@ -191,7 +191,7 @@
                            [(selected)]="user.establishments"
                            [available]="establishments"
                            [readonly]="mode === 'View'"
-                           [labelMapper]="codeDescriptionToLabel">
+                           [labelMapper]="LabelMappingUtils.codeDescriptionToLabel">
             </item-selector>
             <div *ngIf="establishmentsList.dirty && establishmentsList.invalid" class=text-danger>
               <small *ngIf="establishmentsList.errors['invalid']">
@@ -209,7 +209,7 @@
                            [(selected)]="user.homeArea" (selectedChange)="homeAreaChanged()"
                            [available]="user.datasets"
                            [readonly]="mode === 'View'"
-                           [labelMapper]="codeDescriptionToLabel"></item-selector>
+                           [labelMapper]="LabelMappingUtils.codeDescriptionToLabel"></item-selector>
             <div *ngIf="homeArea.dirty && homeArea.invalid" class = text-danger>
               <small *ngIf="homeArea.errors['list']">
                 *At least one home area is required
@@ -229,7 +229,7 @@
                            [available]="[true, false]"
                            [readonly]="mode === 'View'"
                            [alignRight]="true"
-                           [labelMapper]="sectorToLabel"></item-selector>
+                           [labelMapper]="LabelMappingUtils.sectorToLabel"></item-selector>
             <div *ngIf="sectorSelector.dirty && sectorSelector.invalid" class = text-danger>
               <small *ngIf="sectorSelector.errors['list']">
                 *Sector is required
@@ -248,7 +248,7 @@
                            [(selected)]="user.groups['Fileshare']"
                            [available]="fileshareGroups"
                            [readonly]="mode === 'View'"
-                           [labelMapper]="descriptionToLabel"></item-selector>
+                           [labelMapper]="LabelMappingUtils.descriptionToLabel"></item-selector>
           </div>
           <label [for]="'sector-toggle-btn'" class="col-sm-2 col-form-label"
                  title="Select the groups to assign to the user in the NDelius MIS Reporting tool. Leave blank if you're unsure of the user's required level of access.">
@@ -261,7 +261,7 @@
                            [available]="reportingGroups"
                            [readonly]="mode === 'View'"
                            [alignRight]="true"
-                           [labelMapper]="descriptionToLabel"></item-selector>
+                           [labelMapper]="LabelMappingUtils.descriptionToLabel"></item-selector>
           </div>
         </div>
       </section>
@@ -318,7 +318,7 @@
                            [available]="staffGrades"
                            [readonly]="mode === 'View'"
                            [alignRight]="true"
-                           [labelMapper]="codeDescriptionToLabel"></item-selector>
+                           [labelMapper]="LabelMappingUtils.codeDescriptionToLabel"></item-selector>
             <div *ngIf="staffGrade.dirty && staffGrade.invalid" class = text-danger>
               <small *ngIf="staffGrade.errors['required']">
                 *Staff grade required when a staff code exists
@@ -334,7 +334,7 @@
                            [(selected)]="user.teams"
                            [available]="teams"
                            [readonly]="mode === 'View'"
-                           [labelMapper]="codeDescriptionToLabel"></item-selector>
+                           [labelMapper]="LabelMappingUtils.codeDescriptionToLabel"></item-selector>
           </div>
           <label [for]="'sub-contracted-provider-toggle-btn'" class="col-sm-2 col-form-label">Sub-contracted Provider</label>
           <div class="col-sm-4">
@@ -344,7 +344,7 @@
                            [available]="subContractedProviders"
                            [readonly]="mode === 'View'"
                            [alignRight]="true"
-                           [labelMapper]="codeDescriptionToLabel"></item-selector>
+                           [labelMapper]="LabelMappingUtils.codeDescriptionToLabel"></item-selector>
           </div>
         </div>
       </section>
