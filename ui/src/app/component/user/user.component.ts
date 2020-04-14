@@ -18,7 +18,6 @@ import {StaffGradeService} from '../../service/staff-grade.service';
 import {AppComponent} from '../app/app.component';
 import {NgForm, NgModel} from '@angular/forms';
 import {RecentUsersUtils} from '../../util/recent-users.utils';
-import {Groups} from '../../model/groups';
 import {GroupService} from '../../service/group.service';
 import {LabelMappingUtils} from '../../util/label-mapping.utils';
 
