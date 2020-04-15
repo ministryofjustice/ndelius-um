@@ -15,6 +15,7 @@ import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.model.ErrorResponse;
 import uk.co.bconline.ndelius.model.ForbiddenResponse;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ElementKind;
 import javax.validation.Path;
@@ -30,6 +31,12 @@ import static uk.co.bconline.ndelius.util.NameUtils.camelCaseToTitleCase;
 @ControllerAdvice
 public class ControllerExceptionHandler
 {
+	private final AuditHandler auditHandler;
+
+	public ControllerExceptionHandler(AuditHandler auditHandler) {
+		this.auditHandler = auditHandler;
+	}
+
 	@ExceptionHandler
 	@ResponseBody
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -68,9 +75,10 @@ public class ControllerExceptionHandler
 	@ExceptionHandler
 	@ResponseBody
 	@ResponseStatus(HttpStatus.FORBIDDEN)
-	public ForbiddenResponse handle(AccessDeniedException exception) {
+	public ForbiddenResponse handle(AccessDeniedException exception, final HttpServletRequest request) {
+		val requiredScope = auditHandler.interactionFailure(request);
 		log.debug("Returning 403 response", exception);
-		return new ForbiddenResponse(myUsername(), null); // TODO add required roles from annotation
+		return new ForbiddenResponse(myUsername(), new String[]{ requiredScope });
 	}
 
 	@ExceptionHandler
