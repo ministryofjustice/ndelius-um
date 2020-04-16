@@ -38,7 +38,7 @@
     {
       "name": "cache.evict.delay",
       "type": "java.lang.String",
-      "description": "How often the caches should be cleared, in milliseconds. Defaults to 24 hours."
+      "description": "How often the Database and LDAP caches should be cleared, in milliseconds. Defaults to 24 hours."
     },
     {
       "name": "spring.ldap.useOracleAttributes",
