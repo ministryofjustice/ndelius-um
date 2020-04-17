@@ -12,7 +12,7 @@
           [class.ng-dirty]="dirty"
           [title]="displayText"
           aria-haspopup="true" aria-expanded="false">
-    <span class="text-truncate mr-2">{{displayText}}</span>
+    <span class="text-truncate mr-2" [class.text-black-50]="displayText === placeholder">{{displayText}}</span>
     <span class="oi oi-chevron-bottom float-right"></span>
   </button>
   <div class="dropdown-menu bg-light px-lg-3 px-sm-2 py-3"
