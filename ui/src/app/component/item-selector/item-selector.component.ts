@@ -38,8 +38,8 @@ export class ItemSelectorComponent
   @Input() required = false;
   @Input() multiple: boolean;
   @Input() alignRight: boolean;
-  @Input() placeholder: string = 'Please select...';
-  @Input() loadingText: string = 'Loading...';
+  @Input() placeholder = 'Please select...';
+  @Input() loadingText = 'Loading...';
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
   private availableItems: any[];
 
