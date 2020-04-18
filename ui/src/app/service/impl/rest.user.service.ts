@@ -5,6 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {UserService} from '../user.service';
 import {User} from '../../model/user';
 import {environment} from '../../../environments/environment';
+import {SearchParams} from '../../model/search-params';
 
 @Injectable()
 export class RestUserService implements UserService {
@@ -14,15 +15,8 @@ export class RestUserService implements UserService {
     return this.http.get<User>(environment.api.baseurl + 'whoami');
   }
 
-  search(query: string, page: number, pageSize: number, includeInactiveUsers: boolean): Observable<User[]> {
-    return this.http.get<User[]>(environment.api.baseurl + 'users', {
-      params: {
-        q: query,
-        page: page.toString(),
-        pageSize: pageSize.toString(),
-        includeInactiveUsers: String(includeInactiveUsers)
-      }
-    });
+  search(params: SearchParams): Observable<User[]> {
+    return this.http.get<User[]>(environment.api.baseurl + 'users', { params: params.toRequestParams() });
   }
 
   create(user: User): Observable<void> {
