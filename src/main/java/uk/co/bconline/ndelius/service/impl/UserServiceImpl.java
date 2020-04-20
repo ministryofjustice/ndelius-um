@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.data.util.Optionals;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
@@ -19,7 +19,10 @@ import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletionException;
 import java.util.function.Predicate;
@@ -29,8 +32,8 @@ import static java.time.LocalDate.now;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
-import static java.util.Optional.ofNullable;
 import static java.util.concurrent.CompletableFuture.*;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.core.NestedExceptionUtils.getMostSpecificCause;
 import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
@@ -65,33 +68,45 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public List<SearchResult> search(String query, int page, int pageSize, boolean includeInactiveUsers)
+	public List<SearchResult> search(String query, Set<String> groupFilter, Set<String> datasetFilter,
+									 boolean includeInactiveUsers, int page, int pageSize)
 	{
-		if (StringUtils.isEmpty(query) || query.length() < 3) return emptyList();
-
-		Set<String> myDatasets = new HashSet<>();
-		if (!isNational()) {
-			// We only need to filter on datasets for non-national (local) users, so don't bother fetching them for national users
-			myDatasets.addAll(datasetService.getDatasetCodes(myUsername()));
-			myDatasets.add(userEntryService.getUserHomeArea(myUsername()));
+		val queryIsEmpty = query == null || query.length() < 3;
+		if (queryIsEmpty && groupFilter.isEmpty() && datasetFilter.isEmpty()) {
+			// not enough criteria to do a useful search
+			return emptyList();
 		}
 
-		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, myDatasets), taskExecutor);
-		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, myDatasets), taskExecutor);
+		// We only need to filter on datasets for non-national (local) users, so don't bother fetching them for national users
+		if (!isNational()) {
+			Set<String> myDatasets = myDatasets();
+
+			if (datasetFilter.isEmpty()) {
+				datasetFilter.addAll(myDatasets);    // Filter any search results using the current user's datasets
+			} else {
+				datasetFilter.retainAll(myDatasets); // Remove any datasets that the user is not allowed to access
+				if (datasetFilter.isEmpty()) {
+					log.debug("User cannot access any of the datasets they are attempting to filter on");
+					return emptyList();
+				}
+			}
+		}
+
+		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
+		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 
 		try
 		{
 			return allOf(ldapFuture, dbFuture)
 					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())
 							.flatMap(Collection::stream)
-							.collect(HashMap<String, SearchResult>::new, (map, result) -> map.put(result.getUsername(),
-									ofNullable(map.get(result.getUsername()))
-											.map(r -> searchResultTransformer.reduce(r, result))
-											.orElse(result)), HashMap::putAll)
-							.values()
-							.stream()
+							.collect(groupingBy(SearchResult::getUsername)).values().stream()
+							.map(l -> l.stream().reduce(searchResultTransformer::reduce))
+							.flatMap(Optionals::toStream)
 							.filter(result -> includeInactiveUsers || result.getEndDate() == null || !result.getEndDate().isBefore(now()))
-							.sorted(comparing(SearchResult::getScore, Float::compare).reversed())
+							.sorted(queryIsEmpty?
+									comparing(SearchResult::getUsername, String::compareToIgnoreCase):
+									comparing(SearchResult::getScore, Float::compare).reversed())
 							.skip((long) (page-1) * pageSize)
 							.limit(pageSize)
 							.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}", result.getUsername(), result.getScore(), result.getEndDate()))
@@ -196,8 +211,7 @@ public class UserServiceImpl implements UserService
 	{
 		if (isNational()) return (String username) -> true;
 
-		val myDatasets = datasetService.getDatasetCodes(myUsername());
-		myDatasets.add(userEntryService.getUserHomeArea(myUsername()));
+		val myDatasets = myDatasets();
 
 		return (String username) -> {
 			val t = LocalDateTime.now();
@@ -208,5 +222,11 @@ public class UserServiceImpl implements UserService
 			log.trace("--{}ms	Dataset filter", MILLIS.between(t, LocalDateTime.now()));
 			return r;
 		};
+	}
+
+	private Set<String> myDatasets() {
+		val myDatasets = datasetService.getDatasetCodes(myUsername());
+		myDatasets.add(userEntryService.getUserHomeArea(myUsername()));
+		return myDatasets;
 	}
 }

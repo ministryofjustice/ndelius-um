@@ -38,7 +38,6 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
-import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
 import static uk.co.bconline.ndelius.util.NameUtils.join;
 
@@ -113,9 +112,9 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	@Override
 	public List<SearchResult> search(String query, boolean includeInactiveUsers, Set<String> datasets)
 	{
-		// For a national search, we don't need to search LDAP as all the users will be returned by the DB search
+		// For a search with no dataset filtering, we don't need to search LDAP as all the users will be returned by the DB search
 		// (We only ever need to search LDAP to find users that match on userHomeArea - as that attribute doesn't exist in the DB)
-		if (isNational() && !includeInactiveUsers) return emptyList();
+		if (datasets.isEmpty() && !includeInactiveUsers) return emptyList();
 
 		// Build up tokenized filter on givenName (forenames), sn (surname) and cn (username)
 		AndFilter filter = Stream.of(query.trim().split("\\s+"))

@@ -18,6 +18,7 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"    S.OFFICER_CODE AS STAFF_CODE, " +
 			"    T.CODE AS TEAM_CODE, " +
 			"    T.DESCRIPTION AS TEAM_DESCRIPTION, " +
+			"    CASE WHEN ?1 = '' THEN 0 ELSE " +
 			"    GREATEST( " +
 			"        SYS.UTL_MATCH.EDIT_DISTANCE_SIMILARITY(UPPER(U.DISTINGUISHED_NAME), UPPER(?1)) / 100, " +
 			"        SYS.UTL_MATCH.EDIT_DISTANCE_SIMILARITY(UPPER(U.FORENAME), UPPER(?1)) / 100, " +
@@ -26,15 +27,16 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"        CASE WHEN UPPER(S.OFFICER_CODE) LIKE '%'||UPPER(?1)||'%' THEN LENGTH(?1)/LENGTH(S.OFFICER_CODE) ELSE 0 END, " +
 			"        CASE WHEN UPPER(T.CODE) LIKE '%'||UPPER(?1)||'%' THEN LENGTH(?1)/LENGTH(T.CODE) ELSE 0 END, " +
 			"        CASE WHEN UPPER(T.DESCRIPTION) LIKE '%'||UPPER(?1)||'%' THEN LENGTH(?1)/LENGTH(T.DESCRIPTION) ELSE 0 END " +
-			"    ) AS SCORE " +
+			"    ) END AS SCORE " +
 			"FROM USER_ U " +
 			"    LEFT OUTER JOIN STAFF S ON U.STAFF_ID = S.STAFF_ID " +
 			"    LEFT OUTER JOIN STAFF_TEAM ST ON U.STAFF_ID = ST.STAFF_ID " +
 			"    LEFT OUTER JOIN TEAM T ON ST.TEAM_ID = T.TEAM_ID " +
 			"WHERE (?2 = 1 OR U.END_DATE IS NULL OR U.END_DATE >= SYSDATE) " +
-			"AND (?3 = 1 OR (SELECT COUNT(*) FROM PROBATION_AREA_USER WHERE ROWNUM = 1 AND USER_ID = U.USER_ID  " +
+			"AND (?3 = 0 OR (SELECT COUNT(*) FROM PROBATION_AREA_USER WHERE ROWNUM = 1 AND USER_ID = U.USER_ID  " +
 			"    AND PROBATION_AREA_ID IN (SELECT PROBATION_AREA_ID FROM PROBATION_AREA WHERE CODE IN ?4)) > 0) " +
-			"AND (SOUNDEX(U.DISTINGUISHED_NAME) = SOUNDEX(?1) " +
+			"AND (?1 = '' " +
+			"    OR SOUNDEX(U.DISTINGUISHED_NAME) = SOUNDEX(?1) " +
 			"    OR SOUNDEX(U.FORENAME) = SOUNDEX(?1) " +
 			"    OR SOUNDEX(U.FORENAME2) = SOUNDEX(?1) " +
 			"    OR SOUNDEX(U.SURNAME) = SOUNDEX(?1) " +
@@ -45,7 +47,7 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"        OR UPPER(DESCRIPTION) LIKE '%'||UPPER(?1)||'%'))) " +
 			"ORDER BY SCORE DESC",
 			nativeQuery = true)
-	List<SearchResultEntity> search(String query, boolean includeInactiveUsers, boolean national, Set<String> datasetCodes);
+	List<SearchResultEntity> search(String query, boolean includeInactiveUsers, boolean filterDatasets, Set<String> datasetCodes);
 
 	@Query(value = "SELECT U.USER_ID||'-'||T.TEAM_ID AS ID," +
 			"    U.DISTINGUISHED_NAME, " +
@@ -70,9 +72,10 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"    LEFT OUTER JOIN STAFF_TEAM ST ON U.STAFF_ID = ST.STAFF_ID " +
 			"    LEFT OUTER JOIN TEAM T ON ST.TEAM_ID = T.TEAM_ID " +
 			"WHERE (?2 = 1 OR U.END_DATE IS NULL OR U.END_DATE >= SYSDATE) " +
-			"AND (?3 = 1 OR (SELECT COUNT(*) FROM PROBATION_AREA_USER WHERE ROWNUM = 1 AND USER_ID = U.USER_ID  " +
+			"AND (?3 = 0 OR (SELECT COUNT(*) FROM PROBATION_AREA_USER WHERE ROWNUM = 1 AND USER_ID = U.USER_ID  " +
 			"    AND PROBATION_AREA_ID IN (SELECT PROBATION_AREA_ID FROM PROBATION_AREA WHERE CODE IN ?4)) > 0) " +
-			"AND (UPPER(U.DISTINGUISHED_NAME) LIKE '%'||UPPER(?1)||'%' " +
+			"AND (?1 = '' " +
+			"    OR UPPER(U.DISTINGUISHED_NAME) LIKE '%'||UPPER(?1)||'%' " +
 			"    OR UPPER(U.FORENAME) LIKE '%'||UPPER(?1)||'%' " +
 			"    OR UPPER(U.FORENAME2) LIKE '%'||UPPER(?1)||'%' " +
 			"    OR UPPER(U.SURNAME) LIKE '%'||UPPER(?1)||'%' " +
@@ -83,5 +86,5 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"        OR UPPER(DESCRIPTION) LIKE '%'||UPPER(?1)||'%'))) " +
 			"ORDER BY SCORE DESC;",
 			nativeQuery = true)
-	List<SearchResultEntity> simpleSearch(String query, boolean includeInactiveUsers, boolean national, Set<String> datasetCodes);
+	List<SearchResultEntity> simpleSearch(String query, boolean includeInactiveUsers, boolean filterDatasets, Set<String> datasetCodes);
 }

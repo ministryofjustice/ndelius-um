@@ -24,7 +24,6 @@ import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
-import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
 import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Slf4j
@@ -94,10 +93,9 @@ public class UserEntityServiceImpl implements UserEntityService
 	public List<SearchResult> search(String searchTerm, boolean includeInactiveUsers, Set<String> datasets)
 	{
 		val t = LocalDateTime.now();
-		val isNational = isNational();
 		val results = Arrays.stream(searchTerm.trim().split("\\s+"))
 				.parallel()
-				.flatMap(token -> searchForToken(token, includeInactiveUsers, isNational, datasets))
+				.flatMap(token -> searchForToken(token, includeInactiveUsers, datasets))
 				.collect(groupingBy(SearchResultEntity::getUsername))
 				.values()
 				.stream()
@@ -109,14 +107,18 @@ public class UserEntityServiceImpl implements UserEntityService
 		return results;
 	}
 
-	private Stream<SearchResultEntity> searchForToken(String token, boolean includeInactiveUsers, boolean isNational, Set<String> datasets)
+	private Stream<SearchResultEntity> searchForToken(String token, boolean includeInactiveUsers, Set<String> datasets)
 	{
 		log.debug("Searching DB: {}", token);
-		datasets = isEmpty(datasets)? singleton(""): datasets;
+		boolean filterDatasets = true;
+		if (isEmpty(datasets)) {
+			filterDatasets = false;
+			datasets = singleton("");
+		}
 		val isOracle = datasourceUrl.startsWith("jdbc:oracle");
 		return (isOracle?
-					searchResultRepository.search(token, includeInactiveUsers, isNational, datasets):
-					searchResultRepository.simpleSearch(token, includeInactiveUsers, isNational, datasets))
+					searchResultRepository.search(token, includeInactiveUsers, filterDatasets, datasets):
+					searchResultRepository.simpleSearch(token, includeInactiveUsers, filterDatasets, datasets))
 				.stream()
 				.collect(groupingBy(SearchResultEntity::getUsername))
 				.values().stream()

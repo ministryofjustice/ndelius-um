@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.controller;
 
+import com.jayway.jsonpath.JsonPath;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +13,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -206,5 +211,73 @@ public class UserControllerSearchTest
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", hasItems(
 						"test.user", "test.user.inactive", "test.user.inactive.dbonly", "test.user.inactive.oidonly")));
+	}
+
+	@Test
+	public void resultsCanBeFilteredOnDatasets() throws Exception
+	{
+		String token = token(mvc, "test.user");
+
+		// Given I am filtering on the N01 dataset
+		String datasetFilter = "N01";
+
+		// When I search for an N02 user, Then I should get no results
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token)
+				.param("q", "Joe.Bloggs")
+				.param("dataset", datasetFilter))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", not(hasItem("Joe.Bloggs"))));
+
+		// When I search for an N01 user, Then I should get results
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token)
+				.param("q", "Tiffiny.Thrasher")
+				.param("dataset", datasetFilter))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", hasItem("Tiffiny.Thrasher")));
+	}
+
+	@Test
+	public void datasetFiltersAreIgnoredIfNotAllowed() throws Exception
+	{
+		// Given I am non-national user with access only to N01
+		String token = token(mvc, "test.user.local");
+
+		// When I attempt to search for N02 users, Then I should get no results
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token)
+				.param("q", "")
+				.param("dataset", "N02"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", is(empty())));
+
+		// When I attempt to search for N01 users, Then I should get results
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token)
+				.param("q", "")
+				.param("dataset", "N01"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", not(empty())));
+	}
+
+	@Test
+	public void resultsAreOrderedAlphabeticallyWhenQueryIsBlank() throws Exception
+	{
+		String token = token(mvc, "test.user");
+
+		// When I search on datasets only and don't provide a query string
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token)
+				.param("q", "")
+				.param("dataset", "N01"))
+				.andExpect(status().isOk())
+				.andDo(mvcResult -> {
+					String json = mvcResult.getResponse().getContentAsString();
+					List<String> original = JsonPath.parse(json).read("$[*].username");
+					List<String> sorted = new ArrayList<>(original);
+					sorted.sort(String::compareToIgnoreCase);
+					assertThat(original, is(sorted));
+				});
 	}
 }
