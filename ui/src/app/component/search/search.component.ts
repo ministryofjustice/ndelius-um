@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {User} from '../../model/user';
 import {ActivatedRoute, Router} from '@angular/router';
-import {debounceTime, filter, flatMap, map, tap} from 'rxjs/operators';
+import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
 import {UserService} from '../../service/user.service';
 import {AuthorisationService} from '../../service/impl/authorisation.service';
 import {NgModel} from '@angular/forms';
@@ -64,7 +64,7 @@ export class SearchComponent implements AfterViewInit {
     ).pipe(
       debounceTime(500),                                                  // throttle searches
       tap(() => this.searching = true),                                   // set searching flag (for loading indicator)
-      flatMap(() => this.service.search(this.searchParams)),              // perform search
+      switchMap(() => this.service.search(this.searchParams)),            // perform search
       tap(page => this.hasMoreResults = page.length !== 0),               // check if there are any more pages to load
       map(page => this.prevPages =                                        // append to any previous results
         this.searchParams.page === 1 ? page : [...this.prevPages, ...page]), // (except when loading the first page)
