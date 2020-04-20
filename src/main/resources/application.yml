@@ -1,7 +1,12 @@
 spring.application.name: ndelius-um
 
 server.servlet.context-path: /umt
-spring.resources.static-locations: classpath:/ui
+
+spring.resources:
+  static-locations: classpath:/ui
+  cache.cachecontrol:
+    cache-public: true # Enable resource caching by browser or intermediaries
+    no-cache: true     # Enable revalidation on each request
 
 cache.evict.delay: 86400000 # = 24*60*60*1000 = 24 hours
 
