@@ -22,10 +22,12 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
       - name: Run accessibility checks
         run: ./gradlew npm_run_accessibility --build-cache
-      - name: Upload test results
-        if: always()
+
+      - name: Upload test report
+        if: failure()
         uses: actions/upload-artifact@v1
         with:
           name: accessibility-report
