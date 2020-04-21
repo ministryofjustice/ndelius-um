@@ -20,7 +20,7 @@ jobs:
         run: ./gradlew dependencyCheckAnalyze --build-cache
 
       - name: Upload test report
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v1
         with:
           name: vulnerability-report
