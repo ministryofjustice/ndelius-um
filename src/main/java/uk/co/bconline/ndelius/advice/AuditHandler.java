@@ -11,10 +11,13 @@ import org.springframework.security.authentication.event.AbstractAuthenticationF
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
+import uk.co.bconline.ndelius.util.AuthUtils;
 
-import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletRequest;
 
 import static java.util.Optional.ofNullable;
+import static org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_HANDLER_ATTRIBUTE;
 import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Aspect
@@ -35,11 +38,16 @@ public class AuditHandler {
 
 	@Before("@annotation(preauthorize)")
 	public void interactionSuccess(JoinPoint joinPoint, PreAuthorize preauthorize) {
-		val matcher = Pattern.compile("#oauth2\\.hasScope\\('(.*)'\\)").matcher(preauthorize.value());
-		if (matcher.find())
-		{
-			val interaction = matcher.group(1);
-			log.info("{} {} {}", myUsername(), interaction, joinPoint.getArgs());
-		}
+		log.info("{} {} {}", myUsername(), AuthUtils.getRequiredScope(preauthorize), joinPoint.getArgs());
+	}
+
+	public String interactionFailure(HttpServletRequest request) {
+		val requiredScope = ofNullable(request.getAttribute(BEST_MATCHING_HANDLER_ATTRIBUTE))
+				.map(HandlerMethod.class::cast)
+				.flatMap(method -> ofNullable(method.getMethodAnnotation(PreAuthorize.class)))
+				.map(AuthUtils::getRequiredScope)
+				.orElse(null);
+		log.error("{} {}", myUsername(), requiredScope);
+		return requiredScope;
 	}
 }

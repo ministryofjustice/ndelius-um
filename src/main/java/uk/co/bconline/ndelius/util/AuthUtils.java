@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.util;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,6 +12,7 @@ import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
@@ -68,5 +70,14 @@ public class AuthUtils
 	{
 		log.debug("Checking national access (UABI025), interactions={}", myInteractions().collect(toSet()));
 		return myInteractions().anyMatch(NATIONAL_ACCESS::equals);
+	}
+
+	public static String getRequiredScope(PreAuthorize annotation) {
+		val matcher = Pattern.compile("#oauth2\\.hasScope\\('(.*)'\\)").matcher(annotation.value());
+		if (matcher.find()) {
+			return matcher.group(1);
+		} else {
+			return null;
+		}
 	}
 }
