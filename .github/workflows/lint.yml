@@ -1,4 +1,4 @@
-name: Check code quality
+name: Code quality
 
 on: push
 
@@ -22,5 +22,5 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Run tests
+      - name: Lint
         run: ./gradlew npm_run_lint --build-cache
