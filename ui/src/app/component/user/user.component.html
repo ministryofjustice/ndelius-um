@@ -376,10 +376,10 @@
           </ng-container>
           <ng-container *ngIf="!saving">Save</ng-container>
         </button>
-        <button id="copy-btn" type="button" class="btn btn-outline-secondary ml-2"
+        <button id="copy-btn" type="button" class="btn btn-secondary ml-2"
                 routerLink="/user" [queryParams]="{copy: user.username}"
                 *ngIf="mode !== 'Add' && auth.canAddUser()">Create another&hellip;</button>
-        <button id="back-btn" type="button" class="btn btn-outline-secondary ml-2"
+        <button id="back-btn" type="button" class="btn btn-secondary ml-2"
                 (click)="backButtonAlert()">Back</button>
       </div>
     </form>
