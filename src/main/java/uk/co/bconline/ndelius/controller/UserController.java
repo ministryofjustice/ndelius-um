@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.controller;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toSet;
-import static java.util.stream.Stream.concat;
 import static org.springframework.http.ResponseEntity.*;
 import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
@@ -59,7 +58,7 @@ public class UserController
 			@RequestParam(value = "page", defaultValue = "1") @Min(1)  Integer page,
 			@RequestParam(value = "pageSize", defaultValue = "50") @Min(1) @Max(100) Integer pageSize)
 	{
-		val groups = concat(reportingGroups.stream(), fileshareGroups.stream()).collect(toSet());
+		val groups = ImmutableMap.<String, Set<String>>of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
 		return ok(userService.search(query, groups, datasets, includeInactiveUsers, page, pageSize));
 	}
 

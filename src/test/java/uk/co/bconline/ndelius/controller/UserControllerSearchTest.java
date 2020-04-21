@@ -280,4 +280,50 @@ public class UserControllerSearchTest
 					assertThat(original, is(sorted));
 				});
 	}
+
+	@Test
+	public void getAllUsersInFileshareGroup() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc, "test.user"))
+				.param("q", "")
+				.param("fileshareGroup", "Group 1"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", contains("Jane.Bloggs", "Joe.Bloggs", "test.user")));
+	}
+
+	@Test
+	public void getAllUsersInReportingGroup() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc, "test.user"))
+				.param("q", "")
+				.param("reportingGroup", "Group 2"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", contains("Jane.Bloggs", "Joe.Bloggs", "test.user")));
+	}
+
+	@Test
+	public void filterOnMultipleGroupsIsInclusive() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc, "test.user"))
+				.param("q", "")
+				.param("fileshareGroup", "Group 1")		// contains Jane.Bloggs (and test.user)
+				.param("reportingGroup", "Group 3"))	// contains Joe.Bloggs
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", contains("Jane.Bloggs", "Joe.Bloggs", "test.user")));
+	}
+
+	@Test
+	public void searchQueryWithGroupFilters() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc, "test.user"))
+				.param("q", "j bloggs")
+				.param("fileshareGroup", "Group 1")		// contains Jane.Bloggs (and test.user)
+				.param("reportingGroup", "Group 3"))	// contains Joe.Bloggs
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", containsInAnyOrder("Jane.Bloggs", "Joe.Bloggs")));
+	}
 }

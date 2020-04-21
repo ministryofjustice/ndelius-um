@@ -2,27 +2,23 @@ package uk.co.bconline.ndelius.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.util.Optionals;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
-import uk.co.bconline.ndelius.service.DatasetService;
-import uk.co.bconline.ndelius.service.UserEntityService;
-import uk.co.bconline.ndelius.service.UserEntryService;
-import uk.co.bconline.ndelius.service.UserService;
+import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletionException;
 import java.util.function.Predicate;
@@ -33,8 +29,7 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.concurrent.CompletableFuture.*;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 import static org.springframework.core.NestedExceptionUtils.getMostSpecificCause;
 import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
 import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
@@ -46,6 +41,7 @@ public class UserServiceImpl implements UserService
 	private final UserEntityService userEntityService;
 	private final UserEntryService userEntryService;
 	private final DatasetService datasetService;
+	private final GroupService groupService;
 	private final UserTransformer transformer;
 	private final SearchResultTransformer searchResultTransformer;
 	private final TaskExecutor taskExecutor;
@@ -55,6 +51,7 @@ public class UserServiceImpl implements UserService
 			UserEntityService userEntityService,
 			UserEntryService userEntryService,
 			DatasetService datasetService,
+			GroupService groupService,
 			UserTransformer transformer,
 			SearchResultTransformer searchResultTransformer,
 			TaskExecutor taskExecutor)
@@ -62,24 +59,26 @@ public class UserServiceImpl implements UserService
 		this.userEntityService = userEntityService;
 		this.userEntryService = userEntryService;
 		this.datasetService = datasetService;
+		this.groupService = groupService;
 		this.transformer = transformer;
 		this.searchResultTransformer = searchResultTransformer;
 		this.taskExecutor = taskExecutor;
 	}
 
 	@Override
-	public List<SearchResult> search(String query, Set<String> groupFilter, Set<String> datasetFilter,
+	public List<SearchResult> search(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
 									 boolean includeInactiveUsers, int page, int pageSize)
 	{
 		val queryIsEmpty = query == null || query.length() < 3;
-		if (queryIsEmpty && groupFilter.isEmpty() && datasetFilter.isEmpty()) {
+		val groupFilterIsEmpty = groupFilter.values().stream().allMatch(Set::isEmpty);
+		if (queryIsEmpty && groupFilterIsEmpty && datasetFilter.isEmpty()) {
 			// not enough criteria to do a useful search
 			return emptyList();
 		}
 
 		// We only need to filter on datasets for non-national (local) users, so don't bother fetching them for national users
 		if (!isNational()) {
-			Set<String> myDatasets = myDatasets();
+			val myDatasets = myDatasets();
 
 			if (datasetFilter.isEmpty()) {
 				datasetFilter.addAll(myDatasets);    // Filter any search results using the current user's datasets
@@ -92,26 +91,46 @@ public class UserServiceImpl implements UserService
 			}
 		}
 
+		// Create a Future to fetch the members of all the groups that are being filtered on
+		val groupMembersFuture = supplyAsync(() -> groupFilter.keySet().parallelStream()
+				.flatMap(type -> groupFilter.get(type).parallelStream()
+						.map(name -> groupService.getGroup(type, name)))
+				.flatMap(Optionals::toStream)
+				.flatMap(group -> group.getMembers().stream())
+				.map(name -> LdapUtils.getStringValue(name, "cn").toLowerCase())
+				.collect(toSet()), taskExecutor);
+
+		// Create Futures to search the LDAP and Database asynchronously
 		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 
 		try
 		{
-			return allOf(ldapFuture, dbFuture)
-					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())
-							.flatMap(Collection::stream)
-							.collect(groupingBy(SearchResult::getUsername)).values().stream()
-							.map(l -> l.stream().reduce(searchResultTransformer::reduce))
-							.flatMap(Optionals::toStream)
-							.filter(result -> includeInactiveUsers || result.getEndDate() == null || !result.getEndDate().isBefore(now()))
-							.sorted(queryIsEmpty?
-									comparing(SearchResult::getUsername, String::compareToIgnoreCase):
-									comparing(SearchResult::getScore, Float::compare).reversed())
-							.skip((long) (page-1) * pageSize)
-							.limit(pageSize)
-							.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}", result.getUsername(), result.getScore(), result.getEndDate()))
-							.collect(toList()))
-					.join();
+			// fetch and map
+			var stream = allOf(groupMembersFuture, ldapFuture, dbFuture)
+					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())).join()
+					.flatMap(Collection::stream)
+					.collect(groupingBy(SearchResult::getUsername)).values().stream()
+					.map(l -> l.stream().reduce(searchResultTransformer::reduce))
+					.flatMap(Optionals::toStream);
+
+			// apply conditional filters
+			if (!includeInactiveUsers) {
+				stream = stream.filter(result -> result.getEndDate() == null || !result.getEndDate().isBefore(now()));
+			}
+			if (!groupFilterIsEmpty) {
+				stream = stream.filter(result -> groupMembersFuture.join().contains(result.getUsername().toLowerCase()));
+			}
+
+			// apply sorting and paging
+			return stream
+					.sorted(queryIsEmpty?
+							comparing(SearchResult::getUsername, String::compareToIgnoreCase):
+							comparing(SearchResult::getScore, Float::compare).reversed())
+					.skip((long) (page-1) * pageSize)
+					.limit(pageSize)
+					.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}", result.getUsername(), result.getScore(), result.getEndDate()))
+					.collect(toList());
 		}
 		catch (CancellationException | CompletionException e)
 		{
