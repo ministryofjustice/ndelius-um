@@ -40,8 +40,8 @@
     <div class="text-truncate text-muted small border-bottom mb-1">
       <div class="custom-control custom-checkbox float-left" [class.d-none]="readonly" *ngIf="multiple">
         <div class="pl-1">
-          <input #toggleAllBtn [id]="id + '-toggle-all'" class="custom-control-input"
-                 type="checkbox"
+          <input #toggleAllBtn [id]="id + '-toggle-all'" class="custom-control-input" type="checkbox"
+                 title="Toggle all items"
                  (change)="toggleAllItems(); updateDropDown()"
                  [checked]="selected != null && available != null && selected.length == available.length"
                  [indeterminate]="selected != null && available != null && selected.length > 0 && selected.length != available.length"/>
@@ -60,12 +60,14 @@
         <li class="nav-item">
           <a class="nav-link py-1" [class.active]="onlyShowSelected"
              style="cursor: pointer; outline: none" tabindex="0"
+             title="Only show selected options"
              (click)="onlyShowSelected = true; updateDropDown()"
              (keyup.space)="onlyShowSelected = true; updateDropDown()">Selected</a>
         </li>
         <li class="nav-item">
           <a class="nav-link py-1" [class.active]="!onlyShowSelected"
              style="cursor: pointer; outline: none" tabindex="0"
+             title="Show all options"
              (click)="onlyShowSelected = false; updateDropDown()"
              (keyup.space)="onlyShowSelected = false; updateDropDown()">All</a>
         </li>
@@ -80,7 +82,8 @@
                (change)="toggle(item)"
                [checked]="isSelected(item)"
                [disabled]="readonly"
-               [tabindex]="onlyShowSelected && !isSelected(item)? -1: 0"/>
+               [tabindex]="onlyShowSelected && !isSelected(item)? -1: 0"
+               [title]="mapToLabel(item)"/>
         <label [for]="id+'-opt-'+i"
                [title]="mapToLabel(item)"
                class="custom-control-label mb-0 w-100">{{mapToLabel(item)}}</label>
