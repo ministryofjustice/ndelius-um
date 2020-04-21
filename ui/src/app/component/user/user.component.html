@@ -39,7 +39,7 @@
           </div>
           <label for="email" class="col-sm-2 col-form-label">Email</label>
           <div class="col-sm-4">
-            <input id="email" name="email" class="form-control"
+            <input id="email" name="email" #email="ngModel" class="form-control"
                    [(ngModel)]="user.email"
                    [readonly]="mode == 'View'">
           </div>
