@@ -45,6 +45,13 @@
             <div class="p-1" style="margin-top: -3px">
               <div class="form-row p-2">
                 <div class="col-md-4">
+                  <item-selector id="datasets-filter" name="datasets-filter" maxHeight="300px" multiple="true"
+                                 [available]="datasets | async"
+                                 [(ngModel)]="searchParams.datasets" [(selected)]="searchParams.datasets"
+                                 [labelMapper]="LabelMappingUtils.codeDescriptionToLabel"
+                                 placeholder="Datasets"></item-selector>
+                </div>
+                <div class="col-md-4">
                   <item-selector id="fileshare-groups-filter" name="fileshare-groups-filter" maxHeight="300px" multiple="true"
                                  [available]="fileshareGroups | async"
                                  [(ngModel)]="searchParams.fileshareGroups" [(selected)]="searchParams.fileshareGroups"
@@ -57,13 +64,6 @@
                                  [(ngModel)]="searchParams.reportingGroups" [(selected)]="searchParams.reportingGroups"
                                  [labelMapper]="LabelMappingUtils.descriptionToLabel"
                                  placeholder="Reporting access"></item-selector>
-                </div>
-                <div class="col-md-4">
-                  <item-selector id="datasets-filter" name="datasets-filter" maxHeight="300px" multiple="true"
-                                 [available]="datasets | async"
-                                 [(ngModel)]="searchParams.datasets" [(selected)]="searchParams.datasets"
-                                 [labelMapper]="LabelMappingUtils.codeDescriptionToLabel"
-                                 placeholder="Datasets"></item-selector>
                 </div>
               </div>
               <div class="form-row px-2 pb-2">
