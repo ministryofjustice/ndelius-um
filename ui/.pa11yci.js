@@ -1,7 +1,6 @@
 const url = "http://localhost:4200/umt";
 const login = [
   `navigate to ${url}`,
-  "screen capture dist/pa11y-login.png",
   "set field #username to test.user",
   "set field #password to secret",
   "click element button",
@@ -15,7 +14,6 @@ module.exports = {
   urls: [
     {
       url: `${url}/search`,
-      screenCapture: "dist/pa11y-search.png",
       actions: [
         ...login,
         `navigate to ${url}/search`,
@@ -24,7 +22,6 @@ module.exports = {
     },
     {
       url: `${url}/user`,
-      screenCapture: "dist/pa11y-user.png",
       actions: [
         ...login,
         `navigate to ${url}/user`,
