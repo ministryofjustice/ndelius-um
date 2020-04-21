@@ -84,7 +84,8 @@
                   [required]="user.staffCode != null"
                   [max]="globalMaxDate"
                   [min]="globalMinDate"
-                  [readonly]="mode === 'View'"></date>
+                  [readonly]="mode === 'View'"
+                  label="Start date"></date>
             <div *ngIf="startdate.invalid && startdate.dirty" class = text-danger>
               <small
                 *ngIf="startdate.errors['required'] && !startdate.errors['incomplete'] && !startdate.errors['invalidDate']
@@ -112,7 +113,8 @@
                   [(ngModel)]="user.endDate"
                   [max]="globalMaxDate"
                   [min]="globalMinDate"
-                  [readonly]="mode === 'View'"></date>
+                  [readonly]="mode === 'View'"
+                  label="End date"></date>
             <div *ngIf="enddate.dirty && enddate.invalid" class = text-danger>
 
               <small *ngIf="enddate.errors['max']">
@@ -365,17 +367,19 @@
         </div>
       </div>
       <div class="btn-toolbar pb-4 float-sm-right">
-        <button id="save-btn" type="submit" class="btn btn-primary mr-2"
+        <button id="save-btn" type="submit" class="btn btn-primary ml-2"
                 *ngIf="mode !== 'View'"
                 [disabled]="saving">
-          <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true" *ngIf="saving"></span>
-          <span *ngIf="saving">Saving&hellip;</span>
-          <span *ngIf="!saving">Save</span>
+          <ng-container *ngIf="saving">
+            <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+            Saving&hellip;
+          </ng-container>
+          <ng-container *ngIf="!saving">Save</ng-container>
         </button>
-        <button id="copy-btn" type="button" class="btn btn-outline-secondary mr-2"
+        <button id="copy-btn" type="button" class="btn btn-outline-secondary ml-2"
                 routerLink="/user" [queryParams]="{copy: user.username}"
                 *ngIf="mode !== 'Add' && auth.canAddUser()">Create another&hellip;</button>
-        <button id="back-btn" type="button" class="btn btn-outline-secondary mr-2"
+        <button id="back-btn" type="button" class="btn btn-outline-secondary ml-2"
                 (click)="backButtonAlert()">Back</button>
       </div>
     </form>
