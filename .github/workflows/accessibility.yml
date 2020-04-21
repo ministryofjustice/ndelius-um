@@ -24,7 +24,8 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Run accessibility checks
         run: ./gradlew npm_run_accessibility --build-cache
-      - name: Archive test results
+      - name: Upload test results
+        if: always()
         uses: actions/upload-artifact@v1
         with:
           name: accessibility-report
