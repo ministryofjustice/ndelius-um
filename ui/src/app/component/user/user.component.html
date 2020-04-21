@@ -10,7 +10,7 @@
       <h1 class="pl-3">{{mode}} user</h1>
       <hr/>
     </div>
-    <form #form="ngForm" (submit)="submit()">
+    <form #form="ngForm" (submit)="submit()" autocomplete="off">
       <section class="mb-4 card card-body">
         <h4 class="card-title mb-0">User Details</h4>
         <small class="text-muted" *ngIf="mode !== 'View' && (
@@ -26,7 +26,7 @@
           <div class="col-sm-4">
             <input #username="ngModel" id="username" name="username" [(ngModel)]="user.username"
                    class="form-control" [readonly]="mode == 'View'"
-                   autocomplete="off" auto-focus required pattern="^[a-zA-Z0-9_\-.']*$"
+                   auto-focus required pattern="^[a-zA-Z0-9_\-.']*$"
                    maxlength="60" aria-describedby="username-warning"/>
             <div *ngIf="username.invalid && username.dirty" class="text-danger">
               <small *ngIf="username.errors['required']">
@@ -39,17 +39,18 @@
           </div>
           <label for="email" class="col-sm-2 col-form-label">Email</label>
           <div class="col-sm-4">
-            <input id="email" name="email" #email="ngModel" [(ngModel)]="user.email"
-                   autocomplete="email" [readonly]="mode == 'View'"
-                   class="form-control">
+            <input id="email" name="email" class="form-control"
+                   [(ngModel)]="user.email"
+                   [readonly]="mode == 'View'">
           </div>
         </div>
         <div class="form-group row">
           <label for="forenames" class="col-sm-2 col-form-label">Forenames</label>
           <div class="col-sm-4">
-            <input id="forenames" name="forenames" #forenames="ngModel" [(ngModel)]="user.forenames"
-                   autocomplete="given-name"
-                   class="form-control" [readonly]="mode === 'View'" required maxlength="71">
+            <input id="forenames" name="forenames" #forenames="ngModel" class="form-control"
+                   [(ngModel)]="user.forenames"
+                   [readonly]="mode === 'View'"
+                   required maxlength="71">
             <div *ngIf="forenames.invalid && forenames.dirty" class = text-danger>
               <small *ngIf="forenames.errors['required']">
                 *Forenames is required
@@ -61,8 +62,10 @@
           </div>
           <label for="surname" class="col-sm-2 col-form-label">Surname</label>
           <div class="col-sm-4">
-            <input id="surname" name="surname" #surname="ngModel" [(ngModel)]="user.surname" autocomplete="family-name"
-                   class="form-control" [readonly]="mode === 'View'" required maxlength="35">
+            <input id="surname" name="surname" #surname="ngModel" class="form-control"
+                   [(ngModel)]="user.surname"
+                   [readonly]="mode === 'View'"
+                   required maxlength="35">
             <div *ngIf="surname.invalid && surname.dirty" class = text-danger>
               <small *ngIf="surname.errors['required']">
                 *Surname is required
@@ -279,7 +282,7 @@
             <div class="input-group">
               <input id="staff-code" name="staff-code" #staffCode="ngModel" class="form-control"
                      [(ngModel)]="user.staffCode"
-                     [readonly]="mode === 'View'" autocomplete="off"
+                     [readonly]="mode === 'View'"
                      pattern="[A-Z0-9]{7}$" minlength="7" maxlength="7"/>
               <div class="input-group-append" *ngIf="mode !== 'View'">
                 <button type="button" class="btn btn-outline-secondary" (click)="generateStaffCode()"
