@@ -44,3 +44,23 @@ date.ng-dirty input, item-selector.ng-dirty button{
     border-color: $custom-file-focus-border-color;
   }
 }
+
+// Used for overlaying the 'Advanced' link over the search bar on the homepage
+.input-group.input-group-link-overlay {
+  > input {
+    padding-right: 100px;
+  }
+  > a,.btn-link {
+    bottom: 1px;
+    width: 100px;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    z-index: 4;
+  }
+}
+
+[data-toggle="collapse"].collapsed > .oi-chevron-top,
+[data-toggle="collapse"]:not(.collapsed) > .oi-chevron-bottom {
+  @extend .d-none;
+}

@@ -38,6 +38,8 @@ export class ItemSelectorComponent
   @Input() required = false;
   @Input() multiple: boolean;
   @Input() alignRight: boolean;
+  @Input() placeholder = 'Please select...';
+  @Input() loadingText = 'Loading...';
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
   private availableItems: any[];
 
@@ -141,14 +143,14 @@ export class ItemSelectorComponent
   }
 
   get displayText(): string {
-    if (this.available == null) { return 'Loading...'; }
+    if (this.available == null) { return this.loadingText; }
 
     if (this.multiple) {
-      if (this.selected == null || this.selected.length === 0) { return 'Please select...'; }
+      if (this.selected == null || this.selected.length === 0) { return this.placeholder; }
       if (this.selected.length === 1) { return this.mapToLabel(this.selected[0]); }
       return this.selected.length + ' selected';
     } else {
-      if (this.selected == null) { return 'Please select...'; }
+      if (this.selected == null) { return this.placeholder; }
       return this.mapToLabel(this.selected);
     }
   }

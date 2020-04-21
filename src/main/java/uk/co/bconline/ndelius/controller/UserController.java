@@ -1,6 +1,8 @@
 package uk.co.bconline.ndelius.controller;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import javax.validation.constraints.Min;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Set;
 
 import static org.springframework.http.ResponseEntity.*;
 import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
@@ -44,12 +47,19 @@ public class UserController
 	@GetMapping("/users")
 	@PreAuthorize("#oauth2.hasScope('UMBI001')")
 	public ResponseEntity<List<SearchResult>> search(
+			// search terms
 			@RequestParam("q") String query,
-			@Min(1) @RequestParam(value = "page", defaultValue = "1") Integer page,
-			@Min(1) @Max(100) @RequestParam(value = "pageSize", defaultValue = "50") Integer pageSize,
-			@RequestParam(value = "includeInactiveUsers", defaultValue = "false") Boolean includeInactiveUsers)
+			// filters
+			@RequestParam(value = "reportingGroup", defaultValue = "") Set<String> reportingGroups,
+			@RequestParam(value = "fileshareGroup", defaultValue = "") Set<String> fileshareGroups,
+			@RequestParam(value = "dataset", defaultValue = "") Set<String> datasets,
+			@RequestParam(value = "includeInactiveUsers", defaultValue = "false") Boolean includeInactiveUsers,
+			// paging
+			@RequestParam(value = "page", defaultValue = "1") @Min(1)  Integer page,
+			@RequestParam(value = "pageSize", defaultValue = "50") @Min(1) @Max(100) Integer pageSize)
 	{
-		return ok(userService.search(query, page, pageSize, includeInactiveUsers));
+		val groups = ImmutableMap.<String, Set<String>>of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
+		return ok(userService.search(query, groups, datasets, includeInactiveUsers, page, pageSize));
 	}
 
 	@GetMapping(path="/user/{username}")
