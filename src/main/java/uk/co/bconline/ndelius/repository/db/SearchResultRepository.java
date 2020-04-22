@@ -18,7 +18,7 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"    S.OFFICER_CODE AS STAFF_CODE, " +
 			"    T.CODE AS TEAM_CODE, " +
 			"    T.DESCRIPTION AS TEAM_DESCRIPTION, " +
-			"    CASE WHEN ?1 = '' THEN 0 ELSE " +
+			"    CASE WHEN ?1 IS NULL THEN 0 ELSE " +
 			"    GREATEST( " +
 			"        SYS.UTL_MATCH.EDIT_DISTANCE_SIMILARITY(UPPER(U.DISTINGUISHED_NAME), UPPER(?1)) / 100, " +
 			"        SYS.UTL_MATCH.EDIT_DISTANCE_SIMILARITY(UPPER(U.FORENAME), UPPER(?1)) / 100, " +
@@ -35,7 +35,7 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"WHERE (?2 = 1 OR U.END_DATE IS NULL OR U.END_DATE >= SYSDATE) " +
 			"AND (?3 = 0 OR (SELECT COUNT(*) FROM PROBATION_AREA_USER WHERE ROWNUM = 1 AND USER_ID = U.USER_ID  " +
 			"    AND PROBATION_AREA_ID IN (SELECT PROBATION_AREA_ID FROM PROBATION_AREA WHERE CODE IN ?4)) > 0) " +
-			"AND (?1 = '' " +
+			"AND (?1 IS NULL " +
 			"    OR SOUNDEX(U.DISTINGUISHED_NAME) = SOUNDEX(?1) " +
 			"    OR SOUNDEX(U.FORENAME) = SOUNDEX(?1) " +
 			"    OR SOUNDEX(U.FORENAME2) = SOUNDEX(?1) " +
@@ -45,7 +45,7 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"        SELECT TEAM_ID FROM TEAM  " +
 			"        WHERE UPPER(CODE) LIKE '%'||UPPER(?1)||'%' " +
 			"        OR UPPER(DESCRIPTION) LIKE '%'||UPPER(?1)||'%'))) " +
-			"ORDER BY SCORE DESC",
+			"ORDER BY SCORE DESC, LOWER(U.DISTINGUISHED_NAME);",
 			nativeQuery = true)
 	List<SearchResultEntity> search(String query, boolean includeInactiveUsers, boolean filterDatasets, Set<String> datasetCodes);
 
@@ -84,7 +84,7 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"        SELECT TEAM_ID FROM TEAM  " +
 			"        WHERE UPPER(CODE) LIKE '%'||UPPER(?1)||'%' " +
 			"        OR UPPER(DESCRIPTION) LIKE '%'||UPPER(?1)||'%'))) " +
-			"ORDER BY SCORE DESC;",
+			"ORDER BY SCORE DESC, LOWER(U.DISTINGUISHED_NAME);",
 			nativeQuery = true)
 	List<SearchResultEntity> simpleSearch(String query, boolean includeInactiveUsers, boolean filterDatasets, Set<String> datasetCodes);
 }
