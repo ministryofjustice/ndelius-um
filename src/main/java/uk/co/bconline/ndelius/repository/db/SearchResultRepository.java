@@ -45,7 +45,7 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"        SELECT TEAM_ID FROM TEAM  " +
 			"        WHERE UPPER(CODE) LIKE '%'||UPPER(?1)||'%' " +
 			"        OR UPPER(DESCRIPTION) LIKE '%'||UPPER(?1)||'%'))) " +
-			"ORDER BY SCORE DESC, LOWER(U.DISTINGUISHED_NAME);",
+			"ORDER BY SCORE DESC, UPPER(U.DISTINGUISHED_NAME);",
 			nativeQuery = true)
 	List<SearchResultEntity> search(String query, boolean includeInactiveUsers, boolean filterDatasets, Set<String> datasetCodes);
 
@@ -84,7 +84,7 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"        SELECT TEAM_ID FROM TEAM  " +
 			"        WHERE UPPER(CODE) LIKE '%'||UPPER(?1)||'%' " +
 			"        OR UPPER(DESCRIPTION) LIKE '%'||UPPER(?1)||'%'))) " +
-			"ORDER BY SCORE DESC, LOWER(U.DISTINGUISHED_NAME);",
+			"ORDER BY SCORE DESC, UPPER(U.DISTINGUISHED_NAME);",
 			nativeQuery = true)
 	List<SearchResultEntity> simpleSearch(String query, boolean includeInactiveUsers, boolean filterDatasets, Set<String> datasetCodes);
 }
