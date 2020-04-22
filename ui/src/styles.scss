@@ -18,11 +18,21 @@
   padding-bottom: $jumbotron-padding / 2;
 }
 
+// Darken links in jumbotron to maintain an accessible contrast ratio (>4.5)
+.jumbotron a {
+  color: darken($link-color, 15%);
+  @include hover() {
+    color: darken($link-hover-color, 15%);
+  }
+}
+
+// Style readonly inputs like disabled ones
 .form-control.readonly {
   background-color: $input-disabled-bg;
   opacity: 1;
 }
 
+// Add angular invalid/dirty classes to custom inputs
 date.ng-invalid input, item-selector.ng-invalid button{
   @extend .ng-invalid;
 }

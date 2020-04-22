@@ -37,6 +37,14 @@
             ]
           },
           "configurations": {
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
+            },
             "production": {
               "budgets": [
                 {
@@ -68,6 +76,9 @@
             "browserTarget": "ui:build"
           },
           "configurations": {
+            "dev": {
+              "browserTarget": "ui:build:dev"
+            },
             "production": {
               "browserTarget": "ui:build:production"
             }

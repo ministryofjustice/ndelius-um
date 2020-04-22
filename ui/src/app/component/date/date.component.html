@@ -6,12 +6,15 @@
      (keydown.l)="setDaysFromToday(-7)"
      (keydown.f)="setDaysFromToday(14)">
   <input id="{{id}}-d" class="form-control" placeholder="DD" maxlength="2"
+         title="{{label}} day of the month"
          [readonly]="readonly"
          [(ngModel)]="date" (input)="change()"/>
   <input id="{{id}}-m" class="form-control" placeholder="MM" maxlength="2"
+         title="{{label}} month"
          [readonly]="readonly"
          [(ngModel)]="month" (input)="change()"/>
   <input id="{{id}}-y" class="form-control" placeholder="YYYY" maxlength="4"
+         title="{{label}} year"
          [readonly]="readonly"
          [(ngModel)]="year" (input)="change()"/>
 </div>

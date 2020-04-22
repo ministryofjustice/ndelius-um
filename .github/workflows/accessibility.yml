@@ -1,9 +1,9 @@
-name: Code quality
+name: Accessibility
 
 on: push
 
 jobs:
-  lint-typescript:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,5 +22,13 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Lint
-        run: ./gradlew npm_run_lint --build-cache
+
+      - name: Run accessibility checks
+        run: ./gradlew npm_run_accessibility --build-cache
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: accessibility-report
+          path: ui/dist/reports/pa11y
