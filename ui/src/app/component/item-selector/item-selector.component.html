@@ -15,7 +15,7 @@
     <span class="text-truncate mr-2" [class.text-black-50]="displayText === placeholder">{{displayText}}</span>
     <span class="oi oi-chevron-bottom float-right"></span>
   </button>
-  <div class="dropdown-menu bg-light px-lg-3 px-sm-2 py-3"
+  <div class="dropdown-menu bg-light p-2"
        style="overflow-y: auto; min-width: 100%; max-width: 200%"
        [class.dropdown-menu-right]="alignRight"
        [ngStyle]="{maxHeight: maxHeight}"
@@ -24,21 +24,9 @@
        (keyup.alt.arrowup)="collapseDropdown()"
        (keyup.alt.arrowdown)="collapseDropdown()"
        [attr.aria-labelledby]="id+'-toggle-btn'">
-    <div class="form-group mb-1">
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <div class="input-group-text bg-white"><i class="oi oi-magnifying-glass"></i></div>
-        </div>
-        <input #filterControl [id]="id+'-filter'"
-               [(ngModel)]="filter"
-               (input)="updateDropDown()"
-               type="search"
-               class="form-control py-2 border-left-0 border"
-               aria-label="Filter">
-      </div>
-    </div>
-    <div class="text-truncate text-muted small border-bottom mb-1">
-      <div class="custom-control custom-checkbox float-left" [class.d-none]="readonly" *ngIf="multiple && (maxSelectable == null || available.length <= maxSelectable)">
+    <div class="text-truncate text-muted small border-bottom mb-2">
+      <div class="custom-control custom-checkbox float-left" [class.d-none]="readonly"
+           *ngIf="multiple && (maxSelectable == null || available.length <= maxSelectable)">
         <div class="pl-1">
           <input #toggleAllBtn [id]="id + '-toggle-all'" class="custom-control-input" type="checkbox"
                  title="Toggle all items"
@@ -73,6 +61,19 @@
         </li>
       </ul>
     </div>
+    <div class="form-group mb-2">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text bg-white"><i class="oi oi-magnifying-glass"></i></div>
+        </div>
+        <input #filterControl [id]="id+'-filter'"
+               [(ngModel)]="filter"
+               (input)="updateDropDown()"
+               type="search"
+               class="form-control form-control-sm border-left-0"
+               title="Filter selectable options" placeholder="Search&hellip;" aria-label="Filter">
+      </div>
+    </div>
     <div class="text-truncate custom-control custom-{{multiple? 'checkbox': 'radio'}}"
          [class.d-none]="onlyShowSelected && !isSelected(item)"
          *ngFor="let item of filtered; let i = index">
@@ -86,7 +87,7 @@
                [title]="mapToLabel(item)"/>
         <label [for]="id+'-opt-'+i"
                [title]="mapToLabel(item)"
-               class="custom-control-label mb-0 w-100">{{mapToLabel(item)}}</label>
+               class="custom-control-label w-100">{{mapToLabel(item)}}</label>
       </div>
     </div>
   </div>
