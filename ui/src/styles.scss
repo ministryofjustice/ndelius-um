@@ -13,16 +13,19 @@
   -webkit-transition: height 100ms, min-height 100ms;
 }
 
-.jumbotron-compact {
-  padding-top: $jumbotron-padding * 2/3;
-  padding-bottom: $jumbotron-padding / 2;
-}
+.jumbotron {
+  &.jumbotron-compact {
+    padding-top: $jumbotron-padding * 2/3;
+    padding-bottom: $jumbotron-padding / 2;
+  }
 
-// Darken links in jumbotron to maintain an accessible contrast ratio (>4.5)
-.jumbotron a {
-  color: darken($link-color, 15%);
-  @include hover() {
-    color: darken($link-hover-color, 15%);
+  // Darken links and coloured text in jumbotron to maintain an accessible contrast ratio (>4.5)
+  & a {
+    color: darken($link-color, 15%);
+    @include hover() { color: darken($link-hover-color, 15%); }
+  }
+  @each $color, $value in $theme-colors {
+    @include text-emphasis-variant(".text-#{$color}", darken($value, 15%), true);
   }
 }
 

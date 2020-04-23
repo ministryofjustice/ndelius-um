@@ -37,6 +37,7 @@ export class ItemSelectorComponent
   @Input() readonly: boolean;
   @Input() required = false;
   @Input() multiple: boolean;
+  @Input() maxSelectable: number;
   @Input() alignRight: boolean;
   @Input() placeholder = 'Please select...';
   @Input() loadingText = 'Loading...';
@@ -170,9 +171,12 @@ export class ItemSelectorComponent
   }
 
   validate(c: FormControl): ValidationErrors {
-    if (this.required === false || this.readonly) { return null; }
-    if (this.selected == null || (this.selected instanceof Array && this.selected.length === 0)) {
-      return {'list': 'cannot be empty'};
+    if (this.readonly) { return null; }
+    if (this.required && (this.selected == null || (this.selected instanceof Array && this.selected.length === 0))) {
+      return {'required': 'cannot be empty'};
+    }
+    if (this.multiple && this.maxSelectable != null && this.selected.length > this.maxSelectable) {
+      return {'maxSelectable': this.maxSelectable, 'selected': this.selected.length}
     }
     return null;
   }

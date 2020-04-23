@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="text-truncate text-muted small border-bottom mb-1">
-      <div class="custom-control custom-checkbox float-left" [class.d-none]="readonly" *ngIf="multiple">
+      <div class="custom-control custom-checkbox float-left" [class.d-none]="readonly" *ngIf="multiple && (maxSelectable == null || available.length <= maxSelectable)">
         <div class="pl-1">
           <input #toggleAllBtn [id]="id + '-toggle-all'" class="custom-control-input" type="checkbox"
                  title="Toggle all items"
