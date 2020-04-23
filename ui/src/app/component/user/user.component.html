@@ -12,7 +12,7 @@
     </div>
     <form #form="ngForm" (submit)="submit()" autocomplete="off">
       <section class="mb-4 card card-body">
-        <h4 class="card-title mb-0">User Details</h4>
+        <h2 class="card-title mb-0" id="user-details">User Details</h2>
         <small class="text-muted" *ngIf="mode !== 'View' && (
         username.invalid ||
         email.invalid ||
@@ -134,7 +134,7 @@
         </div>
       </section>
       <section class="mb-4 card card-body">
-        <h4 class="card-title mb-0">Authorisation</h4>
+        <h2 class="card-title mb-0" id="authorisation">Authorisation</h2>
         <small class="text-muted" *ngIf="mode !== 'View' && (
         datasetsList.invalid ||
         sectorSelector.invalid ||
@@ -184,7 +184,7 @@
               <small *ngIf="datasetsList.errors['invalid']">
                 *Datasets are invalid
               </small>
-              <small *ngIf="datasetsList.errors['list']">
+              <small *ngIf="datasetsList.errors['required']">
                 *At least one dataset is required
               </small>
             </div>
@@ -216,7 +216,7 @@
                            [readonly]="mode === 'View'"
                            [labelMapper]="LabelMappingUtils.codeDescriptionToLabel"></item-selector>
             <div *ngIf="homeArea.dirty && homeArea.invalid" class = text-danger>
-              <small *ngIf="homeArea.errors['list']">
+              <small *ngIf="homeArea.errors['required']">
                 *At least one home area is required
               </small>
             </div>
@@ -236,7 +236,7 @@
                            [alignRight]="true"
                            [labelMapper]="LabelMappingUtils.sectorToLabel"></item-selector>
             <div *ngIf="sectorSelector.dirty && sectorSelector.invalid" class = text-danger>
-              <small *ngIf="sectorSelector.errors['list']">
+              <small *ngIf="sectorSelector.errors['required']">
                 *Sector is required
               </small>
             </div>
@@ -271,7 +271,7 @@
         </div>
       </section>
       <section class="mb-4 card card-body">
-        <h4 class="card-title mb-0">Staff Details</h4>
+        <h2 class="card-title mb-0" id="staff-details">Staff Details</h2>
         <hr>
         <div class="form-group row">
           <div class="col-sm-2">

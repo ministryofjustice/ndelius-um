@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
 import {UserService} from '../../service/user.service';
 import {AuthorisationService} from '../../service/impl/authorisation.service';
-import {NgModel} from '@angular/forms';
+import {NgForm} from '@angular/forms';
 import {merge, Observable, Subject} from 'rxjs';
 import {RecentUsersUtils} from '../../util/recent-users.utils';
 import {Team} from '../../model/team';
@@ -24,10 +24,10 @@ export class SearchComponent implements AfterViewInit {
   RecentUsersUtils = RecentUsersUtils;
 
   // inputs
-  @ViewChild('form') form: NgModel;
+  @ViewChild('form') form: NgForm;
   searchParams = new SearchParams();
-  searchSubject = new Subject();  // used to trigger the search observable programmatically
-  newPageSubject = new Subject();
+  formSubmit = new Subject();  // used to trigger the search observable programmatically
+  nextPage = new Subject();
 
   // async results
   fileshareGroups = this.groupService.groupsByType('Fileshare');
@@ -49,18 +49,19 @@ export class SearchComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    // Capture query/filter changes
+    const userInput = merge(this.formSubmit, this.form.valueChanges)      // on form submit or user input
+      .pipe(filter(() => this.form.dirty && this.form.valid));            //  ensure form is valid
+    const urlChange = this.route.queryParams.pipe(                        // on url parameter change
+      filter(params => params.q != null && params.q !== ''),              //  ignore empty param
+      filter(params => params.q !== this.searchParams.query),             //  ignore when unchanged
+      tap(params => this.searchParams.query = params.q));                 //  store the value from the url param
+    const queryChanged = merge(userInput, urlChange);
+
     // Set up search results observable
     this.results = merge(
-      merge(
-        this.searchSubject,                                               // on form submit
-        this.form.valueChanges.pipe(filter(() => this.form.dirty)),       // on user input
-        this.route.queryParams.pipe(                                      // on url parameter change
-          filter(params => params.q != null && params.q !== ''),          //  ignore empty param
-          filter(params => params.q !== this.searchParams.query),         //  ignore when unchanged
-          tap(params => this.searchParams.query = params.q)               //  grab the value from url param
-        )
-      ).pipe(tap(() => this.searchParams.page = 1)),                      // reset to first page for the above events
-      this.newPageSubject.pipe(tap(() => this.searchParams.page++)),      // increment page on new page event
+      queryChanged.pipe(tap(() => this.searchParams.page = 1)),           // reset to first page on query/filter change
+      this.nextPage.pipe(tap(() => this.searchParams.page++)),            // increment page on new page event
     ).pipe(
       debounceTime(500),                                                  // throttle searches
       tap(() => this.searching = true),                                   // set searching flag (for loading indicator)

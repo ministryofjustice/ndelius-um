@@ -6,7 +6,7 @@
   <div class="jumbotron animate-padding" [ngClass]="{'jumbotron-compact': prevPages.length > 0}">
     <div class="container">
       <h1>Search</h1>
-      <form #form="ngForm" (submit)="searchSubject.next()">
+      <form #form="ngForm" (submit)="formSubmit.next()">
         <div class="form-group">
           <label for="query" [class.mb-0]="RecentUsersUtils.getRecentUsers().length > 0">
               Use this screen to search for an existing user<ng-container *ngIf="auth.canAddUser()" >, or
@@ -45,24 +45,39 @@
             <div class="p-1" style="margin-top: -3px">
               <div class="form-row p-2">
                 <div class="col-md-4">
-                  <item-selector id="datasets-filter" name="datasets-filter" maxHeight="300px" multiple="true"
+                  <p *ngIf="datasetFilter.dirty && datasetFilter.invalid && datasetFilter.errors['maxSelectable']"
+                       class="small text-danger mb-1">
+                    You can only filter on a maximum of {{ datasetFilter.errors['maxSelectable'] }} datasets at a time.
+                  </p>
+                  <item-selector id="datasets-filter" name="datasets-filter" #datasetFilter="ngModel"
                                  [available]="datasets | async"
                                  [(ngModel)]="searchParams.datasets" [(selected)]="searchParams.datasets"
                                  [labelMapper]="LabelMappingUtils.codeDescriptionToLabel"
+                                 maxHeight="300px" multiple="true" maxSelectable="15"
                                  placeholder="Datasets"></item-selector>
                 </div>
                 <div class="col-md-4">
-                  <item-selector id="fileshare-groups-filter" name="fileshare-groups-filter" maxHeight="300px" multiple="true"
+                  <p *ngIf="fileshareFilter.dirty && fileshareFilter.invalid && fileshareFilter.errors['maxSelectable']"
+                     class="small text-danger mb-1">
+                    You can only filter on a maximum of {{ fileshareFilter.errors['maxSelectable'] }} groups at a time.
+                  </p>
+                  <item-selector id="fileshare-groups-filter" name="fileshare-groups-filter" #fileshareFilter="ngModel"
                                  [available]="fileshareGroups | async"
                                  [(ngModel)]="searchParams.fileshareGroups" [(selected)]="searchParams.fileshareGroups"
                                  [labelMapper]="LabelMappingUtils.descriptionToLabel"
+                                 maxHeight="300px" multiple="true" maxSelectable="15"
                                  placeholder="File Share access"></item-selector>
                 </div>
                 <div class="col-md-4">
-                  <item-selector id="reporting-groups-filter" name="reporting-groups-filter" maxHeight="300px" multiple="true"
+                  <p *ngIf="reportingFilter.dirty && reportingFilter.invalid && reportingFilter.errors['maxSelectable']"
+                     class="small text-danger mb-1">
+                    You can only filter on a maximum of {{ reportingFilter.errors['maxSelectable'] }} groups at a time.
+                  </p>
+                  <item-selector id="reporting-groups-filter" name="reporting-groups-filter" #reportingFilter="ngModel"
                                  [available]="reportingGroups | async"
                                  [(ngModel)]="searchParams.reportingGroups" [(selected)]="searchParams.reportingGroups"
                                  [labelMapper]="LabelMappingUtils.descriptionToLabel"
+                                 maxHeight="300px" multiple="true" maxSelectable="15"
                                  placeholder="Reporting access"></item-selector>
                 </div>
               </div>
@@ -131,7 +146,7 @@
         <button id="search-results-next" class="btn btn-outline-secondary"
                 [hidden]="results.length % searchParams.pageSize != 0 || hasMoreResults === false"
                 [disabled]="searching"
-                (click)="newPageSubject.next()">
+                (click)="nextPage.next()">
           {{searching ? 'Loading': 'Load more'}}
           <span class="oi oi-arrow-circle-bottom"></span>
         </button>
