@@ -176,7 +176,7 @@ export class ItemSelectorComponent
       return {'required': 'cannot be empty'};
     }
     if (this.multiple && this.maxSelectable != null && this.selected.length > this.maxSelectable) {
-      return {'maxSelectable': this.maxSelectable, 'selected': this.selected.length}
+      return {'maxSelectable': this.maxSelectable, 'selected': this.selected.length};
     }
     return null;
   }
