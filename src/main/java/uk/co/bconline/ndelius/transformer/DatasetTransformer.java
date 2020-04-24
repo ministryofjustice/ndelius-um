@@ -8,6 +8,7 @@ import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
 import uk.co.bconline.ndelius.model.entity.SubContractedProviderEntity;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
@@ -42,6 +43,7 @@ public class DatasetTransformer
 		return entities.stream()
 				.filter(p -> !p.isEstablishment())
 				.map(this::map)
+				.sorted(Comparator.comparing(Dataset::getCode))
 				.collect(toList());
 	}
 
@@ -50,6 +52,7 @@ public class DatasetTransformer
 		return entities.stream()
 				.filter(ProbationAreaEntity::isEstablishment)
 				.map(this::map)
+				.sorted(Comparator.comparing(Dataset::getCode))
 				.collect(toList());
 	}
 

@@ -12,7 +12,6 @@ import uk.co.bconline.ndelius.model.ReferenceData;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.*;
 import uk.co.bconline.ndelius.model.entry.ClientEntry;
-import uk.co.bconline.ndelius.model.entry.RoleEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.util.LdapUtils;
@@ -111,16 +110,11 @@ public class UserTransformer
 	public Optional<User> map(ClientEntry client)
 	{
 		LocalDateTime t = now();
-		val allRoles = roleService.getAllRoles().stream().map(RoleEntry::getName).collect(toSet());
-		log.trace("--{}ms	Get all roles for mapping", MILLIS.between(t, now()));
+		val allRoles = roleService.getAllRoles();
+		log.trace("--{}ms	Get all roles for filtering", MILLIS.between(t, now()));
 		return ofNullable(client).map(v -> User.builder()
 				.username(v.getClientId())
-				.roles(ofNullable(v.getRoles())
-						.map(l -> l.stream().filter(role -> allRoles.contains(role.getName())))
-						.map(transactions -> transactions
-								.map(roleTransformer::map)
-								.collect(toList()))
-						.orElse(null))
+				.roles(roleTransformer.filterAndMap(v.getRoles(), allRoles))
 				.sources(singletonList("LDAP"))
 				.build());
 	}
@@ -128,8 +122,8 @@ public class UserTransformer
 	public Optional<User> map(UserEntry user)
 	{
 		LocalDateTime t = now();
-		val allRoles = roleService.getAllRoles().stream().map(RoleEntry::getName).collect(toSet());
-		log.trace("--{}ms	Get all roles for mapping", MILLIS.between(t, now()));
+		val allRoles = roleService.getAllRoles();
+		log.trace("--{}ms	Get all roles for filtering", MILLIS.between(t, now()));
 		return ofNullable(user).map(v -> User.builder()
 				.username(v.getUsername())
 				.forenames(v.getForenames())
@@ -139,12 +133,7 @@ public class UserTransformer
 				.homeArea(datasetService.getDatasetByCode(v.getHomeArea()).orElse(null))
 				.startDate(mapLdapStringToDate(v.getStartDate()))
 				.endDate(mapLdapStringToDate(v.getEndDate()))
-				.roles(ofNullable(v.getRoles())
-						.map(l -> l.stream().filter(role -> allRoles.contains(role.getName())))
-						.map(transactions -> transactions
-								.map(roleTransformer::map)
-								.collect(toList()))
-						.orElse(null))
+				.roles(roleTransformer.filterAndMap(v.getRoles(), allRoles))
 				.groups(groupTransformer.groupedByType(v.getGroups()))
 				.sources(singletonList("LDAP"))
 				.build());
