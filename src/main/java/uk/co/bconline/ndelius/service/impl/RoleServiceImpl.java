@@ -15,6 +15,8 @@ import uk.co.bconline.ndelius.repository.ldap.RoleAssociationRepository;
 import uk.co.bconline.ndelius.repository.ldap.RoleRepository;
 import uk.co.bconline.ndelius.service.RoleService;
 
+import javax.annotation.Resource;
+import javax.naming.Name;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,6 +31,10 @@ import static uk.co.bconline.ndelius.util.NameUtils.join;
 @Service
 public class RoleServiceImpl implements RoleService
 {
+	@Resource
+	// self-autowiring, to workaround cache misses when calling cacheable methods from within the same class
+	private RoleService roleService;
+
 	private final RoleRepository roleRepository;
 	private final RoleAssociationRepository roleAssociationRepository;
 
@@ -58,9 +64,8 @@ public class RoleServiceImpl implements RoleService
 
 	@Override
 	@Cacheable(value = "roles")
-	public Optional<RoleEntry> getRole(String role)
-	{
-		return roleRepository.findByName(role);
+	public Optional<RoleEntry> getRole(Name id) {
+		return roleRepository.findById(id);
 	}
 
 	/**
@@ -87,6 +92,6 @@ public class RoleServiceImpl implements RoleService
 		val base = LdapUtils.newLdapName(ldapBase);
 		val aliasDn = LdapUtils.newLdapName(association.getAliasedObjectName());
 		val aliasId = LdapUtils.removeFirst(aliasDn, base);
-		return roleRepository.findById(aliasId);
+		return roleService.getRole(aliasId);
 	}
 }
