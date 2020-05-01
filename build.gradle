@@ -77,7 +77,9 @@ dependencies {
 	implementation 		'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.6.RELEASE'
 	//
 	implementation 		'com.unboundid:unboundid-ldapsdk'
-	implementation		'com.google.guava:guava:28.2-jre'	// Overriding version due to CVE in 21.0/20.0 (used in embedded-redis + swagger)
+	implementation		'com.google.guava:guava:28.2-jre' // Overriding version due to CVEs in 21.0/20.0 (used in embedded-redis + swagger)
+	implementation		'org.apache.logging.log4j:log4j-api:2.13.2'      // Overriding due to CVE-2020-9488 in previous versions
+	implementation		'org.apache.logging.log4j:log4j-to-slf4j:2.13.2' // ..
 	implementation 		'it.ozimov:embedded-redis:0.7.2'
 	implementation 		'io.springfox:springfox-swagger2:2.9.2'
 	implementation 		'io.springfox:springfox-swagger-ui:2.9.2'
