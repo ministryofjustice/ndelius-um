@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Optionals;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
@@ -16,6 +17,7 @@ import uk.co.bconline.ndelius.repository.db.*;
 import uk.co.bconline.ndelius.service.UserEntityService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
@@ -141,14 +143,8 @@ public class UserEntityServiceImpl implements UserEntityService
 			log.debug("Saving user/staff");
 			val newUser = repository.save(user);
 			updateUserTeams(user);
-			log.debug("Unlinking any other users with the same staff code");
-			// Required due to modelling the OneToOne user/staff relationship as a OneToMany
-			ofNullable(user.getStaff()).map(StaffEntity::getCode)
-					.flatMap(staffRepository::findByCode).map(StaffEntity::getUser)
-					.ifPresent(users -> users.stream()
-							.filter(u -> !u.getUsername().equals(user.getUsername()))
-							.map(u -> u.toBuilder().staff(null).createdBy(null).updatedBy(null).build())
-							.forEach(repository::save));
+			handlePreviousStaffRecord(user.getStaff(), existingUser.get().getStaff());
+			removeStaffLinkFromAnyOtherUsers(user);
 			log.debug("Finished saving user to database");
 			return newUser;
 		}
@@ -162,6 +158,35 @@ public class UserEntityServiceImpl implements UserEntityService
 			ofNullable(user.getStaff()).map(StaffEntity::getTeamLinks).ifPresent(staffTeamRepository::saveAll);
 			log.debug("Finished saving new user to database");
 			return newUser;
+		}
+	}
+
+	private void removeStaffLinkFromAnyOtherUsers(UserEntity user) {
+		log.debug("Unlinking any other users with the same staff code");
+		// This is required due to the OneToOne user/staff relationship being modelled in the database as a OneToMany
+		ofNullable(user.getStaff()).map(StaffEntity::getCode)
+				.flatMap(staffRepository::findByCode).map(StaffEntity::getUser)
+				.ifPresent(users -> users.stream()
+						.filter(u -> !u.getUsername().equals(user.getUsername()))
+						.map(u -> u.toBuilder().staff(null).createdBy(null).updatedBy(null).build())
+						.forEach(repository::save));
+	}
+
+	// When a user is given a new staff code, an End Date should be added to their previous staff record.
+	private void handlePreviousStaffRecord(StaffEntity staff, StaffEntity existingStaff) {
+		if (existingStaff == null || StringUtils.isEmpty(existingStaff.getCode())) {
+			// the user never had a staff code - nothing to end-date
+			return;
+		}
+		if (staff == null || StringUtils.isEmpty(staff.getCode()) ||
+				!staff.getCode().equals(existingStaff.getCode())) {
+			// staff code removed or changed - add an end-date to the old one
+			log.debug(String.format("Adding an end-date to previous staff record (%s)", existingStaff.getCode()));
+			staffRepository.save(existingStaff.toBuilder()
+					.endDate(LocalDate.now())
+					.updatedAt(LocalDateTime.now())
+					.updatedById(getMyUserId())
+					.build());
 		}
 	}
 

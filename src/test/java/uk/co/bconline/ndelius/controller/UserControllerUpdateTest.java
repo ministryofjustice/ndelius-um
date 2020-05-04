@@ -15,14 +15,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.co.bconline.ndelius.model.*;
+import uk.co.bconline.ndelius.model.entity.StaffEntity;
+import uk.co.bconline.ndelius.repository.db.StaffRepository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -41,6 +46,9 @@ public class UserControllerUpdateTest
 {
 	@Autowired
 	private WebApplicationContext context;
+
+	@Autowired
+	private StaffRepository staffRepository;
 
 	private MockMvc mvc;
 
@@ -365,5 +373,38 @@ public class UserControllerUpdateTest
 		// Then I should receive an error message
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.error[*]", hasItem("Insufficient permissions to update National users")));
+	}
+
+	@Test
+	public void oldStaffRecordIsGivenAnEndDate() throws Exception
+	{
+		String username = nextTestUsername();
+		String token = token(mvc);
+
+		// Given a user with staff code N01A601
+		User user = aValidUser().toBuilder()
+				.username(username)
+				.staffCode("N01A601")
+				.staffGrade(ReferenceData.builder().code("GRADE 1").build())
+				.build();
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+				.andExpect(status().isCreated());
+
+		// When I update the staff code to N01A602
+		mvc.perform(post("/api/user/" + username)
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+						.staffCode("N01A602")
+						.build())))
+				.andExpect(status().isNoContent());
+
+		// Then the old staff record (N01A601) should have an end date of today
+		Optional<StaffEntity> oldStaff = staffRepository.findByCode("N01A601");
+		assertTrue(oldStaff.isPresent());
+		assertThat(oldStaff.get().getEndDate(), is(LocalDate.now()));
 	}
 }
