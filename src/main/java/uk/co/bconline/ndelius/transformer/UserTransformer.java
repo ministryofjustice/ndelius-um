@@ -42,9 +42,6 @@ public class UserTransformer
 	@Value("${spring.ldap.default-password:#{null}}")
 	private String defaultPassword;
 
-	@Value("${delius.ldap.base.groups}")
-	private String groupsBase;
-
 	private final TeamService teamService;
 	private final ReferenceDataService referenceDataService;
 	private final DatasetService datasetService;
@@ -283,7 +280,7 @@ public class UserTransformer
 						.map(roleTransformer::map)
 						.collect(toSet()))
 						.orElseGet(Collections::emptySet))
-				.groupNames(groupTransformer.mapToNames(groupTransformer.collate(user.getGroups()), groupsBase))
+				.groupNames(groupTransformer.mapToNames(groupTransformer.collate(user.getGroups())))
 				.build();
 	}
 

@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import uk.co.bconline.ndelius.service.UserEntryService;
 import uk.co.bconline.ndelius.service.UserRoleService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 
+import javax.naming.Name;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +36,7 @@ import java.util.stream.Stream;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -188,6 +191,21 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 				.orElse(emptySet());
 	}
 
+	private void updateUserGroups(String username, Set<Name> groups)
+	{
+		val userDn = LdapNameBuilder.newInstance(ldapBase).add(getDn(username)).build();
+		val existingGroups = getBasicUser(username).map(UserEntry::getGroupNames).orElse(emptySet());
+		val newGroups = ofNullable(groups).orElse(emptySet());
+		val groupsToAdd = Sets.difference(newGroups, existingGroups);
+		val groupsToRemove = Sets.difference(existingGroups, newGroups);
+		groupService.getGroups(groupsToAdd).parallelStream()
+				.peek(group -> group.getMembers().add(userDn))
+				.forEach(groupService::save);
+		groupService.getGroups(groupsToRemove).parallelStream()
+				.peek(group -> group.getMembers().remove(userDn))
+				.forEach(groupService::save);
+	}
+
 	@Override
 	public void save(UserEntry user)
 	{
@@ -201,6 +219,10 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 					.endDate(null).build();
 		}
 		userRepository.save(user);
+
+		// Groups
+		log.debug("Updating group memberships");
+		updateUserGroups(user.getUsername(), user.getGroupNames());
 
 		// Preferences
 		log.debug("Checking if user preferences exist");

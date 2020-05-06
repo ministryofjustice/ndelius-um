@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.transformer;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,12 @@ import static java.util.stream.Collectors.*;
 @Component
 public class GroupTransformer
 {
+	@Value("${spring.ldap.base}")
+	private String ldapBase;
+
+	@Value("${delius.ldap.base.groups}")
+	private String groupsBase;
+
 	public Group map(GroupEntry entry)
 	{
 		return Group.builder()
@@ -72,11 +79,11 @@ public class GroupTransformer
 				.orElse(null);
 	}
 
-	public Set<Name> mapToNames(Collection<Group> groups, String base)
+	public Set<Name> mapToNames(Collection<Group> groups)
 	{
 		return ofNullable(groups)
 				.map(list -> list.stream()
-						.map(group -> (Name) LdapNameBuilder.newInstance(base)
+						.map(group -> (Name) LdapNameBuilder.newInstance(ldapBase).add(groupsBase)
 								.add("ou", group.getType())
 								.add("cn", group.getName())
 								.build())

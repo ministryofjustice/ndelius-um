@@ -14,4 +14,5 @@ public interface GroupService {
     Set<GroupEntry> getGroups(Collection<Name> groupNames);
     Optional<GroupEntry> getGroup(String name);
     Optional<GroupEntry> getGroup(String type, String name);
+    void save(GroupEntry group);
 }
