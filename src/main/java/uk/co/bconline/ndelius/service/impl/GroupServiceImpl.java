@@ -73,10 +73,15 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public Set<GroupEntry> getGroups(Collection<Name> groupNames) {
 		val base = LdapUtils.newLdapName(ldapBase);
-		return groupNames.stream()
+		return groupNames.parallelStream()
 				.map(name -> LdapUtils.removeFirst(name, base))
 				.map(groupRepository::findById)
 				.flatMap(Optionals::toStream)
 				.collect(toSet());
+	}
+
+	@Override
+	public void save(GroupEntry group) {
+		groupRepository.save(group);
 	}
 }

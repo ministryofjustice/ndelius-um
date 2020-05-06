@@ -5,9 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.ldap.odm.annotations.Attribute;
-import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.support.LdapUtils;
 
 import javax.naming.Name;
 import java.io.Serializable;
@@ -25,12 +25,13 @@ public final class GroupEntry implements Serializable {
 	@Attribute(name = "cn")
 	private String name;
 
-	@DnAttribute(value = "ou", index = 1)
-	private String type;
-
 	@Attribute
 	private String description;
 
 	@Attribute(name = "member")
 	private List<Name> members;
+
+	public String getType() {
+		return LdapUtils.getStringValue(dn, dn.size() - 2);
+	}
 }

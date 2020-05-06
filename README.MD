@@ -1,4 +1,10 @@
 # NDelius User Management Tool
+
+![Security](https://github.com/ministryofjustice/ndelius-um/workflows/Security/badge.svg)
+![Accessibility](https://github.com/ministryofjustice/ndelius-um/workflows/Accessibility/badge.svg)
+![Code quality](https://github.com/ministryofjustice/ndelius-um/workflows/Code%20quality/badge.svg)
+![Tests](https://github.com/ministryofjustice/ndelius-um/workflows/Tests/badge.svg)
+
 Developed by [Unilink](https://www.unilink.com) using Angular and Spring Boot to enable NPS-ICT and CRC admins to effectively create and maintain user accounts in the National Delius application, and to allow external services to securely authenticate Probation staff.
 User accounts are stored across an LDAP cluster (for authentication, user preferences and functional authorisation), and an Oracle database (for data authorisation and caseload management). 
 

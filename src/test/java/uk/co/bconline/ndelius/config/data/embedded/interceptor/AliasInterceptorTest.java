@@ -1,19 +1,18 @@
 package uk.co.bconline.ndelius.config.data.embedded.interceptor;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-
+import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchEntry;
+import com.unboundid.ldap.sdk.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchEntry;
-import com.unboundid.ldap.sdk.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
-public class AliasDereferencingInterceptorTest
+public class AliasInterceptorTest
 {
 	private LDAPInterface server = mock(LDAPInterface.class);
-	private AliasDereferencingInterceptor interceptor = new AliasDereferencingInterceptor();
+	private AliasInterceptor interceptor = new AliasInterceptor();
 
 	@Before
 	public void setup()
