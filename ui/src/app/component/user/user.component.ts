@@ -99,7 +99,7 @@ export class UserComponent implements OnInit {
         setTimeout(() => {
           this.staffCodeControl.valueChanges
             .pipe(debounceTime(500), distinctUntilChanged(), filter(val => val != null))
-            .subscribe(this.staffCodeChanged);
+            .subscribe(() => this.staffCodeChanged());
         });
       });
 
