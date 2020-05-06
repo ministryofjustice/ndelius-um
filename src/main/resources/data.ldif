@@ -389,9 +389,7 @@ orclActiveStartDate: 20000101000000
 userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
 description: Test user for basic authentication (password=secret)
-memberOf: cn=Group 1,ou=NDMIS-Reporting,ou=Groups,dc=bcl,dc=local
-memberOf: cn=Group 2,ou=NDMIS-Reporting,ou=Groups,dc=bcl,dc=local
-memberOf: cn=Group 1,ou=Fileshare,ou=Groups,dc=bcl,dc=local
+# memberOf attributes have been purposely excluded here, to prove the MemberOfInterceptor works
 
 dn: cn=test.user.inactive,ou=Users,dc=bcl,dc=local
 objectclass: top

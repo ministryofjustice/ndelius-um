@@ -34,15 +34,15 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 
 /**
- * Tests for {@link EmbeddedAliasDereferencingLdapAutoConfiguration}
+ * Tests for {@link EmbeddedLdapServer}
  *
  * Note: This is just a slightly modified version of https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-autoconfigure/src/test/java/org/springframework/boot/autoconfigure/ldap/embedded/EmbeddedLdapAutoConfigurationTests.java
- * to ensure our EmbeddedAliasDereferencingLdapAutoConfiguration class works in the same way as the built-in EmbeddedLdapAutoConfiguration.
+ * to ensure our EmbeddedLdapServer class works in the same way as the built-in EmbeddedLdapAutoConfiguration.
  */
-public class EmbeddedAliasDereferencingLdapAutoConfigurationTest {
+public class EmbeddedLdapServerTest {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(EmbeddedAliasDereferencingLdapAutoConfiguration.class));
+			.withConfiguration(AutoConfigurations.of(EmbeddedLdapServer.class));
 
 	@Test
 	public void testSetDefaultPort() {
@@ -67,7 +67,7 @@ public class EmbeddedAliasDereferencingLdapAutoConfigurationTest {
 	public void testRandomPortWithValueAnnotation() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 		TestPropertyValues.of("spring.ldap.embedded.base-dn:dc=spring,dc=org").applyTo(context);
-		context.register(EmbeddedAliasDereferencingLdapAutoConfiguration.class, LdapClientConfiguration.class,
+		context.register(EmbeddedLdapServer.class, LdapClientConfiguration.class,
 				PropertyPlaceholderAutoConfiguration.class);
 		context.refresh();
 		LDAPConnection connection = context.getBean(LDAPConnection.class);

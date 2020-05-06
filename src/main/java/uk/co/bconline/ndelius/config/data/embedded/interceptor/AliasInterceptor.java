@@ -7,12 +7,14 @@ import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.LDAPInterface;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.context.annotation.Configuration;
 
 import static java.util.Arrays.stream;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
 
 @Slf4j
-public class AliasDereferencingInterceptor extends InMemoryOperationInterceptor
+@Configuration
+public class AliasInterceptor extends InMemoryOperationInterceptor
 {
 	private LDAPInterface server;
 
