@@ -15,6 +15,7 @@ import java.util.List;
  * See:
  *  https://github.com/spring-projects/spring-security-oauth/issues/935
  *  https://github.com/spring-projects/spring-security-oauth/pull/936
+ * NOTE: This is merged and should be available in spring-security-oauth:2.4.2.RELEASE. This class can be removed after upgrading.
  *
  * 
  * @author Stefan Rempfer
