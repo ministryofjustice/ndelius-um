@@ -27,12 +27,12 @@ import uk.co.bconline.ndelius.service.UserRoleService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 
 import javax.naming.Name;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
@@ -137,7 +137,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 			log.debug("Searching LDAP: {}", filterString);
 		}
 
-		val t = LocalDateTime.now();
+		val t = now();
 		val results = stream(userRepository
 				.findAll(query()
 						.searchScope(ONELEVEL)
@@ -146,14 +146,14 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 				.spliterator(), true)
 				.map(u -> searchResultTransformer.map(u, deriveScore(query, u)))
 				.collect(toList());
-		log.debug("Found {} LDAP results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));
+		log.debug("Found {} LDAP results in {}ms", results.size(), MILLIS.between(t, now()));
 		return results;
 	}
 
 	@Override
 	public Optional<UserEntry> getBasicUser(String username)
 	{
-		val t = LocalDateTime.now();
+		val t = now();
 		Optional<UserEntry> user = userRepository.findByUsername(username);
 		if (useOracleAttributes) {
 			user = user.map(u -> u.toBuilder()
@@ -162,7 +162,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 					.oracleStartDate(null)
 					.oracleEndDate(null).build());
 		}
-		log.trace("--{}ms	LDAP lookup", MILLIS.between(t, LocalDateTime.now()));
+		log.trace("--{}ms	LDAP lookup", MILLIS.between(t, now()));
 		return user;
 	}
 
@@ -210,6 +210,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	public void save(UserEntry user)
 	{
 		// Save user
+		val t = now();
 		log.debug("Saving user: {}", user.getUsername());
 		if (useOracleAttributes) {
 			user = user.toBuilder()
@@ -238,6 +239,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 		// Role associations
 		userRoleService.updateUserRoles(user.getUsername(), user.getRoles());
 
+		log.debug("Finished saving user to LDAP in {}ms", MILLIS.between(t, now()));
 	}
 
 	@Override
