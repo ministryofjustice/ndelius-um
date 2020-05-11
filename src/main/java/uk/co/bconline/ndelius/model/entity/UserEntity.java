@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
-import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static org.hibernate.annotations.NotFoundAction.IGNORE;
 
@@ -56,8 +55,8 @@ public class UserEntity implements Serializable
 	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
+	@ManyToOne
 	@JoinColumn(name = "STAFF_ID")
-	@ManyToOne(cascade = ALL)
 	private StaffEntity staff;
 
 	@ManyToOne

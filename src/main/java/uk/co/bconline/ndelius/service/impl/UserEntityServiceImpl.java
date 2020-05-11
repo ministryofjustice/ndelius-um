@@ -17,15 +17,19 @@ import uk.co.bconline.ndelius.repository.db.*;
 import uk.co.bconline.ndelius.service.UserEntityService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
+import static java.time.LocalDate.now;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 import static org.springframework.util.CollectionUtils.isEmpty;
 import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
@@ -76,12 +80,18 @@ public class UserEntityServiceImpl implements UserEntityService
 	}
 
 	@Override
+	public Optional<StaffEntity> getStaffByStaffCode(String code)
+	{
+		return staffRepository.findByCode(code);
+	}
+
+	@Override
 	public Optional<UserEntity> getUserByStaffCode(String code)
 	{
-		val staff = staffRepository.findByCode(code);
-		return staff.map(s -> s.getUser().isEmpty()?
-				UserEntity.builder().staff(s).build():
-				s.getUser().iterator().next());
+		return getStaffByStaffCode(code)
+				.map(s -> s.getUser().isEmpty()?
+						UserEntity.builder().staff(s).build():
+						s.getUser().iterator().next());
 	}
 
 	@Override
@@ -130,81 +140,64 @@ public class UserEntityServiceImpl implements UserEntityService
 	}
 
 	@Override
-	public UserEntity save(UserEntity user)
-	{
-		log.debug("Checking for existing user");
-		val existingUser = getUser(user.getUsername());
-		if (existingUser.isPresent())
-		{
-			log.debug("Deleting datasets");
-			probationAreaUserRepository.deleteAll(existingUser.get().getProbationAreaLinks());
-			log.debug("Saving new datasets");
-			probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
-			log.debug("Saving user/staff");
-			val newUser = repository.save(user);
-			updateUserTeams(user);
-			handlePreviousStaffRecord(user.getStaff(), existingUser.get().getStaff());
-			removeStaffLinkFromAnyOtherUsers(user);
-			log.debug("Finished saving user to database");
-			return newUser;
-		}
-		else
-		{
-			log.debug("Saving user/staff");
-			val newUser = repository.saveAndFlush(user);
-			log.debug("Saving new datasets");
-			probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
+	public UserEntity save(UserEntity user) {
+		val t = LocalDateTime.now();
+		// Staff/Teams
+		ofNullable(user.getStaff()).ifPresent(staff -> {
+			log.debug("Retrieving existing staff");
+			ofNullable(staff.getId()).flatMap(staffRepository::findById).ifPresent(existingStaff -> {
+				log.debug("Unlinking any other users with the same staff code");
+				unlinkOtherUsersFromStaff(user, existingStaff);
+				log.debug("Deleting team links");
+				staffTeamRepository.deleteAll(existingStaff.getTeamLinks());
+			});
+			log.debug("Saving staff");
+			staffRepository.save(staff);
 			log.debug("Saving team links");
-			ofNullable(user.getStaff()).map(StaffEntity::getTeamLinks).ifPresent(staffTeamRepository::saveAll);
-			log.debug("Finished saving new user to database");
-			return newUser;
-		}
+			staffTeamRepository.saveAll(staff.getTeamLinks());
+		});
+
+		// User/Datasets
+		log.debug("Retrieving existing user");
+		ofNullable(user.getId()).flatMap(repository::findById).ifPresent(existingUser -> {
+			handlePreviousStaffRecord(user.getStaff(), existingUser.getStaff());
+			log.debug("Deleting datasets");
+			probationAreaUserRepository.deleteAll(existingUser.getProbationAreaLinks());
+		});
+		log.debug("Saving user");
+		val savedUser = repository.save(user);
+		log.debug("Saving new datasets");
+		probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
+
+		log.debug("Finished saving user to database in {}ms", MILLIS.between(t, LocalDateTime.now()));
+		return savedUser;
 	}
 
-	private void removeStaffLinkFromAnyOtherUsers(UserEntity user) {
-		log.debug("Unlinking any other users with the same staff code");
+	private void unlinkOtherUsersFromStaff(UserEntity user, StaffEntity existingStaff) {
 		// This is required due to the OneToOne user/staff relationship being modelled in the database as a OneToMany
-		ofNullable(user.getStaff()).map(StaffEntity::getCode)
-				.flatMap(staffRepository::findByCode).map(StaffEntity::getUser)
+		val userId = ofNullable(user).map(UserEntity::getId).orElse(null);
+		ofNullable(existingStaff).map(StaffEntity::getUser)
 				.ifPresent(users -> users.stream()
-						.filter(u -> !u.getUsername().equals(user.getUsername()))
+						.filter(u -> !u.getId().equals(userId))
 						.map(u -> u.toBuilder().staff(null).createdBy(null).updatedBy(null).build())
 						.forEach(repository::save));
 	}
 
 	// When a user is given a new staff code, an End Date should be added to their previous staff record.
-	private void handlePreviousStaffRecord(StaffEntity staff, StaffEntity existingStaff) {
-		if (existingStaff == null || StringUtils.isEmpty(existingStaff.getCode())) {
+	private void handlePreviousStaffRecord(StaffEntity newStaff, StaffEntity previousStaff) {
+		if (previousStaff == null || StringUtils.isEmpty(previousStaff.getCode())) {
 			// the user never had a staff code - nothing to end-date
 			return;
 		}
-		if (staff == null || StringUtils.isEmpty(staff.getCode()) ||
-				!staff.getCode().equals(existingStaff.getCode())) {
+		if (newStaff == null || StringUtils.isEmpty(newStaff.getCode()) ||
+				!newStaff.getCode().equals(previousStaff.getCode())) {
 			// staff code removed or changed - add an end-date to the old one
-			log.debug(String.format("Adding an end-date to previous staff record (%s)", existingStaff.getCode()));
-			staffRepository.save(existingStaff.toBuilder()
-					.endDate(LocalDate.now())
+			log.debug(String.format("Adding an end-date to previous staff record (%s)", previousStaff.getCode()));
+			staffRepository.save(previousStaff.toBuilder()
+					.endDate(now())
 					.updatedAt(LocalDateTime.now())
 					.updatedById(getMyUserId())
 					.build());
 		}
-	}
-
-	private void updateUserTeams(UserEntity user)
-	{
-		log.debug("Deleting any existing team links");
-		ofNullable(user.getStaff()).map(StaffEntity::getCode)
-				.flatMap(staffRepository::findByCode).map(StaffEntity::getTeamLinks)
-				.map(links -> links.stream().filter(Objects::nonNull).collect(toSet()))
-				.ifPresent(staffTeamRepository::deleteAll);
-		log.debug("Saving team links");
-		ofNullable(user.getStaff()).map(StaffEntity::getCode)
-				.flatMap(staffRepository::findByCode)
-				.flatMap(existingStaff -> ofNullable(user.getStaff())
-						.map(StaffEntity::getTeamLinks)
-						.map(links -> links.stream()
-								.peek(link -> link.getId().setStaff(existingStaff))	// Fix staff id
-								.collect(toSet())))
-				.ifPresent(staffTeamRepository::saveAll);
 	}
 }
