@@ -108,6 +108,8 @@ ul.history-list {
       @extend .small
     }
     > .update-note > span {
+      max-height: 300px;
+      overflow-y: auto;
       white-space: pre-line;
       @extend .my-2;
       @extend .py-2;
