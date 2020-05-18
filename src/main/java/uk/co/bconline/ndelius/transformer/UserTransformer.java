@@ -51,7 +51,7 @@ public class UserTransformer
 	private final ReferenceDataTransformer referenceDataTransformer;
 	private final TeamTransformer teamTransformer;
 	private final GroupTransformer groupTransformer;
-	private final UserHistoryTransformer userHistoryTransformer;
+	private final ChangeNoteTransformer changeNoteTransformer;
 
 	@Autowired
 	public UserTransformer(
@@ -65,7 +65,7 @@ public class UserTransformer
 			ReferenceDataTransformer referenceDataTransformer,
 			TeamTransformer teamTransformer,
 			GroupTransformer groupTransformer,
-			UserHistoryTransformer userHistoryTransformer)
+			ChangeNoteTransformer changeNoteTransformer)
 	{
 		this.teamService = teamService;
 		this.referenceDataService = referenceDataService;
@@ -77,7 +77,7 @@ public class UserTransformer
 		this.referenceDataTransformer = referenceDataTransformer;
 		this.teamTransformer = teamTransformer;
 		this.groupTransformer = groupTransformer;
-		this.userHistoryTransformer = userHistoryTransformer;
+		this.changeNoteTransformer = changeNoteTransformer;
 	}
 
 	public Optional<User> map(UserEntity user)
@@ -100,8 +100,8 @@ public class UserTransformer
 				.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
 				.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElseGet(v::getEndDate))
 				.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(teamTransformer::map).orElse(null))
-				.created(userHistoryTransformer.map(v.getCreatedBy(), v.getCreatedAt(), null))
-				.updated(userHistoryTransformer.map(v.getUpdatedBy(), v.getUpdatedAt(), null))
+				.created(changeNoteTransformer.map(v.getCreatedBy(), v.getCreatedAt(), null))
+				.updated(changeNoteTransformer.map(v.getUpdatedBy(), v.getUpdatedAt(), null))
 				.sources(singletonList("DB"))
 				.build());
 	}
@@ -196,7 +196,7 @@ public class UserTransformer
 				.updatedById(myUserId)
 				.updatedAt(updateTime)
 				.build();
-		entity.setHistory(singleton(UserHistoryEntity.builder()
+		entity.setHistory(singleton(ChangeNoteEntity.builder()
 				.user(entity)
 				.updatedById(myUserId)
 				.updatedAt(updateTime)

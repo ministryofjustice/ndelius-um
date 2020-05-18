@@ -88,10 +88,10 @@ public class User {
 	private Map<String, List<@Valid Group>> groups;
 
 	@ApiModelProperty(accessMode = READ_ONLY)
-	private UserHistoryItem created;
+	private ChangeNote created;
 
 	@ApiModelProperty(accessMode = READ_ONLY)
-	private UserHistoryItem updated;
+	private ChangeNote updated;
 
 	@ApiModelProperty("Only used for create/update, for adding change notes to a user. " +
 			"This will always be blank when fetching a user - to retrieve user change notes, see the /user/{username}/history endpoint.")

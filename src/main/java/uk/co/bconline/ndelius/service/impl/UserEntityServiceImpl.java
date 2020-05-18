@@ -45,7 +45,7 @@ public class UserEntityServiceImpl implements UserEntityService
 	private final SearchResultRepository searchResultRepository;
 	private final ProbationAreaUserRepository probationAreaUserRepository;
 	private final StaffTeamRepository staffTeamRepository;
-	private final UserHistoryEntityRepository userHistoryEntityRepository;
+	private final ChangeNoteRepository changeNoteRepository;
 	private final SearchResultTransformer searchResultTransformer;
 
 	@Autowired
@@ -55,7 +55,7 @@ public class UserEntityServiceImpl implements UserEntityService
 			SearchResultRepository searchResultRepository,
 			ProbationAreaUserRepository probationAreaUserRepository,
 			StaffTeamRepository staffTeamRepository,
-			UserHistoryEntityRepository userHistoryEntityRepository,
+			ChangeNoteRepository changeNoteRepository,
 			SearchResultTransformer searchResultTransformer)
 	{
 		this.repository = repository;
@@ -63,7 +63,7 @@ public class UserEntityServiceImpl implements UserEntityService
 		this.searchResultRepository = searchResultRepository;
 		this.probationAreaUserRepository = probationAreaUserRepository;
 		this.staffTeamRepository = staffTeamRepository;
-		this.userHistoryEntityRepository = userHistoryEntityRepository;
+		this.changeNoteRepository = changeNoteRepository;
 		this.searchResultTransformer = searchResultTransformer;
 	}
 
@@ -175,7 +175,7 @@ public class UserEntityServiceImpl implements UserEntityService
 		log.debug("Saving new datasets");
 		probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
 		log.debug("Updating user history");
-		userHistoryEntityRepository.saveAll(user.getHistory());
+		changeNoteRepository.saveAll(user.getHistory());
 
 		log.debug("Finished saving user to database in {}ms", MILLIS.between(t, LocalDateTime.now()));
 		return savedUser;

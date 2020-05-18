@@ -86,7 +86,7 @@ public class UserEntity implements Serializable
 	@Setter
 	@Builder.Default
 	@OneToMany(mappedBy = "user")
-	private Set<UserHistoryEntity> history = new HashSet<>();
+	private Set<ChangeNoteEntity> history = new HashSet<>();
 
 	@Builder.Default
 	@NotFound(action = IGNORE)

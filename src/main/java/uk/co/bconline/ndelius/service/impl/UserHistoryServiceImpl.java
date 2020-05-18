@@ -3,11 +3,11 @@ package uk.co.bconline.ndelius.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
-import uk.co.bconline.ndelius.model.UserHistoryItem;
-import uk.co.bconline.ndelius.repository.db.UserHistoryEntityRepository;
+import uk.co.bconline.ndelius.model.ChangeNote;
+import uk.co.bconline.ndelius.repository.db.ChangeNoteRepository;
 import uk.co.bconline.ndelius.service.UserEntityService;
 import uk.co.bconline.ndelius.service.UserHistoryService;
-import uk.co.bconline.ndelius.transformer.UserHistoryTransformer;
+import uk.co.bconline.ndelius.transformer.ChangeNoteTransformer;
 
 import java.util.List;
 
@@ -15,13 +15,13 @@ import java.util.List;
 @Service
 public class UserHistoryServiceImpl implements UserHistoryService {
 
-	private final UserHistoryEntityRepository repository;
-	private final UserHistoryTransformer transformer;
+	private final ChangeNoteRepository repository;
+	private final ChangeNoteTransformer transformer;
 	private final UserEntityService userEntityService;
 
 	public UserHistoryServiceImpl(
-			UserHistoryEntityRepository repository,
-			UserHistoryTransformer transformer,
+			ChangeNoteRepository repository,
+			ChangeNoteTransformer transformer,
 			UserEntityService userEntityService) {
 		this.repository = repository;
 		this.transformer = transformer;
@@ -29,9 +29,9 @@ public class UserHistoryServiceImpl implements UserHistoryService {
 	}
 
 	@Override
-	public List<UserHistoryItem> getHistory(String username) {
+	public List<ChangeNote> getHistory(String username) {
 		val userId = userEntityService.getUserId(username);
-		val entities = repository.getUserHistoryEntitiesByUserId(userId);
+		val entities = repository.getChangeNoteEntitiesByUserId(userId);
 		return transformer.map(entities);
 	}
 }

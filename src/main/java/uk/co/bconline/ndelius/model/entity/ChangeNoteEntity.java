@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "USER_HISTORY")
-public class UserHistoryEntity implements Serializable {
+@Table(name = "USER_NOTE")
+public class ChangeNoteEntity implements Serializable {
 	@Id
-	@Column(name = "USER_HISTORY_ID")
-	@GeneratedValue(generator = "USER_HISTORY_ID_SEQ")
-	@SequenceGenerator(name = "USER_HISTORY_ID_SEQ", sequenceName = "USER_HISTORY_ID_SEQ", allocationSize = 1)
+	@Column(name = "USER_NOTE_ID")
+	@GeneratedValue(generator = "USER_NOTE_ID_SEQ")
+	@SequenceGenerator(name = "USER_NOTE_ID_SEQ", sequenceName = "USER_NOTE_ID_SEQ", allocationSize = 1)
 	private Long id;
 
 	@Version

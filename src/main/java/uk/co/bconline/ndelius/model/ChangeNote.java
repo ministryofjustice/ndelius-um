@@ -15,10 +15,10 @@ import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(NON_NULL)
-public class UserHistoryItem
+public class ChangeNote
 {
 	@ApiModelProperty(accessMode = READ_ONLY)
-	private UserHistoryItem.User user;
+	private ChangeNote.User user;
 
 	@ApiModelProperty(accessMode = READ_ONLY)
 	private LocalDateTime time;

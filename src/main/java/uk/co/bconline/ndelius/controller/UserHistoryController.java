@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.co.bconline.ndelius.model.UserHistoryItem;
+import uk.co.bconline.ndelius.model.ChangeNote;
 import uk.co.bconline.ndelius.service.UserHistoryService;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class UserHistoryController
 
 	@GetMapping(path="/user/{username}/history")
 	@PreAuthorize("#oauth2.hasScope('UMBI002')")
-	public ResponseEntity<List<UserHistoryItem>> getUserHistory(@PathVariable("username") String username) {
+	public ResponseEntity<List<ChangeNote>> getUserHistory(@PathVariable("username") String username) {
 		try {
 			return ok(this.userHistoryService.getHistory(username));
 		} catch (UsernameNotFoundException e) {
