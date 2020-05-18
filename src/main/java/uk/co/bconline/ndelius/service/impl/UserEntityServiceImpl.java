@@ -45,6 +45,7 @@ public class UserEntityServiceImpl implements UserEntityService
 	private final SearchResultRepository searchResultRepository;
 	private final ProbationAreaUserRepository probationAreaUserRepository;
 	private final StaffTeamRepository staffTeamRepository;
+	private final UserHistoryEntityRepository userHistoryEntityRepository;
 	private final SearchResultTransformer searchResultTransformer;
 
 	@Autowired
@@ -54,6 +55,7 @@ public class UserEntityServiceImpl implements UserEntityService
 			SearchResultRepository searchResultRepository,
 			ProbationAreaUserRepository probationAreaUserRepository,
 			StaffTeamRepository staffTeamRepository,
+			UserHistoryEntityRepository userHistoryEntityRepository,
 			SearchResultTransformer searchResultTransformer)
 	{
 		this.repository = repository;
@@ -61,6 +63,7 @@ public class UserEntityServiceImpl implements UserEntityService
 		this.searchResultRepository = searchResultRepository;
 		this.probationAreaUserRepository = probationAreaUserRepository;
 		this.staffTeamRepository = staffTeamRepository;
+		this.userHistoryEntityRepository = userHistoryEntityRepository;
 		this.searchResultTransformer = searchResultTransformer;
 	}
 
@@ -95,11 +98,14 @@ public class UserEntityServiceImpl implements UserEntityService
 	}
 
 	@Override
-	public long getMyUserId()
-	{
-		val username = myUsername();
+	public long getUserId(String username) {
 		return repository.getUserId(username).orElseThrow(() ->
 				new UsernameNotFoundException(String.format("Unable to find Entity ID for user '%s'", username)));
+	}
+
+	@Override
+	public long getMyUserId() {
+		return getUserId(myUsername());
 	}
 
 	@Override
@@ -168,6 +174,8 @@ public class UserEntityServiceImpl implements UserEntityService
 		val savedUser = repository.save(user);
 		log.debug("Saving new datasets");
 		probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
+		log.debug("Updating user history");
+		userHistoryEntityRepository.saveAll(user.getHistory());
 
 		log.debug("Finished saving user to database in {}ms", MILLIS.between(t, LocalDateTime.now()));
 		return savedUser;

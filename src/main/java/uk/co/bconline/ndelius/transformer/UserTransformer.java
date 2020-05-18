@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Optionals;
 import org.springframework.stereotype.Component;
 import uk.co.bconline.ndelius.model.Dataset;
-import uk.co.bconline.ndelius.model.Modification;
 import uk.co.bconline.ndelius.model.ReferenceData;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.*;
@@ -52,6 +51,7 @@ public class UserTransformer
 	private final ReferenceDataTransformer referenceDataTransformer;
 	private final TeamTransformer teamTransformer;
 	private final GroupTransformer groupTransformer;
+	private final UserHistoryTransformer userHistoryTransformer;
 
 	@Autowired
 	public UserTransformer(
@@ -64,7 +64,8 @@ public class UserTransformer
 			DatasetTransformer datasetTransformer,
 			ReferenceDataTransformer referenceDataTransformer,
 			TeamTransformer teamTransformer,
-			GroupTransformer groupTransformer)
+			GroupTransformer groupTransformer,
+			UserHistoryTransformer userHistoryTransformer)
 	{
 		this.teamService = teamService;
 		this.referenceDataService = referenceDataService;
@@ -76,6 +77,7 @@ public class UserTransformer
 		this.referenceDataTransformer = referenceDataTransformer;
 		this.teamTransformer = teamTransformer;
 		this.groupTransformer = groupTransformer;
+		this.userHistoryTransformer = userHistoryTransformer;
 	}
 
 	public Optional<User> map(UserEntity user)
@@ -98,8 +100,8 @@ public class UserTransformer
 				.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
 				.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElseGet(v::getEndDate))
 				.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(teamTransformer::map).orElse(null))
-				.created(map(v.getCreatedBy(), v.getCreatedAt()))
-				.updated(map(v.getUpdatedBy(), v.getUpdatedAt()))
+				.created(userHistoryTransformer.map(v.getCreatedBy(), v.getCreatedAt(), null))
+				.updated(userHistoryTransformer.map(v.getUpdatedBy(), v.getUpdatedAt(), null))
 				.sources(singletonList("DB"))
 				.build());
 	}
@@ -173,6 +175,7 @@ public class UserTransformer
 
 	public UserEntity mapToUserEntity(User user, UserEntity existingUser)
 	{
+		val updateTime = now();
 		val myUserId = userEntityService.getMyUserId();
 		val staff = mapToStaffEntity(user, ofNullable(existingUser.getStaff()).orElse(new StaffEntity()));
 		val entity = existingUser.toBuilder()
@@ -189,10 +192,16 @@ public class UserTransformer
 				.staff(isEmpty(staff.getCode())? null: staff)
 				.createdBy(null).updatedBy(null)
 				.createdById(ofNullable(existingUser.getCreatedById()).orElse(myUserId))
-				.createdAt(ofNullable(existingUser.getCreatedAt()).orElse(now()))
+				.createdAt(ofNullable(existingUser.getCreatedAt()).orElse(updateTime))
 				.updatedById(myUserId)
-				.updatedAt(now())
+				.updatedAt(updateTime)
 				.build();
+		entity.setHistory(singleton(UserHistoryEntity.builder()
+				.user(entity)
+				.updatedById(myUserId)
+				.updatedAt(updateTime)
+				.notes(user.getChangeNote())
+				.build()));
 		entity.getProbationAreaLinks().clear();
 		entity.getProbationAreaLinks().addAll(Stream
 				.concat(user.getDatasets().stream(),
@@ -203,8 +212,8 @@ public class UserTransformer
 				.map(ProbationAreaEntity::new)
 				.map(dataset -> ProbationAreaUserEntity.builder()
 						.id(new ProbationAreaUserId(dataset, entity))
-						.createdById(myUserId).createdAt(now())
-						.updatedById(myUserId).updatedAt(now())
+						.createdById(myUserId).createdAt(updateTime)
+						.updatedById(myUserId).updatedAt(updateTime)
 						.build())
 				.collect(Collectors.toSet()));
 		staff.setUser(singleton(entity));
@@ -280,16 +289,6 @@ public class UserTransformer
 						.collect(toSet()))
 						.orElseGet(Collections::emptySet))
 				.groupNames(groupTransformer.mapToNames(groupTransformer.collate(user.getGroups())))
-				.build();
-	}
-
-	public Modification map(UserEntity modifiedBy, LocalDateTime modifiedAt) {
-		if (modifiedAt == null || modifiedBy == null) return null;
-		return Modification.builder()
-				.forenames(combineNames(modifiedBy.getForename()))
-				.surname(modifiedBy.getSurname())
-				.username(modifiedBy.getUsername())
-				.at(modifiedAt)
 				.build();
 	}
 }
