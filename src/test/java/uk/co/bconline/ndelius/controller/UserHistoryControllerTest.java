@@ -89,7 +89,6 @@ public class UserHistoryControllerTest {
 				.andExpect(jsonPath("$[0].time", isWithin(5, SECONDS).of(now())));
 	}
 
-
 	@Test
 	public void historyIsPersistedOnUpdate() throws Exception {
 		String token = token(mvc);
@@ -130,5 +129,17 @@ public class UserHistoryControllerTest {
 				.andExpect(jsonPath("$[0].note", equalTo("Test note 123")))
 				.andExpect(jsonPath("$[1].user.username", equalTo("test.user")))
 				.andExpect(jsonPath("$[1].time", isWithin(5, SECONDS).of(now())));
+	}
+
+
+	@Test
+	public void changeNoteCannotBeLongerThan4000Characters() throws Exception {
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token(mvc))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.changeNote(String.join("*", new String[4001])).build())))
+				.andExpect(status().isBadRequest());
 	}
 }

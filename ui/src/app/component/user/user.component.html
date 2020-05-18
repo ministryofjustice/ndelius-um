@@ -359,9 +359,13 @@
         <div class="form-group">
           <textarea *ngIf="mode !== 'View'"
                     id="change-notes" name="change-notes"
-                    class="form-control" aria-labelledby="changes"
+                    class="form-control" aria-labelledby="changes" maxlength="4000"
                     [(ngModel)] = "user.changeNote"
                     placeholder="Enter any additional information about what has changed and why"></textarea>
+          <span *ngIf="user.changeNote" class="small float-right"
+                [class]="user.changeNote.length >= 4000? 'text-danger': 'text-muted'">
+            {{ user.changeNote.length }}/4000
+          </span>
 
           <ng-container *ngIf="user.updated">
             <div id="history" class="history-collapse collapse pl-1">

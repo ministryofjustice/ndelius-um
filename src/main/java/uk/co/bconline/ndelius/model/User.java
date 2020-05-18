@@ -93,6 +93,7 @@ public class User {
 	@ApiModelProperty(accessMode = READ_ONLY)
 	private ChangeNote updated;
 
+	@Size(max = 4000)
 	@ApiModelProperty("Only used for create/update, for adding change notes to a user. " +
 			"This will always be blank when fetching a user - to retrieve user change notes, see the /user/{username}/history endpoint.")
 	private String changeNote;
