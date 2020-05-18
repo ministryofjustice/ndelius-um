@@ -369,10 +369,10 @@
                 <li *ngFor="let item of history" tabindex="0">
                   <span class="oi oi-pencil" title="Updated" rel="icon"></span>
                   <div class="update-info">
-                    <span [title]="item.at | date: 'full'">{{ item.at | date: 'dd/MM/yyyy HH:mm' }}</span>
+                    <span [title]="item.time | date: 'full'">{{ item.time | date: 'dd/MM/yyyy HH:mm' }}</span>
                     &middot;
                     Updated by
-                    <a routerLink="/user/{{ item.by.username }}">{{ item.by.forenames }} {{ item.by.surname }}</a>.
+                    <a routerLink="/user/{{ item.user.username }}">{{ item.user.forenames }} {{ item.user.surname }}</a>.
                   </div>
                   <div *ngIf="item.note" class="update-note">
                     <span>{{ item.note }}</span>
@@ -393,10 +393,10 @@
               <div id="last-updated-details">
                 <small class="oi oi-pencil"></small>
                 Last updated by
-                <a routerLink="/user/{{ user.updated.by.username }}">{{ user.updated.by.forenames }} {{ user.updated.by.surname }}</a>
+                <a routerLink="/user/{{ user.updated.user.username }}">{{ user.updated.user.forenames }} {{ user.updated.user.surname }}</a>
                 on
-                <span [title]="user.updated.at | date: 'full'">
-                {{ user.updated.at | date: 'dd/MM/yyyy' }} at {{ user.updated.at | date: 'HH:mm' }}.
+                <span [title]="user.updated.time | date: 'full'">
+                {{ user.updated.time | date: 'dd/MM/yyyy' }} at {{ user.updated.time | date: 'HH:mm' }}.
                 </span>
               </div>
               <small class="oi oi-ellipses"></small>

@@ -75,18 +75,18 @@ public class UserHistoryControllerTest {
 		mvc.perform(get("/api/user/" + username)
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.created.by.username", equalTo("test.user")))
-				.andExpect(jsonPath("$.created.at", isWithin(5, SECONDS).of(now())))
-				.andExpect(jsonPath("$.updated.by.username", equalTo("test.user")))
-				.andExpect(jsonPath("$.updated.at", isWithin(5, SECONDS).of(now())));
+				.andExpect(jsonPath("$.created.user.username", equalTo("test.user")))
+				.andExpect(jsonPath("$.created.time", isWithin(5, SECONDS).of(now())))
+				.andExpect(jsonPath("$.updated.user.username", equalTo("test.user")))
+				.andExpect(jsonPath("$.updated.time", isWithin(5, SECONDS).of(now())));
 
 		// And the history shows the creation
 		mvc.perform(get("/api/user/" + username + "/history")
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(1)))
-				.andExpect(jsonPath("$[0].by.username", equalTo("test.user")))
-				.andExpect(jsonPath("$[0].at", isWithin(5, SECONDS).of(now())));
+				.andExpect(jsonPath("$[0].user.username", equalTo("test.user")))
+				.andExpect(jsonPath("$[0].time", isWithin(5, SECONDS).of(now())));
 	}
 
 
@@ -115,20 +115,20 @@ public class UserHistoryControllerTest {
 		mvc.perform(get("/api/user/" + username)
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.created.by.username", equalTo("test.user")))
-				.andExpect(jsonPath("$.created.at", isWithin(5, SECONDS).of(now())))
-				.andExpect(jsonPath("$.updated.by.username", equalTo("test.user")))
-				.andExpect(jsonPath("$.updated.at", isWithin(5, SECONDS).of(now())));
+				.andExpect(jsonPath("$.created.user.username", equalTo("test.user")))
+				.andExpect(jsonPath("$.created.time", isWithin(5, SECONDS).of(now())))
+				.andExpect(jsonPath("$.updated.user.username", equalTo("test.user")))
+				.andExpect(jsonPath("$.updated.time", isWithin(5, SECONDS).of(now())));
 
 		// And the history reflects the update
 		mvc.perform(get("/api/user/" + username + "/history")
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
-				.andExpect(jsonPath("$[0].by.username", equalTo("test.user")))
-				.andExpect(jsonPath("$[0].at", isWithin(5, SECONDS).of(now())))
+				.andExpect(jsonPath("$[0].user.username", equalTo("test.user")))
+				.andExpect(jsonPath("$[0].time", isWithin(5, SECONDS).of(now())))
 				.andExpect(jsonPath("$[0].note", equalTo("Test note 123")))
-				.andExpect(jsonPath("$[1].by.username", equalTo("test.user")))
-				.andExpect(jsonPath("$[1].at", isWithin(5, SECONDS).of(now())));
+				.andExpect(jsonPath("$[1].user.username", equalTo("test.user")))
+				.andExpect(jsonPath("$[1].time", isWithin(5, SECONDS).of(now())));
 	}
 }

@@ -138,10 +138,10 @@ public class UserControllerCreateTest
 				.andExpect(jsonPath("$.roles", hasSize(1)))
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT001")))
 				.andExpect(jsonPath("$.roles[0].interactions", hasItem("UMBI001")))
-				.andExpect(jsonPath("$.created.username", is("test.user")))
-				.andExpect(jsonPath("$.created.at", isWithin(5, SECONDS).of(now())))
-				.andExpect(jsonPath("$.updated.username", is("test.user")))
-				.andExpect(jsonPath("$.updated.at", isWithin(5, SECONDS).of(now())));
+				.andExpect(jsonPath("$.created.user.username", is("test.user")))
+				.andExpect(jsonPath("$.created.time", isWithin(5, SECONDS).of(now())))
+				.andExpect(jsonPath("$.updated.user.username", is("test.user")))
+				.andExpect(jsonPath("$.updated.time", isWithin(5, SECONDS).of(now())));
 	}
 
 	@Test

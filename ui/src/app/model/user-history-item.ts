@@ -1,9 +1,9 @@
 export class UserHistoryItem {
-  by: {
+  user: {
     username: string;
     forenames: string;
     surname: string;
   };
-  at: Date;
+  time: Date;
   note?: string;
 }

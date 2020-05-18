@@ -21,7 +21,7 @@ public class UserHistoryTransformer {
 	public List<UserHistoryItem> map(Collection<UserHistoryEntity> entities) {
 		return entities.stream()
 				.map(this::map)
-				.sorted(comparing(UserHistoryItem::getAt).reversed())
+				.sorted(comparing(UserHistoryItem::getTime).reversed())
 				.collect(toList());
 	}
 
@@ -32,12 +32,12 @@ public class UserHistoryTransformer {
 	public UserHistoryItem map(UserEntity modifiedBy, LocalDateTime modifiedAt, String note) {
 		if (modifiedAt == null || modifiedBy == null) return null;
 		return UserHistoryItem.builder()
-				.by(UserHistoryItem.User.builder()
+				.user(UserHistoryItem.User.builder()
 						.forenames(combineNames(modifiedBy.getForename(), modifiedBy.getForename2()))
 						.surname(modifiedBy.getSurname())
 						.username(modifiedBy.getUsername())
 						.build())
-				.at(modifiedAt)
+				.time(modifiedAt)
 				.note(note)
 				.build();
 	}

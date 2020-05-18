@@ -145,8 +145,8 @@ public class UserControllerUpdateTest
 				.andExpect(jsonPath("$.groups.NDMIS-Reporting", hasSize(1)))
 				.andExpect(jsonPath("$.groups.Fileshare[0].name", is("Group 2")))
 				.andExpect(jsonPath("$.groups.NDMIS-Reporting[0].name", is("Group 1")))
-				.andExpect(jsonPath("$.created.at", not(isWithin(5, SECONDS).of(now()))))
-				.andExpect(jsonPath("$.updated.at", isWithin(5, SECONDS).of(now())));
+				.andExpect(jsonPath("$.created.time", not(isWithin(5, SECONDS).of(now()))))
+				.andExpect(jsonPath("$.updated.time", isWithin(5, SECONDS).of(now())));
 	}
 
 	@Test
