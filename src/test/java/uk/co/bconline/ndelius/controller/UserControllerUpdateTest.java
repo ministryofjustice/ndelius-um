@@ -299,7 +299,7 @@ public class UserControllerUpdateTest
 		mvc.perform(get("/api/user/" + username1)
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.staffCode", isEmptyOrNullString()));
+				.andExpect(jsonPath("$.staffCode").doesNotExist());
 	}
 
 	@Test
