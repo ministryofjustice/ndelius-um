@@ -2,7 +2,7 @@ import {Role} from './role';
 import {Dataset} from './dataset';
 import {Team} from './team';
 import {StaffGrade} from './staff-grade';
-import {Modification} from './modification';
+import {UserHistoryItem} from './user-history-item';
 import {Groups} from './groups';
 
 export class User {
@@ -22,7 +22,8 @@ export class User {
   subContractedProvider: Dataset;
   startDate: Date = new Date();
   endDate: Date;
-  created: Modification;
-  updated: Modification;
+  created: UserHistoryItem;
+  updated: UserHistoryItem;
+  changeNote: string;
   sources: string[];
 }
