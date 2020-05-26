@@ -143,7 +143,7 @@ public class UserHistoryControllerTest {
 	}
 
 	@Test
-	public void exitingCreatedUpdatedDetailsAreCopiedIntoHistory() throws Exception {
+	public void existingCreatedUpdatedDetailsAreCopiedIntoHistory() throws Exception {
 		String token = token(mvc);
 
 		// Given a user with existing created and updated details, but no history records
