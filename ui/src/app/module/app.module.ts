@@ -28,6 +28,8 @@ import {OAuthModule} from 'angular-oauth2-oidc';
 import {AutoFocusDirective} from '../directive/auto-focus.directive';
 import {GroupService} from '../service/group.service';
 import {RestGroupService} from '../service/impl/rest.group.service';
+import {RestHistoryService} from '../service/impl/rest.history.service';
+import {HistoryService} from '../service/history.service';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,7 @@ import {RestGroupService} from '../service/impl/rest.group.service';
     {provide: TeamService, useClass: RestTeamService},
     {provide: OrganisationService, useClass: RestOrganisationService},
     {provide: StaffGradeService, useClass: RestStaffGradeService},
+    {provide: HistoryService, useClass: RestHistoryService},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
   ],
   bootstrap: [AppComponent]

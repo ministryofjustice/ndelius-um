@@ -353,34 +353,82 @@
           </div>
         </div>
       </section>
-      <hr/>
-      <div class="text-muted small pb-4 float-sm-left">
-        <div id="updated-details" *ngIf="user.updated != null">
-          <small class="oi oi-pencil"></small>
-          Updated by <a routerLink="/user/{{ user.updated.username }}">{{ user.updated.forenames }} {{ user.updated.surname }}</a>
-          on {{ user.updated.at | date: 'dd/MM/yyyy' }} at {{ user.updated.at | date: 'HH:mm' }}
-        </div>
-        <div id="created-details" *ngIf="user.created != null">
-          <small class="oi oi-plus"></small>
-          Created by <a routerLink="/user/{{ user.created.username }}">{{ user.created.forenames }} {{ user.created.surname }}</a>
-          on {{ user.created.at | date: 'dd/MM/yyyy' }} at {{ user.created.at | date: 'HH:mm' }}
-        </div>
-      </div>
-      <div class="btn-toolbar pb-4 float-sm-right">
-        <button id="save-btn" type="submit" class="btn btn-primary ml-2"
-                *ngIf="mode !== 'View'"
-                [disabled]="saving">
-          <ng-container *ngIf="saving">
-            <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
-            Saving&hellip;
+      <section class="mb-4 card card-body">
+        <h2 class="card-title mb-0" id="changes">Change Notes</h2>
+        <hr>
+        <div class="form-group">
+          <textarea *ngIf="mode !== 'View'"
+                    id="change-notes" name="change-notes"
+                    class="form-control" aria-labelledby="changes" maxlength="4000"
+                    [(ngModel)] = "user.changeNote"
+                    placeholder="Enter any additional information about what has changed and why"></textarea>
+          <span *ngIf="user.changeNote" class="small float-right"
+                [class]="user.changeNote.length >= 4000? 'text-danger': 'text-muted'">
+            {{ user.changeNote.length }}/4000
+          </span>
+
+          <ng-container *ngIf="user.updated">
+            <div id="history" class="history-collapse collapse pl-1">
+              <ul class="history-list">
+                <li *ngFor="let item of history" tabindex="0">
+                  <span class="oi oi-pencil" title="Updated" rel="icon"></span>
+                  <div class="update-info">
+                    <span [title]="item.time | date: 'full'">{{ item.time | date: 'dd/MM/yyyy HH:mm' }}</span>
+                    &middot;
+                    Updated by
+                    <a routerLink="/user/{{ item.user.username }}">{{ item.user.forenames }} {{ item.user.surname }}</a>.
+                  </div>
+                  <div *ngIf="item.note" class="update-note">
+                    <span>{{ item.note }}</span>
+                  </div>
+                </li>
+                <li *ngIf="!history">
+                  <small class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></small>
+                  Loading&hellip;
+                </li>
+                <li>
+                  <span class="oi oi-chevron-top" title="Hide history" rel="icon"></span>
+                  <a class="small" data-toggle="collapse" href="#history" data-target=".history-collapse"
+                     aria-expanded="true" aria-controls="history">Hide history</a>
+                </li>
+              </ul>
+            </div>
+            <div class="history-collapse collapse show small pt-4">
+              <div id="last-updated-details">
+                <small class="oi oi-pencil"></small>
+                Last updated by
+                <a routerLink="/user/{{ user.updated.user.username }}">{{ user.updated.user.forenames }} {{ user.updated.user.surname }}</a>
+                on
+                <span [title]="user.updated.time | date: 'full'">
+                {{ user.updated.time | date: 'dd/MM/yyyy' }} at {{ user.updated.time | date: 'HH:mm' }}.
+                </span>
+              </div>
+              <small class="oi oi-ellipses"></small>
+              &ngsp;
+              <a data-toggle="collapse" href="#history" data-target=".history-collapse"
+                 aria-expanded="false" aria-controls="history" (click)="showHistory()">Show history</a>
+            </div>
           </ng-container>
-          <ng-container *ngIf="!saving">Save</ng-container>
-        </button>
-        <button id="copy-btn" type="button" class="btn btn-secondary ml-2"
-                routerLink="/user" [queryParams]="{copy: user.username}"
-                *ngIf="mode !== 'Add' && auth.canAddUser()">Create another&hellip;</button>
-        <button id="back-btn" type="button" class="btn btn-secondary ml-2"
-                (click)="backButtonAlert()">Back</button>
+        </div>
+      </section>
+      <hr/>
+      <div class="clearfix mb-4">
+        <div class="btn-toolbar float-sm-right">
+          <button id="save-btn" type="submit" class="btn btn-primary ml-2"
+                  *ngIf="mode !== 'View'"
+                  [disabled]="saving">
+            <ng-container *ngIf="saving">
+              <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+              Saving&hellip;
+            </ng-container>
+            <ng-container *ngIf="!saving">Save</ng-container>
+          </button>
+          <button id="copy-btn" type="button" class="btn btn-secondary ml-2"
+                  routerLink="/user" [queryParams]="{copy: user.username}"
+                  *ngIf="mode !== 'Add' && auth.canAddUser()">Create another&hellip;</button>
+          <button id="back-btn" type="button" class="btn btn-secondary ml-2"
+                  (click)="backButtonAlert()">Back</button>
+        </div>
       </div>
     </form>
   </div>

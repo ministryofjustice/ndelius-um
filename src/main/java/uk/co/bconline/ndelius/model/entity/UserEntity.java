@@ -23,7 +23,7 @@ import static org.hibernate.annotations.NotFoundAction.IGNORE;
 @AllArgsConstructor
 @Table(name = "USER_")
 @Builder(toBuilder = true)
-@EqualsAndHashCode(exclude = {"probationAreaLinks", "createdBy", "updatedBy"})
+@EqualsAndHashCode(exclude = {"probationAreaLinks", "createdBy", "updatedBy", "history"})
 public class UserEntity implements Serializable
 {
 	@Id
@@ -82,6 +82,11 @@ public class UserEntity implements Serializable
 
 	@Column(name = "LAST_UPDATED_DATETIME")
 	private LocalDateTime updatedAt;
+
+	@Setter
+	@Builder.Default
+	@OneToMany(mappedBy = "user")
+	private Set<ChangeNoteEntity> history = new HashSet<>();
 
 	@Builder.Default
 	@NotFound(action = IGNORE)

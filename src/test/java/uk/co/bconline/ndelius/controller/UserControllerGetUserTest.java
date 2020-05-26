@@ -108,8 +108,8 @@ public class UserControllerGetUserTest {
 		mvc.perform(get("/api/user/test.user")
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.created", is(nullValue())))
-				.andExpect(jsonPath("$.updated", is(nullValue())));
+				.andExpect(jsonPath("$.created").doesNotExist())
+				.andExpect(jsonPath("$.updated").doesNotExist());
 	}
 
 	@Test

@@ -77,3 +77,45 @@ date.ng-dirty input, item-selector.ng-dirty button{
 [data-toggle="collapse"]:not(.collapsed) > .oi-chevron-bottom {
   @extend .d-none;
 }
+
+ul.history-list {
+  @extend .list-unstyled;
+  @extend .ml-2;
+  @extend .border-left;
+  @extend .pt-4;
+  @extend .pl-3;
+  > li {
+    @extend .position-relative;
+    &:last-child {
+      line-height: 1;
+    }
+    &:not(:last-child) {
+      @extend .mb-2;
+    }
+    > .oi {
+      left: -27px;
+      font-size: 64%;
+      @extend .position-absolute;
+      @extend .p-1;
+      @extend .rounded-circle;
+      @extend .border;
+      @extend .bg-white;
+      @extend .text-muted;
+      @extend .small;
+    }
+    > .update-info {
+      @extend .text-muted;
+      @extend .small
+    }
+    > .update-note > span {
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-line;
+      @extend .my-2;
+      @extend .py-2;
+      @extend .card;
+      @extend .card-body;
+      @extend .d-inline-block;
+    }
+  }
+}

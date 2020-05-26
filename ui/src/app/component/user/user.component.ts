@@ -22,6 +22,8 @@ import {GroupService} from '../../service/group.service';
 import {LabelMappingUtils} from '../../util/label-mapping.utils';
 import {Groups} from '../../model/groups';
 import {Group} from '../../model/group';
+import {UserHistoryItem} from '../../model/user-history-item';
+import {HistoryService} from '../../service/history.service';
 
 @Component({
   selector: 'user',
@@ -46,6 +48,7 @@ export class UserComponent implements OnInit {
   groups: Groups;
   staffGrades: StaffGrade[];
   subContractedProviders: Dataset[];
+  history: UserHistoryItem[];
   userWithStaffCode: User;
   loadingStaffCode: boolean;
   generatingStaffCode: boolean;
@@ -64,6 +67,7 @@ export class UserComponent implements OnInit {
     private teamService: TeamService,
     private organisationService: OrganisationService,
     private staffGradeService: StaffGradeService,
+    private historyService: HistoryService,
     public auth: AuthorisationService) {}
 
   ngOnInit(): void {
@@ -242,6 +246,13 @@ export class UserComponent implements OnInit {
           this.generatingStaffCode = false;
         },
         () => this.generatingStaffCode = false);
+  }
+
+  showHistory(): void {
+    if (this.history == null) {
+      this.historyService.getHistory(this.user.username)
+        .subscribe(history => this.history = history);
+    }
   }
 
   backButtonAlert(): void {
