@@ -98,6 +98,7 @@ export class UserComponent implements OnInit {
       .subscribe((user: User) => {
         this.user = user;
         this.addSelectableRoles(user.roles || []);
+        this.historyService.getHistory(this.user.username).subscribe(history => this.history = history);
         this.loaded = true;
         this.homeAreaChanged();
         setTimeout(() => {
@@ -246,13 +247,6 @@ export class UserComponent implements OnInit {
           this.generatingStaffCode = false;
         },
         () => this.generatingStaffCode = false);
-  }
-
-  showHistory(): void {
-    if (this.history == null) {
-      this.historyService.getHistory(this.user.username)
-        .subscribe(history => this.history = history);
-    }
   }
 
   backButtonAlert(): void {

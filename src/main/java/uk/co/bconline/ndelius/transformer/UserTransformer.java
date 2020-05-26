@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.transformer;
 
+import com.google.common.collect.ImmutableSet;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class UserTransformer
 	private final DatasetService datasetService;
 	private final UserEntityService userEntityService;
 	private final RoleService roleService;
+	private final UserHistoryService userHistoryService;
 	private final RoleTransformer roleTransformer;
 	private final DatasetTransformer datasetTransformer;
 	private final ReferenceDataTransformer referenceDataTransformer;
@@ -60,6 +62,7 @@ public class UserTransformer
 			DatasetService datasetService,
 			UserEntityService userEntityService,
 			RoleService roleService,
+			UserHistoryService userHistoryService,
 			RoleTransformer roleTransformer,
 			DatasetTransformer datasetTransformer,
 			ReferenceDataTransformer referenceDataTransformer,
@@ -72,6 +75,7 @@ public class UserTransformer
 		this.datasetService = datasetService;
 		this.userEntityService = userEntityService;
 		this.roleService = roleService;
+		this.userHistoryService = userHistoryService;
 		this.roleTransformer = roleTransformer;
 		this.datasetTransformer = datasetTransformer;
 		this.referenceDataTransformer = referenceDataTransformer;
@@ -100,8 +104,8 @@ public class UserTransformer
 				.startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
 				.endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElseGet(v::getEndDate))
 				.teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(teamTransformer::map).orElse(null))
-				.created(changeNoteTransformer.map(v.getCreatedBy(), v.getCreatedAt(), null))
-				.updated(changeNoteTransformer.map(v.getUpdatedBy(), v.getUpdatedAt(), null))
+				.created(changeNoteTransformer.map(v.getCreatedBy(), v.getCreatedAt(), null).orElse(null))
+				.updated(changeNoteTransformer.map(v.getUpdatedBy(), v.getUpdatedAt(), null).orElse(null))
 				.sources(singletonList("DB"))
 				.build());
 	}
@@ -196,12 +200,18 @@ public class UserTransformer
 				.updatedById(myUserId)
 				.updatedAt(updateTime)
 				.build();
-		entity.setHistory(singleton(ChangeNoteEntity.builder()
+		val newHistory = ImmutableSet.<ChangeNoteEntity>builder();
+		if (!userHistoryService.hasHistory(existingUser.getId())) {
+			// If a user has no history records but has created/updated details, then copy the created/updated details into the history
+			changeNoteTransformer.mapToEntity(entity, existingUser.getCreatedBy(), existingUser.getCreatedAt()).ifPresent(newHistory::add);
+			changeNoteTransformer.mapToEntity(entity, existingUser.getUpdatedBy(), existingUser.getUpdatedAt()).ifPresent(newHistory::add);
+		}
+		entity.setHistory(newHistory.add(ChangeNoteEntity.builder()
 				.user(entity)
 				.updatedById(myUserId)
 				.updatedAt(updateTime)
 				.notes(user.getChangeNote())
-				.build()));
+				.build()).build());
 		entity.getProbationAreaLinks().clear();
 		entity.getProbationAreaLinks().addAll(Stream
 				.concat(user.getDatasets().stream(),

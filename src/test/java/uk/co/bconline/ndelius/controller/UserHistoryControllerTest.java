@@ -16,7 +16,7 @@ import org.springframework.web.context.WebApplicationContext;
 import uk.co.bconline.ndelius.model.User;
 
 import static java.time.LocalDateTime.now;
-import static java.time.temporal.ChronoUnit.SECONDS;
+import static java.time.temporal.ChronoUnit.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -131,7 +131,6 @@ public class UserHistoryControllerTest {
 				.andExpect(jsonPath("$[1].time", isWithin(5, SECONDS).of(now())));
 	}
 
-
 	@Test
 	public void changeNoteCannotBeLongerThan4000Characters() throws Exception {
 		mvc.perform(post("/api/user")
@@ -141,5 +140,34 @@ public class UserHistoryControllerTest {
 						.username(nextTestUsername())
 						.changeNote(String.join("*", new String[4001])).build())))
 				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	public void exitingCreatedUpdatedDetailsAreCopiedIntoHistory() throws Exception {
+		String token = token(mvc);
+
+		// Given a user with existing created and updated details, but no history records
+		// See data.ldif for user details
+		String username = "Jane.Bloggs";
+		String userJson = mvc.perform(get("/api/user/" + username)
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString();
+
+		// When they are updated
+		mvc.perform(post("/api/user/" + username)
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(userJson))
+				.andExpect(status().isNoContent());
+
+		// Then there should be 3 history records (now + created + updated)
+		mvc.perform(get("/api/user/" + username + "/history")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$", hasSize(3)))
+				.andExpect(jsonPath("$[0].time", isWithin(5, SECONDS).of(now())))
+				.andExpect(jsonPath("$[1].time", isWithin(5, MINUTES).of(now().minus(2, DAYS))))
+				.andExpect(jsonPath("$[2].time", isWithin(5, MINUTES).of(now().minus(7, DAYS))));
 	}
 }
