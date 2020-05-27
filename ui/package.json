@@ -38,7 +38,7 @@
     "moment": "^2.25.3",
     "open-iconic": "^1.1.1",
     "popper.js": "^1.16.1",
-    "rxjs": "^6.5.4",
+    "rxjs": "^6.5.5",
     "rxjs-compat": "^6.5.4",
     "tslib": "^1.11.2",
     "zone.js": "~0.10.2"
