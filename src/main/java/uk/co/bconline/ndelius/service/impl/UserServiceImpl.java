@@ -201,11 +201,12 @@ public class UserServiceImpl implements UserService
 	@Override
 	public void updateUser(User user)
 	{
+		val existingHomeArea = userEntryService.getUserHomeArea(user.getExistingUsername());
 		val dbFuture = runAsync(() -> {
 			log.debug("Fetching existing DB value");
 			val existingUser = userEntityService.getUser(user.getExistingUsername()).orElse(new UserEntity());
 			log.debug("Transforming into DB user");
-			val updatedUser = transformer.mapToUserEntity(user, existingUser);
+			val updatedUser = transformer.mapToUserEntity(user, existingUser, existingHomeArea);
 			userEntityService.save(updatedUser);
 		}, taskExecutor);
 		val ldapFuture = runAsync(() -> {

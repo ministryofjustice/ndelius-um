@@ -407,4 +407,38 @@ public class UserControllerUpdateTest
 		assertTrue(oldStaff.isPresent());
 		assertThat(oldStaff.get().getEndDate(), is(LocalDate.now()));
 	}
+
+	@Test
+	public void staffIsRemovedIfHomeAreaChanges() throws Exception {
+		String username = nextTestUsername();
+		String token = token(mvc);
+
+		// Given a user with staff code N01A603 and home area N01
+		User user = aValidUser().toBuilder()
+				.username(username)
+				.staffCode("N01A603")
+				.staffGrade(ReferenceData.builder().code("GRADE 1").build())
+				.build();
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+				.andExpect(status().isCreated());
+
+		// When I update the home area to N02
+		mvc.perform(post("/api/user/" + username)
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+						.homeArea(Dataset.builder().code("N02").build())
+						.build())))
+				.andExpect(status().isNoContent());
+
+		// Then the staff code should be removed from the user
+		mvc.perform(get("/api/user/" + username)
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.homeArea.code", is("N02")))
+				.andExpect(jsonPath("$.staffCode").doesNotExist());
+	}
 }

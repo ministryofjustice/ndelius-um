@@ -57,6 +57,7 @@ public class User {
 	@NotNull
 	private Boolean privateSector;
 
+	@Setter
 	@PrefixMatchesProviderCode
 	@Pattern(regexp = "^$|^[A-Z0-9]{7}$",
 			message = "must consist of 7 alphanumeric characters, however the recommended format is 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001")

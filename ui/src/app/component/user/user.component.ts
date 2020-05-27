@@ -39,6 +39,7 @@ export class UserComponent implements OnInit {
   mode: string;
   params: Params;
   user: User;
+  existingHomeAreaCode: string;
   teams: Team[];
   datasets: Dataset[];
   establishments: Dataset[];
@@ -100,6 +101,7 @@ export class UserComponent implements OnInit {
         this.addSelectableRoles(user.roles || []);
         this.historyService.getHistory(this.user.username).subscribe(history => this.history = history);
         this.loaded = true;
+        this.existingHomeAreaCode = user.homeArea.code;
         this.homeAreaChanged();
         setTimeout(() => {
           this.staffCodeControl.valueChanges

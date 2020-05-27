@@ -177,11 +177,14 @@ public class UserTransformer
 				.build();
 	}
 
-	public UserEntity mapToUserEntity(User user, UserEntity existingUser)
-	{
+	public UserEntity mapToUserEntity(User user, UserEntity existingUser) {
+		return mapToUserEntity(user, existingUser, null);
+	}
+
+	public UserEntity mapToUserEntity(User user, UserEntity existingUser, String existingHomeArea) {
 		val updateTime = now();
 		val myUserId = userEntityService.getMyUserId();
-		val staff = mapToStaffEntity(user, ofNullable(existingUser.getStaff()).orElse(new StaffEntity()));
+		val staff = mapToStaffEntity(user, ofNullable(existingUser.getStaff()).orElse(new StaffEntity()), existingHomeArea);
 		val entity = existingUser.toBuilder()
 				.username(user.getUsername())
 				.forename(staff.getForename())
@@ -230,13 +233,16 @@ public class UserTransformer
 		return entity;
 	}
 
-	public StaffEntity mapToStaffEntity(User user, StaffEntity existingStaff)
-	{
+	public StaffEntity mapToStaffEntity(User user, StaffEntity existingStaff, String existingHomeArea) {
 		val myUserId = userEntityService.getMyUserId();
-		if (user.getStaffCode() != null && !user.getStaffCode().equals(existingStaff.getCode()))
-		{
+		if (user.getStaffCode() != null && !user.getStaffCode().equals(existingStaff.getCode())) {
 			// staff code has changed, fetch the new staff record to reassign it to this user
 			existingStaff = userEntityService.getStaffByStaffCode(user.getStaffCode()).orElse(new StaffEntity());
+		} else {
+			// staff code has not changed, if home area has changed then the staff record should be unlinked
+			if (user.getHomeArea() != null && !user.getHomeArea().getCode().equals(existingHomeArea)) {
+				user.setStaffCode(null);
+			}
 		}
 		val entity = existingStaff.toBuilder()
 				.code(user.getStaffCode())
