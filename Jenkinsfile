@@ -55,7 +55,7 @@ pipeline {
             }
         }
         stage('Push') {
-            when { branch 'master' }
+            when { branch 'feature/redis-health' }
             environment {
                 snapshotVersion = sh (script: 'source ./gradle.properties && echo "${version}"', returnStdout: true).trim()
             }
@@ -76,13 +76,13 @@ pipeline {
             }
         }
         stage('Deploy to Dev') {
-            when { branch 'master' }
+            when { branch 'feature/redis-health' }
             steps {
                 deploy('723123699647', 'dlc-delius-ecscluster-private-ecs', 'dlc-dev-usermanagement-service')
             }
         }
         stage('Deploy to Test') {
-            when { branch 'master' }
+            when { branch 'feature/redis-health' }
             steps {
                 deploy('728765553488', 'del-delius-ecscluster-private-ecs', 'del-test-usermanagement-service')
             }
