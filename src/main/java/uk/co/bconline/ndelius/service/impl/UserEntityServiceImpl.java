@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.time.LocalDate.now;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
@@ -199,10 +200,10 @@ public class UserEntityServiceImpl implements UserEntityService
 		}
 		if (newStaff == null || StringUtils.isEmpty(newStaff.getCode()) ||
 				!newStaff.getCode().equals(previousStaff.getCode())) {
-			// staff code removed or changed - add an end-date to the old one
+			// staff code removed or changed - set an end-date of yesterday to the old one
 			log.debug(String.format("Adding an end-date to previous staff record (%s)", previousStaff.getCode()));
 			staffRepository.save(previousStaff.toBuilder()
-					.endDate(now())
+					.endDate(now().minus(1, DAYS))
 					.updatedAt(LocalDateTime.now())
 					.updatedById(getMyUserId())
 					.build());
