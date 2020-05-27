@@ -120,6 +120,10 @@ public class UserControllerCreateTest
 						.roles(singletonList(Role.builder()
 								.name("UMBT001")
 								.build()))
+						.groups(ImmutableMap.of(
+								"Fileshare", singletonList(Group.builder().name("Group 1").type("Fileshare").build()),
+								"NDMIS-Reporting", singletonList(Group.builder().name("Group 2").type("NDMIS-Reporting").build())
+						))
 						.build())))
 				.andExpect(status().isCreated())
 				.andExpect(redirectedUrl("/user/" + username));
@@ -138,6 +142,7 @@ public class UserControllerCreateTest
 				.andExpect(jsonPath("$.roles", hasSize(1)))
 				.andExpect(jsonPath("$.roles[0].name", is("UMBT001")))
 				.andExpect(jsonPath("$.roles[0].interactions", hasItem("UMBI001")))
+				.andExpect(jsonPath("$.groups[*][*].name", hasItems("Group 1", "Group 2")))
 				.andExpect(jsonPath("$.created.user.username", is("test.user")))
 				.andExpect(jsonPath("$.created.time", isWithin(5, SECONDS).of(now())))
 				.andExpect(jsonPath("$.updated.user.username", is("test.user")))
@@ -219,5 +224,54 @@ public class UserControllerCreateTest
 						.build())))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.error[*]", hasItem("Name must not be blank")));
+	}
+
+	@Test
+	public void groupsCannotBeAssignedByNonMembers() throws Exception {
+		// Given I login as a local (non-national) admin, who is a member of Fileshare Group 1 only
+		String token = token(mvc, "test.user.local");
+
+		// When I attempt to assign a group that I am not a member of
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.groups(ImmutableMap.of(
+								"Fileshare", singletonList(Group.builder().name("Group 2").type("Fileshare").build())
+						))
+						.build())))
+
+		// Then the request should be rejected
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error[*]", hasItem("attempting to assign invalid groups")));
+	}
+
+
+	@Test
+	public void groupsCanBeAssignedByMembers() throws Exception {
+		// Given I login as a local (non-national) admin, who is a member of Fileshare Group 1 only
+		String token = token(mvc, "test.user.local");
+
+		// When I attempt to assign a group that I am a member of
+		String username = nextTestUsername();
+		mvc.perform(post("/api/user")
+				.header("Authorization", "Bearer " + token)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+						.username(username)
+						.groups(ImmutableMap.of(
+								"Fileshare", singletonList(Group.builder().name("Group 1").type("Fileshare").build())
+						))
+						.build())))
+				.andExpect(status().isCreated());
+
+
+		// Then the user should be created successfully with the group
+		mvc.perform(get("/api/user/" + username)
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.groups[*][*].name", hasItem("Group 1")))
+				.andExpect(jsonPath("$.groups[*][*].type", hasItem("Fileshare")));
 	}
 }
