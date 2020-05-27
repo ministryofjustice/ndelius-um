@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -405,7 +406,7 @@ public class UserControllerUpdateTest
 		// Then the old staff record (N01A601) should have an end date of today
 		Optional<StaffEntity> oldStaff = staffRepository.findByCode("N01A601");
 		assertTrue(oldStaff.isPresent());
-		assertThat(oldStaff.get().getEndDate(), is(LocalDate.now()));
+		assertThat(oldStaff.get().getEndDate(), is(LocalDate.now().minus(1, DAYS)));
 	}
 
 	@Test
