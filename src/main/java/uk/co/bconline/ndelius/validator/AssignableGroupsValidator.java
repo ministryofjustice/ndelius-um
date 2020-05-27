@@ -5,6 +5,7 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.UserEntryService;
+import uk.co.bconline.ndelius.transformer.GroupTransformer;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -22,6 +23,9 @@ public class AssignableGroupsValidator implements ConstraintValidator<Assignable
 	@Autowired
 	private UserEntryService userEntryService;
 
+	@Autowired
+	private GroupTransformer groupTransformer;
+
 	@Override
 	public boolean isValid(User user, ConstraintValidatorContext context)
 	{
@@ -35,12 +39,12 @@ public class AssignableGroupsValidator implements ConstraintValidator<Assignable
 		if (newGroups.isEmpty()) return true;
 
 		// Get the groups that are either assigned to myself or are already assigned to the user
-		val assignableGroups =  userEntryService.getUserGroups(myUsername());
+		val assignableGroups = userEntryService.getUserGroups(myUsername());
 		val existingGroups = userEntryService.getUserGroups(ofNullable(user.getExistingUsername()).orElse(user.getUsername()));
 		assignableGroups.addAll(existingGroups);
 
 		// If all the new groups being assigned are assignable by myself (ie. already assigned to myself, or already
 		// assigned to the user) - then this assignment is valid.
-		return assignableGroups.containsAll(newGroups);
+		return groupTransformer.map(assignableGroups).containsAll(newGroups);
 	}
 }

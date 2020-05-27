@@ -476,6 +476,7 @@ userHomeArea: N01
 mail: test.user.local@test.com
 description: Test user with only local RBAC access
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+memberOf: cn=Group 1,ou=Fileshare,ou=Groups,dc=bcl,dc=local
 
 dn: cn=UMBT001,cn=test.user.local,ou=Users,dc=bcl,dc=local
 objectclass: top
