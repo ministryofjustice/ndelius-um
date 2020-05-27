@@ -11,6 +11,8 @@ import uk.co.bconline.ndelius.transformer.ChangeNoteTransformer;
 
 import java.util.List;
 
+import static java.util.Optional.ofNullable;
+
 @Slf4j
 @Service
 public class UserHistoryServiceImpl implements UserHistoryService {
@@ -31,7 +33,17 @@ public class UserHistoryServiceImpl implements UserHistoryService {
 	@Override
 	public List<ChangeNote> getHistory(String username) {
 		val userId = userEntityService.getUserId(username);
-		val entities = repository.getChangeNoteEntitiesByUserId(userId);
+		return getHistory(userId);
+	}
+
+	@Override
+	public List<ChangeNote> getHistory(Long userId) {
+		val entities = repository.getByUserId(userId);
 		return transformer.map(entities);
+	}
+
+	@Override
+	public boolean hasHistory(Long userId) {
+		return ofNullable(userId).map(repository::existsByUserId).orElse(false);
 	}
 }
