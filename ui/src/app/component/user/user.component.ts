@@ -78,6 +78,7 @@ export class UserComponent implements OnInit {
         if (params.id != null) {
           RecentUsersUtils.add(params.id);
           this.mode = this.auth.canUpdateUser() ? 'Update' : 'View';
+          this.historyService.getHistory(params.id).subscribe(history => this.history = history);
           return this.userService.read(params.id);
         } else {
           return this.route.queryParams.pipe(flatMap(query => {
@@ -99,9 +100,8 @@ export class UserComponent implements OnInit {
       .subscribe((user: User) => {
         this.user = user;
         this.addSelectableRoles(user.roles || []);
-        this.historyService.getHistory(this.user.username).subscribe(history => this.history = history);
         this.loaded = true;
-        this.existingHomeAreaCode = user.homeArea.code;
+        this.existingHomeAreaCode = user.homeArea?.code;
         this.homeAreaChanged();
         setTimeout(() => {
           this.staffCodeControl.valueChanges
