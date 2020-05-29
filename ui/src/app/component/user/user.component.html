@@ -376,12 +376,12 @@
           <ng-container *ngIf="user.updated">
             <div id="history" class="history-collapse collapse pl-1">
               <ul class="history-list">
-                <li *ngFor="let item of history" tabindex="0">
+                <li *ngFor="let item of history; let isLast = last" tabindex="0">
                   <span class="oi oi-pencil" title="Updated" rel="icon"></span>
                   <div class="update-info">
                     <span [title]="item.time | date: 'full'">{{ item.time | date: 'dd/MM/yyyy HH:mm' }}</span>
                     &middot;
-                    Updated by
+                    {{ isLast? 'Created': 'Updated' }} by
                     <a routerLink="/user/{{ item.user.username }}">{{ item.user.forenames }} {{ item.user.surname }}</a>.
                   </div>
                   <div *ngIf="item.note" class="update-note">
