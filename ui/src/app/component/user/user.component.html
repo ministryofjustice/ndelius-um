@@ -302,7 +302,8 @@
               <p *ngIf="staffCode.dirty && staffCode.valid && user.staffCode != null && user.staffCode != '' && !user.staffCode?.match('[A-Z0-9]{3}[A-Z][0-9]{3}')">
                 Warning: Staff code does not match the recommended format of 3 alphanumeric characters followed by one letter and three numbers (eg. XXXA001).
               </p>
-              <p *ngIf="user.homeArea != null && user.homeArea.code != existingHomeAreaCode && !staffCode.dirty && staffCode.valid && user.staffCode != null && user.staffCode != ''">
+              <p *ngIf="mode === 'Update' && user.homeArea != null && user.homeArea.code != existingHomeAreaCode &&
+                        !staffCode.dirty && staffCode.valid && user.staffCode != null && user.staffCode != ''">
                 Warning: Home Area has changed. Please either remove the user's Staff Details, or generate a new {{ user.homeArea.code }} Staff Code using the <span class="oi oi-loop-circular small" title="Generate"></span> button above.
                 Otherwise the Staff Code will be automatically unlinked from this user.
               </p>
