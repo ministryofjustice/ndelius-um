@@ -26,8 +26,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -406,7 +406,7 @@ public class UserControllerUpdateTest
 		// Then the old staff record (N01A601) should have an end date of today
 		Optional<StaffEntity> oldStaff = staffRepository.findByCode("N01A601");
 		assertTrue(oldStaff.isPresent());
-		assertThat(oldStaff.get().getEndDate(), is(LocalDate.now().minus(1, DAYS)));
+		assertEquals(oldStaff.get().getEndDate(), LocalDate.now().minus(1, DAYS));
 	}
 
 	@Test
@@ -441,5 +441,10 @@ public class UserControllerUpdateTest
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.homeArea.code", is("N02")))
 				.andExpect(jsonPath("$.staffCode").doesNotExist());
+
+		// And the staff record should be end-dated
+		Optional<StaffEntity> staff = staffRepository.findByCode("N01A603");
+		assertTrue(staff.isPresent());
+		assertEquals(staff.get().getEndDate(), LocalDate.now().minus(1, DAYS));
 	}
 }
