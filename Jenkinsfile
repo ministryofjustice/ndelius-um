@@ -41,7 +41,7 @@ pipeline {
         stage('Build') {
             when { expression { params.version == 'latest' } }
             environment {
-                BRANCH = branch.getName().replace('/', '_')
+                BRANCH = env.BRANCH_NAME.replace('/', '_')
             }
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
