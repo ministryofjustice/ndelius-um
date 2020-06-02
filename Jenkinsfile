@@ -48,7 +48,7 @@ pipeline {
                     sh """
                         [ "\${BRANCH}" != "master" ] && sed -i "s/-SNAPSHOT/-SNAPSHOT.\${BRANCH}/" gradle.properties
                         source ./gradle.properties
-                        ./gradlew bootBuildImage
+                        ./gradlew build bootBuildImage --info --build-cache
 
                         docker tag "delius-user-management:\${version}" "${image}:\${version}"
                         docker tag "${image}:\${version}" "${image}:latest"
@@ -65,7 +65,7 @@ pipeline {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     sshagent(credentials: ['f44bc5f1-30bd-4ab9-ad61-cc32caf1562a']) {
                         sh """
-                            ./gradlew clean release -Prelease.releaseVersion=\${version} -Prelease.newVersion=\${nextVersion} -Prelease.useAutomaticVersion=true
+                            ./gradlew clean release -Prelease.releaseVersion=\${version} -Prelease.newVersion=\${nextVersion} -Prelease.useAutomaticVersion=true --info
 
                             docker tag "delius-user-management:\${version}" "${image}:\${version}"
                             docker tag "${image}:\${version}" "${image}:latest"

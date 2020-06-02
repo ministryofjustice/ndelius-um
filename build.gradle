@@ -21,7 +21,7 @@ springBoot {
 }
 
 // Release
-release.buildTasks=['bootBuildImage']
+release.buildTasks=['build', 'bootBuildImage']
 
 // Node/NPM
 node {
