@@ -3,7 +3,7 @@ name: Accessibility
 on: push
 
 jobs:
-  test:
+  accessibility-test:
     runs-on: ubuntu-latest
 
     steps:
