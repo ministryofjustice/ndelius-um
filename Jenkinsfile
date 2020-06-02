@@ -40,10 +40,13 @@ pipeline {
         }
         stage('Build') {
             when { expression { params.version == 'latest' } }
+            environment {
+                BRANCH = branch.getName().replace('/', '_')
+            }
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     sh """
-                        [ "${env.BRANCH_NAME}" != "master" ] && sed -i 's/-SNAPSHOT\$/-SNAPSHOT.${env.BRANCH_NAME}/' gradle.properties
+                        [ "\${BRANCH}" != "master" ] && sed -i 's/-SNAPSHOT\$/-SNAPSHOT.\${BRANCH}/' gradle.properties
                         source ./gradle.properties
                         ./gradlew bootBuildImage
 
