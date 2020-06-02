@@ -48,8 +48,9 @@ pipeline {
                     sh """
                         [ "\${BRANCH}" != "master" ] && sed -i "s/-SNAPSHOT/-SNAPSHOT.\${BRANCH}/" gradle.properties
                         source ./gradle.properties
-                        ./gradlew build bootBuildImage --info --build-cache
+                        ./gradlew clean build bootBuildImage --info --build-cache
 
+                        set +x
                         docker tag "delius-user-management:\${version}" "${image}:\${version}"
                         docker tag "${image}:\${version}" "${image}:latest"
                         aws ecr get-login --no-include-email --region eu-west-2 | source /dev/stdin
@@ -67,6 +68,7 @@ pipeline {
                         sh """
                             ./gradlew clean release -Prelease.releaseVersion=\${version} -Prelease.newVersion=\${nextVersion} -Prelease.useAutomaticVersion=true --info
 
+                            set +x
                             docker tag "delius-user-management:\${version}" "${image}:\${version}"
                             docker tag "${image}:\${version}" "${image}:latest"
                             aws ecr get-login --no-include-email --region eu-west-2 | source /dev/stdin
