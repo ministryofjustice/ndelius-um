@@ -27,15 +27,15 @@ To build/test a Jar from the source code, run:
 ```
 
 ### Docker
-Once the Gradle build has completed, a Docker image can be built using the following command:
+To build a docker image, using [Cloud Native Buildpacks](https://buildpacks.io/), run:
 ```shell script
-docker build -t ndelius-um:latest .
+./gradlew clean buildBootImage
 ```
 
 ## Run
 To run the application using a configuration file, use the command: 
 ```shell script
-java -jar build/libs/ndelius-um.jar --spring.config.location=file:/path/to/application.properties
+java -jar build/libs/delius-user-management.jar --spring.config.location=file:/path/to/application.properties
 ```
 By default, the app will run on http://localhost:8080/umt. 
 This can be overridden with the properties `server.address`, `server.port` and `server.servlet.context-path`.
@@ -48,11 +48,11 @@ Data is seeded from [data.ldif](src/main/resources/data.ldif). and [data.sql](sr
 
 * Using Java:
 ```shell script
-java -jar build/libs/ndelius-um.jar --spring.profiles.active=dev
+java -jar build/libs/delius-user-management.jar --spring.profiles.active=dev
 ```
 * Using Docker:
 ```shell script
-docker run -P --env PROFILE=dev ndelius-um:latest
+docker run -P --env SPRING_PROFILES_ACTIVE=dev delius-user-management:latest
 ```
 
 Once started, point your browser at http://localhost:8080/umt and login with the credentials:
