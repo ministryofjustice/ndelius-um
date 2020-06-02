@@ -1,3 +1,5 @@
+image = '895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um'
+
 def deploy(account_id, cluster_name, service_name) {
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
         sh """
@@ -40,7 +42,17 @@ pipeline {
             when { expression { params.version == 'latest' } }
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
-                    sh './gradlew clean build --info'
+                    sh """
+                        [ "${env.BRANCH_NAME}" != "master" ] && sed -i 's/-SNAPSHOT\$/-SNAPSHOT.${env.BRANCH_NAME}/' gradle.properties"
+                        source ./gradle.properties
+                        ./gradlew bootBuildImage
+
+                        docker tag "delius-user-management:\${version}" "${image}:\${version}"
+                        docker tag "${image}:\${version}" "${image}:latest"
+                        aws ecr get-login --no-include-email --region eu-west-2 | source /dev/stdin
+                        docker push "${image}:\${version}"
+                        docker push "${image}:latest"
+                    """
                 }
             }
         }
@@ -49,29 +61,16 @@ pipeline {
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     sshagent(credentials: ['f44bc5f1-30bd-4ab9-ad61-cc32caf1562a']) {
-                        sh './gradlew clean release -Prelease.releaseVersion=$version -Prelease.newVersion=$nextVersion -Prelease.useAutomaticVersion=true'
+                        sh """
+                            ./gradlew clean release -Prelease.releaseVersion=\${version} -Prelease.newVersion=\${nextVersion} -Prelease.useAutomaticVersion=true
+
+                            docker tag "delius-user-management:\${version}" "${image}:\${version}"
+                            docker tag "${image}:\${version}" "${image}:latest"
+                            aws ecr get-login --no-include-email --region eu-west-2 | source /dev/stdin
+                            docker push "${image}:\${version}"
+                            docker push "${image}:latest"
+                        """
                     }
-                }
-            }
-        }
-        stage('Push') {
-            when { branch 'master' }
-            environment {
-                snapshotVersion = sh (script: 'source ./gradle.properties && echo "${version}"', returnStdout: true).trim()
-            }
-            steps {
-                wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
-                    sh '''
-                        echo "Pushing ${version}..."
-                        docker build -t 895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um:latest \
-                                     -t 895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um:$version \
-                                     -t 895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um:$snapshotVersion \
-                                     --no-cache .
-                        aws ecr get-login --no-include-email --region eu-west-2 | source /dev/stdin
-                        docker push 895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um:latest
-                        docker push 895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um:$version
-                        docker push 895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um:$snapshotVersion
-                    '''
                 }
             }
         }
