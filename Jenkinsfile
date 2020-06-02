@@ -46,7 +46,7 @@ pipeline {
             steps {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     sh """
-                        [ "\${BRANCH}" != "master" ] && sed -i 's/-SNAPSHOT\$/-SNAPSHOT.\${BRANCH}/' gradle.properties
+                        [ "\${BRANCH}" != "master" ] && sed -i "s/-SNAPSHOT/-SNAPSHOT.\${BRANCH}/" gradle.properties
                         source ./gradle.properties
                         ./gradlew bootBuildImage
 
