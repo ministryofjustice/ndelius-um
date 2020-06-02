@@ -55,7 +55,7 @@ pipeline {
                         docker tag "${image}:\${version}" "${image}:latest"
                         aws ecr get-login --no-include-email --region eu-west-2 | source /dev/stdin
                         docker push "${image}:\${version}"
-                        docker push "${image}:latest"
+                        [ "\${BRANCH}" == "master" ] && docker push "${image}:latest"
                     """
                 }
             }
