@@ -20,6 +20,9 @@ springBoot {
 	buildInfo()
 }
 
+// Release
+release.buildTasks=['build', 'bootBuildImage']
+
 // Node/NPM
 node {
 	version = '12.16.1'

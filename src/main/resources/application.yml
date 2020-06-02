@@ -24,6 +24,10 @@ spring.data.redis.repositories.enabled: false
 management.endpoints.web.exposure.include: ["health", "info", "metrics"]
 management.endpoint.health.show-details: always
 
+info:
+  java.vm.vendor: ${java.vm.vendor}
+  java.version: ${java.version}
+
 logging.level:
   org.springframework.web: ERROR
 
