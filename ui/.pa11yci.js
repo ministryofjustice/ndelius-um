@@ -1,4 +1,4 @@
-const url = "http://localhost:4200/umt";
+const url = "http://localhost:8080/umt";
 const login = [
   `navigate to ${url}`,
   "set field #username to test.user",
