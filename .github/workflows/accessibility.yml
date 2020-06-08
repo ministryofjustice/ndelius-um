@@ -24,7 +24,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run accessibility checks
-        run: >
+        run: |
           ./gradlew assemble --build-cache
           SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun --build-cache &
           npm run accessibility --prefix=ui
