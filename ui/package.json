@@ -11,7 +11,7 @@
     "test": "ng test --code-coverage",
     "test:watch": "ng test --watch",
     "lint": "ng lint",
-    "accessibility": "start-server-and-test start:dev 4200/umt 'concurrently npm:accessibility:*'",
+    "accessibility": "wait-port 8080; concurrently npm:accessibility:*",
     "accessibility:test": "pa11y-ci",
     "accessibility:report": "pa11y-ci --config .pa11yci-v.js --json > pa11y-ci-results.json; pa11y-ci-reporter-html -d dist/reports/pa11y"
   },
@@ -66,9 +66,9 @@
     "pa11y-ci": "^2.3.0",
     "pa11y-ci-reporter-html": "^2.0.2",
     "puppeteer": "^2.1.1",
-    "start-server-and-test": "^1.11.0",
     "ts-node": "~8.8.1",
     "tslint": "~6.1.0",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "wait-port": "^0.2.9"
   }
 }

@@ -24,7 +24,11 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run accessibility checks
-        run: ./gradlew npm_run_accessibility --build-cache
+        run: |
+          ./gradlew assemble --build-cache
+          SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun --build-cache &
+          npm run accessibility --prefix=ui
+          ./gradlew --stop
 
       - name: Upload test report
         if: always()
