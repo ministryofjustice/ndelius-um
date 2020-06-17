@@ -12,6 +12,6 @@ public interface TeamRepository extends JpaRepository<TeamEntity, Long>
 	List<TeamEntity> findAllByEndDateIsNull();
 	List<TeamEntity> findAllByEndDateIsNullAndProbationAreaCode(String probationAreaCode);
 	Optional<TeamEntity> findByCode(String code);
-	@Query("SELECT t.id FROM TeamEntity t WHERE t.code = ?1")
+	@Query("SELECT t.id FROM TeamEntity t WHERE t.code = ?1 AND t.endDate IS NULL")
 	Optional<Long> findIdByCode(String code);
 }
