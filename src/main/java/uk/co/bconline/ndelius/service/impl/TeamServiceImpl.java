@@ -42,8 +42,7 @@ public class TeamServiceImpl implements TeamService
 
 	@Override
 	@Cacheable("teamIdsByCode")
-	public Optional<Long> getTeamId(String code)
-	{
+	public Optional<Long> getTeamId(String code) {
 		return repository.findIdByCode(code);
 	}
 }
