@@ -13,7 +13,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = AssignableGroupsValidator.class)
 public @interface AssignableGroups
 {
-	String message() default "attempting to assign invalid groups";
+	String message() default "You are not permitted to modify Reporting/Fileshare group membership";
 	Class<?>[] groups() default {};
 	Class<? extends Payload>[] payload() default {};
 }

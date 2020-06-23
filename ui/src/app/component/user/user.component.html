@@ -244,7 +244,7 @@
         </div>
         <div class="form-group row">
           <label [for]="'fileshare-groups-toggle-btn'" class="col-sm-2 col-form-label"
-                 title="Use this field to control access to the folders within the NextCloud File Share application. Leave blank if you're unsure of the user's required level of access.">
+                 title="Manage access to folders in the NextCloud File Share application. This is only editable by NPS administrators, external users should contact the Helpdesk.">
             File Shares
           </label>
           <div class="col-sm-4">
@@ -252,11 +252,11 @@
                            [(ngModel)]="user.groups && user.groups.Fileshare"
                            [(selected)]="user.groups && user.groups.Fileshare"
                            [available]="groups && groups.Fileshare"
-                           [readonly]="mode === 'View'"
+                           [readonly]="mode === 'View' || !auth.isPublicAdmin()"
                            [labelMapper]="LabelMappingUtils.descriptionToLabel"></item-selector>
           </div>
           <label [for]="'reporting-groups-toggle-btn'" class="col-sm-2 col-form-label"
-                 title="Select the groups to assign to the user in the NDelius MIS Reporting tool. Leave blank if you're unsure of the user's required level of access.">
+                 title="Manage access to groups in the NDelius MIS Reporting tool. This is only editable by NPS administrators, external users should contact the Helpdesk.">
             Reporting
           </label>
           <div class="col-sm-4">
@@ -264,7 +264,7 @@
                            [(ngModel)]="user.groups && user.groups['NDMIS-Reporting']"
                            [(selected)]="user.groups && user.groups['NDMIS-Reporting']"
                            [available]="groups && groups['NDMIS-Reporting']"
-                           [readonly]="mode === 'View'"
+                           [readonly]="mode === 'View' || !auth.isPublicAdmin()"
                            [alignRight]="true"
                            [labelMapper]="LabelMappingUtils.descriptionToLabel"></item-selector>
           </div>

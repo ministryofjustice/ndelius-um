@@ -227,11 +227,11 @@ public class UserControllerCreateTest
 	}
 
 	@Test
-	public void groupsCannotBeAssignedByNonMembers() throws Exception {
-		// Given I login as a local (non-national) admin, who is a member of Fileshare Group 1 only
-		String token = token(mvc, "test.user.local");
+	public void groupsCannotBeAssignedByPrivateUsers() throws Exception {
+		// Given I login as a local private admin
+		String token = token(mvc, "test.user.private");
 
-		// When I attempt to assign a group that I am not a member of
+		// When I attempt to assign a group
 		mvc.perform(post("/api/user")
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -244,16 +244,16 @@ public class UserControllerCreateTest
 
 		// Then the request should be rejected
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.error[*]", hasItem("attempting to assign invalid groups")));
+				.andExpect(jsonPath("$.error[*]", hasItem("You are not permitted to modify Reporting/Fileshare group membership")));
 	}
 
 
 	@Test
-	public void groupsCanBeAssignedByMembers() throws Exception {
-		// Given I login as a local (non-national) admin, who is a member of Fileshare Group 1 only
+	public void groupsCanBeAssignedByPublicAdmins() throws Exception {
+		// Given I login as a local public admin
 		String token = token(mvc, "test.user.local");
 
-		// When I attempt to assign a group that I am a member of
+		// When I attempt to assign a group
 		String username = nextTestUsername();
 		mvc.perform(post("/api/user")
 				.header("Authorization", "Bearer " + token)

@@ -16,6 +16,7 @@ export class AuthorisationService {
   static GET_USER_ROLE = 'UMBI002';
   static ADD_USER_ROLE = 'UMBI003';
   static UPDATE_USER_ROLE = 'UMBI004';
+  static PUBLIC_ADMIN_ROLE = 'UABI020';
   static NATIONAL_USER_ROLE = 'UABT0050';
 
   private readonly initialQueryParams;
@@ -65,6 +66,10 @@ export class AuthorisationService {
 
   canUpdateUser(): boolean {
     return this.hasInteraction(AuthorisationService.UPDATE_USER_ROLE);
+  }
+
+  isPublicAdmin(): boolean {
+    return this.hasInteraction(AuthorisationService.PUBLIC_ADMIN_ROLE);
   }
 
   canMigrateUsers(): boolean {
