@@ -120,7 +120,7 @@ export class UserComponent implements OnInit {
       // only show groups that are also assigned to the logged in user, unless they have national access
       if (!this.auth.isNational()) {
         for (const key of Object.keys(new Groups())) {
-          const myGroups = this.auth.me.groups[key];
+          const myGroups = this.auth.me.groups[key] || [];
           groups[key] = groups[key].filter((g1: Group) => myGroups.some(g2 => g1.name === g2.name));
         }
       }
