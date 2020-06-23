@@ -21,7 +21,6 @@ import {RecentUsersUtils} from '../../util/recent-users.utils';
 import {GroupService} from '../../service/group.service';
 import {LabelMappingUtils} from '../../util/label-mapping.utils';
 import {Groups} from '../../model/groups';
-import {Group} from '../../model/group';
 import {UserHistoryItem} from '../../model/user-history-item';
 import {HistoryService} from '../../service/history.service';
 
@@ -116,17 +115,7 @@ export class UserComponent implements OnInit {
 
     this.roleService.roles().subscribe(roles => this.addSelectableRoles(roles));
 
-    this.groupService.groups().subscribe((groups: Groups) => {
-      // only show groups that are also assigned to the logged in user, unless they have national access
-      if (!this.auth.isNational()) {
-        for (const key of Object.keys(new Groups())) {
-          const myGroups = this.auth.me.groups[key];
-          groups[key] = groups[key].filter((g1: Group) => myGroups.some(g2 => g1.name === g2.name));
-        }
-      }
-
-      this.groups = groups;
-    });
+    this.groupService.groups().subscribe(groups => this.groups = groups);
 
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {
       this.datasets = datasets;
