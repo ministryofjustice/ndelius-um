@@ -474,9 +474,8 @@ cn: test.user.local
 uid: test.user.local
 userHomeArea: N01
 mail: test.user.local@test.com
-description: Test user with only local RBAC access
+description: Test user with only local, public RBAC access
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
-memberOf: cn=Group 1,ou=Fileshare,ou=Groups,dc=bcl,dc=local
 
 dn: cn=UMBT001,cn=test.user.local,ou=Users,dc=bcl,dc=local
 objectclass: top
@@ -484,6 +483,38 @@ objectclass: alias
 objectclass: NDRoleAssociation
 cn: UMBT001
 aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=UABT0051,cn=test.user.local,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UABT0051
+aliasedObjectName: cn=UABT0051,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=test.user.private,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+cn: test.user.private
+uid: test.user.private
+userHomeArea: C01
+mail: test.user.private@test.com
+description: Test user with only local, private RBAC access
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+
+dn: cn=UMBT001,cn=test.user.private,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UMBT001
+aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+dn: cn=UABT0052,cn=test.user.private,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UABT0051
+aliasedObjectName: cn=UABT0052,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
 dn: cn=TestUser1,ou=Users,dc=bcl,dc=local
 objectclass: top
