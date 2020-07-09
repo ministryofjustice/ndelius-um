@@ -14,8 +14,8 @@ phases:
       # If this commit has been tagged in git then use the git tag, otherwise default to '<branch>-<commit-hash>'
       - git_tag="$(git tag --points-at HEAD)"
       - git_branch="$(git branch -a --contains HEAD | sed -n 2p | awk '{ printf $1 }' | sed 's/[^[:alnum:]]/_/g')"
-      - version="$${git_tag:-$(printf '%s-%.7s' $${git_branch} $${CODEBUILD_RESOLVED_SOURCE_VERSION})}"
-      - sed -i "s/version=.*/version=$${version}/" gradle.properties
+      - version="${git_tag:-$(printf '%s-%.7s' ${git_branch} ${CODEBUILD_RESOLVED_SOURCE_VERSION})}"
+      - sed -i "s/version=.*/version=${version}/" gradle.properties
       - cat gradle.properties
 
   build:
@@ -26,12 +26,12 @@ phases:
   post_build:
     commands:
       - echo Tagging images...
-      - docker tag "delius-user-management:$${version}" "$${IMAGE}:$${version}"
-      - docker tag "delius-user-management:$${version}" "$${IMAGE}:latest"
+      - docker tag "delius-user-management:${version}" "${IMAGE}:${version}"
+      - docker tag "delius-user-management:${version}" "${IMAGE}:latest"
 
       - echo Pushing to ECR...
-      - docker push $${IMAGE}:$${version}
-      - if [ -n "$${git_tag}" ]; then docker push $${IMAGE}:latest; fi
+      - docker push ${IMAGE}:${version}
+      - if [ -n "${git_tag}" ]; then docker push ${IMAGE}:latest; fi
 
 artifacts:
   files:
