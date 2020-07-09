@@ -1,0 +1,51 @@
+version: 0.2
+
+env:
+  variables:
+    IMAGE: "895523100917.dkr.ecr.eu-west-2.amazonaws.com/hmpps/ndelius-um"
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to ECR...
+      - $(aws ecr get-login --no-include-email)
+
+      - echo Getting version...
+      # If this commit has been tagged in git then use the git tag, otherwise default to '<branch>-<commit-hash>'
+      - git_tag="$(git tag --points-at HEAD)"
+      - git_branch="$(git branch -a --contains HEAD | sed -n 2p | awk '{ printf $1 }' | sed 's/[^[:alnum:]]/_/g')"
+      - version="$${git_tag:-$(printf '%s-%.7s' $${git_branch} $${CODEBUILD_RESOLVED_SOURCE_VERSION})}"
+      - sed -i "s/version=.*/version=$${version}/" gradle.properties
+      - cat gradle.properties
+
+  build:
+    commands:
+      - echo Building...
+      - ./gradlew clean build bootBuildImage --info --build-cache
+
+  post_build:
+    commands:
+      - echo Tagging images...
+      - docker tag "delius-user-management:$${version}" "$${IMAGE}:$${version}"
+      - docker tag "delius-user-management:$${version}" "$${IMAGE}:latest"
+
+      - echo Pushing to ECR...
+      - docker push $${IMAGE}:$${version}
+      - if [ -n "$${git_tag}" ]; then docker push $${IMAGE}:latest; fi
+
+artifacts:
+  files:
+    - build/libs/*.jar
+
+reports:
+  api-test-report:
+    files:
+      - build/test-results/test/**/*
+  ui-test-report:
+    files:
+      - build/test-results/ui-test/**/*
+
+cache:
+  paths:
+    - /root/.gradle/caches/**/*
+    - /root/.npm/**/*
