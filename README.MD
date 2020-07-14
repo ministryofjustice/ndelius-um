@@ -4,7 +4,7 @@
 ![Accessibility](https://github.com/ministryofjustice/ndelius-um/workflows/Accessibility/badge.svg)
 ![Code quality](https://github.com/ministryofjustice/ndelius-um/workflows/Code%20quality/badge.svg)
 ![Tests](https://github.com/ministryofjustice/ndelius-um/workflows/Tests/badge.svg)
-![CodeBuild](https://codebuild.eu-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiYlBORVJHWXBKeXFPdDBSaGh5S0l3ak96S2VINlRKZXM2b1ZOcmJEV0JiNy8vWW1hN0hqMWJ1Y0pUS205MnB6SHdtTTBPaVVSYnR4NG8wdStveUlTelRvPSIsIml2UGFyYW1ldGVyU3BlYyI6IjdWZ1p4bTA4WlA4U2NzZzMiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
+![CodeBuild](https://codebuild.eu-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiVjZDUUNCS092VHUzRXliQWhwa0Rzd1FDZ0xockM4SFZ5NGJiQjB3VmI1dk9ZUm0vZnJVRlJxNkZqQ3pZd1c3SzI2TjRIamVGSC9pNmw1NDNNTmdSYlBvPSIsIml2UGFyYW1ldGVyU3BlYyI6IldoQjcyL3BoSFRmYXZoM2wiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
 
 Developed by [Unilink](https://www.unilink.com) using Angular and Spring Boot to enable NPS-ICT and CRC admins to effectively create and maintain user accounts in the National Delius application, and to allow external services to securely authenticate Probation staff.
 User accounts are stored across an LDAP cluster (for authentication, user preferences and functional authorisation), and an Oracle database (for data authorisation and caseload management). 
