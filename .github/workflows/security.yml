@@ -1,6 +1,10 @@
 name: Security
 
-on: push
+on:
+  push:
+    paths:
+      - build.gradle
+      - dependency-check-suppression.xml
 
 jobs:
   check-dependencies:
