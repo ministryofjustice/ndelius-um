@@ -18,13 +18,13 @@ import java.util.Map;
 public class ReflectionUtils {
 
 	/*
-	 * Replace class-level annotation data using reflection. Note this may break when changing JDK version.
+	 * Replace class-level annotation data using reflection. Tested in Java 8 and 11.
 	 * See https://rationaleemotions.wordpress.com/2016/05/27/changing-annotation-values-at-runtime/
 	 */
 	public static void replaceClassLevelAnnotation(Class annotatedClass,
 												   Class<? extends Annotation> annotationToReplace,
 												   Annotation newAnnotation) throws ReflectiveOperationException {
-		// In JDK8 Class has a private method called annotationData().
+		// Class has a private method called annotationData().
 		// We first need to invoke it to obtain a reference to AnnotationData class which is a private class
 		Method method = Class.class.getDeclaredMethod("annotationData");
 		method.setAccessible(true);
