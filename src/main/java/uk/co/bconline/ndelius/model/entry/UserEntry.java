@@ -51,6 +51,9 @@ public final class UserEntry implements UserHomeAreaProjection, UserDetails {
 	@Attribute(name = "mail")
 	private String email;
 
+	@Attribute
+	private String telephoneNumber;
+
 	// Oracle-specific start/end date (format=yyyyMMddHHmmss):
 	@Attribute(name = "orclActiveStartDate")
 	private String oracleStartDate;

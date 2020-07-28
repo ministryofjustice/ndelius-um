@@ -81,6 +81,16 @@ public class UserControllerGetUserTest {
 	}
 
 	@Test
+	public void telephoneNumberIsReturned() throws Exception {
+		String token = token(mvc);
+
+		mvc.perform(get("/api/user/test.user")
+				.header("Authorization", "Bearer " + token))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.telephoneNumber", is("0123 456 789")));
+	}
+
+	@Test
 	public void subContractedProviderIsReturned() throws Exception {
 		String token = token(mvc);
 

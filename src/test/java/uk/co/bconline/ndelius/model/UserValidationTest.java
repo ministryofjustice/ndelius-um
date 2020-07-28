@@ -374,6 +374,15 @@ public class UserValidationTest {
 	}
 
 	@Test
+	public void invalidTelephoneNumber() {
+		User user = aValidUser().toBuilder()
+				.telephoneNumber("123a")
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("must contain only numbers and spaces"))));
+	}
+
+	@Test
 	public void invalidDatasets() {
 		User user = aValidUser().toBuilder()
 				.datasets(singletonList(Dataset.builder()

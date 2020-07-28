@@ -55,6 +55,11 @@ public class User {
 	@Size(max = 255)
 	private String email;
 
+	@Size(max = 35)
+	@Pattern(regexp = "^[0-9 ]*$",
+			message = "must contain only numbers and spaces")
+	private String telephoneNumber;
+
 	@NotNull
 	private Boolean privateSector;
 
