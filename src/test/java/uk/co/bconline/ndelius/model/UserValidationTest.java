@@ -11,8 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import uk.co.bconline.ndelius.model.auth.UserInteraction;
-import uk.co.bconline.ndelius.service.RoleService;
-import uk.co.bconline.ndelius.service.UserService;
 
 import javax.validation.ConstraintViolation;
 import java.time.LocalDate;
@@ -28,27 +26,19 @@ import static uk.co.bconline.ndelius.util.Constants.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class UserValidationTest
-{
-	@Autowired
-	private RoleService roleService;
-
-	@Autowired
-	private UserService userService;
+public class UserValidationTest {
 
 	@Autowired
 	private LocalValidatorFactoryBean localValidatorFactory;
 
 	@Before
-	public void user()
-	{
+	public void user() {
 		SecurityContextHolder.getContext()
 				.setAuthentication(new TestingAuthenticationToken("test.user", "secret"));
 	}
 
 	@Test
-	public void testUsernameBlank()
-	{
+	public void testUsernameBlank() {
 		User user = aValidUser().toBuilder()
 				.username("")
 				.build();
@@ -60,8 +50,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testUsernameSize()
-	{
+	public void testUsernameSize() {
 		User user = aValidUser().toBuilder()
 				.username("1234567890123456789012345678901234567890123456789012345678901234567890")
 				.build();
@@ -73,8 +62,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testInvalidUsernamePattern()
-	{
+	public void testInvalidUsernamePattern() {
 		User user = aValidUser().toBuilder()
 				.username("john.bob!")
 				.build();
@@ -86,8 +74,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testInvalidForename()
-	{
+	public void testInvalidForename() {
 		User user = aValidUser().toBuilder()
 				.forenames("")
 				.build();
@@ -99,8 +86,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testInvalidSurname()
-	{
+	public void testInvalidSurname() {
 		User user = aValidUser().toBuilder()
 				.surname("")
 				.build();
@@ -110,9 +96,9 @@ public class UserValidationTest
 		assertThat(constraintViolations, hasSize(1));
 		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be blank"))));
 	}
+
 	@Test
-	public void testNullHomeArea()
-	{
+	public void testNullHomeArea() {
 		User user = aValidUser().toBuilder()
 				.homeArea(null)
 				.build();
@@ -122,9 +108,9 @@ public class UserValidationTest
 		assertThat(constraintViolations, hasSize(1));
 		assertThat(constraintViolations, hasItem(hasProperty("message", is("must not be null"))));
 	}
+
 	@Test
-	public void testEmptyDataSets()
-	{
+	public void testEmptyDataSets() {
 		User user = aValidUser().toBuilder()
 				.datasets(null)
 				.build();
@@ -136,8 +122,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testBlankDatasets()
-	{
+	public void testBlankDatasets() {
 		User user = aValidUser().toBuilder()
 				.datasets(singletonList(Dataset.builder().code("").build()))
 				.build();
@@ -149,8 +134,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testStaffGradeWithoutStaffCode()
-	{
+	public void testStaffGradeWithoutStaffCode() {
 		User user = aValidUser().toBuilder()
 				.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
 				.build();
@@ -162,8 +146,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testStaffCodeWithoutStaffGrade()
-	{
+	public void testStaffCodeWithoutStaffGrade() {
 		User user = aValidUser().toBuilder()
 				.staffCode("N01A500")
 				.build();
@@ -175,8 +158,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testStaffCodeWithEmptyStaffGrade()
-	{
+	public void testStaffCodeWithEmptyStaffGrade() {
 		User user = aValidUser().toBuilder()
 				.staffCode("N01A500")
 				.staffGrade(ReferenceData.builder().code("").build())
@@ -189,8 +171,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testStaffCodeWithoutTeam()
-	{
+	public void testStaffCodeWithoutTeam() {
 		User user = aValidUser().toBuilder()
 				.staffCode("N01A501")
 				.staffGrade(ReferenceData.builder().code("GRADE2").build())
@@ -203,8 +184,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testTeamWithoutStaffCode()
-	{
+	public void testTeamWithoutStaffCode() {
 		User user = aValidUser().toBuilder()
 				.teams(singletonList(Team.builder().code("N01TST").build()))
 				.build();
@@ -216,8 +196,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testSubContractedProviderWithoutStaffCode()
-	{
+	public void testSubContractedProviderWithoutStaffCode() {
 		User user = aValidUser().toBuilder()
 				.subContractedProvider(Dataset.builder().code("SC").build())
 				.build();
@@ -229,8 +208,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testEmptyTeamWithoutStaffCode()
-	{
+	public void testEmptyTeamWithoutStaffCode() {
 		User user = aValidUser().toBuilder()
 				.staffCode("N01A500")
 				.staffGrade(ReferenceData.builder().code("GRADE1").build())
@@ -244,8 +222,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testInvalidStaffCodePattern()
-	{
+	public void testInvalidStaffCodePattern() {
 		User user = aValidUser().toBuilder()
 				.staffCode("N01-AAA")
 				.staffGrade(ReferenceData.builder().code("GRADE1").build())
@@ -258,8 +235,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testInvalidStaffCodePrefix()
-	{
+	public void testInvalidStaffCodePrefix() {
 		User user = aValidUser().toBuilder()
 				.staffCode("ZZZA001")
 				.staffGrade(ReferenceData.builder().code("GRADE1").build())
@@ -272,8 +248,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void invalidRoles()
-	{
+	public void invalidRoles() {
 		User user = User.builder()
 				.roles(singletonList(Role.builder()
 						.name("not-real")
@@ -285,8 +260,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testOneDateNull()
-	{
+	public void testOneDateNull() {
 		User user = aValidUser().toBuilder()
 				.startDate(LocalDate.of(2017, 5, 15))
 				.endDate(null)
@@ -297,8 +271,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void startDateAfterEndDate()
-	{
+	public void startDateAfterEndDate() {
 		User user = aValidUser().toBuilder()
 				.startDate(LocalDate.of(2019, 6, 17))
 				.endDate(LocalDate.of(2017, 5, 15))
@@ -309,8 +282,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void startDateBeforeEndDate()
-	{
+	public void startDateBeforeEndDate() {
 		User user = aValidUser().toBuilder()
 				.startDate(LocalDate.of(2017, 5, 15))
 				.endDate(LocalDate.of(2019, 6, 17))
@@ -321,8 +293,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void startDateShouldBeBefore2100()
-	{
+	public void startDateShouldBeBefore2100() {
 		User user = aValidUser().toBuilder()
 				.startDate(LocalDate.of(2100, 1, 1))
 				.build();
@@ -331,8 +302,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void startDateShouldBeAfter1899()
-	{
+	public void startDateShouldBeAfter1899() {
 		User user = aValidUser().toBuilder()
 				.startDate(LocalDate.of(1899, 12, 31))
 				.build();
@@ -341,8 +311,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void endDateShouldBeBefore2100()
-	{
+	public void endDateShouldBeBefore2100() {
 		User user = aValidUser().toBuilder()
 				.endDate(LocalDate.of(2100, 1, 1))
 				.build();
@@ -351,8 +320,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void endDateShouldBeAfter1899()
-	{
+	public void endDateShouldBeAfter1899() {
 		User user = aValidUser().toBuilder()
 				.endDate(LocalDate.of(1899, 12, 31))
 				.build();
@@ -361,8 +329,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testValidEmail()
-	{
+	public void testValidEmail() {
 		User user = aValidUser().toBuilder()
 				.email("test_valid_email@test.com")
 				.build();
@@ -371,8 +338,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testEmailNull()
-	{
+	public void testEmailNull() {
 		User user = aValidUser().toBuilder()
 				.email(null)
 				.build();
@@ -381,8 +347,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void testEmailEmpty()
-	{
+	public void testEmailEmpty() {
 		User user = aValidUser().toBuilder()
 				.email("")
 				.build();
@@ -391,8 +356,25 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void invalidDatasets()
-	{
+	public void testEmailTooLong() {
+		User user = aValidUser().toBuilder()
+				.email("*".repeat(256))
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, hasItem(hasProperty("message", is("size must be between 0 and 255"))));
+	}
+
+	@Test
+	public void testEmailNotTooLong() {
+		User user = aValidUser().toBuilder()
+				.email("*".repeat(255))
+				.build();
+		Set<ConstraintViolation<User>> constraintViolations = localValidatorFactory.validate(user);
+		assertThat(constraintViolations, empty());
+	}
+
+	@Test
+	public void invalidDatasets() {
 		User user = aValidUser().toBuilder()
 				.datasets(singletonList(Dataset.builder()
 						.code("not-real")
@@ -404,11 +386,10 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void localUserCannotAssignNationalRole()
-	{
+	public void localUserCannotAssignNationalRole() {
 		User user = aValidUser().toBuilder()
 				.roles(singletonList(Role.builder()
-						.name(NATIONAL_ROLE)	// Only a national user can apply the national access role
+						.name(NATIONAL_ROLE)    // Only a national user can apply the national access role
 						.build()))
 				.build();
 
@@ -417,8 +398,7 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void nationalUserCanAssignNationalRole()
-	{
+	public void nationalUserCanAssignNationalRole() {
 		SecurityContextHolder.getContext()
 				.setAuthentication(new TestingAuthenticationToken("test.user", "secret",
 						// Note: the National Role is marked as sector:public - so we need to also have the Public Role
@@ -426,7 +406,7 @@ public class UserValidationTest
 
 		User user = aValidUser().toBuilder()
 				.roles(singletonList(Role.builder()
-						.name(NATIONAL_ROLE)	// Only a national user can apply the national access role
+						.name(NATIONAL_ROLE)    // Only a national user can apply the national access role
 						.build()))
 				.build();
 
@@ -435,11 +415,10 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void localUserCanAssignTheirOwnDatasets()
-	{
+	public void localUserCanAssignTheirOwnDatasets() {
 		User user = aValidUser().toBuilder()
 				.datasets(singletonList(Dataset.builder()
-						.code("N01")	// test.user only has NXX datasets
+						.code("N01")    // test.user only has NXX datasets
 						.build()))
 				.build();
 
@@ -448,11 +427,10 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void localUserCanOnlyAssignTheirOwnDatasets()
-	{
+	public void localUserCanOnlyAssignTheirOwnDatasets() {
 		User user = aValidUser().toBuilder()
 				.datasets(singletonList(Dataset.builder()
-						.code("C01")	// test.user only has NXX datasets
+						.code("C01")    // test.user only has NXX datasets
 						.build()))
 				.build();
 
@@ -461,15 +439,14 @@ public class UserValidationTest
 	}
 
 	@Test
-	public void nationalUserCanAssignAnyDataset()
-	{
+	public void nationalUserCanAssignAnyDataset() {
 		SecurityContextHolder.getContext()
 				.setAuthentication(new TestingAuthenticationToken("test.user", "secret",
 						singletonList(new UserInteraction(NATIONAL_ACCESS))));
 
 		User user = aValidUser().toBuilder()
 				.datasets(singletonList(Dataset.builder()
-						.code("C01")	// test.user only has NXX datasets, but is now a National User
+						.code("C01")    // test.user only has NXX datasets, but is now a National User
 						.build()))
 				.build();
 
