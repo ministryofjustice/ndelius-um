@@ -44,7 +44,7 @@ public class GroupController {
 
 	@GetMapping("/groups/{type}")
 	@PreAuthorize("#oauth2.hasScope('UMBI012')")
-	public ResponseEntity<List<Group>> getGroups(@PathVariable String type) {
+	public ResponseEntity<List<Group>> getGroupsByType(@PathVariable String type) {
 		return ok(groupTransformer.map(groupService.getGroups(type)));
 	}
 
