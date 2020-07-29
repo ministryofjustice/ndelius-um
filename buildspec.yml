@@ -31,7 +31,7 @@ phases:
 
       - echo Pushing to ECR...
       - docker push ${IMAGE}:${version}
-      - if [ -n "${git_tag}" || "${git_branch} == "master" ]; then docker push ${IMAGE}:latest; fi
+      - if [ -n "${git_tag}" || "${git_branch}" == "master" ]; then docker push ${IMAGE}:latest; fi
 
 artifacts:
   files:
