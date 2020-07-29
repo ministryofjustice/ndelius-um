@@ -15,7 +15,6 @@
         <h2 class="card-title mb-0" id="user-details">User Details</h2>
         <small class="text-muted" *ngIf="mode !== 'View' && (
         username.invalid ||
-        email.invalid ||
         forenames.invalid ||
         surname.invalid ||
         startdate.invalid ||
@@ -37,11 +36,22 @@
               </small>
             </div>
           </div>
+        </div>
+        <div class="form-group row">
           <label for="email" class="col-sm-2 col-form-label">Email</label>
           <div class="col-sm-4">
-            <input id="email" name="email" #email="ngModel" class="form-control" [(ngModel)]="user.email"
-                   [readonly]="mode == 'View'"
-                   maxlength="255">
+            <input id="email" name="email" class="form-control" [(ngModel)]="user.email"
+                   [readonly]="mode == 'View'" maxlength="255">
+          </div>
+          <label for="telephone-number" class="col-sm-2 col-form-label">Phone Number</label>
+          <div class="col-sm-4">
+            <input #telephoneNumber="ngModel" id="telephone-number" name="telephone-number" class="form-control" [(ngModel)]="user.telephoneNumber"
+                   [readonly]="mode == 'View'" maxlength="35" pattern="^[0-9 ]*$">
+            <div *ngIf="telephoneNumber.invalid && telephoneNumber.dirty" class="text-danger">
+              <small *ngIf="telephoneNumber.errors['pattern']">
+                *Phone Number must contain only numbers and spaces.
+              </small>
+            </div>
           </div>
         </div>
         <div class="form-group row">

@@ -384,6 +384,7 @@ uid: test.user
 givenName: Test
 sn: User
 mail: test.user@test.com
+telephoneNumber: 0123 456 789
 startDate: 20000102000000
 orclActiveStartDate: 20000101000000
 userHomeArea: N01

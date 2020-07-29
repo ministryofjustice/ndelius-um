@@ -10,6 +10,7 @@ export class User {
   forenames: string;
   surname: string;
   email: string;
+  telephoneNumber: string;
   staffCode: string;
   staffGrade: StaffGrade;
   privateSector: boolean;
