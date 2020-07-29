@@ -39,9 +39,9 @@
           </div>
           <label for="email" class="col-sm-2 col-form-label">Email</label>
           <div class="col-sm-4">
-            <input id="email" name="email" #email="ngModel" class="form-control"
-                   [(ngModel)]="user.email"
-                   [readonly]="mode == 'View'">
+            <input id="email" name="email" #email="ngModel" class="form-control" [(ngModel)]="user.email"
+                   [readonly]="mode == 'View'"
+                   maxlength="255">
           </div>
         </div>
         <div class="form-group row">

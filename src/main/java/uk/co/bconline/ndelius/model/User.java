@@ -52,6 +52,7 @@ public class User {
 	@Size(max = 35)
 	private String surname;
 
+	@Size(max = 255)
 	private String email;
 
 	@NotNull
