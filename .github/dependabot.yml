@@ -8,8 +8,8 @@ updates:
   - package-ecosystem: "gradle" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
-      interval: "live"
+      interval: "daily"
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/ui" # Location of package manifests
     schedule:
-      interval: "live"
+      interval: "daily"
