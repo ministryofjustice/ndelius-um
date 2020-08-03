@@ -11,17 +11,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
+import static uk.co.bconline.ndelius.test.util.TokenCache.TOKEN_CACHE;
 
-public class TokenUtils
-{
-	public static String token(MockMvc mvc) throws Exception
-	{
-		return authCodeToken(mvc, "test.user");
+public class TokenUtils {
+	public static String token(MockMvc mvc) throws Exception {
+		return token(mvc, "test.user");
 	}
 
 	public static String token(MockMvc mvc, String username) throws Exception
 	{
-		return authCodeToken(mvc, username);
+		var token = TOKEN_CACHE.get(username);
+		if (token == null) {
+			token = authCodeToken(mvc, username);
+			TOKEN_CACHE.put(username, token);
+		}
+		return token;
 	}
 
 	public static String getAuthCode(MockMvc mvc, String username) throws Exception
