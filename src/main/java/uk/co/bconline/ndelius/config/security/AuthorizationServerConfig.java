@@ -18,9 +18,9 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.code.RedisAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -30,9 +30,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.view.RedirectView;
-import uk.co.bconline.ndelius.config.security.provider.code.RedisAuthorizationCodeServices;
 import uk.co.bconline.ndelius.config.security.provider.endpoint.PathMatchRedirectResolver;
 import uk.co.bconline.ndelius.config.security.provider.token.PreAuthenticatedTokenGranter;
+import uk.co.bconline.ndelius.config.security.provider.token.store.redis.SaferRedisTokenStore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -105,7 +105,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Bean
 	public TokenStore redisTokenStore() {
-		return new RedisTokenStore(redisConnectionFactory);
+		return new SaferRedisTokenStore(redisConnectionFactory);
 	}
 
 	@Bean
