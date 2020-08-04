@@ -5,11 +5,12 @@
 
 version: 2
 updates:
-  - package-ecosystem: "gradle" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "gradle"
+    directory: "/"
     schedule:
       interval: "daily"
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/ui" # Location of package manifests
+  - package-ecosystem: "npm"
+    directory: "/ui"
+    open-pull-requests-limit: 0    # Disable version updates for npm dependencies
     schedule:
       interval: "daily"
