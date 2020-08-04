@@ -12,15 +12,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 
-public class TokenUtils
-{
-	public static String token(MockMvc mvc) throws Exception
-	{
-		return authCodeToken(mvc, "test.user");
+public class TokenUtils {
+	public static String token(MockMvc mvc) throws Exception {
+		return token(mvc, "test.user");
 	}
 
-	public static String token(MockMvc mvc, String username) throws Exception
-	{
+	public static String token(MockMvc mvc, String username) throws Exception {
 		return authCodeToken(mvc, username);
 	}
 

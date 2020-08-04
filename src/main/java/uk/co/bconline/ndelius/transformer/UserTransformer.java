@@ -298,7 +298,7 @@ public class UserTransformer
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
 				.email(user.getEmail())
-				.telephoneNumber(user.getTelephoneNumber())
+				.telephoneNumber(isEmpty(user.getTelephoneNumber())? null: user.getTelephoneNumber())
 				.startDate(mapToLdapString(user.getStartDate()))
 				.endDate(mapToLdapString(user.getEndDate()))
 				.sector(user.getPrivateSector()? "private": "public")

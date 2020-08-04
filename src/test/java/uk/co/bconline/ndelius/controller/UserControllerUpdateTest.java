@@ -36,8 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static uk.co.bconline.ndelius.test.util.CustomMatchers.isWithin;
 import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
-import static uk.co.bconline.ndelius.test.util.UserUtils.aValidUser;
-import static uk.co.bconline.ndelius.test.util.UserUtils.nextTestUsername;
+import static uk.co.bconline.ndelius.test.util.UserUtils.*;
 
 @SpringBootTest
 @DirtiesContext
@@ -371,7 +370,7 @@ public class UserControllerUpdateTest
 		mvc.perform(post("/api/user/test.user")
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser())))
+				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder().username("test.user").build())))
 
 		// Then I should receive an error message
 				.andExpect(status().isBadRequest())
@@ -448,5 +447,23 @@ public class UserControllerUpdateTest
 		Optional<StaffEntity> staff = staffRepository.findByCode("N01A603");
 		assertTrue(staff.isPresent());
 		assertEquals(staff.get().getEndDate(), LocalDate.now().minus(1, DAYS));
+	}
+
+	// Verify fix for defect DST-7302 - 500 Error when removing a user's phone number
+	@Test
+	public void phoneNumberCanBeRemoved() throws Exception {
+		// Given a user exists with a phone number
+		User user = createUser(mvc, aValidUser().toBuilder().telephoneNumber("123456789").build());
+
+		// When I attempt to set the phone number to an empty string
+		// Then the request is successful
+		updateUser(mvc, user.toBuilder().telephoneNumber("").build())
+				.andExpect(status().isNoContent());
+
+		// And the phone number is set to null
+		mvc.perform(get("/api/user/" + user.getUsername())
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.telephoneNumber").doesNotExist());
 	}
 }
