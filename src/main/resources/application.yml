@@ -2,12 +2,10 @@ spring.application.name: ndelius-um
 
 server:
   servlet.context-path: /umt
-  compression:
-    enabled: true # Enable GZIP compression
-    mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
+  compression.enabled: true # Enable GZIP compression
 
 spring.resources:
-  static-locations: classpath:/ui
+  chain.strategy.content.enabled: true
   cache.cachecontrol:
     cache-public: true # Enable resource caching by browser or intermediaries
     no-cache: true     # Enable revalidation on each request
