@@ -198,10 +198,13 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 		val newGroups = ofNullable(groups).orElse(emptySet());
 		val groupsToAdd = Sets.difference(newGroups, existingGroups);
 		val groupsToRemove = Sets.difference(existingGroups, newGroups);
-		groupService.getGroups(groupsToAdd).parallelStream()
+		// Note: We must use serial streams here, due to a bug in Spring LDAP meaning the commonPool loads the
+		// incorrect DirContext class.
+		// See https://github.com/spring-projects/spring-ldap/issues/501
+		groupService.getGroups(groupsToAdd).stream()
 				.peek(group -> group.getMembers().add(userDn))
 				.forEach(groupService::save);
-		groupService.getGroups(groupsToRemove).parallelStream()
+		groupService.getGroups(groupsToRemove).stream()
 				.peek(group -> group.getMembers().remove(userDn))
 				.forEach(groupService::save);
 	}
@@ -227,10 +230,10 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 
 		// Preferences
 		log.debug("Checking if user preferences exist");
-		if (!preferencesRepository.findOne(query()
+		if (preferencesRepository.findOne(query()
 				.searchScope(ONELEVEL)
 				.base(getDn(user.getUsername()))
-				.where(OBJECTCLASS).isPresent()).isPresent())
+				.where(OBJECTCLASS).isPresent()).isEmpty())
 		{
 			log.debug("Creating user preferences");
 			preferencesRepository.save(new UserPreferencesEntry(user.getUsername()));
