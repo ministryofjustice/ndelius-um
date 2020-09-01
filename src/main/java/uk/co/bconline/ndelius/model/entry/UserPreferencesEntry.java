@@ -28,31 +28,4 @@ public final class UserPreferencesEntry
 	@Transient
 	@DnAttribute(value="cn", index=0)
 	private String username;
-
-	@Attribute
-	private String locale = "en";
-
-	@Attribute
-	private String contactLogDefaultStaff = "MANAGER";
-
-	@Attribute
-	private String showStaffGrade = "Y";
-
-	@Attribute
-	private String staffSortingType = "SURNAME";
-
-	@Attribute
-	private String bypassDiaryPicklist = "Y";
-
-	@Attribute
-	private String verboseHelp = "Y";
-
-	@Attribute
-	private String lastReferralDetails = "Y";
-
-	@Attribute
-	private String openLastOffender = "N";
-
-	@Attribute
-	private String mostRecentlyViewedOffenders = "NRO16";
 }
