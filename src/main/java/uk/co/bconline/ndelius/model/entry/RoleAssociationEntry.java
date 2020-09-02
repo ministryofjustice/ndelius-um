@@ -18,6 +18,9 @@ public final class RoleAssociationEntry
 	@Id
 	private Name dn;
 
+	@Attribute
+	private String cn;
+
 	@Attribute(name="cn")
 	@DnAttribute(value="cn", index=1)
 	private String name;

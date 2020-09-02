@@ -1,8 +1,10 @@
 package uk.co.bconline.ndelius.transformer;
 
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.co.bconline.ndelius.model.Role;
+import uk.co.bconline.ndelius.model.entry.RoleAssociationEntry;
 import uk.co.bconline.ndelius.model.entry.RoleEntry;
 
 import java.util.ArrayList;
@@ -14,9 +16,17 @@ import java.util.stream.Stream;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 @Component
 public class RoleTransformer {
+
+	@Value("${spring.ldap.base}")
+	private String ldapBase;
+
+	@Value("${delius.ldap.base.roles}")
+	private String rolesBase;
+
 	public Role map(RoleEntry roleEntry) {
 		return Role.builder()
 				.name(roleEntry.getName())
@@ -57,4 +67,11 @@ public class RoleTransformer {
 				.orElse(null);
 	}
 
+	public RoleAssociationEntry buildAssociation(String username, String roleName) {
+		return RoleAssociationEntry.builder()
+				.name(roleName)
+				.username(username)
+				.aliasedObjectName(join(",", "cn=" + roleName, rolesBase, ldapBase))
+				.build();
+	}
 }
