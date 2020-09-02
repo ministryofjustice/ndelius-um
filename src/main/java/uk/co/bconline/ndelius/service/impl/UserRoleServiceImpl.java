@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,15 @@ import uk.co.bconline.ndelius.repository.ldap.RoleAssociationRepository;
 import uk.co.bconline.ndelius.repository.ldap.RoleRepository;
 import uk.co.bconline.ndelius.service.RoleService;
 import uk.co.bconline.ndelius.service.UserRoleService;
+import uk.co.bconline.ndelius.transformer.RoleTransformer;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -32,14 +34,12 @@ import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 @Slf4j
 @Service
-public class UserRoleServiceImpl implements UserRoleService
-{
+public class UserRoleServiceImpl implements UserRoleService {
+
 	private final RoleService roleService;
 	private final RoleRepository roleRepository;
 	private final RoleAssociationRepository roleAssociationRepository;
-
-	@Value("${spring.ldap.base}")
-	private String ldapBase;
+	private final RoleTransformer roleTransformer;
 
 	@Value("${delius.ldap.base.users}")
 	private String usersBase;
@@ -47,23 +47,20 @@ public class UserRoleServiceImpl implements UserRoleService
 	@Value("${delius.ldap.base.clients}")
 	private String clientsBase;
 
-	@Value("${delius.ldap.base.roles}")
-	private String rolesBase;
-
 	@Autowired
 	public UserRoleServiceImpl(
 			RoleService roleService,
 			RoleRepository roleRepository,
-			RoleAssociationRepository roleAssociationRepository)
-	{
+			RoleAssociationRepository roleAssociationRepository,
+			RoleTransformer roleTransformer) {
 		this.roleService = roleService;
 		this.roleRepository = roleRepository;
 		this.roleAssociationRepository = roleAssociationRepository;
+		this.roleTransformer = roleTransformer;
 	}
 
 	@Override
-	public Set<RoleEntry> getRolesICanAssign()
-	{
+	public Set<RoleEntry> getRolesICanAssign() {
 		val myInteractions = myInteractions().collect(toSet());
 		val privateAccess = myInteractions.contains(PRIVATE_ACCESS);
 		val publicAccess = myInteractions.contains(PUBLIC_ACCESS);
@@ -85,24 +82,18 @@ public class UserRoleServiceImpl implements UserRoleService
 	}
 
 	@Override
-	public Set<RoleEntry> getUserRoles(String username)
-	{
+	public Set<RoleEntry> getUserRoles(String username) {
 		return getAssignedRoles(username, usersBase);
 	}
 
 	@Override
-	public Set<RoleEntry> getClientRoles(String clientId)
-	{
+	public Set<RoleEntry> getClientRoles(String clientId) {
 		return getAssignedRoles(clientId, clientsBase);
 	}
 
-	private Set<RoleEntry> getAssignedRoles(String id, String base)
-	{
+	private Set<RoleEntry> getAssignedRoles(String id, String base) {
 		val t = LocalDateTime.now();
-		val r = stream(roleAssociationRepository.findAll(query()
-				.searchScope(ONELEVEL)
-				.base(join(",", "cn=" + id, base))
-				.where(OBJECTCLASS).is("NDRoleAssociation")).spliterator(), true)
+		val r = stream(getAssignedRoleAssociations(id, base).spliterator(), true)
 				.map(roleService::dereference)
 				.flatMap(Optionals::toStream)
 				.collect(toSet());
@@ -110,9 +101,15 @@ public class UserRoleServiceImpl implements UserRoleService
 		return r;
 	}
 
+	private Iterable<RoleAssociationEntry> getAssignedRoleAssociations(String id, String base) {
+		return roleAssociationRepository.findAll(query()
+				.searchScope(ONELEVEL)
+				.base(join(",", "cn=" + id, base))
+				.where(OBJECTCLASS).is("NDRoleAssociation"));
+	}
+
 	@Override
-	public Set<String> getUserInteractions(String username)
-	{
+	public Set<String> getUserInteractions(String username) {
 		val t = LocalDateTime.now();
 		val r = getUserRoles(username).stream()
 				.map(RoleEntry::getInteractions)
@@ -123,28 +120,31 @@ public class UserRoleServiceImpl implements UserRoleService
 	}
 
 	@Override
-	public void updateUserRoles(String username, Set<RoleEntry> roles)
-	{
-		log.debug("Deleting existing role associations");
-		roleAssociationRepository.deleteAll(roleAssociationRepository.findAll(query()
-				.searchScope(SearchScope.ONELEVEL)
-				.base(join(",", "cn=" + username, usersBase))
-				.where(OBJECTCLASS).is("NDRoleAssociation")));
-		log.debug("Deleting any existing invalid role associations (non-aliases)");
+	public void updateUserRoles(String username, Set<RoleEntry> roles) {
+		log.debug("Deleting any invalid role associations (non-aliases)");
 		roleRepository.deleteAll(roleRepository.findAll(query()
 				.searchScope(SearchScope.ONELEVEL)
 				.base(join(",", "cn=" + username, usersBase))
 				.where(OBJECTCLASS).is("NDRole")));
 
-		log.debug("Saving new role associations");
-		ofNullable(roles).ifPresent(r ->
-				roleAssociationRepository.saveAll(r.stream()
-						.map(RoleEntry::getName)
-						.map(name -> RoleAssociationEntry.builder()
-								.name(name)
-								.username(username)
-								.aliasedObjectName(join(",", "cn=" + name, rolesBase, ldapBase))
-								.build())
-						.collect(toList())));
+		log.debug("Fetching existing role associations");
+		val existingRoles = stream(getAssignedRoleAssociations(username, usersBase).spliterator(), true)
+				.map(RoleAssociationEntry::getCn)
+				.collect(toSet());
+		val newRoles = ofNullable(roles).map(r -> r.stream()
+				.map(RoleEntry::getName)
+				.collect(toSet())).orElse(emptySet());
+		val rolesToAdd = Sets.difference(newRoles, existingRoles);
+		val rolesToRemove = Sets.difference(existingRoles, newRoles);
+
+		log.debug("Removing {} role association(s)", rolesToRemove.size());
+		rolesToRemove.parallelStream()
+				.map(role -> roleTransformer.buildAssociation(username, role))
+				.forEach(roleAssociationRepository::delete);
+
+		log.debug("Adding {} role association(s)", rolesToAdd.size());
+		rolesToAdd.parallelStream()
+				.map(role -> roleTransformer.buildAssociation(username, role))
+				.forEach(roleAssociationRepository::save);
 	}
 }
