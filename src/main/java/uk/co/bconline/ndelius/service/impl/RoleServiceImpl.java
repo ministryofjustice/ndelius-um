@@ -59,7 +59,10 @@ public class RoleServiceImpl implements RoleService
 	@Cacheable(value = "rolesets", key = "'all'")
 	public Set<RoleEntry> getAllRoles()
 	{
-		return Sets.newHashSet(roleRepository.findAll());
+		return Sets.newHashSet(roleRepository.findAll(query()
+				.searchScope(ONELEVEL)
+				.base(rolesBase)
+				.where(OBJECTCLASS).is("NDRole")));
 	}
 
 	@Override
