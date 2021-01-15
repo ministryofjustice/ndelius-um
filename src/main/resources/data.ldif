@@ -10825,3 +10825,320 @@ objectclass:NDRole
 objectclass:top
 cn:AUDBT001
 
+
+#
+# MERGE
+#
+
+# ROLES
+
+## All Roles - MERGEBT000
+dn:cn=MERGEBT000,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:Merge - all access test role
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:merge-batch_job:manage
+uibusinessinteractioncollection:merge-batch_job:view
+uibusinessinteractioncollection:merge-batch_configuration:manage
+uibusinessinteractioncollection:merge-batch_configuration:view
+uibusinessinteractioncollection:merge-errors:manage
+uibusinessinteractioncollection:merge-errors:view
+uibusinessinteractioncollection:merge-merge:manage
+uibusinessinteractioncollection:merge-merge:view
+uibusinessinteractioncollection:merge-unmerge:manage
+uibusinessinteractioncollection:merge-unmerge:view
+uibusinessinteractioncollection:merge-offender:view
+uibusinessinteractioncollection:merge-request:manage
+uibusinessinteractioncollection:merge-request:view
+uibusinessinteractioncollection:merge-app_settings:manage
+uibusinessinteractioncollection:merge-app_settings:view
+uibusinessinteractioncollection:merge-app_admin:manage
+objectclass:NDRole
+objectclass:top
+cn:MERGEBT000
+
+## Merge Offender - MERGEBT001
+dn:cn=MERGEBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:Merge Offenders
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:merge-errors:view
+uibusinessinteractioncollection:merge-merge:manage
+uibusinessinteractioncollection:merge-merge:view
+uibusinessinteractioncollection:merge-offender:view
+uibusinessinteractioncollection:merge-request:view
+objectclass:NDRole
+objectclass:top
+cn:MERGEBT001
+
+## UnMerge Offender - MERGEBT002
+dn:cn=MERGEBT002,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:UnMerge Offenders
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:merge-unmerge:manage
+uibusinessinteractioncollection:merge-unmerge:view
+uibusinessinteractioncollection:merge-request:view
+uibusinessinteractioncollection:merge-errors:view
+objectclass:NDRole
+objectclass:top
+cn:MERGEBT002
+
+## Error Management - MERGEBT003
+dn:cn=MERGEBT003,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:Error Management
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:merge-errors:manage
+uibusinessinteractioncollection:merge-errors:view
+uibusinessinteractioncollection:merge-request:manage
+uibusinessinteractioncollection:merge-request:view
+objectclass:NDRole
+objectclass:top
+cn:MERGEBT003
+
+## Batch Management - MERGEBT004
+dn:cn=MERGEBT004,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:Batch Management
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:merge-batch_job:manage
+uibusinessinteractioncollection:merge-batch_job:view
+objectclass:NDRole
+objectclass:top
+cn:MERGEBT004
+
+## Batch Settings - MERGEBT005
+dn:cn=MERGEBT005,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:Batch Settings
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:merge-batch_configuration:manage
+uibusinessinteractioncollection:merge-batch_configuration:view
+objectclass:NDRole
+objectclass:top
+cn:MERGEBT005
+
+## Application Settings - MERGEBT006
+dn:cn=MERGEBT006,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:Batch Settings
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:merge-app_settings:manage
+uibusinessinteractioncollection:merge-app_settings:view
+objectclass:NDRole
+objectclass:top
+cn:MERGEBT006
+
+## Application Management - MERGEBT999
+dn:cn=MERGEBT999,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+description:Batch Settings
+level1:false
+level2:false
+level3:false
+uibusinessinteractioncollection:merge-app_admin:manage
+objectclass:NDRole
+objectclass:top
+cn:MERGEBT999
+
+# CLIENT
+dn: cn=test.merge.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+objectclass: NDClient
+cn: test.merge.client
+uid: test.merge.client
+givenName: Test Merge Service
+sn: Client
+mail: test.merge.client@test.com
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test front-end client for OAuth authorization_code and implicit flow
+resourceId: NDelius
+registeredRedirectUri: https://example.com/login-success
+registeredRedirectUri: /login-success
+authorizedGrantType: preauthenticated
+authorizedGrantType: authorization_code
+authorizedGrantType: implicit
+authorizedGrantType: refresh_token
+
+dn: cn=MERGEBT000,cn=test.merge.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: MERGEBT000
+aliasedObjectName: cn=MERGEBT000,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+
+
+
+
+
+# USER with all roles
+dn: cn=test.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+cn: test.user.merge
+uid: test.user.merge
+givenName: Test
+sn: User
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test user for Merge service
+
+dn: cn=MERGEBT000,cn=test.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: MERGEBT000
+aliasedObjectName: cn=MERGEBT000,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+# Merge User
+dn: cn=merge.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+cn: merge.user.merge
+uid: merge.user.merge
+givenName: Merge
+sn: User
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test user with merge role
+
+dn: cn=MERGEBT001,cn=merge.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: MERGEBT001
+aliasedObjectName: cn=MERGEBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+# Unmerge User
+dn: cn=unmerge.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+cn: unmerge.user.merge
+uid: unmerge.user.merge
+givenName: UnMerge
+sn: User
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test user with UnMerge role
+
+dn: cn=MERGEBT002,cn=unmerge.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: MERGEBT002
+aliasedObjectName: cn=MERGEBT002,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+# Error Management
+dn: cn=error.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+cn: error.user.merge
+uid: error.user.merge
+givenName: Error
+sn: User
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test user with Error Management role
+
+dn: cn=MERGEBT003,cn=error.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: MERGEBT003
+aliasedObjectName: cn=MERGEBT003,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+## Batch Management - MERGEBT004
+dn: cn=batchman.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+cn: batchman.user.merge
+uid: batchman.user.merge
+givenName: BatchMan
+sn: User
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test user with Batch Management role
+
+dn: cn=MERGEBT004,cn=batchman.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: MERGEBT004
+aliasedObjectName: cn=MERGEBT004,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+
+## Batch Settings - MERGEBT005
+dn: cn=batchsettings.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+cn: batchsettings.user.merge
+uid: batchsettings.user.merge
+givenName: batchsettings
+sn: User
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test user with Batch Settings role
+
+dn: cn=MERGEBT005,cn=batchsettings.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: MERGEBT005
+aliasedObjectName: cn=MERGEBT005,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+## Application Settings - MERGEBT006
+dn: cn=applicationsettings.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+cn: applicationsettings.user.merge
+uid: applicationsettings.user.merge
+givenName: applicationsettings
+sn: User
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test user with Application Settings role
+
+dn: cn=MERGEBT006,cn=applicationsettings.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: MERGEBT006
+aliasedObjectName: cn=MERGEBT006,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
+## Application Management - MERGEBT999
+dn: cn=appmanagement.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: inetOrgPerson
+objectclass: NDUser
+cn: appmanagement.user.merge
+uid: appmanagement.user.merge
+givenName: appmanagement
+sn: User
+userHomeArea: N01
+userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
+description: Test user with Application Management role
+
+dn: cn=MERGEBT999,cn=appmanagement.user.merge,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: MERGEBT999
+aliasedObjectName: cn=MERGEBT999,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
