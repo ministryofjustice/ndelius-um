@@ -10965,6 +10965,11 @@ description: Test front-end client for OAuth authorization_code and implicit flo
 resourceId: NDelius
 registeredRedirectUri: https://example.com/login-success
 registeredRedirectUri: /login-success
+registeredRedirectUri: http://localhost:4200/merge/homepage
+registeredRedirectUri: http://localhost:4200/homepage
+registeredRedirectUri: http://localhost:4200/request-merge
+registeredRedirectUri: http://nd-systest-nt01.bcl.local/homepage
+registeredRedirectUri: http://nd-systest-nt01/homepage
 authorizedGrantType: preauthenticated
 authorizedGrantType: authorization_code
 authorizedGrantType: implicit
