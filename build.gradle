@@ -73,7 +73,7 @@ dependencies {
 	implementation 		'org.springframework.security.oauth:spring-security-oauth2:2.5.0.RELEASE'
 	implementation 		'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.3.4.RELEASE'
 	implementation 		'com.unboundid:unboundid-ldapsdk'
-	implementation		'com.google.guava:guava:29.0-jre' // Overriding version due to CVEs in 21.0 (used in embedded-redis)
+	implementation		'com.google.guava:guava:30.1.1-jre' // Overriding version due to CVEs in 21.0 (used in embedded-redis)
 	implementation 		'it.ozimov:embedded-redis:0.7.2'
 	implementation 		'io.springfox:springfox-swagger2:2.9.2'
 	implementation 		'io.springfox:springfox-swagger-ui:2.9.2'
