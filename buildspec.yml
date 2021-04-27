@@ -8,7 +8,7 @@ phases:
   pre_build:
     commands:
       - echo Logging in to ECR...
-      - $(aws ecr get-login --no-include-email)
+      - aws ecr get-login-password | docker login --username AWS --password-stdin 895523100917.dkr.ecr.eu-west-2.amazonaws.com
 
       - echo Getting version...
       # If this commit has been tagged in git then use the git tag, otherwise default to '<branch>-<commit-hash>'
