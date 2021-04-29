@@ -93,7 +93,7 @@ public class UserEntityServiceImpl implements UserEntityService
 		}
 		catch (IncorrectResultSizeDataAccessException e)
 		{
-			throw new AppException("Multiple active or multiple inactive staff records found for this officer code - " + code);
+			throw new AppException("Unable to select a unique Staff Record for code: " + code);
 		}
 	}
 
