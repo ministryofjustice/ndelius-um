@@ -466,4 +466,80 @@ public class UserControllerUpdateTest
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.telephoneNumber").doesNotExist());
 	}
+
+	// Verify fix for defect DST-8781 - 500 error caused by duplicate staff code
+	@Test
+	public void updateDuplicateInactiveStaffCodeFails() throws Exception {
+		// Given that two inactive duplicate staff codes exist
+		User user = createUser(mvc,
+				aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.forenames("test.user.duplicate-staff-inactive")
+						.surname("test.user.duplicate-staff-inactive")
+						.startDate(LocalDate.of(2001, 2, 3))
+						.build());
+
+		// When I attempt to update the user
+		// Then the request is unsuccessful
+		updateUser(mvc, user.toBuilder().staffCode("N01A204").staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
+				.build())
+				.andExpect(status().is5xxServerError())
+				.andExpect(jsonPath("$.error[*]", hasItem("Unable to update user (Unable to select a unique Staff Record for code: N01A204)")));
+	}
+
+	// Verify fix for defect DST-8781 - 500 error caused by duplicate staff code
+	@Test
+	public void updateDuplicateActiveStaffCodeFails() throws Exception {
+		// Given that two active duplicate staff codes exist
+		User user = createUser(mvc,
+				aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.forenames("test.user.duplicate-staff-active")
+						.surname("test.user.duplicate-staff-active")
+						.startDate(LocalDate.of(2001, 2, 3))
+						.build());
+
+		// When I attempt to update the user
+		// Then the request is unsuccessful
+		updateUser(mvc, user.toBuilder().staffCode("N01A205").staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
+				.build())
+				.andExpect(status().is5xxServerError())
+				.andExpect(jsonPath("$.error[*]", hasItem("Unable to update user (Unable to select a unique Staff Record for code: N01A205)")));
+	}
+
+	@Test
+	public void updateUserWithPreviousStaffCodes() throws Exception {
+		// Given that two inactive staff codes exist and one active staff code exists
+		User user = createUser(mvc,
+				aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.forenames("test.user.duplicate-staff-active")
+						.surname("test.user.duplicate-staff-active")
+						.startDate(LocalDate.of(2001, 2, 3))
+						.build());
+
+		// When I attempt to update the user
+		// Then the request is successful
+		updateUser(mvc, user.toBuilder().staffCode("N01A206").staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
+				.build())
+				.andExpect(status().isNoContent());
+	}
+
+	@Test
+	public void updateSingleInactiveStaffCodePasses() throws Exception {
+		// Given that one inactive staff code exists
+		User user = createUser(mvc,
+				aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.forenames("test.user.duplicate-staff-active")
+						.surname("test.user.duplicate-staff-active")
+						.startDate(LocalDate.of(2001, 2, 3))
+						.build());
+
+		// When I attempt to update the user
+		// Then the request is successful
+		updateUser(mvc, user.toBuilder().staffCode("N01A207").staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
+				.build())
+				.andExpect(status().isNoContent());
+	}
 }

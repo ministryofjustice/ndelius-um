@@ -4,10 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.util.Optionals;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
@@ -85,7 +87,14 @@ public class UserEntityServiceImpl implements UserEntityService
 	@Override
 	public Optional<StaffEntity> getStaffByStaffCode(String code)
 	{
-		return staffRepository.findByCode(code);
+		try
+		{
+			return staffRepository.findByCodeAndEndDateIsNull(code).or(() -> staffRepository.findByCode(code));
+		}
+		catch (IncorrectResultSizeDataAccessException e)
+		{
+			throw new AppException("Unable to select a unique Staff Record for code: " + code);
+		}
 	}
 
 	@Override
