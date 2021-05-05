@@ -12,7 +12,7 @@ User accounts are stored across an LDAP cluster (for authentication, user prefer
 * [Demo Application](https://delius-user-management.herokuapp.com/umt/)
   * username=test.user
   * password=secret
-* [API Documentation](https://umt-dev.bconline.co.uk/umt/swagger-ui.html)
+* [API Documentation](https://delius-user-management.herokuapp.com/umt/swagger-ui.html)
 
 
 ## Build
