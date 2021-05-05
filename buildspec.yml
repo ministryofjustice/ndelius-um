@@ -21,7 +21,7 @@ phases:
   build:
     commands:
       - echo Building...
-      - ./gradlew clean build bootBuildImage --info --build-cache
+      - ./gradlew clean build bootBuildImage --info --build-cache --no-daemon
 
   post_build:
     commands:
