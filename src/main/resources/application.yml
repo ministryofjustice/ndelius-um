@@ -1,10 +1,14 @@
 spring.application.name: ndelius-um
 
+spring.profiles.group:
+  dev: default
+  test: dev
+
 server:
   servlet.context-path: /umt
   compression.enabled: true # Enable GZIP compression
 
-spring.resources:
+spring.web.resources:
   chain.strategy.content.enabled: true
   cache.cachecontrol:
     cache-public: true # Enable resource caching by browser or intermediaries

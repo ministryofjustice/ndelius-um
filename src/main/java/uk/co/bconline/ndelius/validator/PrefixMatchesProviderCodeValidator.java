@@ -7,7 +7,7 @@ import uk.co.bconline.ndelius.service.DatasetService;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static org.springframework.util.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.hasLength;
 
 public class PrefixMatchesProviderCodeValidator implements ConstraintValidator<PrefixMatchesProviderCode, String>
 {
@@ -17,7 +17,7 @@ public class PrefixMatchesProviderCodeValidator implements ConstraintValidator<P
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context)
 	{
-		if (isEmpty(value)) return true;
+		if (!hasLength(value)) return true;
 		if (value.length() < 3) return false;
 
 		val prefix = value.substring(0, 3);

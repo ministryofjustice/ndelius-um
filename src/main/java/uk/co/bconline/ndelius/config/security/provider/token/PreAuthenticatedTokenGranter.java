@@ -47,8 +47,8 @@ public class PreAuthenticatedTokenGranter extends AbstractTokenGranter {
 		Map<String, String> params = tokenRequest.getRequestParameters();
 
 		if (deliusSecret == null
-				|| StringUtils.isEmpty(params.get("u"))
-				|| StringUtils.isEmpty(params.get("t"))) {
+				|| !StringUtils.hasLength(params.get("u"))
+				|| !StringUtils.hasLength(params.get("t"))) {
 			val e = new PreAuthenticatedCredentialsNotFoundException("Missing request parameters");
 			log.debug(e.getMessage(), e);
 			throw e;

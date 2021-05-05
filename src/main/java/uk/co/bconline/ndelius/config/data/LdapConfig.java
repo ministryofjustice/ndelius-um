@@ -46,8 +46,8 @@ public class LdapConfig extends LdapAutoConfiguration {
 
 	@Bean
 	@Override
-	public LdapTemplate ldapTemplate(ContextSource contextSource) {
-		return new LdapTemplate(contextSource);
+	public LdapTemplate ldapTemplate(LdapProperties properties, ContextSource contextSource) {
+		return super.ldapTemplate(properties, contextSource);
 	}
 
 	/*

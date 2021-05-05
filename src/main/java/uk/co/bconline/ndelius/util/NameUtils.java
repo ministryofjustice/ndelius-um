@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
-import static org.springframework.util.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.hasLength;
 import static org.springframework.util.StringUtils.trimTrailingWhitespace;
 
 @UtilityClass
@@ -26,20 +26,20 @@ public class NameUtils
 
 	public static String firstForename(String forenames)
 	{
-		if (isEmpty(forenames)) return "";
+		if (!hasLength(forenames)) return "";
 		return forenames.split(" ")[0];
 	}
 
 	public static String subsequentForenames(String forenames)
 	{
-		if (isEmpty(forenames)) return "";
+		if (!hasLength(forenames)) return "";
 		return stream(forenames.split(" ")).skip(1).collect(joining(" "));
 	}
 
 	public static String join(String delimiter, String... strings)
 	{
 		return Stream.of(strings)
-				.filter(str -> !StringUtils.isEmpty(str))
+				.filter(StringUtils::hasLength)
 				.collect(joining(delimiter));
 	}
 

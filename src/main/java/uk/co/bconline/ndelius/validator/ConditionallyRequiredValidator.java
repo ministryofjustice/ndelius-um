@@ -2,13 +2,12 @@ package uk.co.bconline.ndelius.validator;
 
 import lombok.val;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.util.StringUtils;
 import uk.co.bconline.ndelius.model.User;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.List;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
 import static uk.co.bconline.ndelius.util.NameUtils.camelCaseToTitleCase;
 
 public class ConditionallyRequiredValidator implements ConstraintValidator<ConditionallyRequired, User>
@@ -42,16 +41,5 @@ public class ConditionallyRequiredValidator implements ConstraintValidator<Condi
 		}
 
 		return valid;
-	}
-
-	private boolean isEmpty(Object value)
-	{
-		if (value == null) return true;
-
-		if (value instanceof List) {
-			return ((List) value).isEmpty();
-		} else {
-			return StringUtils.isEmpty(value);
-		}
 	}
 }
