@@ -15,9 +15,8 @@ plugins {
 sourceCompatibility = 11
 
 // Spring Boot
-springBoot {
-	buildInfo()
-}
+springBoot { buildInfo() }
+gitProperties { failOnNoGitDirectory = false }
 
 // Node/NPM
 node {
