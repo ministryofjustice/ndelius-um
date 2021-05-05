@@ -1,10 +1,6 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Wither;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
@@ -15,9 +11,9 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+@With
 @Getter
 @Entity
-@Wither
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)

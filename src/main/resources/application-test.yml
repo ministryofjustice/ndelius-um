@@ -1,1 +1,1 @@
-spring.profiles.include: dev
+# Add any extra configuration for unit/integration testing here

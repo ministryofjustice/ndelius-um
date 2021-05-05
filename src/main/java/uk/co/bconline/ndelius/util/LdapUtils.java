@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Optional.ofNullable;
-import static org.springframework.util.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.hasLength;
 
 @Slf4j
 @UtilityClass
@@ -22,7 +22,7 @@ public class LdapUtils
 
 	public static String fixPassword(String password)
 	{
-		if (!isEmpty(password) && !password.startsWith("{"))
+		if (hasLength(password) && !password.startsWith("{"))
 		{
 			// LDAP passes back the password as a stringify'd byte array, so we manually unpick it and turn it back
 			// into a hashed string for verification here.
