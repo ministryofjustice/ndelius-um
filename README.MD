@@ -9,7 +9,7 @@
 Developed by [Unilink](https://www.unilink.com) using Angular and Spring Boot to enable NPS-ICT and CRC admins to effectively create and maintain user accounts in the National Delius application, and to allow external services to securely authenticate Probation staff.
 User accounts are stored across an LDAP cluster (for authentication, user preferences and functional authorisation), and an Oracle database (for data authorisation and caseload management). 
 
-* [Demo Application](https://umt-dev.bconline.co.uk/umt/)
+* [Demo Application](https://delius-user-management.herokuapp.com/umt/)
   * username=test.user
   * password=secret
 * [API Documentation](https://umt-dev.bconline.co.uk/umt/swagger-ui.html)
