@@ -23,7 +23,7 @@ import {LabelMappingUtils} from '../../util/label-mapping.utils';
 import {Groups} from '../../model/groups';
 import {UserHistoryItem} from '../../model/user-history-item';
 import {HistoryService} from '../../service/history.service';
-import {UserConstants} from "./user.constants";
+import {UserConstants} from './user.constants';
 
 @Component({
   selector: 'user',
@@ -250,7 +250,6 @@ export class UserComponent implements OnInit {
   }
 
   isSystemUser(username: string): boolean{
-    console.log(username);
     return this.systemUserNames.some(v => username.toUpperCase().includes(v));
   }
 }
