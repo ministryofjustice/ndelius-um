@@ -23,6 +23,7 @@ import {LabelMappingUtils} from '../../util/label-mapping.utils';
 import {Groups} from '../../model/groups';
 import {UserHistoryItem} from '../../model/user-history-item';
 import {HistoryService} from '../../service/history.service';
+import {UserConstants} from "./user.constants";
 
 @Component({
   selector: 'user',
@@ -54,6 +55,7 @@ export class UserComponent implements OnInit {
   generatingStaffCode: boolean;
   globalMinDate: Date = new Date(1900, 0, 1);
   globalMaxDate: Date = new Date(2099, 11, 31);
+  systemUserNames: string[] = UserConstants.SYSTEM_USER_NAMES;
 
   LabelMappingUtils = LabelMappingUtils;
 
@@ -245,5 +247,10 @@ export class UserComponent implements OnInit {
       confirm('Any changes made on this screen will be lost. Select OK to continue or Cancel to stay on this screen.')) {
       window.history.back();
     }
+  }
+
+  isSystemUser(username: string): boolean{
+    console.log(username);
+    return this.systemUserNames.some(v => username.toUpperCase().includes(v));
   }
 }
