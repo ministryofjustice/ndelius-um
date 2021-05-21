@@ -249,7 +249,7 @@ export class UserComponent implements OnInit {
     }
   }
 
-  isSystemUser(username: string): boolean{
+  isSystemUser(username: string): boolean {
     return this.systemUserNames.some(v => username.toUpperCase().includes(v));
   }
 }
