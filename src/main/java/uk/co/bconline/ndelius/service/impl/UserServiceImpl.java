@@ -109,6 +109,8 @@ public class UserServiceImpl implements UserService
 			var stream = allOf(groupMembersFuture, ldapFuture, dbFuture)
 					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())).join()
 					.flatMap(Collection::stream)
+					.map(sr -> expandEmailSearchToDB(sr, query))
+					.flatMap(Collection::stream)
 					.collect(groupingBy(SearchResult::getUsername)).values().stream()
 					.map(l -> l.stream().reduce(searchResultTransformer::reduce))
 					.flatMap(Optionals::toStream);
@@ -128,7 +130,7 @@ public class UserServiceImpl implements UserService
 							comparing(SearchResult::getScore, Float::compare).reversed())
 					.skip((long) (page-1) * pageSize)
 					.limit(pageSize)
-					.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}", result.getUsername(), result.getScore(), result.getEndDate()))
+					.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={} email={}", result.getUsername(), result.getScore(), result.getEndDate(), result.getEmail()))
 					.collect(toList());
 		}
 		catch (CancellationException | CompletionException e)
@@ -247,5 +249,20 @@ public class UserServiceImpl implements UserService
 		val myDatasets = datasetService.getDatasetCodes(myUsername());
 		myDatasets.add(userEntryService.getUserHomeArea(myUsername()));
 		return myDatasets;
+	}
+
+
+	private List<SearchResult> expandEmailSearchToDB(SearchResult sr, String query)
+	{
+		List<SearchResult> results = new ArrayList<>();
+
+		// Search the database to obtain staff and team records if the query is a substring of the search result's email
+		if (sr.getSources().contains("LDAP") && sr.getEmail() != null && sr.getEmail().contains(query))
+		{
+			Optional<UserEntity> userEntity = userEntityService.getUser(sr.getUsername());
+			userEntity.ifPresent(entity -> results.add(searchResultTransformer.map(entity)));
+		}
+		results.add(sr);
+		return results;
 	}
 }

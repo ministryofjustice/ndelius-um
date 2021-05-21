@@ -116,14 +116,16 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	public List<SearchResult> search(String query, boolean includeInactiveUsers, Set<String> datasets)
 	{
 		// For a search with no dataset filtering, we don't need to search LDAP as all the users will be returned by the DB search
-		// (We only ever need to search LDAP to find users that match on userHomeArea - as that attribute doesn't exist in the DB)
-		if (datasets.isEmpty() && !includeInactiveUsers) return emptyList();
+		// (We only ever need to search LDAP to find users that match on userHomeArea or email - as these attributes do not exist in the DB)
+		if (datasets.isEmpty() && !includeInactiveUsers && !query.contains("@")) return emptyList();
 
 		// Build up tokenized filter on givenName (forenames), sn (surname) and cn (username)
 		AndFilter filter = Stream.of(query.trim().split("\\s+"))
 				.map(token -> query().where("givenName").like(token + '*')
 						.or("sn").like(token + '*')
-						.or("cn").like(token + '*'))
+						.or("cn").like(token + '*')
+						.or("mail").whitespaceWildcardsLike(token)
+				)
 				.collect(AndFilter::new, (f, q) -> f.and(q.filter()), AndFilter::and);
 
 		// Add additional filter that userHomeArea must be contained in 'datasets'
@@ -269,7 +271,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	{
 		return (float) Stream.of(query.split(" "))
 				.map(String::toLowerCase)
-				.mapToDouble(token -> Stream.of(u.getUsername(), u.getForenames(), u.getSurname())
+				.mapToDouble(token -> Stream.of(u.getUsername(), u.getForenames(), u.getSurname(), u.getEmail())
 						.filter(str -> !StringUtils.isEmpty(str))
 						.filter(str -> str.toLowerCase().contains(token))
 						.mapToDouble(item -> (double) token.length() / item.length())

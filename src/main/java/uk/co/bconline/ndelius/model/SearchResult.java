@@ -20,6 +20,7 @@ public final class SearchResult
 	private String staffCode;
 	private List<String> sources;
 	private LocalDate endDate;
+	private String email;
 	@JsonIgnore
 	private float score;
 }
