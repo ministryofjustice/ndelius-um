@@ -55,7 +55,7 @@ public class UserHistoryControllerTest {
 		mvc.perform(get("/api/user/Joe.Bloggs/history")
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(4)));
+				.andExpect(jsonPath("$", hasSize(5)));
 	}
 
 	@Test
