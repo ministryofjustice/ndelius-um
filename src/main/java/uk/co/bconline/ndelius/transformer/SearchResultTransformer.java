@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
+import uk.co.bconline.ndelius.model.entity.StaffEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 
@@ -77,8 +78,8 @@ public class SearchResultTransformer
 				.forenames(combineNames(entity.getForename(), entity.getForename2()))
 				.surname(entity.getSurname())
 				.endDate(entity.getEndDate())
-				.staffCode(entity.getStaff() != null ? entity.getStaff().getCode() : null)
-				.teams(entity.getStaff() != null ? teamTransformer.map(entity.getStaff().getTeams()) : null)
+				.staffCode(ofNullable(entity.getStaff()).map(StaffEntity::getCode).orElse(null))
+				.teams(ofNullable(entity.getStaff()).map(StaffEntity::getTeams).map(teamTransformer::map).orElse(null))
 				.sources(singletonList("DB"))
 				.build();
 	}
