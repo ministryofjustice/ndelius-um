@@ -78,4 +78,8 @@ export class SearchComponent implements AfterViewInit {
   teamDescriptions(teams: Team[]): string {
     return (teams || []).map(t => t.description).join('\n');
   }
+
+  showEmailCol(user: User) {
+    return user.email != null && user.email.trim().length > 0;
+  }
 }
