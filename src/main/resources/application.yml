@@ -30,6 +30,8 @@ info:
   java.vm.vendor: ${java.vm.vendor}
   java.version: ${java.version}
 
+spring.mvc.async.request-timeout: 1800000 # = 30 * 60 * 1000 = 30 minutes. To support streaming downloads of export data.
+
 logging.level:
   org.springframework.web: ERROR
 

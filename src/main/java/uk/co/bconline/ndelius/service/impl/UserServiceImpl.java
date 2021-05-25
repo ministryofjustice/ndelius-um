@@ -1,5 +1,7 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +9,9 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.util.Optionals;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.co.bconline.ndelius.exception.AppException;
+import uk.co.bconline.ndelius.model.ExportResult;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
@@ -16,6 +20,10 @@ import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CancellationException;
@@ -35,8 +43,7 @@ import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService
-{
+public class UserServiceImpl implements UserService {
 	private final UserEntityService userEntityService;
 	private final UserEntryService userEntryService;
 	private final DatasetService datasetService;
@@ -53,8 +60,7 @@ public class UserServiceImpl implements UserService
 			GroupService groupService,
 			UserTransformer transformer,
 			SearchResultTransformer searchResultTransformer,
-			TaskExecutor taskExecutor)
-	{
+			TaskExecutor taskExecutor) {
 		this.userEntityService = userEntityService;
 		this.userEntryService = userEntryService;
 		this.datasetService = datasetService;
@@ -66,8 +72,7 @@ public class UserServiceImpl implements UserService
 
 	@Override
 	public List<SearchResult> search(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
-									 boolean includeInactiveUsers, int page, int pageSize)
-	{
+									 boolean includeInactiveUsers, int page, int pageSize) {
 		val queryIsEmpty = query == null || query.length() < 3;
 		val groupFilterIsEmpty = groupFilter.values().stream().allMatch(Set::isEmpty);
 		if (queryIsEmpty && groupFilterIsEmpty && datasetFilter.isEmpty()) {
@@ -103,8 +108,7 @@ public class UserServiceImpl implements UserService
 		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 
-		try
-		{
+		try {
 			// fetch and map
 			var stream = allOf(groupMembersFuture, ldapFuture, dbFuture)
 					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())).join()
@@ -123,83 +127,67 @@ public class UserServiceImpl implements UserService
 
 			// apply sorting and paging
 			return stream
-					.sorted(queryIsEmpty?
-							comparing(SearchResult::getUsername, String::compareToIgnoreCase):
+					.sorted(queryIsEmpty ?
+							comparing(SearchResult::getUsername, String::compareToIgnoreCase) :
 							comparing(SearchResult::getScore, Float::compare).reversed())
-					.skip((long) (page-1) * pageSize)
+					.skip((long) (page - 1) * pageSize)
 					.limit(pageSize)
 					.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}", result.getUsername(), result.getScore(), result.getEndDate()))
 					.collect(toList());
-		}
-		catch (CancellationException | CompletionException e)
-		{
+		} catch (CancellationException | CompletionException e) {
 			throw new AppException(String.format("Unable to complete user search for %s", query), e);
 		}
 	}
 
 	@Override
-	public boolean usernameExists(String username)
-	{
+	public boolean usernameExists(String username) {
 		val dbFuture = supplyAsync(() -> userEntityService.usernameExists(username), taskExecutor);
 		val ldapFuture = supplyAsync(() -> userEntryService.usernameExists(username), taskExecutor);
 
-		try
-		{
+		try {
 			return allOf(dbFuture, ldapFuture)
 					.thenApply(v -> dbFuture.join() || ldapFuture.join())
 					.join();
-		}
-		catch (CancellationException | CompletionException e)
-		{
+		} catch (CancellationException | CompletionException e) {
 			throw new AppException(String.format("Unable to check whether user exists with username %s", username), e);
 		}
 	}
 
 	@Override
-	public Optional<User> getUser(String username)
-	{
+	public Optional<User> getUser(String username) {
 		val dbFuture = supplyAsync(() -> userEntityService.getUser(username).orElse(null), taskExecutor);
 		val ldapFuture = supplyAsync(() -> userEntryService.getUser(username).orElse(null), taskExecutor);
 
-		try
-		{
+		try {
 			val datasetsFilter = datasetsFilter();
 			return allOf(dbFuture, ldapFuture)
 					.thenApply(v -> transformer.combine(dbFuture.join(), ldapFuture.join()))
 					.join()
 					.filter(user -> datasetsFilter.test(user.getUsername()));
-		}
-		catch (CancellationException | CompletionException e)
-		{
+		} catch (CancellationException | CompletionException e) {
 			throw new AppException(String.format("Unable to retrieve user details for %s", username), e);
 		}
 	}
 
 	@Override
-	public Optional<User> getUserByStaffCode(String staffCode)
-	{
+	public Optional<User> getUserByStaffCode(String staffCode) {
 		return userEntityService.getUserByStaffCode(staffCode).flatMap(transformer::map);
 	}
 
 	@Override
-	public void addUser(User user)
-	{
+	public void addUser(User user) {
 		val dbFuture = runAsync(() -> userEntityService.save(transformer.mapToUserEntity(user, new UserEntity())), taskExecutor);
 		val ldapFuture = runAsync(() -> userEntryService.save(transformer.mapToUserEntry(user, new UserEntry())), taskExecutor);
 
-		try
-		{
+		try {
 			allOf(dbFuture, ldapFuture).join();
-		}
-		catch (CancellationException | CompletionException e)
-		{
+		} catch (CancellationException | CompletionException e) {
 			throw new AppException(String.format("Unable to create user (%s)", getMostSpecificCause(e).getMessage()), e);
 		}
 	}
 
 	@Override
-	public void updateUser(User user)
-	{
+	public void updateUser(User user) {
 		val existingHomeArea = userEntryService.getUserHomeArea(user.getExistingUsername());
 		val dbFuture = runAsync(() -> {
 			log.debug("Fetching existing DB value");
@@ -216,18 +204,49 @@ public class UserServiceImpl implements UserService
 			userEntryService.save(user.getExistingUsername(), updatedUser);
 		}, taskExecutor);
 
-		try
-		{
+		try {
 			allOf(dbFuture, ldapFuture).join();
-		}
-		catch (CancellationException | CompletionException e)
-		{
+		} catch (CancellationException | CompletionException e) {
 			throw new AppException(String.format("Unable to update user (%s)", getMostSpecificCause(e).getMessage()), e);
 		}
 	}
 
-	private Predicate<String> datasetsFilter()
-	{
+	@Override
+	@Transactional(readOnly = true)
+	public void exportToCsv(OutputStream outputStream) {
+		try (val users = export();
+			 val writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
+			val csv = new StatefulBeanToCsvBuilder<ExportResult>(writer).build();
+			val username = new String[]{""};
+			users.forEachOrdered(user -> {
+				try {
+					if (!user.getUsername().equals(username[0])) {
+						csv.write(user);
+						username[0] = user.getUsername();
+					}
+				} catch (CsvException e) {
+					throw new AppException(String.format("Failed to write CSV entry for %s", user.getUsername()), e);
+				}
+			});
+		} catch (IOException e) {
+			throw new AppException("User export failed", e);
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Stream<ExportResult> export() {
+		log.info("User export started");
+		// Fetch all LDAP entries into memory
+		val ldapUsers = userEntryService.export();
+		log.info("Fetched {} entries from LDAP", ldapUsers.size());
+		// Stream all user entities from the DB, and combine each one with the corresponding LDAP entry
+		return userEntityService.export()
+				.map(entity -> transformer.combine(entity, ldapUsers.get(entity.getUsername())))
+				.filter(Objects::nonNull);
+	}
+
+	private Predicate<String> datasetsFilter() {
 		if (isNational()) return (String username) -> true;
 
 		val myDatasets = myDatasets();

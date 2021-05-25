@@ -5,6 +5,7 @@ import uk.co.bconline.ndelius.model.entry.GroupEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,6 +17,7 @@ public interface UserEntryService
 	Optional<UserEntry> getUser(String username);
 	String getUserHomeArea(String username);
 	Set<GroupEntry> getUserGroups(String username);
+	Map<String, UserEntry> export();
 	void save(UserEntry user);
 	void save(String username, UserEntry user);
 }

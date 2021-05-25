@@ -14,6 +14,7 @@ import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
+import uk.co.bconline.ndelius.model.entity.export.UserExportEntity;
 import uk.co.bconline.ndelius.repository.db.*;
 import uk.co.bconline.ndelius.service.UserEntityService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
@@ -115,6 +116,11 @@ public class UserEntityServiceImpl implements UserEntityService
 	@Override
 	public long getMyUserId() {
 		return getUserId(myUsername());
+	}
+
+	@Override
+	public Stream<UserExportEntity> export() {
+		return repository.export();
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
@@ -28,6 +29,7 @@ import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 
 import javax.naming.Name;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -37,6 +39,7 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toConcurrentMap;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -63,6 +66,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	private final UserRoleService userRoleService;
 	private final GroupService groupService;
 	private final LdapTemplate ldapTemplate;
+	private final LdapTemplate exportLdapTemplate;
 	private final SearchResultTransformer searchResultTransformer;
 
 	@Autowired
@@ -72,6 +76,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 			UserRoleService userRoleService,
 			GroupService groupService,
 			LdapTemplate ldapTemplate,
+			@Qualifier("exportLdapTemplate") LdapTemplate exportLdapTemplate,
 			SearchResultTransformer searchResultTransformer)
 	{
 		this.userRepository = userRepository;
@@ -79,6 +84,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 		this.userRoleService = userRoleService;
 		this.groupService = groupService;
 		this.ldapTemplate = ldapTemplate;
+		this.exportLdapTemplate = exportLdapTemplate;
 		this.searchResultTransformer = searchResultTransformer;
 	}
 
@@ -148,6 +154,16 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 				.collect(toList());
 		log.debug("Found {} LDAP results in {}ms", results.size(), MILLIS.between(t, now()));
 		return results;
+	}
+
+	@Override
+	public Map<String, UserEntry> export() {
+		return exportLdapTemplate.find(query()
+				.base(usersBase)
+				.searchScope(ONELEVEL)
+				.where(OBJECTCLASS).isPresent(), UserEntry.class)
+				.parallelStream()
+				.collect(toConcurrentMap(UserEntry::getUsername, u -> u));
 	}
 
 	@Override

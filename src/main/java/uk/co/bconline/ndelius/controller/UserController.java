@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.UserService;
@@ -20,6 +21,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 
@@ -60,6 +63,18 @@ public class UserController
 	{
 		val groups = ImmutableMap.<String, Set<String>>of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
 		return ok(userService.search(query, groups, datasets, includeInactiveUsers, page, pageSize));
+	}
+
+	@ResponseBody
+	@GetMapping("/users/export")
+	@PreAuthorize("#oauth2.hasScope('UABI025')")
+	public ResponseEntity<StreamingResponseBody> export() {
+		val filename = DateTimeFormatter.ofPattern("'DeliusUsers_'uuuuMMdd'T'HHmmss'.csv'").format(LocalDateTime.now());
+		final StreamingResponseBody body = userService::exportToCsv;
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType("text/csv"))
+				.header("Content-Disposition", "attachment; filename=" + filename)
+				.body(body);
 	}
 
 	@GetMapping(path="/user/{username}")

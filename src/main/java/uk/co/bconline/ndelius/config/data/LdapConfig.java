@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
 import org.springframework.boot.autoconfigure.ldap.LdapProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -35,6 +36,7 @@ public class LdapConfig extends LdapAutoConfiguration {
 	}
 
 	@Bean
+	@Primary
 	@Override
 	public LdapContextSource ldapContextSource(LdapProperties properties, Environment environment,
 											   ObjectProvider<DirContextAuthenticationStrategy> dirContextAuthenticationStrategy) {
@@ -45,6 +47,7 @@ public class LdapConfig extends LdapAutoConfiguration {
 	}
 
 	@Bean
+	@Primary
 	@Override
 	public LdapTemplate ldapTemplate(LdapProperties properties, ContextSource contextSource) {
 		return super.ldapTemplate(properties, contextSource);
