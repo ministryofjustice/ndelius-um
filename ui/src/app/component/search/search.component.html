@@ -112,7 +112,7 @@
             <tr>
               <th>Name</th>
               <th>Username</th>
-              <th *ngIf="results.some(showEmailCol)">Email</th>
+              <th *ngIf="showEmailColumn">Email</th>
               <th class="text-truncate">Staff Code</th>
               <th>Team(s)</th>
               <th *ngIf="searchParams.includeInactiveUsers" class="text-nowrap">End Date</th>
@@ -128,7 +128,7 @@
                    routerLink="/user/{{result.username}}">{{result.forenames}} {{result.surname}}</a>
               </td>
               <td title="Username">{{result.username}}</td>
-              <td *ngIf="results.some(showEmailCol)" title="Email">{{result.email}}</td>
+              <td *ngIf="showEmailColumn" title="Email">{{result.email}}</td>
               <td title="Staff Code">{{result.staffCode}}</td>
               <td class="w-25" [title]="teamDescriptions(result.teams)">
                 <span *ngIf="result.teams != null && result.teams.length == 1">{{ result.teams[0].description }}</span>
