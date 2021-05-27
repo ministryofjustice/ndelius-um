@@ -12,6 +12,7 @@ import {GroupService} from '../../service/group.service';
 import {DatasetService} from '../../service/dataset.service';
 import {LabelMappingUtils} from 'src/app/util/label-mapping.utils';
 import {SearchParams} from '../../model/search-params';
+import {saveAs} from 'file-saver';
 
 @Component({
   selector: 'search',
@@ -77,5 +78,9 @@ export class SearchComponent implements AfterViewInit {
 
   teamDescriptions(teams: Team[]): string {
     return (teams || []).map(t => t.description).join('\n');
+  }
+
+  exportSearchResultToCSV(): void {
+    this.service.exportToCSV(this.searchParams).subscribe(file => saveAs(file,"Search-Results.csv"));
   }
 }

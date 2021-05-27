@@ -114,6 +114,9 @@
               <th>Username</th>
               <th class="text-truncate">Staff Code</th>
               <th>Team(s)</th>
+              <th class="text-right " >
+                <span class="oi oi-data-transfer-download" style="cursor: pointer;" (click)="exportSearchResultToCSV()" title="Export to CSV..."></span >
+              </th>
               <th *ngIf="searchParams.includeInactiveUsers" class="text-nowrap">End Date</th>
               <th></th>
             </tr>

@@ -1,5 +1,9 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +17,12 @@ import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.service.*;
+import uk.co.bconline.ndelius.transformer.CustomMappingStrategy;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CancellationException;
@@ -66,7 +73,7 @@ public class UserServiceImpl implements UserService
 
 	@Override
 	public List<SearchResult> search(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
-									 boolean includeInactiveUsers, int page, int pageSize)
+									 boolean includeInactiveUsers, Integer page, Integer pageSize)
 	{
 		val queryIsEmpty = query == null || query.length() < 3;
 		val groupFilterIsEmpty = groupFilter.values().stream().allMatch(Set::isEmpty);
@@ -122,19 +129,36 @@ public class UserServiceImpl implements UserService
 			}
 
 			// apply sorting and paging
-			return stream
-					.sorted(queryIsEmpty?
-							comparing(SearchResult::getUsername, String::compareToIgnoreCase):
-							comparing(SearchResult::getScore, Float::compare).reversed())
-					.skip((long) (page-1) * pageSize)
-					.limit(pageSize)
-					.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}", result.getUsername(), result.getScore(), result.getEndDate()))
-					.collect(toList());
+			stream = stream
+				.sorted(queryIsEmpty?
+						comparing(SearchResult::getUsername, String::compareToIgnoreCase):
+						comparing(SearchResult::getScore, Float::compare).reversed());
+			if (page != null && pageSize != null)
+			{
+				stream = stream
+						.skip((long) (page - 1) * pageSize)
+						.limit(pageSize);
+			}
+			return	stream
+				.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}", result.getUsername(), result.getScore(), result.getEndDate()))
+				.collect(toList());
 		}
 		catch (CancellationException | CompletionException e)
 		{
 			throw new AppException(String.format("Unable to complete user search for %s", query), e);
 		}
+	}
+
+	public void exportSearchToCSV(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
+									 boolean includeInactiveUsers, PrintWriter writer) throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException
+	{
+		CustomMappingStrategy<SearchResult> mappingStrategy = new CustomMappingStrategy<>();
+		mappingStrategy.setType(SearchResult.class);
+		var searchResults = search(query, groupFilter, datasetFilter, includeInactiveUsers, null , null);
+		StatefulBeanToCsv<SearchResult> sbc = new StatefulBeanToCsvBuilder<SearchResult>(writer)
+				.withMappingStrategy(mappingStrategy)
+				.build();
+		sbc.write(searchResults);
 	}
 
 	@Override

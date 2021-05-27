@@ -77,6 +77,7 @@ dependencies {
 	implementation		'commons-io:commons-io:2.8.0'       // Overriding dependency of embedded-redis due to CVE-2021-29425
 	implementation 		'io.springfox:springfox-swagger2:2.9.2'
 	implementation 		'io.springfox:springfox-swagger-ui:2.9.2'
+	implementation 		'com.opencsv:opencsv:5.4'
 	compileOnly 		'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

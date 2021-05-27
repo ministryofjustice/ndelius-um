@@ -19,6 +19,10 @@ export class RestUserService implements UserService {
     return this.http.get<User[]>(environment.api.baseurl + 'users', { params: params.toRequestParams() });
   }
 
+  exportToCSV(params: SearchParams){
+    return this.http.get(environment.api.baseurl + 'users/export', { params: params.toRequestParams(), responseType: 'blob'});
+  }
+
   create(user: User): Observable<void> {
     return this.http.post<void>(environment.api.baseurl + 'user', user);
   }

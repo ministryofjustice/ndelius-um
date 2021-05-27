@@ -34,6 +34,7 @@
     "@angular/router": "v9-lts",
     "angular-oauth2-oidc": "^9.2.1",
     "bootstrap": "^4.5.0",
+    "file-saver": "^2.0.5",
     "jquery": "^3.5.1",
     "moment": "^2.27.0",
     "open-iconic": "^1.1.1",
