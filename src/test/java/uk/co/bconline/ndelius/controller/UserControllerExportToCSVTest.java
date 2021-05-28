@@ -62,7 +62,7 @@ public class UserControllerExportToCSVTest
 	@Test
 	public void checkCsvHeader() throws Exception
 	{
-		String expectedHeader = "\"Username\",\"Forenames\",\"Surname\",\"Team(s)\",\"StaffCode\",\"Sources\",\"EndDate\"";
+		String expectedHeader = "\"Username\",\"Forenames\",\"Surname\",\"Team(s)\",\"StaffCode\",\"Sources\",\"EndDate\",\"Email\"";
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "test.user"))
@@ -145,7 +145,7 @@ public class UserControllerExportToCSVTest
 				.param("dataset", "N01"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
-				.andExpect(content().string(hasLength(10924)));
+				.andExpect(content().string(hasLength(11655)));
 	}
 
 	@Test

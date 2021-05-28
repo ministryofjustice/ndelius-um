@@ -21,7 +21,6 @@ import uk.co.bconline.ndelius.transformer.CustomMappingStrategy;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -141,8 +140,7 @@ public class UserServiceImpl implements UserService
 						.limit(pageSize);
 			}
 			return	stream
-				.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}", result.getUsername(), result.getScore(), result.getEndDate(), result.getEmail()))
-					.limit(pageSize)
+				.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}, email={}", result.getUsername(), result.getScore(), result.getEndDate(), result.getEmail()))
 				.collect(toList());
 		}
 		catch (CancellationException | CompletionException e)
@@ -152,7 +150,7 @@ public class UserServiceImpl implements UserService
 	}
 
 	public void exportSearchToCSV(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
-									 boolean includeInactiveUsers, PrintWriter writer) throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException
+									 boolean includeInactiveUsers, PrintWriter writer) throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException
 	{
 		CustomMappingStrategy<SearchResult> mappingStrategy = new CustomMappingStrategy<>();
 		mappingStrategy.setType(SearchResult.class);

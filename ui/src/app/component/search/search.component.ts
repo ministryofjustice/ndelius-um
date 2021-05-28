@@ -13,6 +13,8 @@ import {DatasetService} from '../../service/dataset.service';
 import {LabelMappingUtils} from 'src/app/util/label-mapping.utils';
 import {SearchParams} from '../../model/search-params';
 import {saveAs} from 'file-saver';
+import {formatDate} from '@angular/common';
+
 
 @Component({
   selector: 'search',
@@ -87,6 +89,7 @@ export class SearchComponent implements AfterViewInit {
   }
 
   exportSearchResultToCSV(): void {
-    this.service.exportToCSV(this.searchParams).subscribe(file => saveAs(file,"Search-Results.csv"));
+    const timestamp = formatDate(new Date(), 'yyyyMMdd\'T\'HHmmss', 'en-GB');
+    this.service.exportToCSV(this.searchParams).subscribe(file => saveAs(file,"DeliusUsers-SearchResults-"+timestamp+ ".csv"));
   }
 }
