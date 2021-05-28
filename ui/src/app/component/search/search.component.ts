@@ -90,6 +90,6 @@ export class SearchComponent implements AfterViewInit {
 
   exportSearchResultToCSV(): void {
     const timestamp = formatDate(new Date(), 'yyyyMMdd\'T\'HHmmss', 'en-GB');
-    this.service.exportToCSV(this.searchParams).subscribe(file => saveAs(file,"DeliusUsers-SearchResults-"+timestamp+ ".csv"));
+    this.service.exportToCSV(this.searchParams).subscribe(file => saveAs(file, 'DeliusUsers-SearchResults-' + timestamp + '.csv'));
   }
 }
