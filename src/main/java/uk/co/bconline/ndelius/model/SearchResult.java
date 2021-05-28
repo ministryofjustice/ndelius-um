@@ -44,6 +44,10 @@ public final class SearchResult
 	@CsvBindByPosition(position = 6)
 	private LocalDate endDate;
 
+	@CsvBindByName(column = "Email")
+	@CsvBindByPosition(position = 7)
+	private String email;
+
 	@JsonIgnore
 	private float score;
 }

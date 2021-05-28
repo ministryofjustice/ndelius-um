@@ -116,6 +116,7 @@ public class UserServiceImpl implements UserService
 			var stream = allOf(groupMembersFuture, ldapFuture, dbFuture)
 					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())).join()
 					.flatMap(Collection::stream)
+					.flatMap(sr -> expandEmailSearchToDB(sr, query))
 					.collect(groupingBy(SearchResult::getUsername)).values().stream()
 					.map(l -> l.stream().reduce(searchResultTransformer::reduce))
 					.flatMap(Optionals::toStream);
@@ -140,7 +141,8 @@ public class UserServiceImpl implements UserService
 						.limit(pageSize);
 			}
 			return	stream
-				.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}", result.getUsername(), result.getScore(), result.getEndDate()))
+				.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}", result.getUsername(), result.getScore(), result.getEndDate(), result.getEmail()))
+					.limit(pageSize)
 				.collect(toList());
 		}
 		catch (CancellationException | CompletionException e)
@@ -271,5 +273,24 @@ public class UserServiceImpl implements UserService
 		val myDatasets = datasetService.getDatasetCodes(myUsername());
 		myDatasets.add(userEntryService.getUserHomeArea(myUsername()));
 		return myDatasets;
+	}
+
+
+	private Stream<SearchResult> expandEmailSearchToDB(SearchResult sr, String query)
+	{
+		List<SearchResult> results = new ArrayList<>();
+
+		for (String token : query.trim().split("\\s+"))
+		{
+			// Search the database to obtain staff and team records if the token is a substring of the search result's email
+			if (sr.getSources().contains("LDAP") && sr.getEmail() != null && sr.getEmail().contains(token))
+			{
+				Optional<UserEntity> userEntity = userEntityService.getUser(sr.getUsername());
+				userEntity.ifPresent(entity -> results.add(searchResultTransformer.map(entity)));
+			}
+		}
+
+		results.add(sr);
+		return results.stream();
 	}
 }
