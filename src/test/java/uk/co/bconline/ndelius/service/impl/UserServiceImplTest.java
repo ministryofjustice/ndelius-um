@@ -37,7 +37,7 @@ public class UserServiceImplTest
 	}
 
 	@Test
-	public void csvHasCorrectHeader() throws CsvRequiredFieldEmptyExceptio11655n, CsvDataTypeMismatchException
+	public void csvHasCorrectHeader() throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException
 	{
 		StringWriter stringWriter = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(stringWriter);
