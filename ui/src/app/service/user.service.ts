@@ -5,6 +5,7 @@ import {SearchParams} from '../model/search-params';
 export abstract class UserService {
   abstract whoami(): Observable<User>;
   abstract search(params: SearchParams): Observable<User[]>;
+  abstract exportToCSV(params: SearchParams);
   abstract create(user: User): Observable<void>;
   abstract read(username: string): Observable<User>;
   abstract readByStaffCode(staffCode: string): Observable<User>;
