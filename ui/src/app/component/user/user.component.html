@@ -393,7 +393,11 @@
                     <span [title]="item.time | date: 'full'">{{ item.time | date: 'dd/MM/yyyy HH:mm' }}</span>
                     &middot;
                     {{ isLast? 'Created': 'Updated' }} by
-                    <a routerLink="/user/{{ item.user.username }}">{{ item.user.forenames }} {{ item.user.surname }}</a>.
+                    <a *ngIf="!isSystemUser(item.user.username) else systemUser"
+                       routerLink="/user/{{ item.user.username }}">{{ item.user.forenames }} {{ item.user.surname }}</a>
+                    <ng-template #systemUser>
+                      {{ item.user.username }}
+                    </ng-template>
                   </div>
                   <div *ngIf="item.note" class="update-note">
                     <span>{{ item.note }}</span>
@@ -414,7 +418,11 @@
               <div id="last-updated-details">
                 <small class="oi oi-pencil"></small>
                 Last updated by
-                <a routerLink="/user/{{ user.updated.user.username }}">{{ user.updated.user.forenames }} {{ user.updated.user.surname }}</a>
+                <a *ngIf="!isSystemUser(user.updated.user.username) else systemUser"
+                   routerLink="/user/{{user.updated.user.username }}">{{ user.updated.user.forenames }} {{ user.updated.user.surname }}</a>
+                <ng-template #systemUser>
+                  {{ user.updated.user.username }}
+                </ng-template>
                 on
                 <span [title]="user.updated.time | date: 'full'">
                 {{ user.updated.time | date: 'dd/MM/yyyy' }} at {{ user.updated.time | date: 'HH:mm' }}.

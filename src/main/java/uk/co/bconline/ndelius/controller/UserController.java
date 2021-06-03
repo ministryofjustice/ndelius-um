@@ -1,6 +1,8 @@
 package uk.co.bconline.ndelius.controller;
 
 import com.google.common.collect.ImmutableMap;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +19,10 @@ import uk.co.bconline.ndelius.service.UserService;
 import uk.co.bconline.ndelius.validator.NewUsernameMustNotAlreadyExist;
 import uk.co.bconline.ndelius.validator.UsernameMustNotAlreadyExist;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -75,6 +79,23 @@ public class UserController
 				.contentType(MediaType.parseMediaType("text/csv"))
 				.header("Content-Disposition", "attachment; filename=" + filename)
 				.body(body);
+	}
+
+	@GetMapping("/users/export")
+	@PreAuthorize("#oauth2.hasScope('UMBI001')")
+	public void export(
+			HttpServletResponse response,
+			// search terms
+			@RequestParam("q") String query,
+			// filters
+			@RequestParam(value = "reportingGroup", defaultValue = "") Set<String> reportingGroups,
+			@RequestParam(value = "fileshareGroup", defaultValue = "") Set<String> fileshareGroups,
+			@RequestParam(value = "dataset", defaultValue = "") Set<String> datasets,
+			@RequestParam(value = "includeInactiveUsers", defaultValue = "false") Boolean includeInactiveUsers) throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException
+	{
+		val groups = ImmutableMap.<String, Set<String>>of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
+		response.setContentType("text/csv");
+		userService.exportSearchToCSV(query, groups, datasets, includeInactiveUsers,response.getWriter());
 	}
 
 	@GetMapping(path="/user/{username}")

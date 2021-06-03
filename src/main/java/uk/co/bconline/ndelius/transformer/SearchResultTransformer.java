@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
+import uk.co.bconline.ndelius.model.entity.StaffEntity;
+import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 
 import java.util.stream.Stream;
@@ -50,6 +52,7 @@ public class SearchResultTransformer
 				.username(user.getUsername())
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
+				.email(user.getEmail())
 				.endDate(mapLdapStringToDate(useOracleAttributes? user.getOracleEndDate(): user.getEndDate()))
 				.sources(singletonList("LDAP"))
 				.score(score)
@@ -69,6 +72,18 @@ public class SearchResultTransformer
 				.build();
 	}
 
+	public SearchResult map(UserEntity entity) {
+		return SearchResult.builder()
+				.username(entity.getUsername())
+				.forenames(combineNames(entity.getForename(), entity.getForename2()))
+				.surname(entity.getSurname())
+				.endDate(entity.getEndDate())
+				.staffCode(ofNullable(entity.getStaff()).map(StaffEntity::getCode).orElse(null))
+				.teams(ofNullable(entity.getStaff()).map(StaffEntity::getTeams).map(teamTransformer::map).orElse(null))
+				.sources(singletonList("DB"))
+				.build();
+	}
+
 	public SearchResult reduce(SearchResult a, SearchResult b)
 	{
 		return a.toBuilder()
@@ -78,6 +93,7 @@ public class SearchResultTransformer
 				.staffCode(ofNullable(a.getStaffCode()).orElseGet(b::getStaffCode))
 				.teams(ofNullable(a.getTeams()).orElseGet(b::getTeams))
 				.endDate(ofNullable(a.getEndDate()).orElseGet(b::getEndDate))
+				.email(ofNullable(a.getEmail()).orElseGet(b::getEmail))
 				.sources(Stream.concat(a.getSources().stream(), b.getSources().stream()).collect(toList()))
 				.build();
 	}

@@ -9,14 +9,22 @@ import {SearchParams} from '../../model/search-params';
 
 @Injectable()
 export class RestUserService implements UserService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   whoami(): Observable<User> {
     return this.http.get<User>(environment.api.baseurl + 'whoami');
   }
 
   search(params: SearchParams): Observable<User[]> {
-    return this.http.get<User[]>(environment.api.baseurl + 'users', { params: params.toRequestParams() });
+    return this.http.get<User[]>(environment.api.baseurl + 'users', {params: params.toRequestParams()});
+  }
+
+  exportToCSV(params: SearchParams) {
+    return this.http.get(environment.api.baseurl + 'users/export', {
+      params: params.toRequestParams(),
+      responseType: 'blob'
+    });
   }
 
   create(user: User): Observable<void> {
