@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {ApplicationRef, Component, OnInit, ViewChild} from '@angular/core';
 import {User} from '../../model/user';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {debounceTime, distinctUntilChanged, filter, flatMap, map} from 'rxjs/operators';
@@ -27,10 +27,10 @@ import {UserConstants} from './user.constants';
 
 @Component({
   selector: 'user',
-  templateUrl: './user.component.html'
+  templateUrl: './user.component.html',
 })
 
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit{
   loaded: boolean;
   saving: boolean;
   @ViewChild('form') form: NgForm;
@@ -70,7 +70,8 @@ export class UserComponent implements OnInit {
     private organisationService: OrganisationService,
     private staffGradeService: StaffGradeService,
     private historyService: HistoryService,
-    public auth: AuthorisationService) {}
+    private appRef: ApplicationRef,
+    public auth: AuthorisationService){}
 
   ngOnInit(): void {
     this.route.params
@@ -108,8 +109,11 @@ export class UserComponent implements OnInit {
           this.staffCodeControl.valueChanges
             .pipe(debounceTime(500), distinctUntilChanged(), filter(val => val != null))
             .subscribe(() => this.staffCodeChanged());
+          this.user.roles = [...this.user.roles];
         });
       });
+
+
 
     this.roleService.groups().subscribe((roleGroups: RoleGroup[]) => {
       this.roleGroups = roleGroups;
@@ -134,6 +138,8 @@ export class UserComponent implements OnInit {
     });
   }
 
+
+
   private addSelectableRoles(roles: Role[]) {
     this.roles = this.roles || [];
     this.roles.push(...roles.filter(role => this.roles.map(r => r.name).indexOf(role.name) === -1));
@@ -145,7 +151,7 @@ export class UserComponent implements OnInit {
       this.selectedRoleGroups.forEach(selectedRoleGroup => {
         this.roleService.group(selectedRoleGroup.name).subscribe(group => {
           const userRoleNames = this.user.roles.map(r => r.name);
-          this.user.roles.push(...group.roles.filter(role => userRoleNames.indexOf(role.name) === -1));
+          this.user.roles = [...this.user.roles, ...group.roles.filter(role => userRoleNames.indexOf(role.name) === -1)];
           this.rolesControl.control.markAsDirty();
         });
       });

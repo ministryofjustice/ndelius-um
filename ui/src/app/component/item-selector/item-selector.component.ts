@@ -1,4 +1,15 @@
-import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -14,6 +25,7 @@ declare var Popper: any;
 @Component({
   selector: 'item-selector',
   templateUrl: './item-selector.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -24,8 +36,10 @@ declare var Popper: any;
       provide: NG_VALIDATORS,
       useExisting: forwardRef(() => ItemSelectorComponent),
       multi: true,
-    }]
+    }],
+
 })
+
 export class ItemSelectorComponent
     implements ControlValueAccessor, Validator, OnInit {
   @ViewChild('filterControl', { static: true }) filterControl: ElementRef;
@@ -53,6 +67,10 @@ export class ItemSelectorComponent
 
   private propagateChange = (_: any) => { };
   private propagateTouchChange = (_: any) => { };
+
+  constructor(
+    private cdr: ChangeDetectorRef){
+  }
 
   toggle(item): void {
     if (this.multiple) {
