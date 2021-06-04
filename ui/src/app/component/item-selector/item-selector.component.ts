@@ -1,4 +1,15 @@
-import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -14,6 +25,7 @@ declare var Popper: any;
 @Component({
   selector: 'item-selector',
   templateUrl: './item-selector.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -24,13 +36,15 @@ declare var Popper: any;
       provide: NG_VALIDATORS,
       useExisting: forwardRef(() => ItemSelectorComponent),
       multi: true,
-    }]
+    }],
+
 })
+
 export class ItemSelectorComponent
-    implements ControlValueAccessor, Validator, OnInit {
-  @ViewChild('filterControl', { static: true }) filterControl: ElementRef;
-  @ViewChild('toggleBtn', { static: true }) toggleBtn: ElementRef;
-  @ViewChild('dropdown', { static: true }) dropdown: ElementRef;
+  implements ControlValueAccessor, Validator, OnInit {
+  @ViewChild('filterControl', {static: true}) filterControl: ElementRef;
+  @ViewChild('toggleBtn', {static: true}) toggleBtn: ElementRef;
+  @ViewChild('dropdown', {static: true}) dropdown: ElementRef;
   @Input() id: string;
   @Input() selected: any;
   @Input() maxHeight = 'auto';
@@ -51,12 +65,20 @@ export class ItemSelectorComponent
   @Input() idMapper: Function = null;
   @Input() labelMapper: Function = (item: any) => item;
 
-  private propagateChange = (_: any) => { };
-  private propagateTouchChange = (_: any) => { };
+  private propagateChange = (_: any) => {
+  }
+  private propagateTouchChange = (_: any) => {
+  }
+
+  constructor(
+    private cdr: ChangeDetectorRef) {
+  }
 
   toggle(item): void {
     if (this.multiple) {
-      if (this.selected == null) { this.selected = []; }
+      if (this.selected == null) {
+        this.selected = [];
+      }
       const index = this.selected.map(i => this.mapToId(i)).indexOf(this.mapToId(item));
       if (index === -1) {
         this.selected.push(item);
@@ -98,7 +120,9 @@ export class ItemSelectorComponent
   }
 
   isSelected(item: any): boolean {
-    if (this.selected == null) { return false; }
+    if (this.selected == null) {
+      return false;
+    }
     const id: string = this.mapToId(item);
     if (this.multiple) {
       return this.selected.map(i => this.mapToId(i)).indexOf(id) !== -1;
@@ -108,8 +132,12 @@ export class ItemSelectorComponent
   }
 
   get available(): any[] {
-    if (this.selected == null) { return this.availableItems || []; }
-    if (this.availableItems == null) { return []; }
+    if (this.selected == null) {
+      return this.availableItems || [];
+    }
+    if (this.availableItems == null) {
+      return [];
+    }
 
     const removeNullAndDuplicates = (el, pos, arr) => {
       return el != null && arr.map(item => this.mapToId(item)).indexOf(this.mapToId(el)) === pos;
@@ -144,14 +172,22 @@ export class ItemSelectorComponent
   }
 
   get displayText(): string {
-    if (this.available == null) { return this.loadingText; }
+    if (this.available == null) {
+      return this.loadingText;
+    }
 
     if (this.multiple) {
-      if (this.selected == null || this.selected.length === 0) { return this.placeholder; }
-      if (this.selected.length === 1) { return this.mapToLabel(this.selected[0]); }
+      if (this.selected == null || this.selected.length === 0) {
+        return this.placeholder;
+      }
+      if (this.selected.length === 1) {
+        return this.mapToLabel(this.selected[0]);
+      }
       return this.selected.length + ' selected';
     } else {
-      if (this.selected == null) { return this.placeholder; }
+      if (this.selected == null) {
+        return this.placeholder;
+      }
       return this.mapToLabel(this.selected);
     }
   }
@@ -171,7 +207,9 @@ export class ItemSelectorComponent
   }
 
   validate(c: FormControl): ValidationErrors {
-    if (this.readonly) { return null; }
+    if (this.readonly) {
+      return null;
+    }
     if (this.required && (this.selected == null || (this.selected instanceof Array && this.selected.length === 0))) {
       return {'required': 'cannot be empty'};
     }
