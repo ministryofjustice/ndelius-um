@@ -66,9 +66,9 @@ export class ItemSelectorComponent
   @Input() labelMapper: Function = (item: any) => item;
 
   private propagateChange = (_: any) => {
-  };
+  }
   private propagateTouchChange = (_: any) => {
-  };
+  }
 
   constructor(
     private cdr: ChangeDetectorRef) {
