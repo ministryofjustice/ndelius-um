@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.UserService;
+import uk.co.bconline.ndelius.util.CSVUtils;
 import uk.co.bconline.ndelius.validator.NewUsernameMustNotAlreadyExist;
 import uk.co.bconline.ndelius.validator.UsernameMustNotAlreadyExist;
 
@@ -65,25 +66,13 @@ public class UserController
 			@RequestParam(value = "page", defaultValue = "1") @Min(1)  Integer page,
 			@RequestParam(value = "pageSize", defaultValue = "50") @Min(1) @Max(100) Integer pageSize)
 	{
-		val groups = ImmutableMap.<String, Set<String>>of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
+		val groups = ImmutableMap.of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
 		return ok(userService.search(query, groups, datasets, includeInactiveUsers, page, pageSize));
 	}
 
-	@ResponseBody
-	@GetMapping("/users/export")
-	@PreAuthorize("#oauth2.hasScope('UABI025')")
-	public ResponseEntity<StreamingResponseBody> export() {
-		val filename = DateTimeFormatter.ofPattern("'DeliusUsers_'uuuuMMdd'T'HHmmss'.csv'").format(LocalDateTime.now());
-		final StreamingResponseBody body = userService::exportToCsv;
-		return ResponseEntity.ok()
-				.contentType(MediaType.parseMediaType("text/csv"))
-				.header("Content-Disposition", "attachment; filename=" + filename)
-				.body(body);
-	}
-
-	@GetMapping("/users/export")
+	@GetMapping(value = "/users/export", produces = "text/csv")
 	@PreAuthorize("#oauth2.hasScope('UMBI001')")
-	public void export(
+	public void exportSearchResults(
 			HttpServletResponse response,
 			// search terms
 			@RequestParam("q") String query,
@@ -93,9 +82,21 @@ public class UserController
 			@RequestParam(value = "dataset", defaultValue = "") Set<String> datasets,
 			@RequestParam(value = "includeInactiveUsers", defaultValue = "false") Boolean includeInactiveUsers) throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException
 	{
-		val groups = ImmutableMap.<String, Set<String>>of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
+		val groups = ImmutableMap.of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
+		val results = userService.search(query, groups, datasets, includeInactiveUsers, null, null);
 		response.setContentType("text/csv");
-		userService.exportSearchToCSV(query, groups, datasets, includeInactiveUsers,response.getWriter());
+		CSVUtils.write(results, response.getWriter());
+	}
+
+	@ResponseBody
+	@GetMapping(value = "/users/export/all", produces = "text/csv")
+	@PreAuthorize("#oauth2.hasScope('UABI025')")
+	public ResponseEntity<StreamingResponseBody> exportAll() {
+		val filename = DateTimeFormatter.ofPattern("'DeliusUsers_'uuuuMMdd'T'HHmmss'.csv'").format(LocalDateTime.now());
+		return ok()
+				.contentType(MediaType.parseMediaType("text/csv"))
+				.header("Content-Disposition", "attachment; filename=" + filename)
+				.body(userService::exportAllToCsv);
 	}
 
 	@GetMapping(path="/user/{username}")

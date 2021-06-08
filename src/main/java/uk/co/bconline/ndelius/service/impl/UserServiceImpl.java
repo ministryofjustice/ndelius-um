@@ -1,10 +1,5 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +15,14 @@ import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.service.*;
-import uk.co.bconline.ndelius.transformer.CustomMappingStrategy;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
+import uk.co.bconline.ndelius.util.CSVUtils;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CancellationException;
@@ -146,18 +144,6 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	public void exportSearchToCSV(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
-									 boolean includeInactiveUsers, PrintWriter writer) throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException
-	{
-		CustomMappingStrategy<SearchResult> mappingStrategy = new CustomMappingStrategy<>();
-		mappingStrategy.setType(SearchResult.class);
-		var searchResults = search(query, groupFilter, datasetFilter, includeInactiveUsers, null , null);
-		StatefulBeanToCsv<SearchResult> sbc = new StatefulBeanToCsvBuilder<SearchResult>(writer)
-				.withMappingStrategy(mappingStrategy)
-				.build();
-		sbc.write(searchResults);
-	}
-
 	@Override
 	public boolean usernameExists(String username) {
 		val dbFuture = supplyAsync(() -> userEntityService.usernameExists(username), taskExecutor);
@@ -232,37 +218,32 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public void exportToCsv(OutputStream outputStream) {
-		try (val users = export();
-			 val writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
-			val csv = new StatefulBeanToCsvBuilder<ExportResult>(writer).build();
-			val username = new String[]{""};
-			users.forEachOrdered(user -> {
-				try {
-					if (!user.getUsername().equals(username[0])) {
-						csv.write(user);
-						username[0] = user.getUsername();
-					}
-				} catch (CsvException e) {
-					throw new AppException(String.format("Failed to write CSV entry for %s", user.getUsername()), e);
-				}
-			});
-		} catch (IOException e) {
-			throw new AppException("User export failed", e);
-		}
+	public Stream<ExportResult> exportAll() {
+		log.debug("User export started");
+		// Fetch all LDAP entries into memory
+		val ldapUsers = userEntryService.export();
+		log.debug("Fetched {} entries from LDAP", ldapUsers.size());
+		// Stream all user entities from the DB, and combine each one with the corresponding LDAP entry
+		val username = new String[]{""};
+		return userEntityService.export()
+				.map(entity -> transformer.combine(entity, ldapUsers.get(entity.getUsername())))
+				.filter(Objects::nonNull)
+				.filter(result -> {
+					// Remove any repeated entries caused by cartesian product queries, without traversing the entire stream
+					val isDuplicate = result.getUsername().equals(username[0]);
+					username[0] = result.getUsername();
+					return !isDuplicate;
+				});
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Stream<ExportResult> export() {
-		log.info("User export started");
-		// Fetch all LDAP entries into memory
-		val ldapUsers = userEntryService.export();
-		log.info("Fetched {} entries from LDAP", ldapUsers.size());
-		// Stream all user entities from the DB, and combine each one with the corresponding LDAP entry
-		return userEntityService.export()
-				.map(entity -> transformer.combine(entity, ldapUsers.get(entity.getUsername())))
-				.filter(Objects::nonNull);
+	public void exportAllToCsv(OutputStream outputStream) {
+		try (val writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
+			CSVUtils.stream(exportAll(), writer);
+		} catch (IOException e) {
+			throw new AppException("Unable to stream CSV data", e);
+		}
 	}
 
 	private Predicate<String> datasetsFilter() {
