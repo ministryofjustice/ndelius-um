@@ -3,6 +3,9 @@ import {UserService} from '../../service/user.service';
 import {NavigationStart, Router} from '@angular/router';
 import {AuthorisationService} from '../../service/impl/authorisation.service';
 import {OAuthService, UrlHelperService} from 'angular-oauth2-oidc';
+import {formatDate} from '@angular/common';
+import {saveAs} from 'file-saver';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +18,9 @@ export class AppComponent implements OnInit {
   title = 'User Management';
   loaded: boolean;
 
-  constructor(private service: UserService,
+  exporting: boolean;
+
+  constructor(public service: UserService,
               public auth: AuthorisationService,
               private router: Router,
               private oauthService: OAuthService,
@@ -65,6 +70,14 @@ export class AppComponent implements OnInit {
         AppComponent.hideMessage();
       }
     });
+  }
+
+  exportUsers() {
+    const timestamp = formatDate(new Date(), 'yyyyMMdd\'T\'HHmmss', 'en-GB');
+    this.exporting = true;
+    this.service.exportAllToCSV()
+      .pipe(finalize(() => this.exporting = false))
+      .subscribe(file => saveAs(file, 'DeliusUsers-' + timestamp + '.csv'));
   }
 
   get globalMessage() {

@@ -68,12 +68,12 @@ export class AuthorisationService {
     return this.hasInteraction(AuthorisationService.UPDATE_USER_ROLE);
   }
 
-  isPublicAdmin(): boolean {
-    return this.hasInteraction(AuthorisationService.PUBLIC_ADMIN_ROLE);
+  canExportUsers(): boolean {
+    return this.isNational();
   }
 
-  canMigrateUsers(): boolean {
-    return this.canUpdateUser();
+  isPublicAdmin(): boolean {
+    return this.hasInteraction(AuthorisationService.PUBLIC_ADMIN_ROLE);
   }
 
   loadUser(): Observable<User> {
