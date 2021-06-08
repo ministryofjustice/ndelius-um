@@ -5,15 +5,12 @@ import org.springframework.ldap.odm.annotations.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import uk.co.bconline.ndelius.model.auth.UserInteraction;
 import uk.co.bconline.ndelius.model.entry.projections.UserHomeAreaProjection;
+import uk.co.bconline.ndelius.util.AuthUtils;
 
 import javax.naming.Name;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toSet;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -79,13 +76,8 @@ public final class UserEntry implements UserHomeAreaProjection, UserDetails {
 
 	@Override
 	public Collection<UserInteraction> getAuthorities() {
-		return ofNullable(roles)
-				.map(r -> r.parallelStream()
-						.map(RoleEntry::getInteractions)
-						.flatMap(List::stream)
-						.map(UserInteraction::new)
-						.collect(toSet()))
-				.orElseGet(Collections::emptySet);
+		return AuthUtils.mapToAuthorities(roles)
+				.collect(Collectors.toUnmodifiableSet());
 	}
 
 	@Override

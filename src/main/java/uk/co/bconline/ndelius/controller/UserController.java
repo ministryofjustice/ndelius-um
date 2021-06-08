@@ -92,7 +92,7 @@ public class UserController
 	@ResponseBody
 	@Bulkhead(name = "export")
 	@GetMapping(value = "/users/export/all", produces = "text/csv")
-	@PreAuthorize("#oauth2.hasScope('UABI025')")
+	@PreAuthorize("#oauth2.hasScope('UABT0050')")
 	public ResponseEntity<StreamingResponseBody> exportAll() {
 		val filename = DateTimeFormatter.ofPattern("'DeliusUsers_'uuuuMMdd'T'HHmmss'.csv'").format(LocalDateTime.now());
 		return ok()
