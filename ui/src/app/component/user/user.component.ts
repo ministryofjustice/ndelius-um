@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {ApplicationRef, Component, OnInit, ViewChild} from '@angular/core';
 import {User} from '../../model/user';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {debounceTime, distinctUntilChanged, filter, flatMap, map} from 'rxjs/operators';
@@ -27,7 +27,7 @@ import {UserConstants} from './user.constants';
 
 @Component({
   selector: 'user',
-  templateUrl: './user.component.html'
+  templateUrl: './user.component.html',
 })
 
 export class UserComponent implements OnInit {
@@ -70,7 +70,9 @@ export class UserComponent implements OnInit {
     private organisationService: OrganisationService,
     private staffGradeService: StaffGradeService,
     private historyService: HistoryService,
-    public auth: AuthorisationService) {}
+    private appRef: ApplicationRef,
+    public auth: AuthorisationService) {
+  }
 
   ngOnInit(): void {
     this.route.params
@@ -88,7 +90,7 @@ export class UserComponent implements OnInit {
               return this.userService.read(query.copy).pipe(map(user => {
                 // Clear out the details we don't want to copy to the new user
                 user.username = user.staffCode = user.staffGrade = user.teams = user.subContractedProvider
-                    = user.created = user.updated = null;
+                  = user.created = user.updated = null;
                 return user;
               }));
             } else {
@@ -108,8 +110,10 @@ export class UserComponent implements OnInit {
           this.staffCodeControl.valueChanges
             .pipe(debounceTime(500), distinctUntilChanged(), filter(val => val != null))
             .subscribe(() => this.staffCodeChanged());
+          this.user.roles = [...this.user.roles];
         });
       });
+
 
     this.roleService.groups().subscribe((roleGroups: RoleGroup[]) => {
       this.roleGroups = roleGroups;
@@ -121,18 +125,23 @@ export class UserComponent implements OnInit {
 
     this.datasetService.datasets().subscribe((datasets: Dataset[]) => {
       this.datasets = datasets;
-      if (this.user != null && this.user.datasets == null) { this.user.datasets = []; }
+      if (this.user != null && this.user.datasets == null) {
+        this.user.datasets = [];
+      }
     });
 
     this.datasetService.establishments().subscribe((establishments: Dataset[]) => {
       this.establishments = establishments;
-      if (this.user != null && this.user.establishments == null) { this.user.establishments = []; }
+      if (this.user != null && this.user.establishments == null) {
+        this.user.establishments = [];
+      }
     });
 
     this.staffGradeService.staffGrades().subscribe((staffGrades: StaffGrade[]) => {
       this.staffGrades = staffGrades;
     });
   }
+
 
   private addSelectableRoles(roles: Role[]) {
     this.roles = this.roles || [];
@@ -141,11 +150,13 @@ export class UserComponent implements OnInit {
 
   applyRoleGroup(): void {
     if (this.selectedRoleGroups != null) {
-      if (this.user.roles == null) { this.user.roles = []; }
+      if (this.user.roles == null) {
+        this.user.roles = [];
+      }
       this.selectedRoleGroups.forEach(selectedRoleGroup => {
         this.roleService.group(selectedRoleGroup.name).subscribe(group => {
           const userRoleNames = this.user.roles.map(r => r.name);
-          this.user.roles.push(...group.roles.filter(role => userRoleNames.indexOf(role.name) === -1));
+          this.user.roles = [...this.user.roles, ...group.roles.filter(role => userRoleNames.indexOf(role.name) === -1)];
           this.rolesControl.control.markAsDirty();
         });
       });
@@ -220,7 +231,9 @@ export class UserComponent implements OnInit {
       this.saving = true;
       window.scrollTo(0, 0);
       this.userService.update(this.params.id, this.user).subscribe(() => {
-        if (this.params.id !== this.user.username) { RecentUsersUtils.remove(this.params.id); }
+        if (this.params.id !== this.user.username) {
+          RecentUsersUtils.remove(this.params.id);
+        }
         this.router.navigate(['/user/' + this.user.username], {replaceUrl: true}).then(() => {
           AppComponent.success('Updated ' + this.user.username + ' successfully.');
           this.saving = false;
