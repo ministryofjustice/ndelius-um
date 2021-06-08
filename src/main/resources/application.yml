@@ -31,6 +31,7 @@ info:
   java.version: ${java.version}
 
 spring.mvc.async.request-timeout: 600000 # = 10 * 60 * 1000 = 10 minutes. To support streaming downloads of export data.
+resilience4j.bulkhead.instances.export.maxConcurrentCalls: 1
 
 logging.level:
   org.springframework.web: ERROR
