@@ -1,49 +1,40 @@
 package uk.co.bconline.ndelius.controller;
 
-import com.jayway.jsonpath.JsonPath;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.ContentResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.hamcrest.MatcherAssert.assertThat;
+import static java.time.LocalDate.now;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 
 @SpringBootTest
-@DirtiesContext
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class UserControllerExportToCSVTest
-{
+public class UserControllerExportTest {
+
 	@Autowired
 	private WebApplicationContext context;
 
 	private MockMvc mvc;
 
 	@Before
-	public void setup()
-	{
+	public void setup() {
 		mvc = MockMvcBuilders
 				.webAppContextSetup(context)
 				.apply(springSecurity())
@@ -52,29 +43,26 @@ public class UserControllerExportToCSVTest
 	}
 
 	@Test
-	public void searchQueryIsRequired() throws Exception
-	{
+	public void searchQueryIsRequired() throws Exception {
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isBadRequest());
 	}
 
 	@Test
-	public void checkCsvHeader() throws Exception
-	{
-		String expectedHeader = "\"Username\",\"Forenames\",\"Surname\",\"Team(s)\",\"StaffCode\",\"Sources\",\"EndDate\",\"Email\"";
+	public void checkCsvHeader() throws Exception {
+		String expectedHeader = "\"Username\",\"Forenames\",\"Surname\",\"End Date\",\"Staff Code\",\"Teams\"";
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "test.user"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
-				.andExpect(content().string(startsWith(expectedHeader)));
+				.andExpect(content().string(startsWith(expectedHeader + "\n")));
 	}
 
 	@Test
-	public void checkCsvHasTestData() throws Exception
-	{
-		String expectedTestUser = "test.user";
+	public void checkCsvHasTestData() throws Exception {
+		String expectedTestUser = "\"test.user\"";
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "test.user"))
@@ -84,8 +72,7 @@ public class UserControllerExportToCSVTest
 	}
 
 	@Test
-	public void checkCsvHasInActiveUserTest() throws Exception
-	{
+	public void checkCsvHasInActiveUserTest() throws Exception {
 		String expectedTestUser = "test.user.inactive";
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc))
@@ -97,8 +84,7 @@ public class UserControllerExportToCSVTest
 	}
 
 	@Test
-	public void csvResultAreFilteredOnDatasets() throws Exception
-	{
+	public void csvResultAreFilteredOnDatasets() throws Exception {
 		String token = token(mvc, "test.user");
 
 		// Given I am filtering on the N01 dataset
@@ -124,8 +110,7 @@ public class UserControllerExportToCSVTest
 	}
 
 	@Test
-	public void CsvDatasetFiltersAreIgnoredIfNotAllowed() throws Exception
-	{
+	public void CsvDatasetFiltersAreIgnoredIfNotAllowed() throws Exception {
 		// Given I am non-national user with access only to N01
 		String token = token(mvc, "test.user.local");
 
@@ -145,12 +130,11 @@ public class UserControllerExportToCSVTest
 				.param("dataset", "N01"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
-				.andExpect(content().string(hasLength(11655)));
+				.andExpect(content().string(not(emptyOrNullString())));
 	}
 
 	@Test
-	public void CsvGetAllUsersInFileshareGroup() throws Exception
-	{
+	public void CsvGetAllUsersInFileshareGroup() throws Exception {
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
 				.param("q", "")
@@ -161,8 +145,7 @@ public class UserControllerExportToCSVTest
 	}
 
 	@Test
-	public void CsvGetAllUsersInReportingGroup() throws Exception
-	{
+	public void CsvGetAllUsersInReportingGroup() throws Exception {
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
 				.param("q", "")
@@ -173,8 +156,7 @@ public class UserControllerExportToCSVTest
 	}
 
 	@Test
-	public void CsvFilterOnMultipleGroupsIsInclusive() throws Exception
-	{
+	public void CsvFilterOnMultipleGroupsIsInclusive() throws Exception {
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
 				.param("q", "")
@@ -186,8 +168,7 @@ public class UserControllerExportToCSVTest
 	}
 
 	@Test
-	public void searchQueryWithGroupFilters() throws Exception
-	{
+	public void searchQueryWithGroupFilters() throws Exception {
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
 				.param("q", "j bloggs")
@@ -195,6 +176,37 @@ public class UserControllerExportToCSVTest
 				.param("reportingGroup", "Group 3"))	// contains Joe.Bloggs
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
-				.andExpect(content().string(stringContainsInOrder("Joe.Bloggs","Jane.Bloggs")));
+				.andExpect(content().string(stringContainsInOrder("Joe.Bloggs", "Jane.Bloggs")));
+	}
+
+	@Test
+	public void fullExportIsRestrictedToNationalAdmins() throws Exception {
+		mvc.perform(get("/api/users/export/all")
+				.header("Authorization", "Bearer " + token(mvc, "Joe.Bloggs")))
+				.andExpect(status().isForbidden());
+	}
+
+	@Test
+	public void dataIsDisplayedCorrectlyForFullExport() throws Exception {
+		String expectedHeader = "\"Username\",\"Forenames\",\"Surname\",\"Email\",\"Telephone Number\",\"Start Date\",\"End Date\",\"Home Area\",\"Datasets\",\"Sector\",\"Staff Code\",\"Staff Grade\",\"Teams\"";
+		String expectedStartDate = now().minus(10, DAYS).format(ISO_LOCAL_DATE); // see data.sql
+		String[] expectedUsers = {
+				"\n\"Abdul.Austria\",\"Abdul\",\"Austria\",\"\",\"\",\"" + expectedStartDate + "\",\"\",\"N01\",\"\",\"Public\",\"N01A168\",\"GRADE1\",\"\"\n",
+				"\n\"Leia.Leaman\",\"Leia\",\"Leaman\",\"\",\"\",\"" + expectedStartDate + "\",\"\",\"N01\",\"\",\"Public\",\"N01A086\",\"GRADE1\",\"\"\n",
+				"\n\"Zina.Zenon\",\"Zina\",\"Zenon\",\"\",\"\",\"" + expectedStartDate + "\",\"\",\"N01\",\"\",\"Public\",\"N01A131\",\"GRADE1\",\"\"\n",
+				"\n\"test.user\",\"Test\",\"User\",\"test.user@test.com\",\"0123 456 789\",\"2000-01-02\",\"\",\"N01\",\"N01,N02,N03\",\"Public\",\"N01A001\",\"GRADE1\",\"N01TST,N02TST,N03TST\"\n",
+				"\n\"test.user.private\",\"Test\",\"User (Private)\",\"test.user.private@test.com\",\"\",\"\",\"\",\"C01\",\"C01,C02\",\"Public\",\"\",\"\",\"\"\n"};
+
+		MvcResult asyncResult = mvc.perform(get("/api/users/export/all")
+				.header("Authorization", "Bearer " + token(mvc)))
+				.andExpect(request().asyncStarted())
+				.andReturn();
+
+		mvc.perform(asyncDispatch(asyncResult))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("text/csv"))
+				.andExpect(content().string(startsWith(expectedHeader + "\n")))
+				.andExpect(content().string(stringContainsInOrder(expectedUsers)))
+				.andExpect(content().string(not(containsString("test.user.inactive")))); // inactive users should not be returned
 	}
 }
