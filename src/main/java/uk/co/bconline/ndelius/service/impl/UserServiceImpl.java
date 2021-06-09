@@ -15,6 +15,7 @@ import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
+import uk.co.bconline.ndelius.model.entry.RoleAssociationEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.transformer.CustomMappingStrategy;
@@ -51,6 +52,8 @@ public class UserServiceImpl implements UserService
 	private final SearchResultTransformer searchResultTransformer;
 	private final TaskExecutor taskExecutor;
 
+	private final RoleService roleService;
+
 	@Autowired
 	public UserServiceImpl(
 			UserEntityService userEntityService,
@@ -59,7 +62,8 @@ public class UserServiceImpl implements UserService
 			GroupService groupService,
 			UserTransformer transformer,
 			SearchResultTransformer searchResultTransformer,
-			TaskExecutor taskExecutor)
+			TaskExecutor taskExecutor,
+			RoleService roleService)
 	{
 		this.userEntityService = userEntityService;
 		this.userEntryService = userEntryService;
@@ -68,15 +72,17 @@ public class UserServiceImpl implements UserService
 		this.transformer = transformer;
 		this.searchResultTransformer = searchResultTransformer;
 		this.taskExecutor = taskExecutor;
+		this.roleService = roleService;
 	}
 
 	@Override
 	public List<SearchResult> search(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
-									 boolean includeInactiveUsers, Integer page, Integer pageSize)
+									 String role, boolean includeInactiveUsers, Integer page, Integer pageSize)
 	{
 		val queryIsEmpty = query == null || query.length() < 3;
+		val roleIsEmpty = role == null || role.length() == 0;
 		val groupFilterIsEmpty = groupFilter.values().stream().allMatch(Set::isEmpty);
-		if (queryIsEmpty && groupFilterIsEmpty && datasetFilter.isEmpty()) {
+		if (queryIsEmpty && roleIsEmpty && groupFilterIsEmpty && datasetFilter.isEmpty()) {
 			// not enough criteria to do a useful search
 			return emptyList();
 		}
@@ -109,11 +115,22 @@ public class UserServiceImpl implements UserService
 		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 
+		val roleFuture = supplyAsync(() -> roleService.getUsersRoles(role).stream()
+				.map(user -> user.getDn().get(user.getDn().size() - 2).split("cn=")[1])
+				.peek(un -> System.out.println("Username: " + un))
+				.map(userEntryService::getUser)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.map(user -> searchResultTransformer.map(user, 101))
+				.peek(result -> System.out.println("Role result: " + result.getUsername()))
+				.collect(toList()));
+
+
 		try
 		{
 			// fetch and map
-			var stream = allOf(groupMembersFuture, ldapFuture, dbFuture)
-					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())).join()
+			var stream = allOf(groupMembersFuture, ldapFuture, dbFuture, roleFuture)
+					.thenApply(v -> filterRoleResults(roleFuture.join(), ldapFuture.join(), dbFuture.join())).join()
 					.flatMap(Collection::stream)
 					.flatMap(sr -> expandEmailSearchToDB(sr, query))
 					.collect(groupingBy(SearchResult::getUsername)).values().stream()
@@ -154,7 +171,7 @@ public class UserServiceImpl implements UserService
 	{
 		CustomMappingStrategy<SearchResult> mappingStrategy = new CustomMappingStrategy<>();
 		mappingStrategy.setType(SearchResult.class);
-		var searchResults = search(query, groupFilter, datasetFilter, includeInactiveUsers, null , null);
+		var searchResults = search(query, groupFilter, datasetFilter, null, includeInactiveUsers, null , null);
 		StatefulBeanToCsv<SearchResult> sbc = new StatefulBeanToCsvBuilder<SearchResult>(writer)
 				.withMappingStrategy(mappingStrategy)
 				.build();
@@ -290,5 +307,24 @@ public class UserServiceImpl implements UserService
 
 		results.add(sr);
 		return results.stream();
+	}
+
+	private Stream<List<SearchResult>> filterRoleResults(List<SearchResult> roleResults, List<SearchResult> ldapResults, List<SearchResult> dbResults)
+	{
+		if (roleResults == null || roleResults.isEmpty())
+		{
+			return Stream.of(ldapResults, dbResults);
+		}
+
+		if (!ldapResults.isEmpty())
+		{
+			roleResults.retainAll(ldapResults);
+		}
+		if (!dbResults.isEmpty())
+		{
+			roleResults.retainAll(dbResults);
+		}
+
+		return Stream.of(roleResults);
 	}
 }

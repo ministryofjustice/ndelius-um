@@ -19,7 +19,7 @@ public interface UserService
 {
 	boolean usernameExists(String username);
 	List<SearchResult> search(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
-							  boolean includeInactiveUsers, Integer page, Integer pageSize);
+							  String role, boolean includeInactiveUsers, Integer page, Integer pageSize);
 	void exportSearchToCSV(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
 							  boolean includeInactiveUsers, PrintWriter writer) throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException;
 	Optional<User> getUser(String username);

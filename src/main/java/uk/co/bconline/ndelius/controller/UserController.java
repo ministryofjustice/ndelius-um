@@ -58,12 +58,13 @@ public class UserController
 			@RequestParam(value = "fileshareGroup", defaultValue = "") Set<String> fileshareGroups,
 			@RequestParam(value = "dataset", defaultValue = "") Set<String> datasets,
 			@RequestParam(value = "includeInactiveUsers", defaultValue = "false") Boolean includeInactiveUsers,
+			@RequestParam(value = "role", defaultValue = "") String role,
 			// paging
 			@RequestParam(value = "page", defaultValue = "1") @Min(1)  Integer page,
 			@RequestParam(value = "pageSize", defaultValue = "50") @Min(1) @Max(100) Integer pageSize)
 	{
 		val groups = ImmutableMap.<String, Set<String>>of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
-		return ok(userService.search(query, groups, datasets, includeInactiveUsers, page, pageSize));
+		return ok(userService.search(query, groups, datasets, role, includeInactiveUsers, page, pageSize));
 	}
 
 	@GetMapping("/users/export")

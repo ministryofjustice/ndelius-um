@@ -13,4 +13,5 @@ public interface RoleService
 	Set<RoleEntry> getRolesInGroup(String group);
 	Optional<RoleEntry> getRole(Name id);
 	Optional<RoleEntry> dereference(RoleAssociationEntry association);
+	Set<RoleAssociationEntry> getUsersRoles(String role);
 }

@@ -14,7 +14,7 @@ import {LabelMappingUtils} from 'src/app/util/label-mapping.utils';
 import {SearchParams} from '../../model/search-params';
 import {saveAs} from 'file-saver';
 import {formatDate} from '@angular/common';
-
+import {RoleService} from '../../service/role.service';
 
 @Component({
   selector: 'search',
@@ -36,6 +36,7 @@ export class SearchComponent implements AfterViewInit {
   fileshareGroups = this.groupService.groupsByType('Fileshare');
   reportingGroups = this.groupService.groupsByType('NDMIS-Reporting');
   datasets = this.datasetService.datasets();
+  roles = this.roleService.roles();
   results: Observable<User[]>;
 
   // state
@@ -49,7 +50,8 @@ export class SearchComponent implements AfterViewInit {
               private route: ActivatedRoute,
               private service: UserService,
               private groupService: GroupService,
-              private datasetService: DatasetService) {
+              private datasetService: DatasetService,
+              private roleService: RoleService) {
   }
 
   ngAfterViewInit(): void {

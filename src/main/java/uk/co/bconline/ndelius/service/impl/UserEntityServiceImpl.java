@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 import static java.time.LocalDate.now;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
@@ -120,6 +121,7 @@ public class UserEntityServiceImpl implements UserEntityService
 	@Override
 	public List<SearchResult> search(String searchTerm, boolean includeInactiveUsers, Set<String> datasets)
 	{
+		if (searchTerm == null || searchTerm.length() == 0) return emptyList();
 		val t = LocalDateTime.now();
 		val results = Arrays.stream(searchTerm.trim().split("\\s+"))
 				.parallel()

@@ -148,6 +148,10 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 				.spliterator(), true)
 				.map(u -> searchResultTransformer.map(u, deriveScore(query, u)))
 				.collect(toList());
+
+		// for each r in results
+		// roleAssocationRepo.findall(query().where().cn==r.username, cn==roleName
+		//
 		log.debug("Found {} LDAP results in {}ms", results.size(), MILLIS.between(t, now()));
 		return results;
 	}
@@ -177,6 +181,11 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 						.groups(groupService.getGroups(u.getGroupNames()))
 						.build());
 	}
+
+//	public void getUserRoles()
+//	{
+//		userRepository.findAll(query().base(usersBase).)
+//	}
 
 	@Override
 	public String getUserHomeArea(String username)

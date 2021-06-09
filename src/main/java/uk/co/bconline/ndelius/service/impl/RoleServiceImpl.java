@@ -24,6 +24,7 @@ import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static org.springframework.ldap.query.SearchScope.SUBTREE;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
 import static uk.co.bconline.ndelius.util.NameUtils.join;
 
@@ -46,6 +47,9 @@ public class RoleServiceImpl implements RoleService
 
 	@Value("${delius.ldap.base.role-groups}")
 	private String roleGroupsBase;
+
+	@Value("${delius.ldap.base.users}")
+	private String usersBase;
 
 	@Autowired
 	public RoleServiceImpl(RoleRepository roleRepository,
@@ -87,6 +91,15 @@ public class RoleServiceImpl implements RoleService
 				.where(OBJECTCLASS).is("NDRoleAssociation")).spliterator(), true)
 				.map(this::dereference)
 				.flatMap(Optionals::toStream)
+				.collect(toSet());
+	}
+
+	public Set<RoleAssociationEntry> getUsersRoles(String role)
+	{
+		return stream(roleAssociationRepository.findAll(query()
+				.searchScope(SUBTREE)
+				.base(usersBase)
+				.where(OBJECTCLASS).is("NDRoleAssociation").and("cn").like(role)).spliterator(), true)
 				.collect(toSet());
 	}
 
