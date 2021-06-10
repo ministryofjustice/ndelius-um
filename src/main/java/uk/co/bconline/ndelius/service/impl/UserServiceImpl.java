@@ -218,7 +218,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Bulkhead(name = "export")
 	@Transactional(readOnly = true)
 	public Stream<ExportResult> exportAll() {
 		log.debug("User export started");
@@ -239,6 +238,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Bulkhead(name = "export")
 	@Transactional(readOnly = true)
 	public void exportAllToCsv(OutputStream outputStream) {
 		try (val writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
