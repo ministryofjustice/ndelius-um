@@ -48,6 +48,17 @@ export class ErrorInterceptor implements HttpInterceptor {
     415 : 'Unsupported Media Type',
     416 : 'Requested Range Not Satisfiable',
     417 : 'Expectation Failed',
+    418 : 'I\'m a teapot',
+    421 : 'Misdirected Request',
+    422 : 'Unprocessable Entity (WebDAV)',
+    423 : 'Locked (WebDAV)',
+    424 : 'Failed Dependency (WebDAV)',
+    425 : 'Too Early',
+    426 : 'Upgrade Required',
+    428 : 'Precondition Required',
+    429 : 'Too Many Requests',
+    431 : 'Request Header Fields Too Large',
+    451 : 'Unavailable For Legal Reasons',
     500 : 'Internal Server Error',
     501 : 'Not Implemented',
     502 : 'Bad Gateway',
@@ -67,12 +78,15 @@ export class ErrorInterceptor implements HttpInterceptor {
     if (res.status === 401) {
       error = 'Your session has expired. Please login again.';
     } else if (res.status === 403) {
-      error = 'Access denied.' + (res.error.requiredRoles instanceof Array ? ' Missing roles: ' + res.error.requiredRoles.join(', ') : '');
+      error = 'Access denied.' + (res.error && res.error.requiredRoles instanceof Array ? ' Missing roles: ' + res.error.requiredRoles.join(', ') : '');
+    } else if (res.status === 429) {
+      // This message should come from the server, however res.error isn't populated (not sure why - maybe CORS?)
+      error = 'An export is currently in progress. Please try again later.';
     } else if (res.error != null && res.error.error instanceof Array) {
       error = res.error.error.join('</br/>');
     }
 
-    return '<h5>' + header + '</h5>' + error;
+    return '<h5>' + header + '</h5>' + (error !== '{}' ? error : '');
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
