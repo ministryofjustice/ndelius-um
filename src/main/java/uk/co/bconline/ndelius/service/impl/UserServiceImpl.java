@@ -125,7 +125,6 @@ public class UserServiceImpl implements UserService
 				.peek(result -> System.out.println("Role result: " + result.getUsername()))
 				.collect(toList()));
 
-
 		try
 		{
 			// fetch and map

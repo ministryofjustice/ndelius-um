@@ -121,7 +121,6 @@ public class UserEntityServiceImpl implements UserEntityService
 	@Override
 	public List<SearchResult> search(String searchTerm, boolean includeInactiveUsers, Set<String> datasets)
 	{
-		if (searchTerm == null || searchTerm.length() == 0) return emptyList();
 		val t = LocalDateTime.now();
 		val results = Arrays.stream(searchTerm.trim().split("\\s+"))
 				.parallel()
