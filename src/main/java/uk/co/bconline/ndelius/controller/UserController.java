@@ -3,7 +3,6 @@ package uk.co.bconline.ndelius.controller;
 import com.google.common.collect.ImmutableMap;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +89,6 @@ public class UserController
 	}
 
 	@ResponseBody
-	@Bulkhead(name = "export")
 	@GetMapping(value = "/users/export/all", produces = "text/csv")
 	@PreAuthorize("#oauth2.hasScope('UABT0050')")
 	public ResponseEntity<StreamingResponseBody> exportAll() {

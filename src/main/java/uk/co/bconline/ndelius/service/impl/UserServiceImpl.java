@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -217,6 +218,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Bulkhead(name = "export")
 	@Transactional(readOnly = true)
 	public Stream<ExportResult> exportAll() {
 		log.debug("User export started");
