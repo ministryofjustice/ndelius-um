@@ -326,4 +326,26 @@ public class UserControllerSearchTest
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", containsInAnyOrder("Jane.Bloggs", "Joe.Bloggs")));
 	}
+
+	@Test
+	public void searchUsersByRole() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc, "test.user"))
+				.param("q", "")
+				.param("role", "UMBT001"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", containsInAnyOrder("test.user", "test.user.local", "test.user.private")));
+	}
+
+	@Test
+	public void searchQueryWithRoleFilter() throws Exception
+	{
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc, "test.user"))
+				.param("q", "local")
+				.param("role", "UMBT001"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", hasItem("test.user.local")));
+	}
 }

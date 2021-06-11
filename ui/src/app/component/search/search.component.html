@@ -44,7 +44,7 @@
           <div id="filters" class="filter-collapse collapse border border-top-0 rounded-bottom">
             <div class="p-1" style="margin-top: -3px">
               <div class="form-row p-2">
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <p *ngIf="datasetFilter.dirty && datasetFilter.invalid && datasetFilter.errors['maxSelectable']"
                        class="small text-danger mb-1">
                     You can only filter on a maximum of {{ datasetFilter.errors['maxSelectable'] }} datasets at a time.
@@ -56,7 +56,7 @@
                                  maxHeight="300px" multiple="true" maxSelectable="15"
                                  placeholder="Datasets"></item-selector>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <p *ngIf="fileshareFilter.dirty && fileshareFilter.invalid && fileshareFilter.errors['maxSelectable']"
                      class="small text-danger mb-1">
                     You can only filter on a maximum of {{ fileshareFilter.errors['maxSelectable'] }} groups at a time.
@@ -68,7 +68,7 @@
                                  maxHeight="300px" multiple="true" maxSelectable="15"
                                  placeholder="File Share access"></item-selector>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <p *ngIf="reportingFilter.dirty && reportingFilter.invalid && reportingFilter.errors['maxSelectable']"
                      class="small text-danger mb-1">
                     You can only filter on a maximum of {{ reportingFilter.errors['maxSelectable'] }} groups at a time.
@@ -79,6 +79,15 @@
                                  [labelMapper]="LabelMappingUtils.descriptionToLabel"
                                  maxHeight="300px" alignRight="true" multiple="true" maxSelectable="15"
                                  placeholder="Reporting access"></item-selector>
+                </div>
+                <div class="col-md-3">
+                  <item-selector id="role-filter" name="role-filter" #roleFilter="ngModel"
+                                 [available]="roles | async"
+                                 [(ngModel)]="searchParams.role"
+                                 [labelMapper]="LabelMappingUtils.nameDescriptionToLabel"
+                                 [idMapper]="LabelMappingUtils.nameToLabel"
+                                 alignRight="true" maxHeight="300px"
+                                 placeholder="Role"></item-selector>
                 </div>
               </div>
               <div class="form-row px-2 pb-2">
