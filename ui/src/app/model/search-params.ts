@@ -18,7 +18,7 @@ export class SearchParams {
       fileshareGroup: this.fileshareGroups.map(i => i.name),
       reportingGroup: this.reportingGroups.map(i => i.name),
       dataset: this.datasets.map(i => i.code),
-      role: this.role?.name,
+      role: this.role ? this.role.name : '',
       includeInactiveUsers: String(this.includeInactiveUsers),
       page: this.page.toString(),
       pageSize: this.pageSize.toString(),

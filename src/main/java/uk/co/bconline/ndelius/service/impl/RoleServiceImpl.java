@@ -94,15 +94,6 @@ public class RoleServiceImpl implements RoleService
 				.collect(toSet());
 	}
 
-	public Set<RoleAssociationEntry> getUsersRoles(String role)
-	{
-		return stream(roleAssociationRepository.findAll(query()
-				.searchScope(SUBTREE)
-				.base(usersBase)
-				.where(OBJECTCLASS).is("NDRoleAssociation").and("cn").like(role)).spliterator(), true)
-				.collect(toSet());
-	}
-
 	@Override
 	public Optional<RoleEntry> dereference(RoleAssociationEntry association) {
 		val base = LdapUtils.newLdapName(ldapBase);

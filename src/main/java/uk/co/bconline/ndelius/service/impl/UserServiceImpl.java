@@ -15,7 +15,6 @@ import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
-import uk.co.bconline.ndelius.model.entry.RoleAssociationEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.transformer.CustomMappingStrategy;
@@ -51,8 +50,7 @@ public class UserServiceImpl implements UserService
 	private final UserTransformer transformer;
 	private final SearchResultTransformer searchResultTransformer;
 	private final TaskExecutor taskExecutor;
-
-	private final RoleService roleService;
+	private final UserRoleService userRoleService;
 
 	@Autowired
 	public UserServiceImpl(
@@ -63,7 +61,7 @@ public class UserServiceImpl implements UserService
 			UserTransformer transformer,
 			SearchResultTransformer searchResultTransformer,
 			TaskExecutor taskExecutor,
-			RoleService roleService)
+			UserRoleService userRoleService)
 	{
 		this.userEntityService = userEntityService;
 		this.userEntryService = userEntryService;
@@ -72,7 +70,7 @@ public class UserServiceImpl implements UserService
 		this.transformer = transformer;
 		this.searchResultTransformer = searchResultTransformer;
 		this.taskExecutor = taskExecutor;
-		this.roleService = roleService;
+		this.userRoleService = userRoleService;
 	}
 
 	@Override
@@ -115,19 +113,15 @@ public class UserServiceImpl implements UserService
 		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 
-		val roleFuture = supplyAsync(() -> roleService.getUsersRoles(role).stream()
-				.map(user -> user.getDn().get(user.getDn().size() - 2).split("cn=")[1]) // username is 2nd-to-last part of distinguished name
-				.map(userEntryService::getUser)
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.map(user -> searchResultTransformer.map(user, 100))
+		val roleFuture = supplyAsync(() -> userRoleService.getAllUsersWithRole(role).stream()
+				.map(user -> LdapUtils.getStringValue(user.getDn(), user.getDn().size() - 2).toLowerCase()) // username is 2nd-to-last part of distinguished name
 				.collect(toList()));
 
 		try
 		{
 			// fetch and map
 			var stream = allOf(groupMembersFuture, ldapFuture, dbFuture, roleFuture)
-					.thenApply(v -> filterRoleResults(roleFuture.join(), ldapFuture.join(), dbFuture.join())).join()
+					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())).join()
 					.flatMap(Collection::stream)
 					.flatMap(sr -> expandEmailSearchToDB(sr, query))
 					.collect(groupingBy(SearchResult::getUsername)).values().stream()
@@ -140,6 +134,9 @@ public class UserServiceImpl implements UserService
 			}
 			if (!groupFilterIsEmpty) {
 				stream = stream.filter(result -> groupMembersFuture.join().contains(result.getUsername().toLowerCase()));
+			}
+			if (!roleIsEmpty) {
+				stream = stream.filter(result -> roleFuture.join().contains(result.getUsername().toLowerCase()));
 			}
 
 			// apply sorting and paging
@@ -304,21 +301,5 @@ public class UserServiceImpl implements UserService
 
 		results.add(sr);
 		return results.stream();
-	}
-
-	private Stream<List<SearchResult>> filterRoleResults(List<SearchResult> roleResults, List<SearchResult> ldapResults, List<SearchResult> dbResults)
-	{
-		if (roleResults == null || roleResults.isEmpty()) {
-			return Stream.of(ldapResults, dbResults);
-		}
-
-		if (!ldapResults.isEmpty()) {
-			roleResults.retainAll(ldapResults);
-		}
-		if (!dbResults.isEmpty()) {
-			roleResults.retainAll(dbResults);
-		}
-
-		return Stream.of(roleResults);
 	}
 }

@@ -27,6 +27,7 @@ import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static org.springframework.ldap.query.SearchScope.SUBTREE;
 import static uk.co.bconline.ndelius.util.AuthUtils.myInteractions;
 import static uk.co.bconline.ndelius.util.Constants.*;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
@@ -146,5 +147,17 @@ public class UserRoleServiceImpl implements UserRoleService {
 		rolesToAdd.parallelStream()
 				.map(role -> roleTransformer.buildAssociation(username, role))
 				.forEach(roleAssociationRepository::save);
+	}
+
+	@Override
+	public Set<RoleAssociationEntry> getAllUsersWithRole(String role)
+	{
+		if (role == null || role.isBlank()) return emptySet();
+
+		return stream(roleAssociationRepository.findAll(query()
+				.searchScope(SUBTREE)
+				.base(usersBase)
+				.where(OBJECTCLASS).is("NDRoleAssociation").and("cn").like(role)).spliterator(), true)
+				.collect(toSet());
 	}
 }
