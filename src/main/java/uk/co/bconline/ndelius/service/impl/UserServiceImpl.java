@@ -112,10 +112,7 @@ public class UserServiceImpl implements UserService
 		// Create Futures to search the LDAP and Database asynchronously
 		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
-
-		val roleFuture = supplyAsync(() -> userRoleService.getAllUsersWithRole(role).stream()
-				.map(user -> LdapUtils.getStringValue(user.getDn(), user.getDn().size() - 2).toLowerCase()) // username is 2nd-to-last part of distinguished name
-				.collect(toList()));
+		val roleFuture = supplyAsync(() -> userRoleService.getAllUsersWithRole(role));
 
 		try
 		{

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Optionals;
 import org.springframework.ldap.query.SearchScope;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.entry.RoleAssociationEntry;
 import uk.co.bconline.ndelius.model.entry.RoleEntry;
@@ -21,8 +22,10 @@ import java.util.List;
 import java.util.Set;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -150,14 +153,15 @@ public class UserRoleServiceImpl implements UserRoleService {
 	}
 
 	@Override
-	public Set<RoleAssociationEntry> getAllUsersWithRole(String role)
+	public List<String> getAllUsersWithRole(String role)
 	{
-		if (role == null || role.isBlank()) return emptySet();
+		if (role == null || role.isBlank()) return emptyList();
 
 		return stream(roleAssociationRepository.findAll(query()
 				.searchScope(SUBTREE)
 				.base(usersBase)
 				.where(OBJECTCLASS).is("NDRoleAssociation").and("cn").like(role)).spliterator(), true)
-				.collect(toSet());
+				.map(user -> LdapUtils.getStringValue(user.getDn(), user.getDn().size() - 2).toLowerCase()) // username is 2nd-to-last part of distinguished name
+				.collect(toList());
 	}
 }
