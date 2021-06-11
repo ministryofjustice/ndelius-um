@@ -116,13 +116,11 @@ public class UserServiceImpl implements UserService
 		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 
 		val roleFuture = supplyAsync(() -> roleService.getUsersRoles(role).stream()
-				.map(user -> user.getDn().get(user.getDn().size() - 2).split("cn=")[1])
-				.peek(un -> System.out.println("Username: " + un))
+				.map(user -> user.getDn().get(user.getDn().size() - 2).split("cn=")[1]) // username is 2nd-to-last part of distinguished name
 				.map(userEntryService::getUser)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
-				.map(user -> searchResultTransformer.map(user, 101))
-				.peek(result -> System.out.println("Role result: " + result.getUsername()))
+				.map(user -> searchResultTransformer.map(user, 100))
 				.collect(toList()));
 
 		try
@@ -310,17 +308,14 @@ public class UserServiceImpl implements UserService
 
 	private Stream<List<SearchResult>> filterRoleResults(List<SearchResult> roleResults, List<SearchResult> ldapResults, List<SearchResult> dbResults)
 	{
-		if (roleResults == null || roleResults.isEmpty())
-		{
+		if (roleResults == null || roleResults.isEmpty()) {
 			return Stream.of(ldapResults, dbResults);
 		}
 
-		if (!ldapResults.isEmpty())
-		{
+		if (!ldapResults.isEmpty()) {
 			roleResults.retainAll(ldapResults);
 		}
-		if (!dbResults.isEmpty())
-		{
+		if (!dbResults.isEmpty()) {
 			roleResults.retainAll(dbResults);
 		}
 
