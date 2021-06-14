@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.advice;
 
+import io.github.resilience4j.bulkhead.BulkheadFullException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -96,6 +97,14 @@ public class ControllerExceptionHandler
 	public ErrorResponse handle(RuntimeException exception) {
 		log.error("Returning 500 response", exception);
 		return new ErrorResponse(getMostSpecificCause(exception).getMessage());
+	}
+
+	@ExceptionHandler
+	@ResponseBody
+	@ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+	public ErrorResponse handle(BulkheadFullException exception) {
+		log.debug("Returning 429 response", exception);
+		return new ErrorResponse("An export is currently in progress. Please try again later.");
 	}
 
 	private <T> T getLast(Iterator<T> propertyPath) {

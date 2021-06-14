@@ -148,6 +148,13 @@ objectclass: NDRoleAssociation
 cn: UMBT001
 aliasedObjectName: cn=UMBT001,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
+dn: cn=UABT0050,cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
+objectclass: top
+objectclass: alias
+objectclass: NDRoleAssociation
+cn: UABT0050
+aliasedObjectName: cn=UABT0050,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
+
 dn: cn=APBT001,cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: alias

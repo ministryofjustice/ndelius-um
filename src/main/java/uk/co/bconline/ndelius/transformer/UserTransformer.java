@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Optionals;
 import org.springframework.stereotype.Component;
 import uk.co.bconline.ndelius.model.Dataset;
+import uk.co.bconline.ndelius.model.ExportResult;
 import uk.co.bconline.ndelius.model.ReferenceData;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.*;
+import uk.co.bconline.ndelius.model.entity.export.*;
 import uk.co.bconline.ndelius.model.entry.ClientEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.service.*;
@@ -28,8 +30,7 @@ import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.*;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 import static org.springframework.util.StringUtils.isEmpty;
 import static uk.co.bconline.ndelius.util.LdapUtils.mapLdapStringToDate;
 import static uk.co.bconline.ndelius.util.LdapUtils.mapToLdapString;
@@ -141,6 +142,27 @@ public class UserTransformer
 				.groups(groupTransformer.groupedByType(v.getGroups()))
 				.sources(singletonList("LDAP"))
 				.build());
+	}
+
+	public ExportResult combine(UserExportEntity db, UserEntry ldap) {
+		if (ldap == null) return null;
+		return ExportResult.builder()
+				.username(ofNullable(ldap.getUsername()).orElseGet(db::getUsername))
+				.forenames(ofNullable(ldap.getForenames()).orElseGet(() -> combineNames(db.getForename(), db.getForename2())))
+				.surname(ofNullable(ldap.getSurname()).orElseGet(db::getSurname))
+				.email(ldap.getEmail())
+				.telephoneNumber(ldap.getTelephoneNumber())
+				.homeArea(ldap.getHomeArea())
+				.endDate(ofNullable(ldap.getEndDate()).map(LdapUtils::mapLdapStringToDate).orElseGet(db::getEndDate))
+				.startDate(ofNullable(ldap.getStartDate()).map(LdapUtils::mapLdapStringToDate).orElseGet(() -> ofNullable(db.getStaff()).map(StaffExportEntity::getStartDate).orElse(null)))
+				.sector(ofNullable(ofNullable(ldap.getSector()).map("private"::equalsIgnoreCase).orElseGet(db::getPrivateUser)).map(p -> p ? "Private" : "Public").orElse(null))
+				.staffCode(ofNullable(db.getStaff()).map(StaffExportEntity::getCode).orElse(null))
+				.staffGrade(ofNullable(db.getStaff()).map(StaffExportEntity::getGrade).map(ReferenceDataExportEntity::getCode).orElse(null))
+				.teams(ofNullable(db.getStaff()).map(StaffExportEntity::getTeams).map(l -> l.stream()
+						.map(TeamExportEntity::getCode).distinct().sorted().collect(joining(","))).orElse(null))
+				.datasets(ofNullable(db.getDatasets()).map(l -> l.stream()
+						.map(ProbationAreaExportEntity::getCode).distinct().sorted().collect(joining(","))).orElse(null))
+				.build();
 	}
 
 	public Optional<User> combine(UserEntity dbUser, UserEntry userEntry)

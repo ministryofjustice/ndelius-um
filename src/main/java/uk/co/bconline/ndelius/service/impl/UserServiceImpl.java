@@ -1,9 +1,6 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +8,22 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.util.Optionals;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.co.bconline.ndelius.exception.AppException;
+import uk.co.bconline.ndelius.model.ExportResult;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.service.*;
-import uk.co.bconline.ndelius.transformer.CustomMappingStrategy;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
+import uk.co.bconline.ndelius.util.CSVUtils;
 
-import java.io.PrintWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CancellationException;
@@ -41,8 +43,7 @@ import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService
-{
+public class UserServiceImpl implements UserService {
 	private final UserEntityService userEntityService;
 	private final UserEntryService userEntryService;
 	private final DatasetService datasetService;
@@ -75,8 +76,7 @@ public class UserServiceImpl implements UserService
 
 	@Override
 	public List<SearchResult> search(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
-									 String role, boolean includeInactiveUsers, Integer page, Integer pageSize)
-	{
+									 String role, boolean includeInactiveUsers, Integer page, Integer pageSize) {
 		val queryIsEmpty = query == null || query.length() < 3;
 		val roleIsEmpty = role == null || role.length() == 0;
 		val groupFilterIsEmpty = groupFilter.values().stream().allMatch(Set::isEmpty);
@@ -114,8 +114,7 @@ public class UserServiceImpl implements UserService
 		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 		val roleFuture = supplyAsync(() -> userRoleService.getAllUsersWithRole(role));
 
-		try
-		{
+		try {
 			// fetch and map
 			var stream = allOf(groupMembersFuture, ldapFuture, dbFuture, roleFuture)
 					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())).join()
@@ -138,8 +137,8 @@ public class UserServiceImpl implements UserService
 
 			// apply sorting and paging
 			stream = stream
-				.sorted(queryIsEmpty?
-						comparing(SearchResult::getUsername, String::compareToIgnoreCase):
+				.sorted(queryIsEmpty ?
+						comparing(SearchResult::getUsername, String::compareToIgnoreCase) :
 						comparing(SearchResult::getScore, Float::compare).reversed());
 			if (page != null && pageSize != null)
 			{
@@ -150,88 +149,60 @@ public class UserServiceImpl implements UserService
 			return	stream
 				.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}, email={}", result.getUsername(), result.getScore(), result.getEndDate(), result.getEmail()))
 				.collect(toList());
-		}
-		catch (CancellationException | CompletionException e)
-		{
+		} catch (CancellationException | CompletionException e) {
 			throw new AppException(String.format("Unable to complete user search for %s", query), e);
 		}
 	}
 
-	public void exportSearchToCSV(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
-									 boolean includeInactiveUsers, PrintWriter writer) throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException
-	{
-		CustomMappingStrategy<SearchResult> mappingStrategy = new CustomMappingStrategy<>();
-		mappingStrategy.setType(SearchResult.class);
-		var searchResults = search(query, groupFilter, datasetFilter, null, includeInactiveUsers, null , null);
-		StatefulBeanToCsv<SearchResult> sbc = new StatefulBeanToCsvBuilder<SearchResult>(writer)
-				.withMappingStrategy(mappingStrategy)
-				.build();
-		sbc.write(searchResults);
-	}
-
 	@Override
-	public boolean usernameExists(String username)
-	{
+	public boolean usernameExists(String username) {
 		val dbFuture = supplyAsync(() -> userEntityService.usernameExists(username), taskExecutor);
 		val ldapFuture = supplyAsync(() -> userEntryService.usernameExists(username), taskExecutor);
 
-		try
-		{
+		try {
 			return allOf(dbFuture, ldapFuture)
 					.thenApply(v -> dbFuture.join() || ldapFuture.join())
 					.join();
-		}
-		catch (CancellationException | CompletionException e)
-		{
+		} catch (CancellationException | CompletionException e) {
 			throw new AppException(String.format("Unable to check whether user exists with username %s", username), e);
 		}
 	}
 
 	@Override
-	public Optional<User> getUser(String username)
-	{
+	public Optional<User> getUser(String username) {
 		val dbFuture = supplyAsync(() -> userEntityService.getUser(username).orElse(null), taskExecutor);
 		val ldapFuture = supplyAsync(() -> userEntryService.getUser(username).orElse(null), taskExecutor);
 
-		try
-		{
+		try {
 			val datasetsFilter = datasetsFilter();
 			return allOf(dbFuture, ldapFuture)
 					.thenApply(v -> transformer.combine(dbFuture.join(), ldapFuture.join()))
 					.join()
 					.filter(user -> datasetsFilter.test(user.getUsername()));
-		}
-		catch (CancellationException | CompletionException e)
-		{
+		} catch (CancellationException | CompletionException e) {
 			throw new AppException(String.format("Unable to retrieve user details for %s", username), e);
 		}
 	}
 
 	@Override
-	public Optional<User> getUserByStaffCode(String staffCode)
-	{
+	public Optional<User> getUserByStaffCode(String staffCode) {
 		return userEntityService.getUserByStaffCode(staffCode).flatMap(transformer::map);
 	}
 
 	@Override
-	public void addUser(User user)
-	{
+	public void addUser(User user) {
 		val dbFuture = runAsync(() -> userEntityService.save(transformer.mapToUserEntity(user, new UserEntity())), taskExecutor);
 		val ldapFuture = runAsync(() -> userEntryService.save(transformer.mapToUserEntry(user, new UserEntry())), taskExecutor);
 
-		try
-		{
+		try {
 			allOf(dbFuture, ldapFuture).join();
-		}
-		catch (CancellationException | CompletionException e)
-		{
+		} catch (CancellationException | CompletionException e) {
 			throw new AppException(String.format("Unable to create user (%s)", getMostSpecificCause(e).getMessage()), e);
 		}
 	}
 
 	@Override
-	public void updateUser(User user)
-	{
+	public void updateUser(User user) {
 		val existingHomeArea = userEntryService.getUserHomeArea(user.getExistingUsername());
 		val dbFuture = runAsync(() -> {
 			log.debug("Fetching existing DB value");
@@ -248,18 +219,45 @@ public class UserServiceImpl implements UserService
 			userEntryService.save(user.getExistingUsername(), updatedUser);
 		}, taskExecutor);
 
-		try
-		{
+		try {
 			allOf(dbFuture, ldapFuture).join();
-		}
-		catch (CancellationException | CompletionException e)
-		{
+		} catch (CancellationException | CompletionException e) {
 			throw new AppException(String.format("Unable to update user (%s)", getMostSpecificCause(e).getMessage()), e);
 		}
 	}
 
-	private Predicate<String> datasetsFilter()
-	{
+	@Override
+	@Transactional(readOnly = true)
+	public Stream<ExportResult> exportAll() {
+		log.debug("User export started");
+		// Fetch all LDAP entries into memory
+		val ldapUsers = userEntryService.export();
+		log.debug("Fetched {} entries from LDAP", ldapUsers.size());
+		// Stream all user entities from the DB, and combine each one with the corresponding LDAP entry
+		val username = new String[]{""};
+		return userEntityService.export()
+				.map(entity -> transformer.combine(entity, ldapUsers.get(entity.getUsername())))
+				.filter(Objects::nonNull)
+				.filter(result -> {
+					// Remove any repeated entries caused by cartesian product queries, without traversing the entire stream
+					val isDuplicate = result.getUsername().equals(username[0]);
+					username[0] = result.getUsername();
+					return !isDuplicate;
+				});
+	}
+
+	@Override
+	@Bulkhead(name = "export")
+	@Transactional(readOnly = true)
+	public void exportAllToCsv(OutputStream outputStream) {
+		try (val writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
+			CSVUtils.stream(exportAll(), writer);
+		} catch (IOException e) {
+			throw new AppException("Unable to stream CSV data", e);
+		}
+	}
+
+	private Predicate<String> datasetsFilter() {
 		if (isNational()) return (String username) -> true;
 
 		val myDatasets = myDatasets();
