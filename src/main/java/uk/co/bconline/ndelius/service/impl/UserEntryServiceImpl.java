@@ -154,6 +154,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 				.spliterator(), true)
 				.map(u -> searchResultTransformer.map(u, deriveScore(query, u)))
 				.collect(toList());
+
 		log.debug("Found {} LDAP results in {}ms", results.size(), MILLIS.between(t, now()));
 		return results;
 	}

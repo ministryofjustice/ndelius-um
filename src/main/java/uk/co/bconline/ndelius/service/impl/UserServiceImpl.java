@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
 	private final UserTransformer transformer;
 	private final SearchResultTransformer searchResultTransformer;
 	private final TaskExecutor taskExecutor;
+	private final UserRoleService userRoleService;
 
 	@Autowired
 	public UserServiceImpl(
@@ -60,7 +61,9 @@ public class UserServiceImpl implements UserService {
 			GroupService groupService,
 			UserTransformer transformer,
 			SearchResultTransformer searchResultTransformer,
-			TaskExecutor taskExecutor) {
+			TaskExecutor taskExecutor,
+			UserRoleService userRoleService)
+	{
 		this.userEntityService = userEntityService;
 		this.userEntryService = userEntryService;
 		this.datasetService = datasetService;
@@ -68,14 +71,16 @@ public class UserServiceImpl implements UserService {
 		this.transformer = transformer;
 		this.searchResultTransformer = searchResultTransformer;
 		this.taskExecutor = taskExecutor;
+		this.userRoleService = userRoleService;
 	}
 
 	@Override
 	public List<SearchResult> search(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
-									 boolean includeInactiveUsers, Integer page, Integer pageSize) {
+									 String role, boolean includeInactiveUsers, Integer page, Integer pageSize) {
 		val queryIsEmpty = query == null || query.length() < 3;
+		val roleIsEmpty = role == null || role.length() == 0;
 		val groupFilterIsEmpty = groupFilter.values().stream().allMatch(Set::isEmpty);
-		if (queryIsEmpty && groupFilterIsEmpty && datasetFilter.isEmpty()) {
+		if (queryIsEmpty && roleIsEmpty && groupFilterIsEmpty && datasetFilter.isEmpty()) {
 			// not enough criteria to do a useful search
 			return emptyList();
 		}
@@ -107,10 +112,11 @@ public class UserServiceImpl implements UserService {
 		// Create Futures to search the LDAP and Database asynchronously
 		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
 		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
+		val roleFuture = supplyAsync(() -> userRoleService.getAllUsersWithRole(role));
 
 		try {
 			// fetch and map
-			var stream = allOf(groupMembersFuture, ldapFuture, dbFuture)
+			var stream = allOf(groupMembersFuture, ldapFuture, dbFuture, roleFuture)
 					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())).join()
 					.flatMap(Collection::stream)
 					.flatMap(sr -> expandEmailSearchToDB(sr, query))
@@ -124,6 +130,9 @@ public class UserServiceImpl implements UserService {
 			}
 			if (!groupFilterIsEmpty) {
 				stream = stream.filter(result -> groupMembersFuture.join().contains(result.getUsername().toLowerCase()));
+			}
+			if (!roleIsEmpty) {
+				stream = stream.filter(result -> roleFuture.join().contains(result.getUsername().toLowerCase()));
 			}
 
 			// apply sorting and paging
