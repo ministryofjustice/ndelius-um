@@ -104,7 +104,7 @@ public class ControllerExceptionHandler
 	@ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
 	public ErrorResponse handle(BulkheadFullException exception) {
 		log.debug("Returning 429 response", exception);
-		return new ErrorResponse("An export is currently in progress. Please try again later.");
+		return new ErrorResponse("An export task is currently in progress. Please try again later.");
 	}
 
 	private <T> T getLast(Iterator<T> propertyPath) {
