@@ -71,7 +71,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   static parseErrorResponse(res: HttpErrorResponse): string {
     let error: string = res.error ? JSON.stringify(res.error) : '';
-    let header: string = res.status + ' ' + (ErrorInterceptor.HTTP_STATUS_CODES[res.status] || 'Unknown');
+    let header: string = 'Error ' + res.status + ': ' + (ErrorInterceptor.HTTP_STATUS_CODES[res.status] || 'Unknown');
     if (res.status === 400 && res.error != null && res.error.error instanceof Array) {
       header = 'Validation Errors';
     }
@@ -81,7 +81,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       error = 'Access denied.' + (res.error && res.error.requiredRoles instanceof Array ? ' Missing roles: ' + res.error.requiredRoles.join(', ') : '');
     } else if (res.status === 429) {
       // This message should come from the server, however res.error isn't populated (not sure why - maybe CORS?)
-      error = 'An export is currently in progress. Please try again later.';
+      error = 'An export task is currently in progress. Please try again later.';
     } else if (res.error != null && res.error.error instanceof Array) {
       error = res.error.error.join('</br/>');
     }
