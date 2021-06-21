@@ -145,7 +145,7 @@ export class UserComponent implements OnInit {
 
   private addSelectableRoles(roles: Role[]) {
     this.roles = this.roles || [];
-    this.roles.push(...roles.filter(role => this.roles.map(r => r.name).indexOf(role.name) === -1));
+    this.roles = [...this.roles, ...roles.filter(role => this.roles.map(r => r.name).indexOf(role.name) === -1)];
   }
 
   applyRoleGroup(): void {
