@@ -65,8 +65,8 @@ export class ItemSelectorComponent
   onlyShowSelected: boolean;
 
   @Input() idMapper: Function = null;
-  @Input() labelMapper: Function = (item: any) => item;
   @Input() availableGetter: Function;
+  @Input() labelMapper: Function = (item: any) => item;
 
   private propagateChange = (_: any) => {
   }
@@ -242,6 +242,6 @@ export class ItemSelectorComponent
   getAvailableTeams(): void {
     this.availableGetter(this.selectedSubMenuItem).subscribe(
       teams => this.available = teams
-    )
+    );
   }
 }
