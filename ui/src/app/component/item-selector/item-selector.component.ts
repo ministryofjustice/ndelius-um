@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -55,6 +54,9 @@ export class ItemSelectorComponent
   @Input() alignRight: boolean;
   @Input() placeholder = 'Please select...';
   @Input() loadingText = 'Loading...';
+  @Input() subMenuItems: {code: string, description: string}[];
+  @Input() selectedSubMenuItem: string;
+
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
   private availableItems: any[];
 
@@ -64,14 +66,11 @@ export class ItemSelectorComponent
 
   @Input() idMapper: Function = null;
   @Input() labelMapper: Function = (item: any) => item;
+  @Input() availableGetter: Function;
 
   private propagateChange = (_: any) => {
   }
   private propagateTouchChange = (_: any) => {
-  }
-
-  constructor(
-    private cdr: ChangeDetectorRef) {
   }
 
   toggle(item): void {
@@ -238,5 +237,11 @@ export class ItemSelectorComponent
       return true;
     }
     return false;
+  }
+
+  getAvailableTeams(): void {
+    this.availableGetter(this.selectedSubMenuItem).subscribe(
+      teams => this.available = teams
+    )
   }
 }

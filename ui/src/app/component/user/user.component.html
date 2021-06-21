@@ -355,6 +355,9 @@
                            [(ngModel)] = "user.teams"
                            [(selected)]="user.teams"
                            [available]="teams"
+                           [subMenuItems]="user.datasets"
+                           [availableGetter]="teamService.providerTeams.bind(teamService)"
+                           [selectedSubMenuItem]="user.homeArea?.code"
                            [readonly]="mode === 'View'"
                            [labelMapper]="LabelMappingUtils.codeDescriptionToLabel"></item-selector>
           </div>
