@@ -7,7 +7,7 @@
           (keydown.arrowdown)="collapseDropdown() && $event.stopPropagation()"
           (keydown.alt.arrowup)="collapseDropdown() && $event.stopPropagation()"
           (keydown.alt.arrowdown)="collapseDropdown() && $event.stopPropagation()"
-          [disabled]="available == null || available.length == 0"
+          [disabled]="available == null || (available.length == 0 && subMenuItems == null) || (subMenuItems != null && subMenuItems.length == 0)"
           [class.readonly]="readonly"
           [class.ng-dirty]="dirty"
           [title]="displayText"
@@ -49,6 +49,7 @@
           <a class="nav-link py-1" [class.active]="onlyShowSelected"
              style="cursor: pointer; outline: none" tabindex="0"
              title="Only show selected options"
+             [hidden]="subMenuItems != null"
              (click)="onlyShowSelected = true; updateDropDown()"
              (keyup.space)="onlyShowSelected = true; updateDropDown()">Selected</a>
         </li>
@@ -56,8 +57,33 @@
           <a class="nav-link py-1" [class.active]="!onlyShowSelected"
              style="cursor: pointer; outline: none" tabindex="0"
              title="Show all options"
+             [hidden]="subMenuItems != null"
              (click)="onlyShowSelected = false; updateDropDown()"
              (keyup.space)="onlyShowSelected = false; updateDropDown()">All</a>
+
+          <select (change)="onlyShowSelected = false; getSubMenuList(); updateDropDown()"
+                  [(ngModel)]="selectedSubMenuItem"
+                  [class.active]="!onlyShowSelected"
+                  [hidden]="subMenuItems == null"
+                  class="nav-link py-1"
+                  style="cursor: pointer; text-align-last: center"
+                  tabindex="0"
+                  title="Add teams from another provider">
+            <option class="nav-link py-1" [class.active]="onlyShowSelected"
+               style="cursor: pointer"
+               title="Only show selected options"
+               (click)="onlyShowSelected = true; updateDropDown()"
+               (keyup.space)="onlyShowSelected = true; updateDropDown()">Selected</option>
+            <option *ngFor="let dataset of subMenuItems"
+                    [value]="dataset.code"
+                    [selected]="dataset.description"
+                    class="nav-link py-1"
+                    tabindex="0"
+                    title="Show teams for the {{dataset.description}} provider">
+              {{ dataset.description }}
+            </option>
+          </select>
+
         </li>
       </ul>
     </div>

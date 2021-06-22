@@ -1,4 +1,4 @@
-import {ApplicationRef, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {User} from '../../model/user';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {debounceTime, distinctUntilChanged, filter, flatMap, map} from 'rxjs/operators';
@@ -66,12 +66,11 @@ export class UserComponent implements OnInit {
     private roleService: RoleService,
     private groupService: GroupService,
     private datasetService: DatasetService,
-    private teamService: TeamService,
     private organisationService: OrganisationService,
     private staffGradeService: StaffGradeService,
     private historyService: HistoryService,
-    private appRef: ApplicationRef,
-    public auth: AuthorisationService) {
+    public auth: AuthorisationService,
+    public teamService: TeamService) {
   }
 
   ngOnInit(): void {
@@ -168,9 +167,6 @@ export class UserComponent implements OnInit {
       this.teams = null;
       this.teamService.providerTeams(this.user.homeArea.code).subscribe((teams: Team[]) => {
         this.teams = teams;
-        if (this.user.teams != null) {
-          this.user.teams = this.user.teams.filter(team => teams.map(t => t.code).indexOf(team.code) !== -1);
-        }
       });
       this.subContractedProviders = null;
       this.datasetService.subContractedProviders(this.user.homeArea.code).subscribe((subContractedProviders: Dataset[]) => {

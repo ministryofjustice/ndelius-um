@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -55,6 +54,9 @@ export class ItemSelectorComponent
   @Input() alignRight: boolean;
   @Input() placeholder = 'Please select...';
   @Input() loadingText = 'Loading...';
+  @Input() subMenuItems: {code: string, description: string}[];
+  @Input() selectedSubMenuItem: string;
+
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
   private availableItems: any[];
 
@@ -63,15 +65,12 @@ export class ItemSelectorComponent
   onlyShowSelected: boolean;
 
   @Input() idMapper: Function = null;
+  @Input() getSubMenu: Function;
   @Input() labelMapper: Function = (item: any) => item;
 
   private propagateChange = (_: any) => {
   }
   private propagateTouchChange = (_: any) => {
-  }
-
-  constructor(
-    private cdr: ChangeDetectorRef) {
   }
 
   toggle(item): void {
@@ -143,7 +142,7 @@ export class ItemSelectorComponent
       return el != null && arr.map(item => this.mapToId(item)).indexOf(this.mapToId(el)) === pos;
     };
 
-    if (this.multiple) {
+    if (this.multiple || this.subMenuItems != null) {
       return [...this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
     } else {
       return [this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
@@ -238,5 +237,11 @@ export class ItemSelectorComponent
       return true;
     }
     return false;
+  }
+
+  getSubMenuList(): void {
+    this.getSubMenu(this.selectedSubMenuItem).subscribe(
+      items => this.available = items
+    );
   }
 }
