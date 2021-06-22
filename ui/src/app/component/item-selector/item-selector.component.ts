@@ -65,7 +65,7 @@ export class ItemSelectorComponent
   onlyShowSelected: boolean;
 
   @Input() idMapper: Function = null;
-  @Input() availableGetter: Function;
+  @Input() getSubMenu: Function;
   @Input() labelMapper: Function = (item: any) => item;
 
   private propagateChange = (_: any) => {
@@ -142,7 +142,7 @@ export class ItemSelectorComponent
       return el != null && arr.map(item => this.mapToId(item)).indexOf(this.mapToId(el)) === pos;
     };
 
-    if (this.multiple) {
+    if (this.multiple || this.subMenuItems != null) {
       return [...this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
     } else {
       return [this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
@@ -239,9 +239,9 @@ export class ItemSelectorComponent
     return false;
   }
 
-  getAvailableTeams(): void {
-    this.availableGetter(this.selectedSubMenuItem).subscribe(
-      teams => this.available = teams
+  getSubMenuList(): void {
+    this.getSubMenu(this.selectedSubMenuItem).subscribe(
+      items => this.available = items
     );
   }
 }

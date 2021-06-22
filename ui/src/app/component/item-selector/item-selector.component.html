@@ -61,7 +61,7 @@
              (click)="onlyShowSelected = false; updateDropDown()"
              (keyup.space)="onlyShowSelected = false; updateDropDown()">All</a>
 
-          <select (change)="onlyShowSelected = false; getAvailableTeams(); updateDropDown()"
+          <select (change)="onlyShowSelected = false; getSubMenuList(); updateDropDown()"
                   [(ngModel)]="selectedSubMenuItem"
                   [class.active]="!onlyShowSelected"
                   [hidden]="subMenuItems == null"
