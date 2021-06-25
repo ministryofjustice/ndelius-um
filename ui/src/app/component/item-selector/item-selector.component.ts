@@ -60,7 +60,7 @@ export class ItemSelectorComponent
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
   private availableItems: any[];
 
-  readonly SELECTED_OPTION_SUB_MENU = "-1";
+  readonly SELECTED_OPTION_SUB_MENU = '-1';
   dirty = false;
   filter = '';
   onlyShowSelected: boolean;
@@ -247,7 +247,7 @@ export class ItemSelectorComponent
   }
 
   getSubMenuList(): void {
-    if (this.selectedSubMenuItem == this.SELECTED_OPTION_SUB_MENU) {
+    if (this.selectedSubMenuItem === this.SELECTED_OPTION_SUB_MENU) {
       this.onlyShowSelected = true;
       this.available = [];
       return;
