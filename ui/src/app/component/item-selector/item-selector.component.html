@@ -72,8 +72,7 @@
             <option class="nav-link py-1" [class.active]="onlyShowSelected"
                style="cursor: pointer"
                title="Only show selected options"
-               (click)="onlyShowSelected = true; updateDropDown()"
-               (keyup.space)="onlyShowSelected = true; updateDropDown()">Selected</option>
+               [value]="SELECTED_OPTION_SUB_MENU">Selected</option>
             <option *ngFor="let dataset of subMenuItems"
                     [value]="dataset.code"
                     [selected]="dataset.description"
