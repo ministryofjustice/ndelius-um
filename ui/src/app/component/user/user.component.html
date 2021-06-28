@@ -353,6 +353,7 @@
           <div class="col-sm-4">
             <item-selector id="teams" name="teams" multiple="true" #teamsList="ngModel" maxHeight="300px"
                            [(ngModel)] = "user.teams"
+                           [disabled]="user.staffCode == null || user.staffCode == ''"
                            [(selected)]="user.teams"
                            [available]="teams"
                            [subMenuItems]="user.datasets"
