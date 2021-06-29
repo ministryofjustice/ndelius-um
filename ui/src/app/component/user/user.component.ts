@@ -179,6 +179,9 @@ export class UserComponent implements OnInit {
   }
 
   staffCodeChanged(): void {
+    if (!this.user.staffCode) {
+      this.user.teams = null;
+    }
     this.userWithStaffCode = null;
     this.loadingStaffCode = true;
     this.userService.readByStaffCode(this.user.staffCode)

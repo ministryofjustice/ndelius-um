@@ -7,7 +7,7 @@
           (keydown.arrowdown)="collapseDropdown() && $event.stopPropagation()"
           (keydown.alt.arrowup)="collapseDropdown() && $event.stopPropagation()"
           (keydown.alt.arrowdown)="collapseDropdown() && $event.stopPropagation()"
-          [disabled]="available == null || (available.length == 0 && subMenuItems == null) || (subMenuItems != null && subMenuItems.length == 0)"
+          [disabled]="disableComponent()"
           [class.readonly]="readonly"
           [class.ng-dirty]="dirty"
           [title]="displayText"

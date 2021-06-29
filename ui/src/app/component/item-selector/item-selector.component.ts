@@ -56,7 +56,7 @@ export class ItemSelectorComponent
   @Input() loadingText = 'Loading...';
   @Input() subMenuItems: {code: string, description: string}[];
   @Input() selectedSubMenuItem: string;
-
+  @Input() disabled: boolean;
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
   private availableItems: any[];
 
@@ -257,5 +257,15 @@ export class ItemSelectorComponent
     this.getSubMenu(this.selectedSubMenuItem).subscribe(
       items => this.available = items
     );
+  }
+
+  disableComponent(): boolean {
+    // If using a subMenu then the component is disabled when the subMenu has no items
+    // Otherwise the item-selector is disabled when the available field is empty
+    if (this.subMenuItems == null || this.subMenuItems.length === 0) {
+      return this.available == null || this.available.length === 0 || this.disabled;
+    } else {
+      return this.subMenuItems.length === 0 || this.disabled;
+    }
   }
 }
