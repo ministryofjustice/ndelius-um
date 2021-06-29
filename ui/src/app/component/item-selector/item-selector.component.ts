@@ -60,6 +60,7 @@ export class ItemSelectorComponent
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
   private availableItems: any[];
 
+  readonly SELECTED_OPTION_SUB_MENU = '-1';
   dirty = false;
   filter = '';
   onlyShowSelected: boolean;
@@ -142,7 +143,13 @@ export class ItemSelectorComponent
       return el != null && arr.map(item => this.mapToId(item)).indexOf(this.mapToId(el)) === pos;
     };
 
-    if (this.multiple || this.subMenuItems != null) {
+    if (this.subMenuItems != null) {
+      if (this.onlyShowSelected) {
+        return [...this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
+      } else {
+        return this.availableItems.filter(removeNullAndDuplicates);
+      }
+    } else if (this.multiple) {
       return [...this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
     } else {
       return [this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
@@ -240,6 +247,13 @@ export class ItemSelectorComponent
   }
 
   getSubMenuList(): void {
+    if (this.selectedSubMenuItem === this.SELECTED_OPTION_SUB_MENU) {
+      this.onlyShowSelected = true;
+      this.available = [];
+      return;
+    } else {
+      this.onlyShowSelected = false;
+    }
     this.getSubMenu(this.selectedSubMenuItem).subscribe(
       items => this.available = items
     );
