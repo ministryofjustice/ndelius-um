@@ -160,7 +160,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 		return stream(roleAssociationRepository.findAll(query()
 				.searchScope(SUBTREE)
 				.base(usersBase)
-				.where(OBJECTCLASS).is("NDRoleAssociation").and("cn").like(role)).spliterator(), true)
+				.where(OBJECTCLASS).is("NDRoleAssociation").and("cn").like(role)).spliterator(), false)
 				.map(user -> LdapUtils.getStringValue(user.getDn(), user.getDn().size() - 2).toLowerCase()) // username is 2nd-to-last part of distinguished name
 				.collect(toList());
 	}
