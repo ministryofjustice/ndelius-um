@@ -118,12 +118,12 @@ export class ItemSelectorComponent
         ));
     } else {
       this.selected = Array.of(...this.selected, ...nonSelectedItems);
-      this.selected = [...this.selected.reduce((output, item) => {
+      this.selected = Array.from(this.selected.reduce((output, item) => {
         if (!output.has(item.code)) {
           output.set(item.code, item);
         }
         return output;
-      }, new Map()).values()];
+      }, new Map()).values());
     }
     this.selectedChange.emit(this.selected);
     this.dirty = true;
