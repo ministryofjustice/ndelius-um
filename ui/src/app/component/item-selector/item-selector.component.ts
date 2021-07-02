@@ -107,6 +107,36 @@ export class ItemSelectorComponent
     this.dirty = true;
   }
 
+  toggleAllSubMenuItems() {
+    // let nonSelectedTeams = this.available.filter(item => this.selected.map(i => this.mapToId(i)).indexOf(item) < 0);
+    // let currentSelectedTeams = this.available.filter(item => this.selected.map(i => this.mapToId(i)).indexOf(item) >= 0);
+
+    let nonSelectedTeams = this.available.filter(item => this.selected.indexOf(item) < 0);
+    let currentSelectedTeams = this.available.filter(item => this.selected.indexOf(item) >= 0);
+
+    console.log('available');
+    console.log(this.available);
+    console.log('selected');
+    console.log(this.selected);
+    console.log('nonSelectedTeams');
+    console.log(nonSelectedTeams);
+    console.log('currentSelectedTeams');
+    console.log(currentSelectedTeams);
+
+    if (nonSelectedTeams.length === 0)
+    {
+      console.log('Deselecting teams...')
+      this.selected = this.selected.filter(item => !currentSelectedTeams.includes(item));
+    } else {
+      console.log('Selecting all teams...')
+      this.selected = Array.of(...this.selected, ...nonSelectedTeams);
+    }
+
+    this.selectedChange.emit(this.selected);
+    this.propagateChange(this.selected);
+    this.dirty = true;
+
+  }
   focusOnFilter(): void {
     setTimeout(() => this.filterControl.nativeElement.focus(), 0);
   }
