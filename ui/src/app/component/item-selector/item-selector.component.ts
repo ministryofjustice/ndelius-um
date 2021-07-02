@@ -108,35 +108,27 @@ export class ItemSelectorComponent
   }
 
   toggleAllSubMenuItems() {
-    // let nonSelectedTeams = this.available.filter(item => this.selected.map(i => this.mapToId(i)).indexOf(item) < 0);
-    // let currentSelectedTeams = this.available.filter(item => this.selected.map(i => this.mapToId(i)).indexOf(item) >= 0);
+    const nonSelectedItems = this.available.filter(item => !this.selected.some(sel => sel.code === item.code));
+    const currentSelectedItems = this.available.filter(item => this.selected.some(sel => sel.code === item.code));
 
-    let nonSelectedTeams = this.available.filter(item => this.selected.indexOf(item) < 0);
-    let currentSelectedTeams = this.available.filter(item => this.selected.indexOf(item) >= 0);
-
-    console.log('available');
-    console.log(this.available);
-    console.log('selected');
-    console.log(this.selected);
-    console.log('nonSelectedTeams');
-    console.log(nonSelectedTeams);
-    console.log('currentSelectedTeams');
-    console.log(currentSelectedTeams);
-
-    if (nonSelectedTeams.length === 0)
-    {
-      console.log('Deselecting teams...')
-      this.selected = this.selected.filter(item => !currentSelectedTeams.includes(item));
+    if (currentSelectedItems.length === this.available.length) {
+      this.selected = this.selected.filter(
+        item => !currentSelectedItems.some(
+          currentSelectedItem => currentSelectedItem.code === item.code
+        ));
     } else {
-      console.log('Selecting all teams...')
-      this.selected = Array.of(...this.selected, ...nonSelectedTeams);
+      this.selected = Array.of(...this.selected, ...nonSelectedItems);
+      this.selected = [...this.selected.reduce((output, item) => {
+        if (!output.has(item.code)) {
+          output.set(item.code, item);
+        }
+        return output;
+      }, new Map()).values()];
     }
-
     this.selectedChange.emit(this.selected);
-    this.propagateChange(this.selected);
     this.dirty = true;
-
   }
+
   focusOnFilter(): void {
     setTimeout(() => this.filterControl.nativeElement.focus(), 0);
   }
@@ -297,5 +289,30 @@ export class ItemSelectorComponent
     } else {
       return this.subMenuItems.length === 0 || this.disabled;
     }
+  }
+
+  toggleAllCheckboxState(): boolean {
+    if (this.selected != null && this.available != null) {
+      if (this.subMenuItems == null || this.subMenuItems.length === 0) {
+        return this.selected.length === this.available.length;
+      } else {
+        const currentSelectedItems = this.available.filter(item => this.selected.some(sel => sel.code === item.code));
+        return currentSelectedItems.length > 0 && currentSelectedItems.length === this.available.length;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  toggleCheckboxIndeterminateState(): boolean {
+    if (this.selected != null && this.available != null) {
+      if (this.subMenuItems == null || this.subMenuItems.length === 0) {
+        return this.selected.length > 0 && this.selected.length !== this.available.length;
+      } else {
+        const currentSelectedItems = this.available.filter(item => this.selected.some(sel => sel.code === item.code));
+        return currentSelectedItems.length > 0 && currentSelectedItems.length < this.available.length;
+      }
+    }
+    return false;
   }
 }

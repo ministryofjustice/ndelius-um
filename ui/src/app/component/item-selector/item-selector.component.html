@@ -31,8 +31,8 @@
           <input #toggleAllBtn [id]="id + '-toggle-all'" class="custom-control-input" type="checkbox"
                  title="Toggle all items"
                  (change)="subMenuItems == null ? toggleAllItems() : toggleAllSubMenuItems(); updateDropDown()"
-                 [checked]="selected != null && available != null && selected.length == available.length"
-                 [indeterminate]="selected != null && available != null && selected.length > 0 && selected.length != available.length"/>
+                 [checked]="toggleAllCheckboxState()"
+                 [indeterminate]="toggleCheckboxIndeterminateState()"/>
           <label [for]="id+'-toggle-all'"
                  class="custom-control-label"
                  title="Toggle all items">&nbsp;</label>
