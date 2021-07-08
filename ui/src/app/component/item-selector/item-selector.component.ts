@@ -64,6 +64,7 @@ export class ItemSelectorComponent
   dirty = false;
   filter = '';
   onlyShowSelected: boolean;
+  subMenuMessage: string;
 
   @Input() idMapper: Function = null;
   @Input() getSubMenu: Function;
@@ -265,16 +266,19 @@ export class ItemSelectorComponent
   }
 
   getSubMenuList(): void {
+    // Triggered when changing sub-menu, to populate the available items within the sub-menu
     if (this.selectedSubMenuItem === this.SELECTED_OPTION_SUB_MENU) {
+      this.available = this.selected;
       this.onlyShowSelected = true;
-      this.available = [];
-      return;
     } else {
+      this.available = null;
       this.onlyShowSelected = false;
+      this.subMenuMessage = 'Loading...';
+      this.getSubMenu(this.selectedSubMenuItem).subscribe(
+        items => { this.subMenuMessage = ''; this.available = items; console.log('loaded items', this.available)},
+        error => this.subMenuMessage = 'Error loading menu items'
+      );
     }
-    this.getSubMenu(this.selectedSubMenuItem).subscribe(
-      items => this.available = items
-    );
   }
 
   disableComponent(): boolean {

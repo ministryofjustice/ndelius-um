@@ -98,6 +98,7 @@
                title="Filter selectable options" placeholder="Search&hellip;" aria-label="Filter">
       </div>
     </div>
+    <div *ngIf="available == null || available.length === 0">{{ subMenuMessage }}</div>
     <div class="text-truncate custom-control custom-{{multiple? 'checkbox': 'radio'}}"
          [class.d-none]="onlyShowSelected && !isSelected(item)"
          *ngFor="let item of filtered; let i = index">
