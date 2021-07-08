@@ -21,7 +21,7 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, Long>
 			"LEFT JOIN FETCH u.staff s " +
 			"LEFT JOIN FETCH s.teams " +
 			"LEFT JOIN FETCH s.grade " +
-			"WHERE u.endDate is null OR u.endDate > current_date " +
+			"WHERE u.endDate is null OR u.endDate >= current_date " +
 			"ORDER BY u.username")
 	Stream<UserExportEntity> export();
 }
