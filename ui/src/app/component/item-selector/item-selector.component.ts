@@ -91,6 +91,9 @@ export class ItemSelectorComponent
     // Change detection when the subMenuItems changes (datasets)
     if (this.subMenuItems != null && this.subMenuItems.length !== (this.prevSubMenuItems || []).length) {
       this.prevSubMenuItems = [...this.subMenuItems];
+      // DST-9201 Filter selected items (teams) to contain only items where providerCode is in the list of available subMenuItems (datasets)
+      // Note: providerCode is specific to Teams - if we need to make this generic we'll need to rethink this.
+      this.selected = this.selected.filter(sel => this.subMenuItems.some(subMenuItem => subMenuItem.code === sel.providerCode));
       this.getSubMenuList();
     }
   }
@@ -299,7 +302,7 @@ export class ItemSelectorComponent
           this.subMenuMessage = '';
           this.available = items;
         },
-        error => this.subMenuMessage = 'Error loading menu items'
+        () => this.subMenuMessage = 'Error loading menu items'
       );
     }
   }
