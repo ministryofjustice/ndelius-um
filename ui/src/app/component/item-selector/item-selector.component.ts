@@ -1,12 +1,15 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DoCheck,
   ElementRef,
   EventEmitter,
   forwardRef,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {
@@ -40,7 +43,7 @@ declare var Popper: any;
 })
 
 export class ItemSelectorComponent
-  implements ControlValueAccessor, Validator, OnInit {
+  implements ControlValueAccessor, Validator, OnInit, DoCheck, OnChanges {
   @ViewChild('filterControl', {static: true}) filterControl: ElementRef;
   @ViewChild('toggleBtn', {static: true}) toggleBtn: ElementRef;
   @ViewChild('dropdown', {static: true}) dropdown: ElementRef;
@@ -54,7 +57,8 @@ export class ItemSelectorComponent
   @Input() alignRight: boolean;
   @Input() placeholder = 'Please select...';
   @Input() loadingText = 'Loading...';
-  @Input() subMenuItems: {code: string, description: string}[];
+  @Input() subMenuItems: { code: string, description: string }[];
+  @Input() prevSubMenuItems: { code: string, description: string }[]; // for change detection
   @Input() selectedSubMenuItem: string;
   @Input() disabled: boolean;
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
@@ -73,6 +77,22 @@ export class ItemSelectorComponent
   private propagateChange = (_: any) => {
   }
   private propagateTouchChange = (_: any) => {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // Change detection to the default selectedSubMenuItem (homeArea)
+    if (changes.hasOwnProperty('selectedSubMenuItem')) {
+      this.getSubMenuList();
+    }
+  }
+
+  ngDoCheck() {
+    // Using ngDoCheck for custom change detection on the subMenuItems Array
+    // Change detection when the subMenuItems changes (datasets)
+    if (this.subMenuItems != null && this.subMenuItems.length !== (this.prevSubMenuItems || []).length) {
+      this.prevSubMenuItems = [...this.subMenuItems];
+      this.getSubMenuList();
+    }
   }
 
   toggle(item): void {
@@ -275,7 +295,10 @@ export class ItemSelectorComponent
       this.onlyShowSelected = false;
       this.subMenuMessage = 'Loading...';
       this.getSubMenu(this.selectedSubMenuItem).subscribe(
-        items => { this.subMenuMessage = ''; this.available = items; console.log('loaded items', this.available)},
+        items => {
+          this.subMenuMessage = '';
+          this.available = items;
+        },
         error => this.subMenuMessage = 'Error loading menu items'
       );
     }

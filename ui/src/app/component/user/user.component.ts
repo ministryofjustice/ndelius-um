@@ -164,16 +164,11 @@ export class UserComponent implements OnInit {
 
   homeAreaChanged() {
     if (this.user.homeArea != null) {
-      this.teams = null;
-      this.teamService.providerTeams(this.user.homeArea.code).subscribe((teams: Team[]) => {
-        this.teams = teams;
-      });
       this.subContractedProviders = null;
       this.datasetService.subContractedProviders(this.user.homeArea.code).subscribe((subContractedProviders: Dataset[]) => {
         this.subContractedProviders = subContractedProviders;
       });
     } else {
-      this.teams = [];
       this.subContractedProviders = [];
     }
   }
