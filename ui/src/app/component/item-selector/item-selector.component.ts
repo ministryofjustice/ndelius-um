@@ -166,11 +166,7 @@ export class ItemSelectorComponent
     };
 
     if (this.subMenuItems != null) {
-      if (this.onlyShowSelected) {
-        return [...this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
-      } else {
-        return this.availableItems.filter(removeNullAndDuplicates);
-      }
+      return this.availableItems.filter(removeNullAndDuplicates);
     } else if (this.multiple) {
       return [...this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
     } else {

@@ -358,7 +358,7 @@
                            [available]="teams"
                            [subMenuItems]="user.datasets"
                            [getSubMenu]="teamService.providerTeams.bind(teamService)"
-                           [selectedSubMenuItem]="user.homeArea?.code"
+                           [selectedSubMenuItem]="user.homeArea?.code || (user.datasets?.length > 0 && user.datasets[0]?.code)"
                            [readonly]="mode === 'View'"
                            [labelMapper]="LabelMappingUtils.codeDescriptionToLabel"></item-selector>
           </div>
