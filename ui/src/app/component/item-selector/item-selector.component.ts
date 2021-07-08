@@ -107,6 +107,28 @@ export class ItemSelectorComponent
     this.dirty = true;
   }
 
+  toggleAllSubMenuItems() {
+    const nonSelectedItems = this.available.filter(item => !this.selected.some(sel => sel.code === item.code));
+    const currentSelectedItems = this.available.filter(item => this.selected.some(sel => sel.code === item.code));
+
+    if (currentSelectedItems.length === this.available.length) {
+      this.selected = this.selected.filter(
+        item => !currentSelectedItems.some(
+          currentSelectedItem => currentSelectedItem.code === item.code
+        ));
+    } else {
+      this.selected = Array.of(...this.selected, ...nonSelectedItems);
+      this.selected = Array.from(this.selected.reduce((output, item) => {
+        if (!output.has(item.code)) {
+          output.set(item.code, item);
+        }
+        return output;
+      }, new Map()).values());
+    }
+    this.selectedChange.emit(this.selected);
+    this.dirty = true;
+  }
+
   focusOnFilter(): void {
     setTimeout(() => this.filterControl.nativeElement.focus(), 0);
   }
@@ -267,5 +289,30 @@ export class ItemSelectorComponent
     } else {
       return this.subMenuItems.length === 0 || this.disabled;
     }
+  }
+
+  toggleAllCheckboxState(): boolean {
+    if (this.selected != null && this.available != null) {
+      if (this.subMenuItems == null || this.subMenuItems.length === 0) {
+        return this.selected.length === this.available.length;
+      } else {
+        const currentSelectedItems = this.available.filter(item => this.selected.some(sel => sel.code === item.code));
+        return currentSelectedItems.length > 0 && currentSelectedItems.length === this.available.length;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  toggleCheckboxIndeterminateState(): boolean {
+    if (this.selected != null && this.available != null) {
+      if (this.subMenuItems == null || this.subMenuItems.length === 0) {
+        return this.selected.length > 0 && this.selected.length !== this.available.length;
+      } else {
+        const currentSelectedItems = this.available.filter(item => this.selected.some(sel => sel.code === item.code));
+        return currentSelectedItems.length > 0 && currentSelectedItems.length < this.available.length;
+      }
+    }
+    return false;
   }
 }

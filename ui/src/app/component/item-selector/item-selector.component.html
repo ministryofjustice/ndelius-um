@@ -30,9 +30,9 @@
         <div class="pl-1">
           <input #toggleAllBtn [id]="id + '-toggle-all'" class="custom-control-input" type="checkbox"
                  title="Toggle all items"
-                 (change)="toggleAllItems(); updateDropDown()"
-                 [checked]="selected != null && available != null && selected.length == available.length"
-                 [indeterminate]="selected != null && available != null && selected.length > 0 && selected.length != available.length"/>
+                 (change)="subMenuItems == null ? toggleAllItems() : toggleAllSubMenuItems(); updateDropDown()"
+                 [checked]="toggleAllCheckboxState()"
+                 [indeterminate]="toggleCheckboxIndeterminateState()"/>
           <label [for]="id+'-toggle-all'"
                  class="custom-control-label"
                  title="Toggle all items">&nbsp;</label>
