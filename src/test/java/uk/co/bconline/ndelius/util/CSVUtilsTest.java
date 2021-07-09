@@ -46,7 +46,7 @@ public class CSVUtilsTest {
 				.build()), writer);
 		String csv = writer.toString();
 
-		String expectedTestUser = "\n\"test.user\",\"test\",\"user\",\"2020-01-01\",\"ABC123\",\"Team(code=TEAM01, description=Team 1) Team(code=TEAM02, description=Team 2)\"\n";
+		String expectedTestUser = "\n\"test.user\",\"test\",\"user\",\"2020-01-01\",\"ABC123\",\"Team(code=TEAM01, description=Team 1, providerCode=null) Team(code=TEAM02, description=Team 2, providerCode=null)\"\n";
 		assertThat(csv, containsString(expectedTestUser));
 	}
 

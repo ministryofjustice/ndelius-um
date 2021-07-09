@@ -1,12 +1,15 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DoCheck,
   ElementRef,
   EventEmitter,
   forwardRef,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {
@@ -40,7 +43,7 @@ declare var Popper: any;
 })
 
 export class ItemSelectorComponent
-  implements ControlValueAccessor, Validator, OnInit {
+  implements ControlValueAccessor, Validator, OnInit, DoCheck, OnChanges {
   @ViewChild('filterControl', {static: true}) filterControl: ElementRef;
   @ViewChild('toggleBtn', {static: true}) toggleBtn: ElementRef;
   @ViewChild('dropdown', {static: true}) dropdown: ElementRef;
@@ -54,7 +57,8 @@ export class ItemSelectorComponent
   @Input() alignRight: boolean;
   @Input() placeholder = 'Please select...';
   @Input() loadingText = 'Loading...';
-  @Input() subMenuItems: {code: string, description: string}[];
+  @Input() subMenuItems: { code: string, description: string }[];
+  @Input() prevSubMenuItems: { code: string, description: string }[]; // for change detection
   @Input() selectedSubMenuItem: string;
   @Input() disabled: boolean;
   @Output() selectedChange: EventEmitter<any> = new EventEmitter<any>();
@@ -64,6 +68,7 @@ export class ItemSelectorComponent
   dirty = false;
   filter = '';
   onlyShowSelected: boolean;
+  subMenuMessage: string;
 
   @Input() idMapper: Function = null;
   @Input() getSubMenu: Function;
@@ -72,6 +77,25 @@ export class ItemSelectorComponent
   private propagateChange = (_: any) => {
   }
   private propagateTouchChange = (_: any) => {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // Change detection to the default selectedSubMenuItem (homeArea)
+    if (changes.hasOwnProperty('selectedSubMenuItem')) {
+      this.getSubMenuList();
+    }
+  }
+
+  ngDoCheck() {
+    // Using ngDoCheck for custom change detection on the subMenuItems Array
+    // Change detection when the subMenuItems changes (datasets)
+    if (this.subMenuItems != null && this.subMenuItems.length !== (this.prevSubMenuItems || []).length) {
+      this.prevSubMenuItems = [...this.subMenuItems];
+      // DST-9201 Filter selected items (teams) to contain only items where providerCode is in the list of available subMenuItems (datasets)
+      // Note: providerCode is specific to Teams - if we need to make this generic we'll need to rethink this.
+      this.selected = this.selected.filter(sel => this.subMenuItems.some(subMenuItem => subMenuItem.code === sel.providerCode));
+      this.getSubMenuList();
+    }
   }
 
   toggle(item): void {
@@ -166,11 +190,7 @@ export class ItemSelectorComponent
     };
 
     if (this.subMenuItems != null) {
-      if (this.onlyShowSelected) {
-        return [...this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
-      } else {
-        return this.availableItems.filter(removeNullAndDuplicates);
-      }
+      return this.availableItems.filter(removeNullAndDuplicates);
     } else if (this.multiple) {
       return [...this.selected, ...this.availableItems].filter(removeNullAndDuplicates);
     } else {
@@ -269,16 +289,22 @@ export class ItemSelectorComponent
   }
 
   getSubMenuList(): void {
+    // Triggered when changing sub-menu, to populate the available items within the sub-menu
     if (this.selectedSubMenuItem === this.SELECTED_OPTION_SUB_MENU) {
+      this.available = this.selected;
       this.onlyShowSelected = true;
-      this.available = [];
-      return;
     } else {
+      this.available = null;
       this.onlyShowSelected = false;
+      this.subMenuMessage = 'Loading...';
+      this.getSubMenu(this.selectedSubMenuItem).subscribe(
+        items => {
+          this.subMenuMessage = '';
+          this.available = items;
+        },
+        () => this.subMenuMessage = 'Error loading menu items'
+      );
     }
-    this.getSubMenu(this.selectedSubMenuItem).subscribe(
-      items => this.available = items
-    );
   }
 
   disableComponent(): boolean {

@@ -35,7 +35,7 @@ public class TeamServiceImpl implements TeamService
 	{
 		List<TeamEntity> teams = ofNullable(probationArea)
 				.map(repository::findAllByEndDateIsNullAndProbationAreaCode)
-				.orElse(repository.findAllByEndDateIsNull());
+				.orElseGet(repository::findAllByEndDateIsNull);
 
 		return transformer.map(teams);
 	}
