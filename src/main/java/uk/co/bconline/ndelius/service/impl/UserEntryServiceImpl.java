@@ -6,6 +6,7 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ldap.NoSuchAttributeException;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.OrFilter;
@@ -44,7 +45,9 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
+import static org.springframework.ldap.support.LdapUtils.newLdapName;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
+import static uk.co.bconline.ndelius.util.LdapUtils.handleCorruptedUser;
 import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 @Slf4j
@@ -231,9 +234,9 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	@Override
 	public void save(UserEntry user)
 	{
-		// Save user
 		val t = now();
-		log.debug("Saving user: {}", user.getUsername());
+
+		// Set date attributes
 		if (useOracleAttributes) {
 			user = user.toBuilder()
 					.oracleStartDate(user.getStartDate())
@@ -241,7 +244,16 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 					.startDate(null)
 					.endDate(null).build();
 		}
-		userRepository.save(user);
+
+		// Save user
+		log.debug("Saving user: {}", user.getUsername());
+		try {
+			userRepository.save(user);
+		} catch (NoSuchAttributeException e) {
+			// Attempt to correct the corrupted data, then retry
+			handleCorruptedUser(e, user.getDn(), ldapTemplate, newLdapName(ldapBase));
+			userRepository.save(user);
+		}
 
 		// Groups
 		log.debug("Updating group memberships");
