@@ -26,6 +26,7 @@ import uk.co.bconline.ndelius.service.GroupService;
 import uk.co.bconline.ndelius.service.UserEntryService;
 import uk.co.bconline.ndelius.service.UserRoleService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
+import uk.co.bconline.ndelius.util.SearchUtils;
 
 import javax.naming.Name;
 import java.util.List;
@@ -49,8 +50,7 @@ import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 @Slf4j
 @Service
-public class UserEntryServiceImpl implements UserEntryService, UserDetailsService
-{
+public class UserEntryServiceImpl implements UserEntryService, UserDetailsService {
 
 	@Value("${spring.ldap.base}")
 	private String ldapBase;
@@ -77,8 +77,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 			GroupService groupService,
 			LdapTemplate ldapTemplate,
 			@Qualifier("exportLdapTemplate") LdapTemplate exportLdapTemplate,
-			SearchResultTransformer searchResultTransformer)
-	{
+			SearchResultTransformer searchResultTransformer) {
 		this.userRepository = userRepository;
 		this.preferencesRepository = preferencesRepository;
 		this.userRoleService = userRoleService;
@@ -89,15 +88,13 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
-	{
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return getUser(username)
 				.orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
 	}
 
 	@Override
-	public boolean usernameExists(String username)
-	{
+	public boolean usernameExists(String username) {
 		return userRepository.findByUsername(username).isPresent();
 	}
 
@@ -119,8 +116,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	 * @return a set of matching users from LDAP
 	 */
 	@Override
-	public List<SearchResult> search(String query, boolean includeInactiveUsers, Set<String> datasets)
-	{
+	public List<SearchResult> search(String query, boolean includeInactiveUsers, Set<String> datasets) {
 		// For a search with no dataset filtering, we don't need to search LDAP as all the users will be returned by the DB search
 		// (We only ever need to search LDAP to find users that match on userHomeArea or email - as these attributes do not exist in the DB)
 		if (datasets.isEmpty() && !includeInactiveUsers && !query.contains("@")) return emptyList();
@@ -139,8 +135,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 				.map(dataset -> query().where("userHomeArea").is(dataset))
 				.collect(OrFilter::new, (f, q) -> f.or(q.filter()), OrFilter::or));
 
-		if (log.isDebugEnabled())
-		{
+		if (log.isDebugEnabled()) {
 			val filterString = filter.encode();
 			log.debug("Searching LDAP: {}", filterString);
 		}
@@ -170,8 +165,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	}
 
 	@Override
-	public Optional<UserEntry> getBasicUser(String username)
-	{
+	public Optional<UserEntry> getBasicUser(String username) {
 		val t = now();
 		Optional<UserEntry> user = userRepository.findByUsername(username);
 		if (useOracleAttributes) {
@@ -186,8 +180,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	}
 
 	@Override
-	public Optional<UserEntry> getUser(String username)
-	{
+	public Optional<UserEntry> getUser(String username) {
 		return getBasicUser(username)
 				.map(u -> u.toBuilder()
 						.roles(userRoleService.getUserRoles(u.getUsername()))
@@ -196,22 +189,19 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	}
 
 	@Override
-	public String getUserHomeArea(String username)
-	{
+	public String getUserHomeArea(String username) {
 		return userRepository.getUserHomeAreaProjectionByUsername(username)
 				.map(UserHomeAreaProjection::getHomeArea).orElse(null);
 	}
 
 	@Override
-	public Set<GroupEntry> getUserGroups(String username)
-	{
+	public Set<GroupEntry> getUserGroups(String username) {
 		return getBasicUser(username)
 				.map(u -> groupService.getGroups(u.getGroupNames()))
 				.orElse(emptySet());
 	}
 
-	private void updateUserGroups(String username, Set<Name> groups)
-	{
+	private void updateUserGroups(String username, Set<Name> groups) {
 		val userDn = LdapNameBuilder.newInstance(ldapBase).add(getDn(username)).build();
 		val existingGroups = getBasicUser(username).map(UserEntry::getGroupNames).orElse(emptySet());
 		val newGroups = ofNullable(groups).orElse(emptySet());
@@ -229,8 +219,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	}
 
 	@Override
-	public void save(UserEntry user)
-	{
+	public void save(UserEntry user) {
 		// Save user
 		val t = now();
 		log.debug("Saving user: {}", user.getUsername());
@@ -252,8 +241,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 		if (preferencesRepository.findOne(query()
 				.searchScope(ONELEVEL)
 				.base(getDn(user.getUsername()))
-				.where(OBJECTCLASS).isPresent()).isEmpty())
-		{
+				.where(OBJECTCLASS).isPresent()).isEmpty()) {
 			log.debug("Creating user preferences");
 			preferencesRepository.save(new UserPreferencesEntry(user.getUsername()));
 		}
@@ -265,8 +253,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	}
 
 	@Override
-	public void save(String existingUsername, UserEntry user)
-	{
+	public void save(String existingUsername, UserEntry user) {
 		// Keep hold of the new username, if it's different we'll rename it later
 		val newUsername = user.getUsername();
 		user.setUsername(existingUsername);
@@ -275,8 +262,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 		save(user);
 
 		// Rename user if required
-		if (!existingUsername.equals(newUsername))
-		{
+		if (!existingUsername.equals(newUsername)) {
 			val oldDn = user.getDn();
 			val newDn = LdapNameBuilder.newInstance(getDn(newUsername)).build();
 			log.debug("Renaming LDAP entry from {} to {}", oldDn, newDn);
@@ -284,20 +270,17 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 		}
 	}
 
-	private float deriveScore(String query, UserEntry u)
-	{
-		return (float) Stream.of(query.split(" "))
-				.map(String::toLowerCase)
+	private float deriveScore(String query, UserEntry u) {
+		return (float) SearchUtils.streamTokens(query)
 				.mapToDouble(token -> Stream.of(u.getUsername(), u.getForenames(), u.getSurname(), u.getEmail())
-						.filter(str -> !StringUtils.isEmpty(str))
+						.filter(StringUtils::hasLength)
 						.filter(str -> str.toLowerCase().contains(token))
 						.mapToDouble(item -> (double) token.length() / item.length())
 						.max().orElse(0.0))
 				.sum();
 	}
 
-	private String getDn(String username)
-	{
+	private String getDn(String username) {
 		return join(",", "cn=" + username, usersBase);
 	}
 }

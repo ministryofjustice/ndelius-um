@@ -18,9 +18,9 @@ import uk.co.bconline.ndelius.model.entity.export.UserExportEntity;
 import uk.co.bconline.ndelius.repository.db.*;
 import uk.co.bconline.ndelius.service.UserEntityService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
+import uk.co.bconline.ndelius.util.SearchUtils;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,15 +31,14 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
 import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Slf4j
 @Service
-public class UserEntityServiceImpl implements UserEntityService
-{
+public class UserEntityServiceImpl implements UserEntityService {
+
 	@Value("${spring.datasource.url}")
 	private String datasourceUrl;
 
@@ -59,8 +58,7 @@ public class UserEntityServiceImpl implements UserEntityService
 			ProbationAreaUserRepository probationAreaUserRepository,
 			StaffTeamRepository staffTeamRepository,
 			ChangeNoteRepository changeNoteRepository,
-			SearchResultTransformer searchResultTransformer)
-	{
+			SearchResultTransformer searchResultTransformer) {
 		this.repository = repository;
 		this.staffRepository = staffRepository;
 		this.searchResultRepository = searchResultRepository;
@@ -71,36 +69,29 @@ public class UserEntityServiceImpl implements UserEntityService
 	}
 
 	@Override
-	public boolean usernameExists(String username)
-	{
+	public boolean usernameExists(String username) {
 		return repository.existsByUsernameIgnoreCase(username);
 	}
 
 	@Override
-	public Optional<UserEntity> getUser(String username)
-	{
+	public Optional<UserEntity> getUser(String username) {
 		val t = LocalDateTime.now();
-		val u =  repository.findFirstByUsernameIgnoreCase(username);
+		val u = repository.findFirstByUsernameIgnoreCase(username);
 		log.trace("--{}ms	DB lookup", MILLIS.between(t, LocalDateTime.now()));
 		return u;
 	}
 
 	@Override
-	public Optional<StaffEntity> getStaffByStaffCode(String code)
-	{
-		try
-		{
+	public Optional<StaffEntity> getStaffByStaffCode(String code) {
+		try {
 			return staffRepository.findByCodeAndEndDateIsNull(code).or(() -> staffRepository.findByCode(code));
-		}
-		catch (IncorrectResultSizeDataAccessException e)
-		{
+		} catch (IncorrectResultSizeDataAccessException e) {
 			throw new AppException("Unable to select a unique Staff Record for code: " + code);
 		}
 	}
 
 	@Override
-	public Optional<UserEntity> getUserByStaffCode(String code)
-	{
+	public Optional<UserEntity> getUserByStaffCode(String code) {
 		return getStaffByStaffCode(code)
 				.map(s -> s.getUser().isEmpty()?
 						UserEntity.builder().staff(s).build():
@@ -124,25 +115,19 @@ public class UserEntityServiceImpl implements UserEntityService
 	}
 
 	@Override
-	public List<SearchResult> search(String searchTerm, boolean includeInactiveUsers, Set<String> datasets)
-	{
+	public List<SearchResult> search(String query, boolean includeInactiveUsers, Set<String> datasets) {
 		val t = LocalDateTime.now();
-		val results = Arrays.stream(searchTerm.trim().split("\\s+"))
-				.parallel()
+		val results = SearchUtils.streamTokens(query).parallel()
 				.flatMap(token -> searchForToken(token, includeInactiveUsers, datasets))
-				.collect(groupingBy(SearchResultEntity::getUsername))
-				.values()
-				.stream()
-				.map(list -> list.stream().reduce(searchResultTransformer::reduce))
-				.flatMap(Optionals::toStream)
 				.map(searchResultTransformer::map)
+				.collect(groupingByConcurrent(SearchResult::getUsername, reducing(searchResultTransformer::reduce)))
+				.values().stream().flatMap(Optional::stream)
 				.collect(toList());
 		log.debug("Found {} DB results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));
 		return results;
 	}
 
-	private Stream<SearchResultEntity> searchForToken(String token, boolean includeInactiveUsers, Set<String> datasets)
-	{
+	private Stream<SearchResultEntity> searchForToken(String token, boolean includeInactiveUsers, Set<String> datasets) {
 		log.debug("Searching DB: {}", token);
 		var filterDatasets = true;
 		if (isEmpty(datasets)) {
@@ -154,10 +139,8 @@ public class UserEntityServiceImpl implements UserEntityService
 					searchResultRepository.search(token, includeInactiveUsers, filterDatasets, datasets):
 					searchResultRepository.simpleSearch(token, includeInactiveUsers, filterDatasets, datasets))
 				.stream()
-				.collect(groupingBy(SearchResultEntity::getUsername))
-				.values().stream()
-				.map(list -> list.stream().reduce(searchResultTransformer::reduceTeams))
-				.flatMap(Optionals::toStream);
+				.collect(groupingBy(SearchResultEntity::getUsername, reducing(searchResultTransformer::reduceTeams)))
+				.values().stream().flatMap(Optionals::toStream);
 	}
 
 	@Override

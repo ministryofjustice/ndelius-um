@@ -19,6 +19,7 @@ import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.transformer.UserTransformer;
 import uk.co.bconline.ndelius.util.CSVUtils;
+import uk.co.bconline.ndelius.util.SearchUtils;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -62,8 +63,7 @@ public class UserServiceImpl implements UserService {
 			UserTransformer transformer,
 			SearchResultTransformer searchResultTransformer,
 			TaskExecutor taskExecutor,
-			UserRoleService userRoleService)
-	{
+			UserRoleService userRoleService) {
 		this.userEntityService = userEntityService;
 		this.userEntryService = userEntryService;
 		this.datasetService = datasetService;
@@ -110,19 +110,19 @@ public class UserServiceImpl implements UserService {
 				.collect(toSet()), taskExecutor);
 
 		// Create Futures to search the LDAP and Database asynchronously
-		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
-		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, datasetFilter), taskExecutor);
+		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, datasetFilter).stream(), taskExecutor);
+		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, datasetFilter).stream(), taskExecutor);
 		val roleFuture = supplyAsync(() -> userRoleService.getAllUsersWithRole(role), taskExecutor);
 
 		try {
-			// fetch and map
+			// fetch and combine
 			var stream = allOf(groupMembersFuture, ldapFuture, dbFuture, roleFuture)
-					.thenApply(v -> Stream.of(ldapFuture.join(), dbFuture.join())).join()
-					.flatMap(Collection::stream)
-					.flatMap(sr -> expandEmailSearchToDB(sr, query))
-					.collect(groupingBy(SearchResult::getUsername)).values().stream()
-					.map(l -> l.stream().reduce(searchResultTransformer::reduce))
-					.flatMap(Optionals::toStream);
+					.thenApply(v -> Stream.concat(
+							ldapFuture.join().map(sr -> expandEmailSearchToDB(sr, query)),
+							dbFuture.join()
+					)).join()
+					.collect(groupingByConcurrent(SearchResult::getUsername, reducing(searchResultTransformer::reduce)))
+					.values().stream().flatMap(Optionals::toStream);
 
 			// apply conditional filters
 			if (!includeInactiveUsers) {
@@ -135,20 +135,22 @@ public class UserServiceImpl implements UserService {
 				stream = stream.filter(result -> roleFuture.join().contains(result.getUsername().toLowerCase()));
 			}
 
-			// apply sorting and paging
-			stream = stream
-				.sorted(queryIsEmpty ?
-						comparing(SearchResult::getUsername, String::compareToIgnoreCase) :
-						comparing(SearchResult::getScore, Float::compare).reversed());
-			if (page != null && pageSize != null)
-			{
+			// apply sorting
+			stream = stream.sorted(queryIsEmpty ?
+					comparing(SearchResult::getUsername, String::compareToIgnoreCase) :
+					comparing(SearchResult::getScore, Float::compare).reversed());
+
+			// apply paging
+			if (page != null && pageSize != null) {
 				stream = stream
 						.skip((long) (page - 1) * pageSize)
 						.limit(pageSize);
 			}
-			return	stream
-				.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}, email={}", result.getUsername(), result.getScore(), result.getEndDate(), result.getEmail()))
-				.collect(toList());
+
+			// collect and return
+			return stream
+					.peek(result -> log.debug("SearchResult: username={}, score={}, endDate={}, email={}", result.getUsername(), result.getScore(), result.getEndDate(), result.getEmail()))
+					.collect(toList());
 		} catch (CancellationException | CompletionException e) {
 			throw new AppException(String.format("Unable to complete user search for %s", query), e);
 		}
@@ -280,21 +282,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 
-	private Stream<SearchResult> expandEmailSearchToDB(SearchResult sr, String query)
-	{
-		List<SearchResult> results = new ArrayList<>();
-
-		for (String token : query.trim().split("\\s+"))
-		{
+	private SearchResult expandEmailSearchToDB(SearchResult ldapResult, String query) {
+		if (ldapResult.getEmail() != null && SearchUtils.streamTokens(query).anyMatch(ldapResult.getEmail()::contains)) {
 			// Search the database to obtain staff and team records if the token is a substring of the search result's email
-			if (sr.getSources().contains("LDAP") && sr.getEmail() != null && sr.getEmail().contains(token))
-			{
-				Optional<UserEntity> userEntity = userEntityService.getUser(sr.getUsername());
-				userEntity.ifPresent(entity -> results.add(searchResultTransformer.map(entity)));
-			}
+			return userEntityService.getUser(ldapResult.getUsername())
+					.map(searchResultTransformer::map)
+					.map(dbResult -> searchResultTransformer.reduce(ldapResult, dbResult))
+					.orElse(ldapResult);
 		}
-
-		results.add(sr);
-		return results.stream();
+		return ldapResult;
 	}
 }
