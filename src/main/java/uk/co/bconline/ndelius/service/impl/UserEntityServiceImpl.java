@@ -29,7 +29,6 @@ import java.util.stream.Stream;
 import static java.time.LocalDate.now;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
@@ -121,7 +120,7 @@ public class UserEntityServiceImpl implements UserEntityService
 
 	@Override
 	public Stream<UserExportEntity> export() {
-		return repository.export();
+		return repository.export(now()); // Must pass in the current date, as using `CURRENT_DATE` in JPQL/Oracle includes the timestamp
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.entity.export.UserExportEntity;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -21,7 +22,7 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, Long>
 			"LEFT JOIN FETCH u.staff s " +
 			"LEFT JOIN FETCH s.teams " +
 			"LEFT JOIN FETCH s.grade " +
-			"WHERE u.endDate is null OR u.endDate >= current_date " +
+			"WHERE u.endDate is null OR u.endDate >= ?1 " +
 			"ORDER BY u.username")
-	Stream<UserExportEntity> export();
+	Stream<UserExportEntity> export(LocalDate currentDate);
 }
