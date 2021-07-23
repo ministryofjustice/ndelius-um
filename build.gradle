@@ -74,7 +74,7 @@ dependencies {
 	implementation      'com.unboundid:unboundid-ldapsdk'
 	implementation      'it.ozimov:embedded-redis:0.7.2'
 	implementation      'com.google.guava:guava:30.1.1-jre' // Overriding dependency of embedded-redis due to CVE-2018-10237, CVE-2020-8908
-	implementation      'commons-io:commons-io:2.10.0'      // Overriding dependency of embedded-redis due to CVE-2021-29425
+	implementation      'commons-io:commons-io:2.11.0'      // Overriding dependency of embedded-redis due to CVE-2021-29425
 	implementation      'io.springfox:springfox-swagger2:2.9.2'
 	implementation      'io.springfox:springfox-swagger-ui:2.9.2'
 	implementation      'com.opencsv:opencsv:5.5.1'
