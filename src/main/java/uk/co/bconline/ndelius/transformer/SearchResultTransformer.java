@@ -22,8 +22,8 @@ import static uk.co.bconline.ndelius.util.NameUtils.combineNames;
 
 @Slf4j
 @Component
-public class SearchResultTransformer
-{
+public class SearchResultTransformer {
+
 	@Value("${spring.ldap.useOracleAttributes:#{true}}")
 	private boolean useOracleAttributes;
 
@@ -34,8 +34,7 @@ public class SearchResultTransformer
 		this.teamTransformer = teamTransformer;
 	}
 
-	public SearchResult map(User user)
-	{
+	public SearchResult map(User user) {
 		return SearchResult.builder()
 				.username(user.getUsername())
 				.forenames(user.getForenames())
@@ -53,7 +52,7 @@ public class SearchResultTransformer
 				.forenames(user.getForenames())
 				.surname(user.getSurname())
 				.email(user.getEmail())
-				.endDate(mapLdapStringToDate(useOracleAttributes? user.getOracleEndDate(): user.getEndDate()))
+				.endDate(mapLdapStringToDate(useOracleAttributes ? user.getOracleEndDate() : user.getEndDate()))
 				.sources(singletonList("LDAP"))
 				.score(score)
 				.build();
@@ -84,8 +83,7 @@ public class SearchResultTransformer
 				.build();
 	}
 
-	public SearchResult reduce(SearchResult a, SearchResult b)
-	{
+	public SearchResult reduce(SearchResult a, SearchResult b) {
 		return a.toBuilder()
 				.username(ofNullable(a.getUsername()).orElseGet(b::getUsername))
 				.forenames(ofNullable(a.getForenames()).orElseGet(b::getForenames))
@@ -94,12 +92,12 @@ public class SearchResultTransformer
 				.teams(ofNullable(a.getTeams()).orElseGet(b::getTeams))
 				.endDate(ofNullable(a.getEndDate()).orElseGet(b::getEndDate))
 				.email(ofNullable(a.getEmail()).orElseGet(b::getEmail))
-				.sources(Stream.concat(a.getSources().stream(), b.getSources().stream()).collect(toList()))
+				.score(a.getScore() > 0.0 ? a.getScore() : b.getScore())
+				.sources(Stream.concat(a.getSources().stream(), b.getSources().stream()).distinct().collect(toList()))
 				.build();
 	}
 
-	public SearchResultEntity reduceTeams(SearchResultEntity a, SearchResultEntity b)
-	{
+	public SearchResultEntity reduceTeams(SearchResultEntity a, SearchResultEntity b) {
 		val reduced = a.toBuilder()
 				.score(Math.max(a.getScore(), b.getScore()))
 				.build();
@@ -108,8 +106,7 @@ public class SearchResultTransformer
 		return reduced;
 	}
 
-	public SearchResultEntity reduce(SearchResultEntity a, SearchResultEntity b)
-	{
+	public SearchResultEntity reduce(SearchResultEntity a, SearchResultEntity b) {
 		return a.withScore(a.getScore() + b.getScore());
 	}
 }

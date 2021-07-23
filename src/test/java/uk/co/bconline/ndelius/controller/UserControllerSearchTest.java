@@ -29,16 +29,14 @@ import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 @DirtiesContext
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class UserControllerSearchTest
-{
+public class UserControllerSearchTest {
 	@Autowired
 	private WebApplicationContext context;
 
 	private MockMvc mvc;
 
 	@Before
-	public void setup()
-	{
+	public void setup() {
 		mvc = MockMvcBuilders
 				.webAppContextSetup(context)
 				.apply(springSecurity())
@@ -47,16 +45,14 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void searchQueryIsRequired() throws Exception
-	{
+	public void searchQueryIsRequired() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc)))
 				.andExpect(status().isBadRequest());
 	}
 
 	@Test
-	public void maxPageSizeForSearchIs100() throws Exception
-	{
+	public void maxPageSizeForSearchIs100() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "")
@@ -65,8 +61,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void minPageSizeIs1() throws Exception
-	{
+	public void minPageSizeIs1() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "")
@@ -75,8 +70,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void searchOnName() throws Exception
-	{
+	public void searchOnName() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "j blog"))
@@ -86,8 +80,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void searchOnUsername() throws Exception
-	{
+	public void searchOnUsername() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "joe.bloggs"))
@@ -97,8 +90,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void searchOnTeamDescriptionReturnsWholeTeam() throws Exception
-	{
+	public void searchOnTeamDescriptionReturnsWholeTeam() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "test team"))
@@ -108,8 +100,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void searchOnStaffCode() throws Exception
-	{
+	public void searchOnStaffCode() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "N01A001"))
@@ -119,8 +110,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void emptyQueryReturnsNoResult() throws Exception
-	{
+	public void emptyQueryReturnsNoResult() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", ""))
@@ -129,8 +119,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void limitedToPageSize() throws Exception
-	{
+	public void limitedToPageSize() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "j blog")
@@ -140,8 +129,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void resultsAreFilteredOnTheCurrentUsersDatasets() throws Exception
-	{
+	public void resultsAreFilteredOnTheCurrentUsersDatasets() throws Exception {
 		// Given I login as N01 user
 		String token = token(mvc, "test.user.local");
 
@@ -161,8 +149,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void combinedUserIsReturnedInSearchResults() throws Exception
-	{
+	public void combinedUserIsReturnedInSearchResults() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "test.user"))
@@ -175,8 +162,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void combinedUserIsReturnedInSearchResultsWhenSearchingByTeam() throws Exception
-	{
+	public void combinedUserIsReturnedInSearchResultsWhenSearchingByTeam() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "N03TST"))
@@ -189,8 +175,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void inactiveUsersAreNotReturnedByDefault() throws Exception
-	{
+	public void inactiveUsersAreNotReturnedByDefault() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "test.user"))
@@ -202,8 +187,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void inactiveUsersAreReturnedWhenFlagIsSpecified() throws Exception
-	{
+	public void inactiveUsersAreReturnedWhenFlagIsSpecified() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
 				.param("q", "test.user")
@@ -214,8 +198,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void resultsCanBeFilteredOnDatasets() throws Exception
-	{
+	public void resultsCanBeFilteredOnDatasets() throws Exception {
 		String token = token(mvc, "test.user");
 
 		// Given I am filtering on the N01 dataset
@@ -239,8 +222,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void datasetFiltersAreIgnoredIfNotAllowed() throws Exception
-	{
+	public void datasetFiltersAreIgnoredIfNotAllowed() throws Exception {
 		// Given I am non-national user with access only to N01
 		String token = token(mvc, "test.user.local");
 
@@ -262,8 +244,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void resultsAreOrderedAlphabeticallyWhenQueryIsBlank() throws Exception
-	{
+	public void resultsAreOrderedAlphabeticallyWhenQueryIsBlank() throws Exception {
 		String token = token(mvc, "test.user");
 
 		// When I search on datasets only and don't provide a query string
@@ -282,8 +263,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void getAllUsersInFileshareGroup() throws Exception
-	{
+	public void getAllUsersInFileshareGroup() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
 				.param("q", "")
@@ -293,8 +273,7 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void getAllUsersInReportingGroup() throws Exception
-	{
+	public void getAllUsersInReportingGroup() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
 				.param("q", "")
@@ -304,32 +283,29 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void filterOnMultipleGroupsIsInclusive() throws Exception
-	{
+	public void filterOnMultipleGroupsIsInclusive() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
 				.param("q", "")
-				.param("fileshareGroup", "Group 1")		// contains Jane.Bloggs (and test.user)
-				.param("reportingGroup", "Group 3"))	// contains Joe.Bloggs
+				.param("fileshareGroup", "Group 1")        // contains Jane.Bloggs (and test.user)
+				.param("reportingGroup", "Group 3"))    // contains Joe.Bloggs
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", contains("Jane.Bloggs", "Joe.Bloggs", "test.user")));
 	}
 
 	@Test
-	public void searchQueryWithGroupFilters() throws Exception
-	{
+	public void searchQueryWithGroupFilters() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
 				.param("q", "j bloggs")
-				.param("fileshareGroup", "Group 1")		// contains Jane.Bloggs (and test.user)
-				.param("reportingGroup", "Group 3"))	// contains Joe.Bloggs
+				.param("fileshareGroup", "Group 1")        // contains Jane.Bloggs (and test.user)
+				.param("reportingGroup", "Group 3"))    // contains Joe.Bloggs
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", containsInAnyOrder("Jane.Bloggs", "Joe.Bloggs")));
 	}
 
 	@Test
-	public void searchUsersByRole() throws Exception
-	{
+	public void searchUsersByRole() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
 				.param("q", "")
@@ -339,13 +315,22 @@ public class UserControllerSearchTest
 	}
 
 	@Test
-	public void searchQueryWithRoleFilter() throws Exception
-	{
+	public void searchQueryWithRoleFilter() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
 				.param("q", "local")
 				.param("role", "UMBT001"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", hasItem("test.user.local")));
+	}
+
+	@Test
+	public void searchQueryIsCaseInsensitive() throws Exception {
+		mvc.perform(get("/api/users")
+				.header("Authorization", "Bearer " + token(mvc))
+				.param("q", "emma elks")
+				.param("includeInactiveUsers", "true"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[*].username", hasItem("Emma.Elks")));
 	}
 }
