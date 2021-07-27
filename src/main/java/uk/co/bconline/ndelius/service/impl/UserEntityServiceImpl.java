@@ -120,7 +120,7 @@ public class UserEntityServiceImpl implements UserEntityService {
 		val results = SearchUtils.streamTokens(query).parallel()
 				.flatMap(token -> searchForToken(token, includeInactiveUsers, datasets))
 				.map(searchResultTransformer::map)
-				.collect(groupingByConcurrent(SearchResult::getUsername, reducing(searchResultTransformer::reduce)))
+				.collect(groupingByConcurrent(SearchResult::getUsername, reducing((a, b) -> a.withScore(a.getScore() + b.getScore()))))
 				.values().stream().flatMap(Optional::stream)
 				.collect(toList());
 		log.debug("Found {} DB results in {}ms", results.size(), MILLIS.between(t, LocalDateTime.now()));

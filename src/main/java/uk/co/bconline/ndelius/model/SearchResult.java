@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.opencsv.bean.CsvBindAndSplitByPosition;
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvIgnore;
@@ -9,6 +8,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@With
 @Getter
 @ToString
 @AllArgsConstructor
@@ -39,7 +39,7 @@ public final class SearchResult {
 	@CsvIgnore
 	private List<String> sources;
 
-	@CsvIgnore
-	@JsonIgnore
+//	@CsvIgnore
+//	@JsonIgnore
 	private float score;
 }

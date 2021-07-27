@@ -92,7 +92,6 @@ public class SearchResultTransformer {
 				.teams(ofNullable(a.getTeams()).orElseGet(b::getTeams))
 				.endDate(ofNullable(a.getEndDate()).orElseGet(b::getEndDate))
 				.email(ofNullable(a.getEmail()).orElseGet(b::getEmail))
-				.score(a.getScore() > 0.0 ? a.getScore() : b.getScore())
 				.sources(Stream.concat(a.getSources().stream(), b.getSources().stream()).distinct().collect(toList()))
 				.build();
 	}
@@ -104,9 +103,5 @@ public class SearchResultTransformer {
 		reduced.getTeams().addAll(a.getTeams());
 		reduced.getTeams().addAll(b.getTeams());
 		return reduced;
-	}
-
-	public SearchResultEntity reduce(SearchResultEntity a, SearchResultEntity b) {
-		return a.withScore(a.getScore() + b.getScore());
 	}
 }
