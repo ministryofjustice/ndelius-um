@@ -542,4 +542,49 @@ public class UserControllerUpdateTest
 				.build())
 				.andExpect(status().isNoContent());
 	}
+
+	@Test
+	public void previousStaffWithStartDateOfTodayIsEndDatedCorrectly() throws Exception {
+		// Given a user with a staff code and a start date of today
+		User user = createUser(mvc,
+				aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.startDate(LocalDate.now())
+						.staffCode("N01A208")
+						.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
+						.build());
+
+		// When I attempt to update the staff code
+		// Then the request is successful
+		updateUser(mvc, user.toBuilder().staffCode("N01A209").build())
+				.andExpect(status().isNoContent());
+
+		// And the start and end date on the staff record are updated to yesterday's date
+		StaffEntity previousStaff = staffRepository.findByCode("N01A208").orElseThrow();
+		assertEquals(LocalDate.now().minusDays(1), previousStaff.getEndDate());
+		assertEquals(LocalDate.now().minusDays(1), previousStaff.getStartDate());
+	}
+
+
+	@Test
+	public void previousStaffWithAFutureStartDateIsEndDatedCorrectly() throws Exception {
+		// Given a user with a staff code and a start date in the future
+		User user = createUser(mvc,
+				aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.startDate(LocalDate.now().plusYears(1))
+						.staffCode("N01A209")
+						.staffGrade(ReferenceData.builder().code("GRADE2").description("Grade 2").build())
+						.build());
+
+		// When I attempt to update the staff code
+		// Then the request is successful
+		updateUser(mvc, user.toBuilder().staffCode("N01A210").build())
+				.andExpect(status().isNoContent());
+
+		// And the start and end date on the staff record are updated to yesterday's date
+		StaffEntity previousStaff = staffRepository.findByCode("N01A209").orElseThrow();
+		assertEquals(LocalDate.now().minusDays(1), previousStaff.getEndDate());
+		assertEquals(LocalDate.now().minusDays(1), previousStaff.getStartDate());
+	}
 }

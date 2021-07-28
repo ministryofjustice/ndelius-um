@@ -20,6 +20,7 @@ import uk.co.bconline.ndelius.service.UserEntityService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.util.SearchUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -191,16 +192,21 @@ public class UserEntityServiceImpl implements UserEntityService {
 
 	// When a user is given a new staff code, an End Date should be added to their previous staff record.
 	private void handlePreviousStaffRecord(StaffEntity newStaff, StaffEntity previousStaff) {
-		if (previousStaff == null || StringUtils.isEmpty(previousStaff.getCode())) {
+		if (previousStaff == null || !StringUtils.hasLength(previousStaff.getCode())) {
 			// the user never had a staff code - nothing to end-date
 			return;
 		}
-		if (newStaff == null || StringUtils.isEmpty(newStaff.getCode()) ||
+		if (newStaff == null || !StringUtils.hasLength(newStaff.getCode()) ||
 				!newStaff.getCode().equals(previousStaff.getCode())) {
 			// staff code removed or changed - set an end-date of yesterday to the old one
-			log.debug(String.format("Adding an end-date to previous staff record (%s)", previousStaff.getCode()));
+			val endDate = now().minus(1, DAYS);
+			log.debug(String.format("Adding an end-date of %s to previous staff record (%s)", endDate, previousStaff.getCode()));
+			// if setting the end-date will cause it to be before the start-date (e.g if the start-date is today), then also update the start-date
+			LocalDate startDate = previousStaff.getStartDate();
+			if (startDate != null && startDate.isAfter(endDate)) startDate = endDate;
 			staffRepository.save(previousStaff.toBuilder()
-					.endDate(now().minus(1, DAYS))
+					.startDate(startDate)
+					.endDate(endDate)
 					.updatedAt(LocalDateTime.now())
 					.updatedById(getMyUserId())
 					.build());
