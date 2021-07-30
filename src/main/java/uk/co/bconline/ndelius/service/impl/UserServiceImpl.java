@@ -281,10 +281,10 @@ public class UserServiceImpl implements UserService {
 		return myDatasets;
 	}
 
-
 	private SearchResult expandEmailSearchToDB(SearchResult ldapResult, String query) {
-		if (ldapResult.getEmail() != null && SearchUtils.streamTokens(query).anyMatch(ldapResult.getEmail()::contains)) {
-			// Search the database to obtain staff and team records if the token is a substring of the search result's email
+		// If a search result was matched on email address only (from the LDAP), then we may need to fetch additional details from the Database
+		if (SearchUtils.isEmailSearch(query) && SearchUtils.resultMatchedOnEmail(query, ldapResult)) {
+			// Search the database to obtain staff and team records
 			return userEntityService.getUser(ldapResult.getUsername())
 					.map(searchResultTransformer::map)
 					.map(dbResult -> searchResultTransformer.reduce(ldapResult, dbResult))
