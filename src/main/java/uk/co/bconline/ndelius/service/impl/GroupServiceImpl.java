@@ -81,6 +81,16 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
+	public Set<String> getAllUsersInGroups(Map<String, Set<String>> groups) {
+		return groups.keySet().parallelStream()
+				.flatMap(type -> groups.get(type).parallelStream().map(name -> getGroup(type, name)))
+				.flatMap(Optionals::toStream)
+				.flatMap(group -> group.getMembers().stream())
+				.map(name -> LdapUtils.getStringValue(name, "cn").toLowerCase())
+				.collect(toSet());
+	}
+
+	@Override
 	public void save(GroupEntry group) {
 		groupRepository.save(group);
 	}

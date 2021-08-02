@@ -6,7 +6,6 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.util.Optionals;
-import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.bconline.ndelius.exception.AppException;
@@ -100,23 +99,15 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 
-		// Create a Future to fetch the members of all the groups that are being filtered on
-		val groupMembersFuture = supplyAsync(() -> groupFilter.keySet().parallelStream()
-				.flatMap(type -> groupFilter.get(type).parallelStream()
-						.map(name -> groupService.getGroup(type, name)))
-				.flatMap(Optionals::toStream)
-				.flatMap(group -> group.getMembers().stream())
-				.map(name -> LdapUtils.getStringValue(name, "cn").toLowerCase())
-				.collect(toSet()), taskExecutor);
-
 		// Create Futures to search the LDAP and Database asynchronously
 		val dbFuture = supplyAsync(() -> userEntityService.search(query, includeInactiveUsers, datasetFilter).stream(), taskExecutor);
 		val ldapFuture = supplyAsync(() -> userEntryService.search(query, includeInactiveUsers, datasetFilter).stream(), taskExecutor);
 		val roleFuture = supplyAsync(() -> userRoleService.getAllUsersWithRole(role), taskExecutor);
+		val groupFuture = supplyAsync(() -> groupService.getAllUsersInGroups(groupFilter), taskExecutor);
 
 		try {
 			// fetch and combine
-			var stream = allOf(groupMembersFuture, ldapFuture, dbFuture, roleFuture)
+			var stream = allOf(ldapFuture, dbFuture, roleFuture, groupFuture)
 					.thenApply(v -> Stream.concat(
 							ldapFuture.join().map(sr -> expandEmailSearchToDB(sr, query)),
 							dbFuture.join()
@@ -129,7 +120,7 @@ public class UserServiceImpl implements UserService {
 				stream = stream.filter(result -> result.getEndDate() == null || !result.getEndDate().isBefore(now()));
 			}
 			if (!groupFilterIsEmpty) {
-				stream = stream.filter(result -> groupMembersFuture.join().contains(result.getUsername().toLowerCase()));
+				stream = stream.filter(result -> groupFuture.join().contains(result.getUsername().toLowerCase()));
 			}
 			if (!roleIsEmpty) {
 				stream = stream.filter(result -> roleFuture.join().contains(result.getUsername().toLowerCase()));
@@ -281,10 +272,10 @@ public class UserServiceImpl implements UserService {
 		return myDatasets;
 	}
 
-
 	private SearchResult expandEmailSearchToDB(SearchResult ldapResult, String query) {
-		if (ldapResult.getEmail() != null && SearchUtils.streamTokens(query).anyMatch(ldapResult.getEmail()::contains)) {
-			// Search the database to obtain staff and team records if the token is a substring of the search result's email
+		// If a search result was matched on email address only (from the LDAP), then we may need to fetch additional details from the Database
+		if (SearchUtils.isEmailSearch(query) && SearchUtils.resultMatchedOnEmail(query, ldapResult)) {
+			// Search the database to obtain staff and team records
 			return userEntityService.getUser(ldapResult.getUsername())
 					.map(searchResultTransformer::map)
 					.map(dbResult -> searchResultTransformer.reduce(ldapResult, dbResult))
