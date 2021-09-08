@@ -3,7 +3,7 @@ version: 0.2
 phases:
   build:
     commands:
-      - ./gradlew gatlingRun -x build --info --build-cache --no-daemon
+      - ./gradlew gatlingRun -x npmBuild --info --build-cache --no-daemon
 
 artifacts:
   files:
