@@ -77,6 +77,39 @@ class MainSimulation extends Simulation {
           .header("Authorization", "Bearer ${access_token}")
           .check(status.is(200))
           .check(jmesPath("username").is("${username}"))
+          .resources(
+            http("FetchUserHistory").get("/api/user/${username}/history")
+              .header("Authorization", "Bearer ${access_token}")
+              .check(status.is(200)),
+            http("RoleGroups").get("/api/rolegroups")
+              .header("Authorization", "Bearer ${access_token}")
+              .check(status.is(200)),
+            http("Roles").get("/api/roles")
+              .header("Authorization", "Bearer ${access_token}")
+              .check(status.is(200)),
+            http("Groups").get("/api/groups")
+              .header("Authorization", "Bearer ${access_token}")
+              .check(status.is(200)),
+            http("Establishments").get("/api/establishments")
+              .header("Authorization", "Bearer ${access_token}")
+              .check(status.is(200)),
+            http("StaffGrades").get("/api/staffgrades")
+              .header("Authorization", "Bearer ${access_token}")
+              .check(status.is(200)),
+            http("Datasets").get("/api/datasets")
+              .header("Authorization", "Bearer ${access_token}")
+              .check(status.is(200))
+              .check(jsonPath("$[*].code").findRandom.saveAs("homearea"))
+              .resources(
+                http("SubContractedProviders").get("/api/dataset/${homearea}/subContractedProviders")
+                  .header("Authorization", "Bearer ${access_token}")
+                  .check(status.is(200)),
+                http("Teams").get("/api/teams")
+                  .header("Authorization", "Bearer ${access_token}")
+                  .queryParam("provider", "${homearea}")
+                  .check(status.is(200))
+              )
+          )
         )
       )
     },
