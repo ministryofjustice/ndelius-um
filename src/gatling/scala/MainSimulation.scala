@@ -36,8 +36,7 @@ class MainSimulation extends Simulation {
       exec(http("GetCurrentUserDetails").get("/api/whoami")
         .header("Authorization", "Bearer ${access_token}")
         .check(status.is(200))
-        .check(jmesPath("forenames").is("Performance"))
-        .check(jmesPath("surname").is("Test"))
+        .check(jmesPath("username").is("${username}"))
         .resources(
           http("Datasets").get("/api/datasets")
             .header("Authorization", "Bearer ${access_token}")
