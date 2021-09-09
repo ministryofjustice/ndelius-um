@@ -3,11 +3,11 @@ version: 0.2
 phases:
   build:
     commands:
-      - ./gradlew gatlingRun -x npmBuild --info --build-cache --no-daemon
+      - ./gradlew gatlingRun --info --build-cache --no-daemon --exclude-task npmBuild
 
 artifacts:
   files:
-    - results/**/*
+    - build/reports/gatling/**/*
 
 cache:
   paths:
