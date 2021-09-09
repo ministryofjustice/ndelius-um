@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
-    "module": "esnext",
+    "module": "es2020",
     "paths": {
       "stream": [
         "node_modules/readable-stream"

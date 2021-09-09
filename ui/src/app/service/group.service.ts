@@ -1,4 +1,4 @@
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {Groups} from '../model/groups';
 import {Group} from '../model/group';
 

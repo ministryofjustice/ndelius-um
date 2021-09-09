@@ -1,4 +1,4 @@
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {UserHistoryItem} from '../model/user-history-item';
 
 export abstract class HistoryService {

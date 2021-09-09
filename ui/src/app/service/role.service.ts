@@ -1,4 +1,4 @@
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {Role} from '../model/role';
 import {RoleGroup} from '../model/role-group';
 

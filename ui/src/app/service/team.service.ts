@@ -1,4 +1,4 @@
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {Team} from '../model/team';
 
 export abstract class TeamService {
