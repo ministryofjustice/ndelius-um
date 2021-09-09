@@ -8,5 +8,4 @@ import java.util.Optional;
 public interface RoleGroupRepository extends LdapRepository<RoleGroupEntry>
 {
     Optional<RoleGroupEntry> findByName(String transactionGroupName);
-    Iterable<RoleGroupEntry> findAll();
 }

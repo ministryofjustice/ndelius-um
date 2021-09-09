@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
 
 @Service
 public class RoleGroupServiceImpl implements RoleGroupService
@@ -36,7 +35,7 @@ public class RoleGroupServiceImpl implements RoleGroupService
 	@Cacheable(value = "roleGroups", key = "'all'")
     public List<RoleGroup> getRoleGroups()
     {
-        return stream(roleGroupRepository.findAll().spliterator(), true)
+        return roleGroupRepository.findAll().parallelStream()
                 .map(roleGroupTransformer::map)
                 .collect(toList());
     }

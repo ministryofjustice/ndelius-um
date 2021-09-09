@@ -41,7 +41,7 @@ public class GroupServiceImpl implements GroupService {
 
 	@Override
 	public Map<String, Set<GroupEntry>> getGroups() {
-		return stream(groupRepository.findAll().spliterator(), false)
+		return groupRepository.findAll().stream()
 				.collect(groupingBy(GroupEntry::getType, toSet()));
 	}
 
