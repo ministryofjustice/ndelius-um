@@ -18,6 +18,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "aot": true,
+            "baseHref": "/umt/",
             "outputPath": "dist/static",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -64,7 +65,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
