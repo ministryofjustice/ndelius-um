@@ -7,7 +7,7 @@ phases:
 
 artifacts:
   files:
-    - results/*
+    - results/**/*
 
 cache:
   paths:
