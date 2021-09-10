@@ -15,8 +15,8 @@
 
 .jumbotron {
   &.jumbotron-compact {
-    padding-top: $jumbotron-padding * 2/3;
-    padding-bottom: $jumbotron-padding / 2;
+    padding-top: $jumbotron-padding * 0.67;
+    padding-bottom: $jumbotron-padding * 0.5;
   }
 
   // Darken links and coloured text in jumbotron to maintain an accessible contrast ratio (>4.5)
