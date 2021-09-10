@@ -1,5 +1,5 @@
 import {User} from '../model/user';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {SearchParams} from '../model/search-params';
 
 export abstract class UserService {

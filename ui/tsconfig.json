@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
-    "module": "esnext",
+    "module": "es2020",
     "paths": {
       "stream": [
         "node_modules/readable-stream"
@@ -12,7 +12,6 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
     "typeRoots": [

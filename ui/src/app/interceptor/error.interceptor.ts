@@ -6,7 +6,7 @@ import {
   HttpRequest,
   HttpResponseBase
 } from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {tap} from 'rxjs/operators';
 import {AppComponent} from '../component/app/app.component';

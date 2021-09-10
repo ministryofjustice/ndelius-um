@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {DatasetService} from '../dataset.service';

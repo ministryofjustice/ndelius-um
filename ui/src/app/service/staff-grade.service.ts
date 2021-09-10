@@ -1,4 +1,4 @@
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {StaffGrade} from '../model/staff-grade';
 
 export abstract class StaffGradeService {

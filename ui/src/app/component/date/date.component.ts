@@ -27,7 +27,7 @@ import {
 })
 export class DateComponent implements Validator, ControlValueAccessor {
   @Input() id: string;
-  @Input() label: string = this.id;
+  @Input() label: string;
   @Input() value: Date;
   @Input() required = false;
   @Input() readonly: boolean;

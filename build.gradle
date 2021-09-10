@@ -17,6 +17,7 @@ sourceCompatibility = 11
 // Spring Boot
 springBoot { buildInfo() }
 gitProperties { failOnNoGitDirectory = false }
+jar { enabled = false }
 
 // Node/NPM
 node {

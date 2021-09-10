@@ -2,8 +2,8 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {User} from '../../model/user';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {debounceTime, distinctUntilChanged, filter, flatMap, map} from 'rxjs/operators';
+import {of} from 'rxjs';
 import {UserService} from '../../service/user.service';
-import {Observable} from 'rxjs/Observable';
 import {AuthorisationService} from '../../service/impl/authorisation.service';
 import {RoleService} from '../../service/role.service';
 import {Role} from '../../model/role';
@@ -94,7 +94,7 @@ export class UserComponent implements OnInit {
               }));
             } else {
               this.mode = 'Add';
-              return Observable.of(new User());
+              return of(new User());
             }
           }));
         }
