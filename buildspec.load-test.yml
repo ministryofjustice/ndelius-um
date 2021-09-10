@@ -1,0 +1,18 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - ./gradlew gatlingRun --info --build-cache --no-daemon --exclude-task npmBuild
+
+artifacts:
+  files:
+    - build/reports/gatling/**/*
+
+cache:
+  paths:
+    - /root/.gradle/caches/**/*
+    - /root/.gradle/nodejs/**/*
+    - /root/.gradle/npm/**/*
+    - /root/.npm/**/*
+    - ./**/.local-chromium/**/*

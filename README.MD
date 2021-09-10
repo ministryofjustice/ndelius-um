@@ -62,7 +62,7 @@ Once started, point your browser at http://localhost:8080/umt and login with the
 
 ### Front-end development
 To enable live reloading of the front-end during development, run
-```bash
+```shell script
 npm start --prefix=ui
 ```
 and open http://localhost:4200/umt in your browser. Any changes to the UI files will trigger a browser refresh.
@@ -83,6 +83,21 @@ Alternatively, look at [application-dev.yml](src/main/resources/application-dev.
 ### Custom configuration items
 * `delius.secret` is a shared secret key between this application and Delius to support authenticating users who have already logged in to Delius (See [Preauthenticated grant](#Preauthenticated grant)).
 * `delius.ldap.base.*` defines the base context where users, roles, groups etc are stored within the Delius LDAP.
+
+## Performance Testing
+Load tests are written in Scala using the [Gatling](https://gatling.io) library.
+These tests run from an [AWS CodeBuild project](https://eu-west-2.console.aws.amazon.com/codesuite/codebuild/130975965028/projects/del-perf-usermanagement-performance-tests-build) 
+in the Delius performance test environment  (see [buildspec.load-test.yml](buildspec.load-test.yml) and [performance-test-umt.tf](https://github.com/ministryofjustice/hmpps-delius-pipelines/blob/master/components/delius-core/performance-test-umt.tf)).
+
+To run the tests locally,
+```shell script
+BASE_URL=http://localhost:8080/umt \
+TEST_USERNAME=test.user \
+TEST_PASSWORD=secret \
+CONCURRENT_USERS=100 \
+DURATION=300 \
+./gradlew gatlingRun
+```
 
 ## Authentication
 The User Management Tool acts as an [OAuth2](https://oauth.net/2/) identity provider for National Delius, and supports the `implicit`, `authorization_code`, `client_credentials` and `refresh_token` grant types as well as a custom `preauthenticated` grant type.
