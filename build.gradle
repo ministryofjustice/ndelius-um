@@ -3,17 +3,19 @@ plugins {
 	id 'java'
 	id 'idea'
 	id 'jacoco'
-	id 'org.springframework.boot'               version '2.5.4'
+	id 'org.springframework.boot'               version '2.5.8'
 	id 'io.spring.dependency-management'        version '1.0.11.RELEASE'
-	id 'com.github.node-gradle.node'            version '3.1.0'
-	id 'io.gatling.gradle'                      version '3.6.1'
+	id 'com.github.node-gradle.node'            version '3.1.1'
+	id 'io.gatling.gradle'                      version '3.7.3'
 	id 'org.sonarqube'                          version '3.3'
-	id 'com.gorylenko.gradle-git-properties'    version '2.3.1'
-	id 'org.owasp.dependencycheck'              version '6.3.1'
+	id 'com.gorylenko.gradle-git-properties'    version '2.3.2'
+	id 'org.owasp.dependencycheck'              version '6.5.1'
 }
 
 // Java
-sourceCompatibility = 11
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(11) }
+}
 
 // Spring Boot
 springBoot { buildInfo() }
@@ -22,7 +24,7 @@ jar { enabled = false }
 
 // Node/NPM
 node {
-	version = '12.18.3'
+	version = '16.13.1'
 	download = true
 	nodeModulesDir = file('ui')
 }
@@ -31,15 +33,11 @@ task npmBuild(type: NpmTask, dependsOn: npmInstall) {
 }
 processResources.dependsOn(npmBuild)
 test.dependsOn(npm_test)
-sourceSets {
-	main.resources.srcDirs 'ui/dist'
-}
-clean {
-	delete 'ui/dist'
-}
+sourceSets { main.resources.srcDirs 'ui/dist' }
+clean { delete 'ui/dist' }
 
 // Jacoco test coverage
-jacoco.toolVersion '0.8.5'
+jacoco.toolVersion '0.8.7'
 jacocoTestReport.reports.html.destination file("${buildDir}/reports/coverage/test")
 plugins.withType(JacocoPlugin) {
 	tasks['test'].finalizedBy jacocoTestReport
@@ -49,19 +47,11 @@ plugins.withType(JacocoPlugin) {
 dependencyCheck {
 	suppressionFile = 'dependency-check-suppression.xml'
 	skipConfigurations = ['zinc'] // zinc is the Scala incremental compiler used for Gatling tests, and can be ignored
-	failBuildOnCVSS = 4
-	// CVSS scoring: https://nvd.nist.gov/vuln-metrics/cvss
-	// None     0.0
-	// Low      0.1-3.9
-	// Medium   4.0-6.9
-	// High     7.0-8.9
-	// Critical 9.0-10.0
+	failBuildOnCVSS = 4 // Medium severity or higher. See https://nvd.nist.gov/vuln-metrics/cvss
 }
 
 // Project dependencies
-repositories {
-	mavenCentral()
-}
+repositories { mavenCentral() }
 dependencies {
 	implementation      'org.springframework.boot:spring-boot-starter-web'
 	implementation      'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -73,12 +63,11 @@ dependencies {
 	implementation      'org.springframework.boot:spring-boot-starter-validation'
 	implementation      'org.springframework.session:spring-session-data-redis'
 	implementation      'org.springframework.security.oauth:spring-security-oauth2:2.5.1.RELEASE'
-	implementation      'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.5.2'
-	implementation      'org.bouncycastle:bcpkix-jdk15on:1.69' // Overriding dependency of spring-security-oauth2-autoconfigure:2.5.2 due to CVE-2020-15522
+	implementation      'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.5.7'
+	implementation      'org.bouncycastle:bcpkix-jdk15on:1.69' // Overriding dependency of spring-security-oauth2-autoconfigure:2.5.7 due to CVE-2020-15522
 	implementation      'com.unboundid:unboundid-ldapsdk'
-	implementation      'it.ozimov:embedded-redis:0.7.2'
-	implementation      'com.google.guava:guava:30.1.1-jre' // Overriding dependency of embedded-redis due to CVE-2018-10237, CVE-2020-8908
-	implementation      'commons-io:commons-io:2.11.0'      // Overriding dependency of embedded-redis due to CVE-2021-29425
+	implementation      'org.signal:embedded-redis:0.8.1'
+	implementation      'com.google.guava:guava:31.0.1-jre' // Overriding dependency of embedded-redis due to CVE-2020-8908
 	implementation      'io.springfox:springfox-swagger2:2.9.2'
 	implementation      'io.springfox:springfox-swagger-ui:2.9.2'
 	implementation      'com.opencsv:opencsv:5.5.2'
@@ -89,7 +78,7 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	developmentOnly     'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly         'com.h2database:h2'
-	runtimeOnly         'com.oracle.ojdbc:ojdbc8'
+	runtimeOnly         'com.oracle.database.jdbc:ojdbc11'
 	testImplementation  'org.junit.vintage:junit-vintage-engine'
 	testImplementation  'org.springframework.boot:spring-boot-starter-test'
 	testImplementation  'org.springframework.restdocs:spring-restdocs-mockmvc'
