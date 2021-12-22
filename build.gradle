@@ -24,7 +24,7 @@ jar { enabled = false }
 
 // Node/NPM
 node {
-	version = '12.18.3'
+	version = '16.13.1'
 	download = true
 	nodeModulesDir = file('ui')
 }
