@@ -46,6 +46,7 @@ plugins.withType(JacocoPlugin) {
 // Dependency vulnerability scanning
 dependencyCheck {
 	suppressionFile = 'dependency-check-suppression.xml'
+	analyzers.assemblyEnabled = false
 	skipConfigurations = ['zinc'] // zinc is the Scala incremental compiler used for Gatling tests, and can be ignored
 	failBuildOnCVSS = 4 // Medium severity or higher. See https://nvd.nist.gov/vuln-metrics/cvss
 }
