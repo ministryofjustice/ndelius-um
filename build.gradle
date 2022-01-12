@@ -52,6 +52,7 @@ dependencyCheck {
 }
 
 // Project dependencies
+ext['log4j2.version'] = '2.17.1'
 repositories { mavenCentral() }
 dependencies {
 	implementation      'org.springframework.boot:spring-boot-starter-web'
