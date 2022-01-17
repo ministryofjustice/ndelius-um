@@ -14,7 +14,6 @@ import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Cache(usage = READ_ONLY)
 @Table(name = "R_STANDARD_REFERENCE_LIST")
 public class ReferenceDataExportEntity implements Serializable {
 	@Id

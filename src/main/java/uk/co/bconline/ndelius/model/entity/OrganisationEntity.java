@@ -16,7 +16,6 @@ import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Cache(usage = READ_ONLY)
 @Table(name = "ORGANISATION")
 public class OrganisationEntity implements Serializable
 {

@@ -16,7 +16,6 @@ import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 @Entity
 @Getter
 @NoArgsConstructor
-@Cache(usage = READ_ONLY)
 @Table(name = "PROBATION_AREA")
 @ToString(of = {"code", "description"})
 @EqualsAndHashCode(exclude = "userLinks")

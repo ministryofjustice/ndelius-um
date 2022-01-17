@@ -14,7 +14,6 @@ import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Cache(usage = READ_ONLY)
 @Table(name = "PROBATION_AREA")
 public class ProbationAreaExportEntity implements Serializable {
 	@Id

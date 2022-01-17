@@ -15,7 +15,6 @@ import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "TEAM")
-@Cache(usage = READ_ONLY)
 public class TeamExportEntity implements Serializable {
 	@Id
 	@Column(name = "TEAM_ID")

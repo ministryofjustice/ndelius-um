@@ -27,14 +27,12 @@ public class OrganisationServiceImpl implements OrganisationService
 	}
 
 	@Override
-	@Cacheable("organisationIds")
 	public Optional<Long> getOrganisationId(String code)
 	{
 		return repository.findByCode(code).map(OrganisationEntity::getId);
 	}
 
 	@Override
-	@Cacheable(value = "organisations", key = "'all'")
 	public List<Organisation> getOrganisations()
 	{
 		List<OrganisationEntity> organisations = repository.findAll();

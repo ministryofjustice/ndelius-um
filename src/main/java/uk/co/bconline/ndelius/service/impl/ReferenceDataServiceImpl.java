@@ -31,7 +31,6 @@ public class ReferenceDataServiceImpl implements ReferenceDataService
 	}
 
 	@Override
-	@Cacheable(value = "staffGrades", key = "'all'")
 	public List<ReferenceData> getStaffGrades()
 	{
 		List<ReferenceDataEntity> resultsDB = repository.findAllBySelectableAndReferenceDataMasterCodeSetName("Y", OFFICER_GRADE);
@@ -39,7 +38,6 @@ public class ReferenceDataServiceImpl implements ReferenceDataService
 	}
 
 	@Override
-	@Cacheable("staffGradeIds")
 	public Optional<Long> getStaffGradeId(String code)
 	{
 		return repository.findByCodeAndReferenceDataMasterCodeSetName(code, OFFICER_GRADE).map(ReferenceDataEntity::getId);
