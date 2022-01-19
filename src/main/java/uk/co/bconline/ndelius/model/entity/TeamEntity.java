@@ -17,7 +17,6 @@ import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "TEAM")
-@Cache(usage = READ_ONLY)
 @ToString(exclude = "staffLinks")
 @EqualsAndHashCode(exclude = "staffLinks")
 public class TeamEntity implements Serializable

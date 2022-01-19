@@ -10,7 +10,6 @@ import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
 @Getter
 @Entity
-@Cache(usage = READ_ONLY)
 @Table(name = "R_REFERENCE_DATA_MASTER")
 @SequenceGenerator(name = "REFERENCE_DATA_MASTER_ID_SEQ", sequenceName = "REFERENCE_DATA_MASTER_ID_SEQ", allocationSize = 1)
 public class ReferenceDataMasterEntity implements Serializable

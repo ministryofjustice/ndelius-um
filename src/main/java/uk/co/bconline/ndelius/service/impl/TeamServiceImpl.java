@@ -30,7 +30,6 @@ public class TeamServiceImpl implements TeamService
 	}
 
 	@Override
-	@Cacheable("teamsByProbationArea")
 	public List<Team> getTeams(String probationArea)
 	{
 		List<TeamEntity> teams = ofNullable(probationArea)
@@ -41,7 +40,6 @@ public class TeamServiceImpl implements TeamService
 	}
 
 	@Override
-	@Cacheable("teamIdsByCode")
 	public Optional<Long> getTeamId(String code) {
 		return repository.findIdByCode(code);
 	}
