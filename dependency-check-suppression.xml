@@ -10,12 +10,10 @@
     </suppress>
     <suppress until="2022-03-01Z">
         <notes><![CDATA[
-        Suppresses multiple vulnerabilities in netty-tcnative-classes:2.0.46.Final.
-        Reason: False positive in DependencyCheck plugin, will be resolved in v6.5.2.
-        More info:
-         * https://github.com/jeremylong/DependencyCheck/issues/3865
+        Suppresses CVE-2021-42392 in h2:1.4.200.
+        Reason: `web-allow-others` is explicitly disabled.
         ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io\.netty/netty\-tcnative\-classes@.*$</packageUrl>
-        <cpe>cpe:/a:netty:netty</cpe>
+        <packageUrl regex="true">^pkg:maven/com\.h2database/h2@.*$</packageUrl>
+        <cve>CVE-2021-42392</cve>
     </suppress>
 </suppressions>
