@@ -138,7 +138,7 @@ public class UserEntityServiceImpl implements UserEntityService {
 		val isOracle = datasourceUrl.startsWith("jdbc:oracle");
 		return (isOracle?
 					searchResultRepository.search(token, includeInactiveUsers, filterDatasets, datasets):
-					searchResultRepository.simpleSearch(token, includeInactiveUsers, filterDatasets, datasets))
+					searchResultRepository.simpleSearch(token, includeInactiveUsers ? 1 : 0, filterDatasets ? 1 : 0, datasets))
 				.stream()
 				.collect(groupingBy(SearchResultEntity::getUsername, reducing(searchResultTransformer::reduceTeams)))
 				.values().stream().flatMap(Optionals::toStream);

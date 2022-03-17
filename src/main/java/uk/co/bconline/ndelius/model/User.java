@@ -2,7 +2,7 @@ package uk.co.bconline.ndelius.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import uk.co.bconline.ndelius.validator.*;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static io.swagger.annotations.ApiModelProperty.AccessMode.READ_ONLY;
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 
 @Getter
 @ToString
@@ -94,14 +94,14 @@ public class User {
 
 	private Map<String, List<@Valid Group>> groups;
 
-	@ApiModelProperty(accessMode = READ_ONLY)
+	@Schema(accessMode = READ_ONLY)
 	private ChangeNote created;
 
-	@ApiModelProperty(accessMode = READ_ONLY)
+	@Schema(accessMode = READ_ONLY)
 	private ChangeNote updated;
 
 	@Size(max = 4000)
-	@ApiModelProperty("Only used for create/update, for adding change notes to a user. " +
+	@Schema(description = "Only used for create/update, for adding change notes to a user. " +
 			"This will always be blank when fetching a user - to retrieve user change notes, see the /user/{username}/history endpoint.")
 	private String changeNote;
 

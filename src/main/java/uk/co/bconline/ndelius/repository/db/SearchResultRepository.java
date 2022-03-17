@@ -73,7 +73,7 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"    LEFT OUTER JOIN TEAM T ON ST.TEAM_ID = T.TEAM_ID " +
 			"WHERE (?2 = 1 OR U.END_DATE IS NULL OR U.END_DATE >= TRUNC(SYSDATE)) " +
 			"AND (?3 = 0 OR (SELECT COUNT(*) FROM PROBATION_AREA_USER WHERE ROWNUM = 1 AND USER_ID = U.USER_ID  " +
-			"    AND PROBATION_AREA_ID IN (SELECT PROBATION_AREA_ID FROM PROBATION_AREA WHERE CODE IN ?4)) > 0) " +
+			"    AND PROBATION_AREA_ID IN (SELECT PROBATION_AREA_ID FROM PROBATION_AREA WHERE CODE IN (?4))) > 0) " +
 			"AND (?1 = '' " +
 			"    OR UPPER(U.DISTINGUISHED_NAME) LIKE '%'||UPPER(?1)||'%' " +
 			"    OR UPPER(U.FORENAME) LIKE '%'||UPPER(?1)||'%' " +
@@ -86,5 +86,5 @@ public interface SearchResultRepository extends JpaRepository<SearchResultEntity
 			"        OR UPPER(DESCRIPTION) LIKE '%'||UPPER(?1)||'%'))) " +
 			"ORDER BY SCORE DESC, UPPER(U.DISTINGUISHED_NAME);",
 			nativeQuery = true)
-	List<SearchResultEntity> simpleSearch(String query, boolean includeInactiveUsers, boolean filterDatasets, Set<String> datasetCodes);
+	List<SearchResultEntity> simpleSearch(String query, int includeInactiveUsers, int filterDatasets, Set<String> datasetCodes);
 }

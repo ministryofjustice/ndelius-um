@@ -24,7 +24,6 @@ import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
-import static org.springframework.ldap.query.SearchScope.SUBTREE;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
 import static uk.co.bconline.ndelius.util.NameUtils.join;
 
@@ -33,7 +32,8 @@ import static uk.co.bconline.ndelius.util.NameUtils.join;
 public class RoleServiceImpl implements RoleService
 {
 	@Resource
-	// self-autowiring, to workaround cache misses when calling cacheable methods from within the same class
+	// self-autowiring, to workaround cache misses when calling cacheable methods from within the same class.
+	// spring.main.allow-circular-references must be set to true.
 	private RoleService roleService;
 
 	private final RoleRepository roleRepository;
