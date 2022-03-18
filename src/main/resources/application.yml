@@ -20,6 +20,8 @@ spring.ldap.base-environment:
   java.naming.ldap.derefAliases: never
   com.sun.jndi.ldap.connect.pool: true
 
+spring.main.allow-circular-references: true # See RoleServiceImpl.java
+
 spring.session.store-type: redis
 spring.data.redis.repositories.enabled: false
 
