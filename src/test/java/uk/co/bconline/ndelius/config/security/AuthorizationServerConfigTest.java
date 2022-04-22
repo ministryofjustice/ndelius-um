@@ -59,7 +59,7 @@ public class AuthorizationServerConfigTest {
 		mvc.perform(get("/api/user/test.user")
 				.header("Authorization", "Bearer INVALID-TOKEN"))
 				.andExpect(status().isUnauthorized())
-				.andExpect(jsonPath("error_description", is("Invalid access token: INVALID-TOKEN")));
+				.andExpect(jsonPath("error_description", is("Invalid access token")));
 	}
 
 	@Test
