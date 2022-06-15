@@ -68,7 +68,7 @@ dependencies {
 	implementation      'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.6.6'
 	implementation      'org.bouncycastle:bcpkix-jdk15on:1.70' // Overriding dependency of spring-security-oauth2-autoconfigure due to CVE-2020-15522
 	implementation      'com.unboundid:unboundid-ldapsdk'
-	implementation      'org.signal:embedded-redis:0.8.2'
+	implementation      'org.signal:embedded-redis:0.8.3'
 	implementation      'com.google.guava:guava:31.1-jre' // Overriding dependency of embedded-redis:0.8.1 due to CVE-2020-8908
 	implementation      'org.springdoc:springdoc-openapi-ui:1.6.8'
 	implementation      'com.opencsv:opencsv:5.6'
