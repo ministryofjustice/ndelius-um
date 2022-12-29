@@ -13,7 +13,7 @@
     "lint": "ng lint",
     "accessibility": "wait-port 8080; concurrently npm:accessibility:*",
     "accessibility:test": "pa11y-ci",
-    "accessibility:report": "pa11y-ci --config .pa11yci-v.js"
+    "accessibility:report": "pa11y-ci --config .pa11yci-v.js; exit 0"
   },
   "private": true,
   "browserslist": [
