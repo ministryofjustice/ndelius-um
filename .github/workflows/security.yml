@@ -9,19 +9,12 @@ on:
 jobs:
   check-dependencies:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-      - name: Cache gradle dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
 
       - name: Analyze Gradle dependencies
-        run: ./gradlew dependencyCheckAnalyze --build-cache
+        run: ./gradlew dependencyCheckAnalyze
 
       - name: Upload test report
         if: always()
