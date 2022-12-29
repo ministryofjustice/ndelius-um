@@ -26,4 +26,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: accessibility-report
-          path: ui/dist/reports/pa11y
+          path: ui/pa11y-ci-report
