@@ -9,7 +9,15 @@ const login = [
 
 module.exports = {
   defaults: {
-    useIncognitoBrowserContext: true
+    chromeLaunchConfig: {
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage"
+      ]
+    },
+    timeout: 10000,
+    useIncognitoBrowserContext: true,
   },
   urls: [
     {
