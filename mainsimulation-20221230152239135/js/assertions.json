@@ -1,0 +1,10 @@
+{
+  "simulation": "MainSimulation",
+  "simulationId": "mainsimulation-20221230152239135",
+  "start": 1672413759779,
+  "description": "",
+  "scenarios": ["ViewUser", "Search", "UpdateUser"],
+  "assertions": [
+
+  ]
+}

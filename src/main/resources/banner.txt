@@ -1,5 +1,0 @@
-
-    ------------------------------------
-    National Delius User Management Tool
-          Developed by Unilink Ltd
-    ------------------------------------
