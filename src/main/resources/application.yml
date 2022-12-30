@@ -16,6 +16,15 @@ spring.web.resources:
 
 cache.evict.delay: 86400000 # = 24*60*60*1000 = 24 hours
 
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 50
+      leak-detection-threshold: 20000
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+
 spring.ldap.base-environment:
   java.naming.ldap.derefAliases: never
   com.sun.jndi.ldap.connect.pool: true

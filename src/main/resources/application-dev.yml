@@ -8,8 +8,6 @@ spring:
     settings.web-allow-others: false # explicitly disabled to mitigate CVE-2021-42392
   datasource:
     url: 'jdbc:h2:mem:testdb;Mode=Oracle'
-    type: com.zaxxer.hikari.HikariDataSource
-    hikari.leak-detection-threshold: 20000
   ldap:
     base: dc=bcl,dc=local
     urls: ldap://localhost:3060
