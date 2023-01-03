@@ -14,7 +14,7 @@ plugins {
 
 // Java
 java {
-	toolchain { languageVersion = JavaLanguageVersion.of(11) }
+	toolchain { languageVersion = JavaLanguageVersion.of(17) }
 }
 
 // Spring Boot
