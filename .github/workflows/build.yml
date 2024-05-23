@@ -3,6 +3,7 @@ name: Build
 on:
   release:
     types: [published, edited]
+  push:
 
 jobs:
   build:
@@ -17,10 +18,16 @@ jobs:
 
       - uses: ./.github/actions/setup
 
+      - name: Set version
+        run: |
+          version=${tag:-dev}
+          echo "version=$version" | tee -a "$GITHUB_ENV"
+          echo "ORG_GRADLE_PROJECT_version=$version" | tee -a "$GITHUB_ENV"
+        env:
+          tag: ${{ github.event.release.tag_name }}
+
       - name: Build image
         run: ./gradlew clean build bootBuildImage --info --build-cache
-        env:
-          ORG_GRADLE_PROJECT_version: ${{ github.event.release.tag_name }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
