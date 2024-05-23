@@ -1,0 +1,42 @@
+name: Build
+
+on:
+  release:
+    types: [published, edited]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      image_name: 374269020027.dkr.ecr.eu-west-2.amazonaws.com/delius-core-user-management
+      version: ${{ github.event.release.tag_name }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/setup
+
+      - name: Build image
+        run: ./gradlew clean build bootBuildImage --info --build-cache
+        env:
+          ORG_GRADLE_PROJECT_version: ${{ github.event.release.tag_name }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::326912278139:role/modernisation-platform-oidc-cicd
+          role-session-name: delius-user-management-${{ github.run_number }}
+          aws-region: eu-west-2
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registries: "374269020027"
+
+      - name: Push to Amazon ECR
+        run: |
+          docker tag "delius-user-management:$version" "$image_name:$version"
+          docker tag "delius-user-management:$version" "$image_name:latest"
+          docker push "$image_name:$version"
+          docker push "$image_name:latest"
