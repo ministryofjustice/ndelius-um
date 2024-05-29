@@ -1,0 +1,71 @@
+name: Build
+
+on:
+  release:
+    types: [published, edited]
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      ecr_image_name: 374269020027.dkr.ecr.eu-west-2.amazonaws.com/delius-core-user-management
+      ghcr_image_name: ghcr.io/${{ github.repository_owner }}/delius-core-user-management
+      version: ${{ github.event.release.tag_name }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/setup
+
+      - name: Set version
+        run: |
+          version=${tag:-dev}
+          echo "version=$version" | tee -a "$GITHUB_ENV"
+          echo "ORG_GRADLE_PROJECT_version=$version" | tee -a "$GITHUB_ENV"
+        env:
+          tag: ${{ github.event.release.tag_name }}
+
+      - name: Build image
+        run: ./gradlew clean build bootBuildImage --info --build-cache
+
+      - name: Login to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Push to GHCR
+        run: |
+          docker tag "delius-user-management:$version" "$ghcr_image_name:$version"
+          docker tag "delius-user-management:$version" "$ghcr_image_name:latest"
+          docker push "$ghcr_image_name:$version"
+          docker push "$ghcr_image_name:latest"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::326912278139:role/modernisation-platform-oidc-cicd
+          role-session-name: delius-user-management-${{ github.run_number }}
+          aws-region: eu-west-2
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registries: "374269020027"
+
+      - name: Push to Amazon ECR
+        run: |
+          docker tag "delius-user-management:$version" "$ecr_image_name:$version"
+          docker tag "delius-user-management:$version" "$ecr_image_name:latest"
+          docker push "$ecr_image_name:$version"
+          docker push "$ecr_image_name:latest"
