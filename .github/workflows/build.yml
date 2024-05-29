@@ -19,7 +19,6 @@ jobs:
     env:
       ecr_image_name: 374269020027.dkr.ecr.eu-west-2.amazonaws.com/delius-core-user-management
       ghcr_image_name: ghcr.io/${{ github.repository_owner }}/delius-core-user-management
-      version: ${{ github.event.release.tag_name }}
 
     steps:
       - uses: actions/checkout@v3
@@ -55,7 +54,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::326912278139:role/modernisation-platform-oidc-cicd
-          role-session-name: delius-user-management-${{ github.run_number }}
+          role-session-name: delius-user-management-build-${{ github.run_number }}
           aws-region: eu-west-2
 
       - name: Login to Amazon ECR

@@ -1,0 +1,33 @@
+image:
+  name: 374269020027.dkr.ecr.eu-west-2.amazonaws.com/delius-core-user-management
+
+healthcheck:
+  command: "curl -f http://localhost:8080/umt/actuator/health || exit 1"
+
+resources:
+  cpu: 1024    # = 1 vCPU
+  memory: 4096 # = 4GB
+
+env:
+  JAVA_OPTS: "-XX:MaxMetaspaceSize=512M -XX:MaxDirectMemorySize=128M"
+  TZ: "Europe/London"
+  SERVER_USE-FORWARD-HEADERS: "true"
+  SERVER_FORWARD-HEADERS-STRATEGY: "native"
+  SPRING_DATASOURCE_USERNAME: "delius_app_schema"
+  SPRING_DATASOURCE_TYPE: "com.zaxxer.hikari.HikariDataSource"
+  SPRING_DATASOURCE_HIKARI_MAXIMUM-POOL-SIZE: "50"
+  SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "org.hibernate.dialect.Oracle12cDialect"
+  SPRING_JPA_HIBERNATE_DDL-AUTO: "none"
+  SPRING_LDAP_EXPORT_USERNAME: "cn=root,dc=moj,dc=com"
+  SPRING_LDAP_USERNAME: "cn=root,dc=moj,dc=com"
+  SPRING_LDAP_USEORACLEATTRIBUTES: "false"
+  REDIS_CONFIGURE_NO-OP: "true"
+  SPRING_LDAP_BASE: "dc=moj,dc=com"
+  DELIUS_LDAP_BASE_USERS: "ou=Users"
+  DELIUS_LDAP_BASE_CLIENTS: "cn=EISUsers,ou=Users"
+  DELIUS_LDAP_BASE_ROLES: "cn=ndRoleCatalogue,ou=Users"
+  DELIUS_LDAP_BASE_ROLE-GROUPS: "cn=ndRoleGroups,ou=Users"
+  DELIUS_LDAP_BASE_GROUPS: "ou=Groups"
+  # TODO add to SSM
+  JWT_SECRET: "testing"
+  DELIUS_SECRET: "testing"

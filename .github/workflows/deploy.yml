@@ -1,0 +1,58 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version
+        required: true
+      environment:
+        description: Environment
+        required: true
+        type: choice
+        options:
+          - dev
+          - test
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::326912278139:role/modernisation-platform-oidc-cicd
+          role-session-name: delius-user-management-deploy-${{ github.run_number }}
+
+      - name: Render values
+        shell: bash
+        run: yq eval-all 'select(fileIndex == 0) *d select(fileIndex == 1)' "deploy/values.yml" "deploy/values-$ENV.yml" | tee deploy/merged.yml
+        env:
+          ENV: ${{ inputs.environment }}
+
+      - name: Render task definition
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          brew install gomplate
+          old_task_definition=$(aws ecs describe-task-definition --task-definition "$TASK_DEFINITION" --include TAGS | jq '.taskDefinition | del(.containerDefinitions[0].command, .compatibilities, .taskDefinitionArn, .requiresAttributes, .revision, .status, .registeredAt, .registeredBy)')
+          new_task_definition=$(gomplate --file deploy/task-definition.yml --context values=deploy/merged.yml)
+          merged_task_definition_json=$(yq eval-all 'select(fileIndex == 0) *d select(fileIndex == 1)' <(echo "${old_task_definition}") <(echo "${new_task_definition}") --output-format json | tee task-definition.json)
+          echo "Deploying new task definition: ${merged_task_definition_json}"
+        env:
+          VERSION: ${{ inputs.version }}
+          TASK_DEFINITION: umt
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@69e7aed9b8acdd75a6c585ac669c33831ab1b9a3 # v1.5.0
+        with:
+          task-definition: task-definition.json
+          service: umt
+          cluster: delius-core-${{ inputs.environment }}-cluster
+          wait-for-service-stability: true
