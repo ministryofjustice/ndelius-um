@@ -1,0 +1,15 @@
+image:
+  name: 374269020027.dkr.ecr.eu-west-2.amazonaws.com/delius-core-user-management
+
+env:
+  LOGGING_LEVEL_UK_CO_BCONLINE_NDELIUS: DEBUG
+  DELIUS_PASSWORD-RESET_URL: https://pwm.dev.delius-core.hmpps-development.modernisation-platform.service.justice.gov.uk/public/forgottenpassword
+  SPRING_DATASOURCE_URL: jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=OFF)(CONNECT_TIMEOUT=10)(RETRY_COUNT=3)(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=delius-db-1.mis-dev.delius.probation.hmpps.dsd.io)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=DMDNDA_TAF)))
+  SPRING_LDAP_URLS: ldap://ldap.mis-dev.delius.probation.hmpps.dsd.io:389
+#  SPRING_REDIS_HOST: aws_route53_record.token_store_private_dns.fqdn
+#  SPRING_REDIS_PORT: aws_elasticache_replication_group.token_store_replication_group.port
+#  SPRING_REDIS_CLUSTER_NODES: "${aws_route53_record.token_store_private_dns.fqdn}:${aws_elasticache_replication_group.token_store_replication_group.port}"
+
+secrets:
+  SPRING_DATASOURCE_PASSWORD: "arn:aws:secretsmanager:eu-west-2:326912278139:secret:delius-core-dev-oracle-db-application-passwords-kRyWVh:delius_app_schema::"
+  SPRING_LDAP_PASSWORD: "arn:aws:ssm:eu-west-2:326912278139:parameter/delius-core-dev/LDAP_BIND_PASSWORD"
