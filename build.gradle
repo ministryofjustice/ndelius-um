@@ -76,7 +76,7 @@ dependencies {
 	implementation      'com.google.guava:guava:31.1-jre' // Overriding dependency of embedded-redis:0.8.1 due to CVE-2020-8908
 	implementation      'org.springdoc:springdoc-openapi-ui:1.6.14'
 	implementation      'com.opencsv:opencsv:5.7.1'
-	implementation      'io.github.resilience4j:resilience4j-bulkhead:1.7.1'
+	implementation      'io.github.resilience4j:resilience4j-bulkhead:2.2.0'
 	implementation      'io.github.resilience4j:resilience4j-spring-boot2:1.7.1'
 	compileOnly         'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
