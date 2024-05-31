@@ -13,3 +13,5 @@ env:
 secrets:
   SPRING_DATASOURCE_PASSWORD: "arn:aws:secretsmanager:eu-west-2:326912278139:secret:delius-core-dev-oracle-db-application-passwords-kRyWVh:delius_app_schema::"
   SPRING_LDAP_PASSWORD: "arn:aws:ssm:eu-west-2:326912278139:parameter/delius-core-dev/LDAP_BIND_PASSWORD"
+  JWT_SECRET: "arn:aws:ssm:eu-west-2:326912278139:parameter/delius-core-dev/UMT_JWT_SECRET"
+  DELIUS_SECRET: "arn:aws:ssm:eu-west-2:326912278139:parameter/delius-core-dev/UMT_DELIUS_SECRET"

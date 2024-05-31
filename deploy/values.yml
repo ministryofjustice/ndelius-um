@@ -28,6 +28,3 @@ env:
   DELIUS_LDAP_BASE_ROLES: "cn=ndRoleCatalogue,ou=Users"
   DELIUS_LDAP_BASE_ROLE-GROUPS: "cn=ndRoleGroups,ou=Users"
   DELIUS_LDAP_BASE_GROUPS: "ou=Groups"
-  # TODO add to SSM
-  JWT_SECRET: "testing"
-  DELIUS_SECRET: "testing"
