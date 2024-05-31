@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
+import org.hibernate.type.YesNoConverter;
+import jakarta.persistence.Convert;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -39,7 +40,6 @@ public class SubContractedProviderEntity implements Serializable
 	private Boolean active;
 
 	@Column(name = "END_DATE")
-	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
 	@ManyToOne

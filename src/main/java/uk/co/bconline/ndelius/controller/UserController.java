@@ -20,9 +20,9 @@ import uk.co.bconline.ndelius.util.CSVUtils;
 import uk.co.bconline.ndelius.validator.NewUsernameMustNotAlreadyExist;
 import uk.co.bconline.ndelius.validator.UsernameMustNotAlreadyExist;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;

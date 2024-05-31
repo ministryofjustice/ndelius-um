@@ -2,9 +2,10 @@ package uk.co.bconline.ndelius.model.entity;
 
 import lombok.*;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.Type;
+import org.hibernate.type.YesNoConverter;
+import jakarta.persistence.Convert;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -39,11 +40,9 @@ public class TeamEntity implements Serializable
 	private String description;
 
 	@Column(name = "START_DATE")
-	@Type(type = "java.time.LocalDate")
 	private LocalDate startDate;
 
 	@Column(name = "END_DATE")
-	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
 	@ManyToOne

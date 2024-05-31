@@ -5,7 +5,7 @@ import uk.co.bconline.ndelius.model.ExportResult;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;

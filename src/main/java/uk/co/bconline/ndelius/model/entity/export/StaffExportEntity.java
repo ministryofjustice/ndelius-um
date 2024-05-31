@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
+import org.hibernate.type.YesNoConverter;
+import jakarta.persistence.Convert;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
@@ -45,11 +46,9 @@ public class StaffExportEntity implements Serializable
 	private Boolean privateStaff;
 
 	@Column(name = "START_DATE")
-	@Type(type = "java.time.LocalDate")
 	private LocalDate startDate;
 
 	@Column(name = "END_DATE")
-	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
 	@ManyToOne

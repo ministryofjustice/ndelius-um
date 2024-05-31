@@ -8,8 +8,8 @@ import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.UserEntryService;
 import uk.co.bconline.ndelius.transformer.GroupTransformer;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.List;
 
 import static java.util.Collections.emptyMap;

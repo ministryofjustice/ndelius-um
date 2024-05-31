@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import uk.co.bconline.ndelius.model.auth.UserInteraction;
 
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 import java.time.LocalDate;
 import java.util.Set;
 

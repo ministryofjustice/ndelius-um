@@ -16,10 +16,10 @@ import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.model.ErrorResponse;
 import uk.co.bconline.ndelius.model.ForbiddenResponse;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ElementKind;
-import javax.validation.Path;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ElementKind;
+import jakarta.validation.Path;
 import java.util.Iterator;
 
 import static java.util.stream.Collectors.toList;

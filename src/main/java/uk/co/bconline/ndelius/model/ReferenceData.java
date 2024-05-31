@@ -1,6 +1,6 @@
 package uk.co.bconline.ndelius.model;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import lombok.*;
 

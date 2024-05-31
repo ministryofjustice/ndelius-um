@@ -33,7 +33,7 @@ import org.springframework.util.StringUtils;
 import uk.co.bconline.ndelius.config.data.embedded.interceptor.AliasInterceptor;
 import uk.co.bconline.ndelius.config.data.embedded.interceptor.MemberOfInterceptor;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;

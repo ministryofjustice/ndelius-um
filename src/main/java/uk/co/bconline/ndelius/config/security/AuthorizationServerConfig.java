@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -28,15 +29,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.view.RedirectView;
 import uk.co.bconline.ndelius.config.security.provider.endpoint.PathMatchRedirectResolver;
 import uk.co.bconline.ndelius.config.security.provider.token.PreAuthenticatedTokenGranter;
 import uk.co.bconline.ndelius.config.security.provider.token.store.redis.SaferRedisTokenStore;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import static java.util.Arrays.asList;
 
@@ -87,8 +87,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		security.realm("ndelius-clients")
 				.passwordEncoder(passwordEncoder)
 				.tokenKeyAccess("permitAll()")
-				.checkTokenAccess("isAuthenticated()")
-				.addTokenEndpointAuthenticationFilter(new CorsFilter(corsConfigurationSource()));
+				.checkTokenAccess("isAuthenticated()");
+//				.addTokenEndpointAuthenticationFilter((Filter) new CorsFilter(corsConfigurationSource()));
 	}
 
 	@Override
@@ -135,7 +135,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	 */
 	@Bean
 	public HandlerInterceptor invalidateSessionInterceptor() {
-		return new HandlerInterceptorAdapter() {
+		return new HandlerInterceptor() {
 			@Override
 			public void postHandle(HttpServletRequest request,
 								   HttpServletResponse response, Object handler,
@@ -151,6 +151,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				}
 			}
 		};
+	}
+
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
 	}
 
 	private TokenGranter tokenGranter(final AuthorizationServerEndpointsConfigurer endpoints) {

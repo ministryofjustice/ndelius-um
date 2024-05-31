@@ -25,7 +25,7 @@ public class EncryptionUtils
 		try
 		{
 			final Cipher cipher = cipherFromSecret(Cipher.ENCRYPT_MODE, secret);
-			return cipher != null ? new String(Base64.encodeBase64(cipher.doFinal(plainText.getBytes()))) : null;
+			return cipher != null ? new String(Base64.encodeBase64(cipher.doFinal(plainText.getBytes()), true)) : null;
 		}
 		catch (IllegalBlockSizeException | BadPaddingException ex)
 		{
@@ -38,7 +38,7 @@ public class EncryptionUtils
 		try
 		{
 			final Cipher cipher = cipherFromSecret(Cipher.DECRYPT_MODE, secret);
-			return cipher != null ? new String(cipher.doFinal(Base64.decodeBase64(encrypted.getBytes()))) : null;
+			return cipher != null ? new String(cipher.doFinal(Base64.decodeBase64(Arrays.toString(encrypted.getBytes())))) : null;
 		}
 		catch (IllegalBlockSizeException | BadPaddingException ex)
 		{

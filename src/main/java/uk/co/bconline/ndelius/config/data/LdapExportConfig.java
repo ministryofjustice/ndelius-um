@@ -6,6 +6,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
+import org.springframework.boot.autoconfigure.ldap.LdapConnectionDetails;
 import org.springframework.boot.autoconfigure.ldap.LdapProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,10 +24,10 @@ public class LdapExportConfig extends LdapAutoConfiguration {
 
 	@Override
 	@Bean("exportLdapContextSource")
-	public LdapContextSource ldapContextSource(LdapProperties properties, Environment environment,
+	public LdapContextSource ldapContextSource(LdapConnectionDetails connectionDetails, LdapProperties properties,
 											   ObjectProvider<DirContextAuthenticationStrategy> dirContextAuthenticationStrategy) {
 		properties.setUsername(exportUser);
-		val ctxSource = super.ldapContextSource(properties, environment, dirContextAuthenticationStrategy);
+		val ctxSource = super.ldapContextSource(connectionDetails, properties, dirContextAuthenticationStrategy);
 		val pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
 		ctxSource.setPooled(pooled);
 		return ctxSource;

@@ -2,8 +2,8 @@ package uk.co.bconline.ndelius.validator;
 
 import java.time.LocalDate;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import uk.co.bconline.ndelius.model.User;
 

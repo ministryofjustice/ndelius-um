@@ -6,9 +6,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import uk.co.bconline.ndelius.validator.*;
 
-import javax.persistence.Transient;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.persistence.Transient;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;

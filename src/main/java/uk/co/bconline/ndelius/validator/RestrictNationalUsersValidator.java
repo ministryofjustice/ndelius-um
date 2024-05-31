@@ -7,8 +7,8 @@ import org.springframework.ldap.NameNotFoundException;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.UserRoleService;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import static java.util.Optional.ofNullable;
 import static uk.co.bconline.ndelius.util.AuthUtils.isNational;

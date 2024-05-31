@@ -3,7 +3,7 @@ package uk.co.bconline.ndelius.model.entity;
 import lombok.Getter;
 import org.hibernate.annotations.Cache;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;

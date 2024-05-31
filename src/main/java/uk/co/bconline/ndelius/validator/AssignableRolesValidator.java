@@ -9,8 +9,8 @@ import uk.co.bconline.ndelius.model.entry.RoleEntry;
 import uk.co.bconline.ndelius.service.UserEntryService;
 import uk.co.bconline.ndelius.service.UserRoleService;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;

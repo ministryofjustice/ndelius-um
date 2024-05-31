@@ -2,9 +2,10 @@ package uk.co.bconline.ndelius.model.entity;
 
 import lombok.*;
 import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.Type;
+import org.hibernate.type.YesNoConverter;
+import jakarta.persistence.Convert;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
-import static javax.persistence.FetchType.EAGER;
+import static jakarta.persistence.FetchType.EAGER;
 import static org.hibernate.annotations.NotFoundAction.IGNORE;
 
 @Getter
@@ -52,7 +53,6 @@ public class UserEntity implements Serializable
 	private Boolean privateUser;
 
 	@Column(name = "END_DATE")
-	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
 	@ManyToOne

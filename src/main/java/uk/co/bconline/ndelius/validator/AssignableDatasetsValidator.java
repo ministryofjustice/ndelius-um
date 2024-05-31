@@ -10,8 +10,8 @@ import uk.co.bconline.ndelius.service.DatasetService;
 import uk.co.bconline.ndelius.service.UserEntityService;
 import uk.co.bconline.ndelius.service.UserEntryService;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 import static java.util.Collections.emptyList;

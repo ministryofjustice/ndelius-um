@@ -15,7 +15,7 @@ import uk.co.bconline.ndelius.repository.ldap.RoleAssociationRepository;
 import uk.co.bconline.ndelius.repository.ldap.RoleRepository;
 import uk.co.bconline.ndelius.service.RoleService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.naming.Name;
 import java.util.Optional;
 import java.util.Set;

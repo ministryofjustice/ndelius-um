@@ -1,9 +1,10 @@
 package uk.co.bconline.ndelius.model.entity.export;
 
 import lombok.*;
-import org.hibernate.annotations.Type;
+import org.hibernate.type.YesNoConverter;
+import jakarta.persistence.Convert;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -43,7 +44,6 @@ public class UserExportEntity implements Serializable
 	private Boolean privateUser;
 
 	@Column(name = "END_DATE")
-	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
 	@ManyToOne
