@@ -14,7 +14,7 @@ plugins {
 
 // Java
 java {
-	toolchain { languageVersion = JavaLanguageVersion.of(17) }
+	toolchain { languageVersion = JavaLanguageVersion.of(21) }
 }
 
 // Spring Boot
@@ -40,8 +40,14 @@ processResources.dependsOn(npmBuild)
 sourceSets { main.resources.srcDirs 'ui/dist' }
 clean { delete 'ui/dist' }
 
+//Tests
+test {
+	jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
+}
+
+
 // Jacoco test coverage
-jacoco.toolVersion '0.8.7'
+jacoco.toolVersion '0.8.12'
 jacocoTestReport.reports.html.destination file("${buildDir}/reports/coverage/test")
 plugins.withType(JacocoPlugin) {
 	tasks['test'].finalizedBy jacocoTestReport
