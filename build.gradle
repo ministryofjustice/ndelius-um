@@ -28,7 +28,7 @@ jar { enabled = false }
 
 // Node/NPM
 node {
-	version = '16.13.1'
+	version = '22.2.0'
 	download = true
 	nodeModulesDir = file('ui')
 }
@@ -36,7 +36,7 @@ task npmBuild(type: NpmTask, dependsOn: npmInstall) {
 	npmCommand = ['run', 'build-prod']
 }
 processResources.dependsOn(npmBuild)
-//test.dependsOn(npm_test)
+test.dependsOn(npm_test)
 sourceSets { main.resources.srcDirs 'ui/dist' }
 clean { delete 'ui/dist' }
 

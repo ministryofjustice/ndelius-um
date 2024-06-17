@@ -259,8 +259,8 @@
           </label>
           <div class="col-sm-4">
             <item-selector id="fileshare-groups" name="fileshare-groups" maxHeight="300px" multiple="true"
-                           [(ngModel)]="user.groups && user.groups.Fileshare"
-                           [(selected)]="user.groups && user.groups.Fileshare"
+                           [(ngModel)]="user.groups.Fileshare"
+                           [(selected)]="user.groups.Fileshare"
                            [available]="groups && groups.Fileshare"
                            [readonly]="mode === 'View' || !auth.isPublicAdmin()"
                            [labelMapper]="LabelMappingUtils.descriptionToLabel"></item-selector>
@@ -271,8 +271,8 @@
           </label>
           <div class="col-sm-4">
             <item-selector id="reporting-groups" name="reporting-groups" maxHeight="300px" multiple="true"
-                           [(ngModel)]="user.groups && user.groups['NDMIS-Reporting']"
-                           [(selected)]="user.groups && user.groups['NDMIS-Reporting']"
+                           [(ngModel)]="user.groups['NDMIS-Reporting']"
+                           [(selected)]="user.groups['NDMIS-Reporting']"
                            [available]="groups && groups['NDMIS-Reporting']"
                            [readonly]="mode === 'View' || !auth.isPublicAdmin()"
                            [alignRight]="true"
