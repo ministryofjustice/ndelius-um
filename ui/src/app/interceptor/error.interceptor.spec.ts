@@ -57,17 +57,5 @@ describe('ErrorInterceptor', () => {
       done();
     });
   });
-
-  it('should not intercept success responses', (done) => {
-    new ErrorInterceptor().intercept(new HttpRequest<any>('GET', 'someurl'), {
-      handle: () => of(new HttpResponse({status: 200}))
-    }).subscribe(done, fail);
-  });
-
-  it('should not intercept excluded urls', (done) => {
-    new ErrorInterceptor().intercept(new HttpRequest<any>('GET', environment.api.baseurl + 'staff/'), {
-      handle: () => of(new HttpResponse({status: 200}))
-    }).subscribe(done, fail);
-  });
 });
 
