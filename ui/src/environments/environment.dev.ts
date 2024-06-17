@@ -13,15 +13,15 @@ const authConfig: AuthConfig = {
   useHttpBasicAuth: true,
   oidc: false,
   requireHttps: false,
-  loginUrl: 'https://umt-dev.bconline.co.uk/umt/oauth/authorize',
-  tokenEndpoint: 'https://umt-dev.bconline.co.uk/umt/oauth/token',
+  loginUrl: 'http://localhost:8080/umt/oauth/authorize',
+  tokenEndpoint: 'http://localhost:8080/umt/oauth/token',
   redirectUri: window.location.origin + '/umt/',
 };
 
 export const environment = {
   production: false,
   api: {
-    baseurl: 'https://umt-dev.bconline.co.uk/umt/api/'
+    baseurl: 'http://localhost:8080/umt/api/'
   },
   authConfig: authConfig
 };

@@ -15,6 +15,9 @@ import {SearchParams} from '../../model/search-params';
 import {saveAs} from 'file-saver';
 import {formatDate} from '@angular/common';
 import {RoleService} from '../../service/role.service';
+import {Group} from "../../model/group";
+import {Dataset} from "../../model/dataset";
+import {Role} from "../../model/role";
 
 @Component({
   selector: 'search',
@@ -33,10 +36,10 @@ export class SearchComponent implements AfterViewInit {
   nextPage = new Subject();
 
   // async results
-  fileshareGroups = this.groupService.groupsByType('Fileshare');
-  reportingGroups = this.groupService.groupsByType('NDMIS-Reporting');
-  datasets = this.datasetService.datasets();
-  roles = this.roleService.roles();
+  fileshareGroups: Observable<Group[]>;
+  reportingGroups: Observable<Group[]>;
+  datasets: Observable<Dataset[]>;
+  roles: Observable<Role[]>;
   results: Observable<User[]>;
 
   // state
@@ -52,6 +55,10 @@ export class SearchComponent implements AfterViewInit {
               private groupService: GroupService,
               private datasetService: DatasetService,
               private roleService: RoleService) {
+    this.fileshareGroups = this.groupService.groupsByType('Fileshare');
+    this.reportingGroups = this.groupService.groupsByType('NDMIS-Reporting');
+    this.datasets = this.datasetService.datasets();
+    this.roles = this.roleService.roles();
   }
 
   ngAfterViewInit(): void {

@@ -21,8 +21,8 @@ import {
   Validator
 } from '@angular/forms';
 
-declare var $: any;
-declare var Popper: any;
+declare let $: any;
+declare let Popper: any;
 
 @Component({
   selector: 'item-selector',

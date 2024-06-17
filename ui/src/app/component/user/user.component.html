@@ -24,7 +24,7 @@
           <label for="username" class="col-sm-2 col-form-label">Username</label>
           <div class="col-sm-4">
             <input #username="ngModel" id="username" name="username" [(ngModel)]="user.username"
-                   class="form-control" [readonly]="mode == 'View'"
+                   class="form-control" [readonly]="mode === 'View'"
                    auto-focus required pattern="^[a-zA-Z0-9_\-.']*$"
                    maxlength="60" aria-describedby="username-warning"/>
             <div *ngIf="username.invalid && username.dirty" class="text-danger">
@@ -73,12 +73,12 @@
           <label for="email" class="col-sm-2 col-form-label">Email</label>
           <div class="col-sm-4">
             <input id="email" name="email" class="form-control" [(ngModel)]="user.email"
-                   [readonly]="mode == 'View'" maxlength="255">
+                   [readonly]="mode === 'View'" maxlength="255">
           </div>
           <label for="telephone-number" class="col-sm-2 col-form-label">Phone Number</label>
           <div class="col-sm-4">
             <input #telephoneNumber="ngModel" id="telephone-number" name="telephone-number" class="form-control" [(ngModel)]="user.telephoneNumber"
-                   [readonly]="mode == 'View'" maxlength="35" pattern="^[0-9 ]*$">
+                   [readonly]="mode === 'View'" maxlength="35" pattern="^[0-9 ]*$">
             <div *ngIf="telephoneNumber.invalid && telephoneNumber.dirty" class="text-danger">
               <small *ngIf="telephoneNumber.errors['pattern']">
                 *Phone Number must contain only numbers and spaces.
@@ -309,11 +309,11 @@
               <p *ngIf="staffCode.dirty && staffCode.invalid && staffCode.errors['pattern']" class="text-danger">
                 *Staff code should consist of 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001.
               </p>
-              <p *ngIf="staffCode.dirty && staffCode.valid && user.staffCode != null && user.staffCode != '' && !user.staffCode?.match('[A-Z0-9]{3}[A-Z][0-9]{3}')">
+              <p *ngIf="staffCode.dirty && staffCode.valid && user.staffCode != null && user.staffCode !== '' && !user.staffCode?.match('[A-Z0-9]{3}[A-Z][0-9]{3}')">
                 Warning: Staff code does not match the recommended format of 3 alphanumeric characters followed by one letter and three numbers (eg. XXXA001).
               </p>
               <p *ngIf="mode === 'Update' && user.homeArea != null && user.homeArea.code != existingHomeAreaCode &&
-                        !staffCode.dirty && staffCode.valid && user.staffCode != null && user.staffCode != ''">
+                        !staffCode.dirty && staffCode.valid && user.staffCode != null && user.staffCode !== ''">
                 Warning: Home Area has changed. Please either remove the user's Staff Details, or generate a new {{ user.homeArea.code }} Staff Code using the <span class="oi oi-loop-circular small" title="Generate"></span> button above.
                 Otherwise the Staff Code will be automatically unlinked from this user.
               </p>
@@ -334,7 +334,7 @@
           <label [for]="'staff-grade-toggle-btn'" class="col-sm-2 col-form-label">Staff Grade</label>
           <div class="col-sm-4">
             <item-selector id="staff-grade" name="staffGrade" #staffGrade="ngModel" maxHeight="300px"
-                           [required]="user.staffCode != null && user.staffCode != '' && staffCode.valid == true"
+                           [required]="user.staffCode != null && user.staffCode !== '' && staffCode.valid == true"
                            [(ngModel)]="user.staffGrade"
                            [(selected)]="user.staffGrade"
                            [available]="staffGrades"
@@ -353,7 +353,7 @@
           <div class="col-sm-4">
             <item-selector id="teams" name="teams" multiple="true" #teamsList="ngModel" maxHeight="300px"
                            [(ngModel)] = "user.teams"
-                           [disabled]="user.staffCode == null || user.staffCode == ''"
+                           [disabled]="user.staffCode == null || user.staffCode === ''"
                            [(selected)]="user.teams"
                            [available]="teams"
                            [subMenuItems]="user.datasets"

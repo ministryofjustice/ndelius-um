@@ -12,7 +12,7 @@ User accounts are stored across an LDAP cluster (for authentication, user prefer
 ## Build
 ### Dependencies
 The following dependencies are required to build this application:
-* [JDK 17](https://jdk.java.net/)
+* [JDK 21](https://jdk.java.net/)
 * [Angular CLI](https://cli.angular.io/) (`npm install -g @angular/cli`)
 
 ### Gradle

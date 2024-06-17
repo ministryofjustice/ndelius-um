@@ -40,11 +40,10 @@ test.dependsOn(npm_test)
 sourceSets { main.resources.srcDirs 'ui/dist' }
 clean { delete 'ui/dist' }
 
-//Tests
+// Tests
 test {
 	jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
 }
-
 
 // Jacoco test coverage
 jacoco.toolVersion '0.8.12'
