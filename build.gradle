@@ -23,6 +23,9 @@ bootBuildImage {
 	environment['BPE_DELIM_JAVA_TOOL_OPTIONS'] = ' '
 	environment['BPE_APPEND_JAVA_TOOL_OPTIONS'] = '--add-opens=java.base/java.lang=ALL-UNNAMED'
 }
+bootRun {
+	jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
+}
 gitProperties { failOnNoGitDirectory = false }
 jar { enabled = false }
 
