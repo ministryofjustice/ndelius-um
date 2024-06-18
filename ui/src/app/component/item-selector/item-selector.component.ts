@@ -70,9 +70,11 @@ export class ItemSelectorComponent
   onlyShowSelected: boolean;
   subMenuMessage: string;
 
-  @Input() idMapper: Function = null;
-  @Input() getSubMenu: Function;
-  @Input() labelMapper: Function = (item: any) => item;
+  @Input() idMapper: (_:any) => string = null;
+  @Input() getSubMenu: (item : string) => {
+    subscribe(param: (items) => void, param2: () => string): void;
+  };
+  @Input() labelMapper: (item : any) => string;
 
   private propagateChange = (_: any) => {
   }
@@ -81,7 +83,7 @@ export class ItemSelectorComponent
 
   ngOnChanges(changes: SimpleChanges) {
     // Change detection to the default selectedSubMenuItem (homeArea)
-    if (changes.hasOwnProperty('selectedSubMenuItem')) {
+    if (Object.prototype.hasOwnProperty.call(changes, 'selectedSubMenuItem')) {
       this.getSubMenuList();
     }
   }

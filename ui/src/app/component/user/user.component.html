@@ -91,7 +91,7 @@
           <div class="col-sm-4">
             <date id="start-date" name="start-date" #startdate="ngModel"
                   [(ngModel)]="user.startDate"
-                  [required]="user.staffCode != null"
+                  [required]="user.staffCode !== undefined"
                   [max]="globalMaxDate"
                   [min]="globalMinDate"
                   [readonly]="mode === 'View'"
@@ -152,14 +152,14 @@
         <hr>
         <div class="form-group row">
           <label [for]="'role-groups-toggle-btn'" class="col-sm-2 col-form-label">Role Groups</label>
-          <div class="col-sm-{{selectedRoleGroups != null && selectedRoleGroups.length != 0 && mode !== 'View'? '3  pr-sm-0': 4}}">
+          <div class="col-sm-{{selectedRoleGroups !== undefined && selectedRoleGroups.length !== 0 && mode !== 'View'? '3  pr-sm-0': 4}}">
             <item-selector id="role-groups" #roleGroupField multiple="true" maxHeight="300px"
                            [(selected)]="selectedRoleGroups"
                            [available]="roleGroups"
                            [readonly]="mode === 'View'"
                            [labelMapper]="LabelMappingUtils.nameToLabel"></item-selector>
           </div>
-          <div class="col-sm-1 pl-sm-1" *ngIf="selectedRoleGroups != null && selectedRoleGroups.length != 0 && mode !== 'View'">
+          <div class="col-sm-1 pl-sm-1" *ngIf="selectedRoleGroups !== undefined && selectedRoleGroups.length !== 0 && mode !== 'View'">
             <button class="btn btn-sm btn-outline-secondary w-100 py-2" (click)="applyRoleGroup()"
                     title="Apply selected role groups to this user"
                     type="button">
@@ -231,7 +231,7 @@
               </small>
             </div>
             <div class="text-muted small"
-                 *ngIf="user.homeArea == null && datasetsList.invalid">
+                 *ngIf="user.homeArea === undefined && datasetsList.invalid">
               Datasets must be entered before selecting a Home Area
             </div>
           </div>
@@ -309,21 +309,21 @@
               <p *ngIf="staffCode.dirty && staffCode.invalid && staffCode.errors['pattern']" class="text-danger">
                 *Staff code should consist of 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001.
               </p>
-              <p *ngIf="staffCode.dirty && staffCode.valid && user.staffCode != null && user.staffCode !== '' && !user.staffCode?.match('[A-Z0-9]{3}[A-Z][0-9]{3}')">
+              <p *ngIf="staffCode.dirty && staffCode.valid && user.staffCode !== undefined && user.staffCode !== '' && !user.staffCode?.match('[A-Z0-9]{3}[A-Z][0-9]{3}')">
                 Warning: Staff code does not match the recommended format of 3 alphanumeric characters followed by one letter and three numbers (eg. XXXA001).
               </p>
-              <p *ngIf="mode === 'Update' && user.homeArea != null && user.homeArea.code != existingHomeAreaCode &&
-                        !staffCode.dirty && staffCode.valid && user.staffCode != null && user.staffCode !== ''">
+              <p *ngIf="mode === 'Update' && user.homeArea !== undefined && user.homeArea.code !== existingHomeAreaCode &&
+                        !staffCode.dirty && staffCode.valid && user.staffCode !== undefined && user.staffCode !== ''">
                 Warning: Home Area has changed. Please either remove the user's Staff Details, or generate a new {{ user.homeArea.code }} Staff Code using the <span class="oi oi-loop-circular small" title="Generate"></span> button above.
                 Otherwise the Staff Code will be automatically unlinked from this user.
               </p>
-              <p *ngIf="userWithStaffCode != null">
-                <ng-container *ngIf="userWithStaffCode.username != null && userWithStaffCode.username != user.username">
+              <p *ngIf="userWithStaffCode !== undefined">
+                <ng-container *ngIf="userWithStaffCode.username !== undefined && userWithStaffCode.username !== user.username">
                   Warning: This staff code already belongs to <strong>{{ userWithStaffCode.username }}</strong> ({{ userWithStaffCode.forenames }} {{ userWithStaffCode.surname }}).
                   Saving this value will cause the staff record to be unlinked from <strong>{{ userWithStaffCode.username }}</strong> and linked to <strong>{{ user.username }}</strong>.
                   This means that any existing values for Staff Grade, Sub-Contracted Provider and Teams that are associated with <strong>{{ user.username }}</strong>, will be overwritten by those of <strong>{{ userWithStaffCode.username }}</strong>.
                 </ng-container>
-                <ng-container *ngIf="userWithStaffCode != null && userWithStaffCode.username == null">
+                <ng-container *ngIf="userWithStaffCode !== undefined && userWithStaffCode.username === undefined">
                   Warning: A staff record already exists for this staff code, but has not been linked to a user.
                   Saving this value will cause the existing staff record to be linked to <strong>{{ user.username }}</strong>.
                   This means that any existing values for Staff Grade, Sub-Contracted Provider and Teams that are associated with <strong>{{ user.username }}</strong>, will be overwritten by those associated with the existing record.
@@ -334,7 +334,7 @@
           <label [for]="'staff-grade-toggle-btn'" class="col-sm-2 col-form-label">Staff Grade</label>
           <div class="col-sm-4">
             <item-selector id="staff-grade" name="staffGrade" #staffGrade="ngModel" maxHeight="300px"
-                           [required]="user.staffCode != null && user.staffCode !== '' && staffCode.valid == true"
+                           [required]="user.staffCode !== undefined && user.staffCode !== '' && staffCode.valid === true"
                            [(ngModel)]="user.staffGrade"
                            [(selected)]="user.staffGrade"
                            [available]="staffGrades"
@@ -353,7 +353,7 @@
           <div class="col-sm-4">
             <item-selector id="teams" name="teams" multiple="true" #teamsList="ngModel" maxHeight="300px"
                            [(ngModel)] = "user.teams"
-                           [disabled]="user.staffCode == null || user.staffCode === ''"
+                           [disabled]="user.staffCode === undefined || user.staffCode === ''"
                            [(selected)]="user.teams"
                            [available]="teams"
                            [subMenuItems]="user.datasets"

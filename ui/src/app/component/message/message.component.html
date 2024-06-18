@@ -1,4 +1,4 @@
-<div *ngIf="message != null" class="mb-0 alert alert-{{severity}} alert-dismissible">
+<div *ngIf="message !== undefined" class="mb-0 alert alert-{{severity}} alert-dismissible">
   <span [innerHTML]="message"></span>
   <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
 </div>

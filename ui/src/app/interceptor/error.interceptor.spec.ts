@@ -1,8 +1,7 @@
 import {ErrorInterceptor} from './error.interceptor';
-import {HttpErrorResponse, HttpRequest, HttpResponse} from '@angular/common/http';
-import {of, throwError} from 'rxjs';
+import {HttpErrorResponse, HttpRequest} from '@angular/common/http';
+import {throwError} from 'rxjs';
 import {AppComponent} from '../component/app/app.component';
-import {environment} from '../../environments/environment';
 
 describe('ErrorInterceptor', () => {
 

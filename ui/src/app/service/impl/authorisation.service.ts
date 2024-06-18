@@ -91,11 +91,11 @@ export class AuthorisationService {
   login(): void {
     // Login using OAuth if required
     if (!this.oauthService.hasValidAccessToken()) {
-      if (this.initialQueryParams.hasOwnProperty('u') && this.initialQueryParams.hasOwnProperty('t')) {
+      if (Object.prototype.hasOwnProperty.call(this.initialQueryParams, 'u') && Object.prototype.hasOwnProperty.call(this.initialQueryParams, 't')) {
         // We have delius request params, use preauthenticated OAuth flow
         this.oauthService.customQueryParams['grant_type'] = 'preauthenticated';
         this.oauthService.fetchTokenUsingPasswordFlow(null, null).then(_ => location.reload());
-      } else if (!this.initialQueryParams.hasOwnProperty('code')) {
+      } else if (!Object.prototype.hasOwnProperty.call(this.initialQueryParams, 'code')) {
         // Get authorization code first
         this.oauthService.initCodeFlow();
       } else {
