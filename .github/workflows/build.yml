@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew clean build bootBuildImage --info --build-cache
 
       - name: Login to GHCR
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
