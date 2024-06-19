@@ -5,9 +5,8 @@ plugins {
 	id 'jacoco'
 	id 'org.springframework.boot'               version '2.7.18'
 	id 'io.spring.dependency-management'        version '1.1.5'
-	id 'com.github.node-gradle.node'            version '3.5.1'
+	id 'com.github.node-gradle.node'            version '7.0.2'
 	id 'io.gatling.gradle'                      version '3.11.3'
-	id 'org.sonarqube'                          version '3.5.0.2730'
 	id 'com.gorylenko.gradle-git-properties'    version '2.4.2'
 	id 'org.owasp.dependencycheck'              version '9.2.0'
 }
@@ -23,9 +22,7 @@ bootBuildImage {
 	environment['BPE_DELIM_JAVA_TOOL_OPTIONS'] = ' '
 	environment['BPE_APPEND_JAVA_TOOL_OPTIONS'] = '--add-opens=java.base/java.lang=ALL-UNNAMED'
 }
-bootRun {
-	jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
-}
+bootRun.jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
 gitProperties { failOnNoGitDirectory = false }
 jar { enabled = false }
 
@@ -33,9 +30,11 @@ jar { enabled = false }
 node {
 	version = '22.2.0'
 	download = true
-	nodeModulesDir = file('ui')
+	nodeProjectDir = file('ui')
+	npmInstallCommand = "ci"
 }
-task npmBuild(type: NpmTask, dependsOn: npmInstall) {
+tasks.register('npmBuild', NpmTask) {
+	dependsOn npmInstall
 	npmCommand = ['run', 'build-prod']
 }
 processResources.dependsOn(npmBuild)
@@ -44,15 +43,11 @@ sourceSets { main.resources.srcDirs 'ui/dist' }
 clean { delete 'ui/dist' }
 
 // Tests
-test {
-	jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
-}
-
-// Jacoco test coverage
 jacoco.toolVersion '0.8.12'
-jacocoTestReport.reports.html.destination file("${buildDir}/reports/coverage/test")
-plugins.withType(JacocoPlugin) {
-	tasks['test'].finalizedBy jacocoTestReport
+jacocoTestReport.reports.html.outputLocation.set(layout.buildDirectory.dir('reports/coverage/test'))
+tasks.named('test', Test).configure {
+	jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
+	finalizedBy jacocoTestReport
 }
 
 // Dependency vulnerability scanning
