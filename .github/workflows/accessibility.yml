@@ -23,7 +23,7 @@ jobs:
 
       - name: Upload test report
         if: always()
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: accessibility-report
           path: ui/pa11y-ci-report
