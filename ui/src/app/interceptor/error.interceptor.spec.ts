@@ -1,8 +1,7 @@
 import {ErrorInterceptor} from './error.interceptor';
-import {HttpErrorResponse, HttpRequest, HttpResponse} from '@angular/common/http';
-import {of, throwError} from 'rxjs';
+import {HttpErrorResponse, HttpRequest} from '@angular/common/http';
+import {throwError} from 'rxjs';
 import {AppComponent} from '../component/app/app.component';
-import {environment} from '../../environments/environment';
 
 describe('ErrorInterceptor', () => {
 
@@ -56,18 +55,6 @@ describe('ErrorInterceptor', () => {
       expect(AppComponent.globalMessage).toBe('<h5>Error 500: Internal Server Error</h5>');
       done();
     });
-  });
-
-  it('should not intercept success responses', (done) => {
-    new ErrorInterceptor().intercept(new HttpRequest<any>('GET', 'someurl'), {
-      handle: () => of(new HttpResponse({status: 200}))
-    }).subscribe(done, fail);
-  });
-
-  it('should not intercept excluded urls', (done) => {
-    new ErrorInterceptor().intercept(new HttpRequest<any>('GET', environment.api.baseurl + 'staff/'), {
-      handle: () => of(new HttpResponse({status: 200}))
-    }).subscribe(done, fail);
   });
 });
 

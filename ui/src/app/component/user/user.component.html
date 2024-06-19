@@ -24,8 +24,8 @@
           <label for="username" class="col-sm-2 col-form-label">Username</label>
           <div class="col-sm-4">
             <input #username="ngModel" id="username" name="username" [(ngModel)]="user.username"
-                   class="form-control" [readonly]="mode == 'View'"
-                   auto-focus required pattern="^[a-zA-Z0-9_\-.']*$"
+                   class="form-control" [readonly]="mode === 'View'"
+                   autoFocus required pattern="^[a-zA-Z0-9_\-.']*$"
                    maxlength="60" aria-describedby="username-warning"/>
             <div *ngIf="username.invalid && username.dirty" class="text-danger">
               <small *ngIf="username.errors['required']">
@@ -73,12 +73,12 @@
           <label for="email" class="col-sm-2 col-form-label">Email</label>
           <div class="col-sm-4">
             <input id="email" name="email" class="form-control" [(ngModel)]="user.email"
-                   [readonly]="mode == 'View'" maxlength="255">
+                   [readonly]="mode === 'View'" maxlength="255">
           </div>
           <label for="telephone-number" class="col-sm-2 col-form-label">Phone Number</label>
           <div class="col-sm-4">
             <input #telephoneNumber="ngModel" id="telephone-number" name="telephone-number" class="form-control" [(ngModel)]="user.telephoneNumber"
-                   [readonly]="mode == 'View'" maxlength="35" pattern="^[0-9 ]*$">
+                   [readonly]="mode === 'View'" maxlength="35" pattern="^[0-9 ]*$">
             <div *ngIf="telephoneNumber.invalid && telephoneNumber.dirty" class="text-danger">
               <small *ngIf="telephoneNumber.errors['pattern']">
                 *Phone Number must contain only numbers and spaces.
@@ -91,7 +91,7 @@
           <div class="col-sm-4">
             <date id="start-date" name="start-date" #startdate="ngModel"
                   [(ngModel)]="user.startDate"
-                  [required]="user.staffCode != null"
+                  [required]="!!user.staffCode"
                   [max]="globalMaxDate"
                   [min]="globalMinDate"
                   [readonly]="mode === 'View'"
@@ -152,14 +152,14 @@
         <hr>
         <div class="form-group row">
           <label [for]="'role-groups-toggle-btn'" class="col-sm-2 col-form-label">Role Groups</label>
-          <div class="col-sm-{{selectedRoleGroups != null && selectedRoleGroups.length != 0 && mode !== 'View'? '3  pr-sm-0': 4}}">
+          <div class="col-sm-{{selectedRoleGroups && selectedRoleGroups.length !== 0 && mode !== 'View'? '3  pr-sm-0': 4}}">
             <item-selector id="role-groups" #roleGroupField multiple="true" maxHeight="300px"
                            [(selected)]="selectedRoleGroups"
                            [available]="roleGroups"
                            [readonly]="mode === 'View'"
                            [labelMapper]="LabelMappingUtils.nameToLabel"></item-selector>
           </div>
-          <div class="col-sm-1 pl-sm-1" *ngIf="selectedRoleGroups != null && selectedRoleGroups.length != 0 && mode !== 'View'">
+          <div class="col-sm-1 pl-sm-1" *ngIf="selectedRoleGroups && selectedRoleGroups.length !== 0 && mode !== 'View'">
             <button class="btn btn-sm btn-outline-secondary w-100 py-2" (click)="applyRoleGroup()"
                     title="Apply selected role groups to this user"
                     type="button">
@@ -231,7 +231,7 @@
               </small>
             </div>
             <div class="text-muted small"
-                 *ngIf="user.homeArea == null && datasetsList.invalid">
+                 *ngIf="!user.homeArea && datasetsList.invalid">
               Datasets must be entered before selecting a Home Area
             </div>
           </div>
@@ -259,8 +259,8 @@
           </label>
           <div class="col-sm-4">
             <item-selector id="fileshare-groups" name="fileshare-groups" maxHeight="300px" multiple="true"
-                           [(ngModel)]="user.groups && user.groups.Fileshare"
-                           [(selected)]="user.groups && user.groups.Fileshare"
+                           [(ngModel)]="user.groups.Fileshare"
+                           [(selected)]="user.groups.Fileshare"
                            [available]="groups && groups.Fileshare"
                            [readonly]="mode === 'View' || !auth.isPublicAdmin()"
                            [labelMapper]="LabelMappingUtils.descriptionToLabel"></item-selector>
@@ -271,8 +271,8 @@
           </label>
           <div class="col-sm-4">
             <item-selector id="reporting-groups" name="reporting-groups" maxHeight="300px" multiple="true"
-                           [(ngModel)]="user.groups && user.groups['NDMIS-Reporting']"
-                           [(selected)]="user.groups && user.groups['NDMIS-Reporting']"
+                           [(ngModel)]="user.groups['NDMIS-Reporting']"
+                           [(selected)]="user.groups['NDMIS-Reporting']"
                            [available]="groups && groups['NDMIS-Reporting']"
                            [readonly]="mode === 'View' || !auth.isPublicAdmin()"
                            [alignRight]="true"
@@ -309,21 +309,21 @@
               <p *ngIf="staffCode.dirty && staffCode.invalid && staffCode.errors['pattern']" class="text-danger">
                 *Staff code should consist of 3 alphanumeric characters followed by one letter and three numbers eg. XXXA001.
               </p>
-              <p *ngIf="staffCode.dirty && staffCode.valid && user.staffCode != null && user.staffCode != '' && !user.staffCode?.match('[A-Z0-9]{3}[A-Z][0-9]{3}')">
+              <p *ngIf="staffCode.dirty && staffCode.valid && user.staffCode && user.staffCode !== '' && !user.staffCode?.match('[A-Z0-9]{3}[A-Z][0-9]{3}')">
                 Warning: Staff code does not match the recommended format of 3 alphanumeric characters followed by one letter and three numbers (eg. XXXA001).
               </p>
-              <p *ngIf="mode === 'Update' && user.homeArea != null && user.homeArea.code != existingHomeAreaCode &&
-                        !staffCode.dirty && staffCode.valid && user.staffCode != null && user.staffCode != ''">
+              <p *ngIf="mode === 'Update' && user.homeArea && user.homeArea.code !== existingHomeAreaCode &&
+                        !staffCode.dirty && staffCode.valid && user.staffCode && user.staffCode !== ''">
                 Warning: Home Area has changed. Please either remove the user's Staff Details, or generate a new {{ user.homeArea.code }} Staff Code using the <span class="oi oi-loop-circular small" title="Generate"></span> button above.
                 Otherwise the Staff Code will be automatically unlinked from this user.
               </p>
-              <p *ngIf="userWithStaffCode != null">
-                <ng-container *ngIf="userWithStaffCode.username != null && userWithStaffCode.username != user.username">
+              <p *ngIf="userWithStaffCode">
+                <ng-container *ngIf="userWithStaffCode.username && userWithStaffCode.username !== user.username">
                   Warning: This staff code already belongs to <strong>{{ userWithStaffCode.username }}</strong> ({{ userWithStaffCode.forenames }} {{ userWithStaffCode.surname }}).
                   Saving this value will cause the staff record to be unlinked from <strong>{{ userWithStaffCode.username }}</strong> and linked to <strong>{{ user.username }}</strong>.
                   This means that any existing values for Staff Grade, Sub-Contracted Provider and Teams that are associated with <strong>{{ user.username }}</strong>, will be overwritten by those of <strong>{{ userWithStaffCode.username }}</strong>.
                 </ng-container>
-                <ng-container *ngIf="userWithStaffCode != null && userWithStaffCode.username == null">
+                <ng-container *ngIf="userWithStaffCode && !userWithStaffCode.username">
                   Warning: A staff record already exists for this staff code, but has not been linked to a user.
                   Saving this value will cause the existing staff record to be linked to <strong>{{ user.username }}</strong>.
                   This means that any existing values for Staff Grade, Sub-Contracted Provider and Teams that are associated with <strong>{{ user.username }}</strong>, will be overwritten by those associated with the existing record.
@@ -334,7 +334,7 @@
           <label [for]="'staff-grade-toggle-btn'" class="col-sm-2 col-form-label">Staff Grade</label>
           <div class="col-sm-4">
             <item-selector id="staff-grade" name="staffGrade" #staffGrade="ngModel" maxHeight="300px"
-                           [required]="user.staffCode != null && user.staffCode != '' && staffCode.valid == true"
+                           [required]="user.staffCode && user.staffCode !== '' && staffCode.valid === true"
                            [(ngModel)]="user.staffGrade"
                            [(selected)]="user.staffGrade"
                            [available]="staffGrades"
@@ -353,7 +353,7 @@
           <div class="col-sm-4">
             <item-selector id="teams" name="teams" multiple="true" #teamsList="ngModel" maxHeight="300px"
                            [(ngModel)] = "user.teams"
-                           [disabled]="user.staffCode == null || user.staffCode == ''"
+                           [disabled]="!user.staffCode || user.staffCode === ''"
                            [(selected)]="user.teams"
                            [available]="teams"
                            [subMenuItems]="user.datasets"

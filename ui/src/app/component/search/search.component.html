@@ -17,13 +17,13 @@
             <span *ngFor="let username of RecentUsersUtils.getRecentUsers().reverse(); let isLast = last">
               <a routerLink="/user/{{username}}" (keyup.enter)="router.navigate(['/user/'+username])">{{username}}</a>{{isLast? '': ','}}
             </span>
-            <a (click)="RecentUsersUtils.clear()" title="Clear" style="cursor: pointer">&times;</a>
+            <a (click)="RecentUsersUtils.clear()" (keyup.enter)="RecentUsersUtils.clear()" tabindex="0" title="Clear" style="cursor: pointer">&times;</a>
           </p>
           <div class="input-group input-group-link-overlay">
             <input id="query" name="query" type="search" [(ngModel)]="searchParams.query"
                    class="form-control form-control-lg font-weight-light"
                    placeholder="Search using name, username, team, staff code..."
-                   autocomplete="off" auto-focus>
+                   autocomplete="off" autoFocus>
             <button type="button" class="btn btn-link btn-sm collapsed" style="margin-right: 55px"
                     title="Show/hide advanced search filters"
                     data-toggle="collapse" data-target="#filters"
@@ -126,7 +126,7 @@
               <th>Team(s)</th>
               <th *ngIf="searchParams.includeInactiveUsers" class="text-nowrap">End Date</th>
               <th class="text-right " >
-                <span class="oi oi-data-transfer-download" style="cursor: pointer;" (click)="exportSearchResultToCSV()" title="Export to CSV..."></span >
+                <span class="oi oi-data-transfer-download" style="cursor: pointer;" (click)="exportSearchResultToCSV()" (keyup.enter)="exportSearchResultToCSV()" tabindex="0" title="Export to CSV..."></span >
               </th>
             </tr>
             </thead>
@@ -142,8 +142,8 @@
               <td *ngIf="showEmailColumn" title="Email">{{result.email}}</td>
               <td title="Staff Code">{{result.staffCode}}</td>
               <td class="w-25" [title]="teamDescriptions(result.teams)">
-                <span *ngIf="result.teams != null && result.teams.length == 1">{{ result.teams[0].description }}</span>
-                <span *ngIf="result.teams != null && result.teams.length > 1">{{ result.teams.length }} teams</span>
+                <span *ngIf="result.teams !== null && result.teams.length === 1">{{ result.teams[0].description }}</span>
+                <span *ngIf="result.teams !== null && result.teams.length > 1">{{ result.teams.length }} teams</span>
               </td>
               <td title="End Date" *ngIf="searchParams.includeInactiveUsers" class="text-nowrap">{{ result.endDate | date: 'dd/MM/yyyy' }}</td>
               <td class="text-right">
@@ -157,14 +157,14 @@
       <hr/>
       <div class="btn-toolbar justify-content-center">
         <button id="search-results-next" class="btn btn-outline-secondary"
-                [hidden]="results.length % searchParams.pageSize != 0 || hasMoreResults === false"
+                [hidden]="results.length % searchParams.pageSize !== 0 || hasMoreResults === false"
                 [disabled]="searching"
                 (click)="nextPage.next()">
           {{searching ? 'Loading': 'Load more'}}
           <span class="oi oi-arrow-circle-bottom"></span>
         </button>
         <span id="search-results-count" class="small text-muted"
-              [hidden]="results.length % searchParams.pageSize == 0 && hasMoreResults === true">
+              [hidden]="results.length % searchParams.pageSize === 0 && hasMoreResults === true">
           {{results.length}} result{{results.length === 1? '': 's'}}
         </span>
       </div>

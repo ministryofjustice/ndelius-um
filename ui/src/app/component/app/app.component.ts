@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     const params = this.urlHelper.parseQueryString(location.search.replace(/^\?/, ''));
-    if (params.hasOwnProperty('error')) {
+    if (Object.prototype.hasOwnProperty.call(params, 'error')) {
       AppComponent.error(params['error_description'] + ' (' + params['error'] + ')');
       this.loaded = true;
       return;
