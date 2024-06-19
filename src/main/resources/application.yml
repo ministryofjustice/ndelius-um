@@ -48,5 +48,3 @@ resilience4j.bulkhead.instances:
 
 logging.level:
   org.springframework.web: ERROR
-
-logging.file.path: ./log/
