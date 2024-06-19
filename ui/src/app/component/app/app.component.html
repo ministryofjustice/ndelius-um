@@ -11,7 +11,7 @@
         <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/user">Add User</a>
       </li>
       <li class="nav-item" *ngIf="auth.canExportUsers()">
-        <a class="nav-link" role="button" [class.disabled]="exporting" (click)="exportUsers()" (keyup)="exportUsers()" tabindex="0">
+        <a class="nav-link" role="button" [class.disabled]="exporting" (click)="exportUsers()" (keyup.enter)="exportUsers()" tabindex="0">
           <ng-container *ngIf="exporting">
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             Exporting&hellip;

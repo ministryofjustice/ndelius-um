@@ -17,13 +17,13 @@
             <span *ngFor="let username of RecentUsersUtils.getRecentUsers().reverse(); let isLast = last">
               <a routerLink="/user/{{username}}" (keyup.enter)="router.navigate(['/user/'+username])">{{username}}</a>{{isLast? '': ','}}
             </span>
-            <a (click)="RecentUsersUtils.clear()" (keyup)="RecentUsersUtils.clear()" tabindex="0" title="Clear" style="cursor: pointer">&times;</a>
+            <a (click)="RecentUsersUtils.clear()" (keyup.enter)="RecentUsersUtils.clear()" tabindex="0" title="Clear" style="cursor: pointer">&times;</a>
           </p>
           <div class="input-group input-group-link-overlay">
             <input id="query" name="query" type="search" [(ngModel)]="searchParams.query"
                    class="form-control form-control-lg font-weight-light"
                    placeholder="Search using name, username, team, staff code..."
-                   autocomplete="off" auto-focus>
+                   autocomplete="off" autoFocus>
             <button type="button" class="btn btn-link btn-sm collapsed" style="margin-right: 55px"
                     title="Show/hide advanced search filters"
                     data-toggle="collapse" data-target="#filters"
@@ -126,7 +126,7 @@
               <th>Team(s)</th>
               <th *ngIf="searchParams.includeInactiveUsers" class="text-nowrap">End Date</th>
               <th class="text-right " >
-                <span class="oi oi-data-transfer-download" style="cursor: pointer;" (click)="exportSearchResultToCSV()" (keyup)="exportSearchResultToCSV()" tabindex="0" title="Export to CSV..."></span >
+                <span class="oi oi-data-transfer-download" style="cursor: pointer;" (click)="exportSearchResultToCSV()" (keyup.enter)="exportSearchResultToCSV()" tabindex="0" title="Export to CSV..."></span >
               </th>
             </tr>
             </thead>
