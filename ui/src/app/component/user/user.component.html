@@ -172,6 +172,7 @@
             <item-selector #rolesControl="ngModel" id="roles" name="roles" multiple="true" maxHeight="300px"
                            [required]="false"
                            [(ngModel)]="user.roles"
+                           [(selected)]="user.roles"
                            [available]="roles"
                            [readonly]="mode === 'View'"
                            [alignRight]="true"
