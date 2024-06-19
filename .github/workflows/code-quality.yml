@@ -12,9 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - uses: github/codeql-action/init@v1
-      - uses: github/codeql-action/autobuild@v1
-      - uses: github/codeql-action/analyze@v1
+      - uses: github/codeql-action/init@v3
+      - uses: github/codeql-action/autobuild@v3
+      - uses: github/codeql-action/analyze@v3
 
   lint-typescript:
     name: Lint Typescript
