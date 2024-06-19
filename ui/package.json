@@ -69,6 +69,6 @@
     "puppeteer": "^22.11.1",
     "ts-node": "^10.9.2",
     "typescript": "~5.4.5",
-    "wait-port": "^0.2.9"
+    "wait-port": "^1.1.0"
   }
 }
