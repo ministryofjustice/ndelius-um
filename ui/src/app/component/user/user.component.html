@@ -72,8 +72,16 @@
         <div class="form-group row">
           <label for="email" class="col-sm-2 col-form-label">Email</label>
           <div class="col-sm-4">
-            <input id="email" name="email" class="form-control" [(ngModel)]="user.email"
-                   [readonly]="mode === 'View'" maxlength="255">
+            <input id="email" name="email" #email="ngModel" class="form-control" [(ngModel)]="user.email"
+                   [readonly]="mode === 'View'" maxlength="255" required>
+            <div *ngIf="email.invalid && email.dirty" class = text-danger>
+              <small *ngIf="email.errors['required']">
+                *Email is required
+              </small>
+              <small *ngIf="email.errors['maxlength']">
+                *Email must be less than 255 characters
+              </small>
+            </div>
           </div>
           <label for="telephone-number" class="col-sm-2 col-form-label">Phone Number</label>
           <div class="col-sm-4">
