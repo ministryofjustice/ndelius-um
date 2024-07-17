@@ -1,0 +1,11 @@
+---
+generic-service:
+  ingress:
+    host: delius-user-management-test.hmpps.service.justice.gov.uk
+
+  env:
+    LOGGING_LEVEL_UK_CO_BCONLINE_NDELIUS: DEBUG
+    DELIUS_PASSWORD-RESET_URL: https://password-reset.test.probation.service.justice.gov.uk/public/forgottenpassword
+
+  scheduledDowntime:
+    enabled: true

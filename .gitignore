@@ -7,6 +7,9 @@ Thumbs.db
 /build/
 !gradle/wrapper/gradle-wrapper.jar
 
+### Helm ###
+Chart.lock
+
 ### NPM ###
 /node_modules
 /.sass-cache
