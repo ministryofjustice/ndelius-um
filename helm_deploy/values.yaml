@@ -54,10 +54,8 @@ generic-service:
       JWT_SECRET: JWT_SECRET
       DELIUS_SECRET: DELIUS_SECRET
     elasticache-redis:
-      SPRING_REDIS_URL: primary_endpoint_address
+      SPRING_REDIS_HOST: primary_endpoint_address
       SPRING_REDIS_PASSWORD: auth_token
-      SPRING_REDIS_HOST: HOST
-      SPRING_REDIS_PORT: PORT
 
   allowlist:
     groups:
