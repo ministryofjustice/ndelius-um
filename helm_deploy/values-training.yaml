@@ -1,0 +1,10 @@
+---
+generic-service:
+  ingress:
+    host: delius-user-management-training.hmpps.service.justice.gov.uk
+
+  env:
+    DELIUS_PASSWORD-RESET_URL: https://password-reset.training.probation.service.justice.gov.uk/public/forgottenpassword
+
+  scheduledDowntime:
+    enabled: true

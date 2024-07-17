@@ -1,0 +1,13 @@
+---
+generic-service:
+  resources:
+    requests:
+      memory: 4Gi
+    limits:
+      memory: 4Gi
+
+  ingress:
+    host: delius-user-management.hmpps.service.justice.gov.uk
+
+  env:
+    DELIUS_PASSWORD-RESET_URL: https://password-reset.probation.service.justice.gov.uk/public/forgottenpassword

@@ -1,0 +1,69 @@
+generic-service:
+  nameOverride: delius-user-management
+
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 128m
+      memory: 2Gi
+    limits:
+      cpu: 1024m
+      memory: 2Gi
+
+  image:
+    repository: ghcr.io/ministryofjustice/delius-core-user-management
+    tag: app_version # override at deployment time
+    port: 8080
+
+  ingress:
+    enabled: true
+    v1_2_enabled: true
+    v0_47_enabled: false
+    tlsSecretName: delius-user-management-cert
+
+  env:
+    JAVA_OPTS: "-XX:MaxMetaspaceSize=512M -XX:MaxDirectMemorySize=128M"
+    TZ: "Europe/London"
+    SERVER_USE-FORWARD-HEADERS: "true"
+    SERVER_FORWARD-HEADERS-STRATEGY: "native"
+    SPRING_DATASOURCE_TYPE: "com.zaxxer.hikari.HikariDataSource"
+    SPRING_DATASOURCE_HIKARI_MAXIMUM-POOL-SIZE: "50"
+    SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "org.hibernate.dialect.Oracle12cDialect"
+    SPRING_JPA_HIBERNATE_DDL-AUTO: "none"
+    SPRING_LDAP_USEORACLEATTRIBUTES: "false"
+    SPRING_REDIS_SSL: "true"
+    REDIS_CONFIGURE_NO-OP: "true"
+    SPRING_LDAP_BASE: "dc=moj,dc=com"
+    DELIUS_LDAP_BASE_USERS: "ou=Users"
+    DELIUS_LDAP_BASE_CLIENTS: "cn=EISUsers,ou=Users"
+    DELIUS_LDAP_BASE_ROLES: "cn=ndRoleCatalogue,ou=Users"
+    DELIUS_LDAP_BASE_ROLE-GROUPS: "cn=ndRoleGroups,ou=Users"
+    DELIUS_LDAP_BASE_GROUPS: "ou=Groups"
+
+  namespace_secrets:
+    common:
+      SPRING_DATASOURCE_URL: DB_URL
+      SPRING_LDAP_URLS: LDAP_URL
+      SPRING_LDAP_USERNAME: LDAP_ROOT_USERNAME
+      SPRING_LDAP_EXPORT_USERNAME: LDAP_ROOT_USERNAME
+      SPRING_LDAP_PASSWORD: LDAP_ROOT_PASSWORD
+    delius-user-management:
+      SPRING_DATASOURCE_USERNAME: DB_USERNAME
+      SPRING_DATASOURCE_PASSWORD: DB_PASSWORD
+      JWT_SECRET: JWT_SECRET
+      DELIUS_SECRET: DELIUS_SECRET
+    elasticache-redis:
+      SPRING_REDIS_HOST: primary_endpoint_address
+      SPRING_REDIS_PASSWORD: auth_token
+
+  allowlist:
+    groups:
+      - internal
+      - unilink_staff
+
+  readinessProbe:
+    httpGet:
+      path: /umt/actuator/health/readiness
+  livenessProbe:
+    httpGet:
+      path: /umt/actuator/health/liveness
