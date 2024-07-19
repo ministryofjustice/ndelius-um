@@ -20,8 +20,10 @@ import uk.co.bconline.ndelius.model.entry.GroupEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.model.entry.UserPreferencesEntry;
 import uk.co.bconline.ndelius.model.entry.projections.UserHomeAreaProjection;
+import uk.co.bconline.ndelius.model.notification.HmppsDomainEventType;
 import uk.co.bconline.ndelius.repository.ldap.UserEntryRepository;
 import uk.co.bconline.ndelius.repository.ldap.UserPreferencesRepository;
+import uk.co.bconline.ndelius.service.DomainEventService;
 import uk.co.bconline.ndelius.service.GroupService;
 import uk.co.bconline.ndelius.service.UserEntryService;
 import uk.co.bconline.ndelius.service.UserRoleService;
@@ -29,6 +31,7 @@ import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.util.SearchUtils;
 
 import javax.naming.Name;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,6 +71,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	private final LdapTemplate ldapTemplate;
 	private final LdapTemplate exportLdapTemplate;
 	private final SearchResultTransformer searchResultTransformer;
+	private final DomainEventService domainEventService;
 
 	@Autowired
 	public UserEntryServiceImpl(
@@ -77,7 +81,8 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 			GroupService groupService,
 			LdapTemplate ldapTemplate,
 			@Qualifier("exportLdapTemplate") LdapTemplate exportLdapTemplate,
-			SearchResultTransformer searchResultTransformer) {
+			SearchResultTransformer searchResultTransformer,
+			DomainEventService domainEventService) {
 		this.userRepository = userRepository;
 		this.preferencesRepository = preferencesRepository;
 		this.userRoleService = userRoleService;
@@ -85,6 +90,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 		this.ldapTemplate = ldapTemplate;
 		this.exportLdapTemplate = exportLdapTemplate;
 		this.searchResultTransformer = searchResultTransformer;
+		this.domainEventService = domainEventService;
 	}
 
 	@Override
@@ -267,6 +273,12 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 			val newDn = LdapNameBuilder.newInstance(getDn(newUsername)).build();
 			log.debug("Renaming LDAP entry from {} to {}", oldDn, newDn);
 			ldapTemplate.rename(oldDn, newDn);
+
+			// Send Domain event
+			HashMap<String, String> domainEventValues = new HashMap<>();
+			domainEventValues.put("fromUsername", existingUsername);
+			domainEventValues.put("toUsername", newUsername);
+			domainEventService.insertDomainEvent(HmppsDomainEventType.UMT_USERNAME_CHANGED, domainEventValues);
 		}
 	}
 
