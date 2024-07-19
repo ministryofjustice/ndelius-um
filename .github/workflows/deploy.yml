@@ -50,7 +50,7 @@ jobs:
           TASK_DEFINITION: umt
 
       - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@69e7aed9b8acdd75a6c585ac669c33831ab1b9a3 # v1.5.0
+        uses: aws-actions/amazon-ecs-deploy-task-definition@8229049d0e7c34be9ba40d443608d2d6cde7510f # v1.6.0
         with:
           task-definition: task-definition.json
           service: umt
