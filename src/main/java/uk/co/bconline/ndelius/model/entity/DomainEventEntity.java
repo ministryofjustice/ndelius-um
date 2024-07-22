@@ -2,18 +2,18 @@ package uk.co.bconline.ndelius.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "DOMAIN_EVENT", schema = "delius_app_schema")
+@Table(name = "DOMAIN_EVENT")
 public class DomainEventEntity
 {
     @Id

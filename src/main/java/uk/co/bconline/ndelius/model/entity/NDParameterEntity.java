@@ -1,7 +1,8 @@
 package uk.co.bconline.ndelius.model.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -9,11 +10,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Data
+@Getter
+@Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "ND_PARAMETER", schema = "delius_app_schema")
+@Table(name = "ND_PARAMETER")
 public class NDParameterEntity
 {
     @Id
