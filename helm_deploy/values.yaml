@@ -11,7 +11,7 @@ generic-service:
       memory: 2Gi
 
   image:
-    repository: 374269020027.dkr.ecr.eu-west-2.amazonaws.com/delius-core-user-management
+    repository: ghcr.io/ministryofjustice/delius-core-user-management
     tag: app_version # override at deployment time
     port: 8080
 
