@@ -1,0 +1,10 @@
+---
+generic-service:
+  ingress:
+    host: delius-user-management-stage.hmpps.service.justice.gov.uk
+
+  env:
+    DELIUS_PASSWORD-RESET_URL: https://password-reset.stage.probation.service.justice.gov.uk/public/forgottenpassword
+
+  scheduledDowntime:
+    enabled: true
