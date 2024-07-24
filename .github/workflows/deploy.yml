@@ -70,4 +70,4 @@ jobs:
           ENVIRONMENT: ${{ inputs.environment }}
           VERSION: ${{ inputs.version }}
           GITHUB_TOKEN: ${{ github.token }}
-          HMPPS_IP_ALLOWLIST_GROUPS_YAML: ${{ var.HMPPS_IP_ALLOWLIST_GROUPS_YAML }}
+          HMPPS_IP_ALLOWLIST_GROUPS_YAML: ${{ vars.HMPPS_IP_ALLOWLIST_GROUPS_YAML }}
