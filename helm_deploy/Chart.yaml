@@ -1,7 +1,7 @@
 apiVersion: v2
 appVersion: '1.0'
 description: A Helm chart for Kubernetes
-name: probation-offender-search
+name: delius-user-management
 version: 1.0.0
 
 dependencies:

@@ -46,7 +46,7 @@ jobs:
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install helm
-          helm dependency update helm_deploy/delius-user-management
+          helm dependency update helm_deploy
 
       - name: Deploy
         run: |
