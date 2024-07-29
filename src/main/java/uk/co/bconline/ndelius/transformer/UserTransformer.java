@@ -243,7 +243,6 @@ public class UserTransformer
 		entity.getProbationAreaLinks().addAll(Stream
 				.concat(user.getDatasets().stream(),
 						ofNullable(user.getEstablishments()).map(List::stream).orElseGet(Stream::empty))
-				.parallel()
 				.map(dataset -> datasetService.getDatasetId(dataset.getCode()).orElse(null))
 				.filter(Objects::nonNull)
 				.map(ProbationAreaEntity::new)
@@ -296,7 +295,7 @@ public class UserTransformer
 				.updatedById(myUserId)
 				.build();
 		entity.getTeamLinks().clear();
-		entity.getTeamLinks().addAll(ofNullable(user.getTeams()).map(list -> list.parallelStream()
+		entity.getTeamLinks().addAll(ofNullable(user.getTeams()).map(list -> list.stream()
 				.map(team -> teamService.getTeamId(team.getCode()).orElse(null))
 				.filter(Objects::nonNull)
 				.map(id -> StaffTeamEntity.builder()
