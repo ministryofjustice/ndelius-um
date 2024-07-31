@@ -208,7 +208,7 @@ public class UserServiceImpl implements UserService {
 			log.debug("Transforming into LDAP user");
 			val updatedLDAPUser = transformer.mapToUserEntry(user, existingLDAPUser);
 			userEntryService.save(user.getExistingUsername(), updatedLDAPUser);
-		} catch (CancellationException | CompletionException e) {
+		} catch (Exception e) {
 			throw new AppException(String.format("Unable to update user (%s)", getMostSpecificCause(e).getMessage()), e);
 		}
 	}

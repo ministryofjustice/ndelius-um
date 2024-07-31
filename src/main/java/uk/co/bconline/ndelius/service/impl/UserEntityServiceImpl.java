@@ -180,8 +180,7 @@ public class UserEntityServiceImpl implements UserEntityService {
 
 		// User/Datasets
 		log.debug("Retrieving existing user");
-		AtomicReference<UserEntity> savedUser = new AtomicReference<>();
-		ofNullable(user.getId()).flatMap(repository::findById).ifPresentOrElse(existingUser -> {
+		val savedUser = ofNullable(user.getId()).flatMap(repository::findById).map(existingUser -> {
 			handlePreviousStaffRecord(user.getStaff(), existingUser.getStaff());
 			log.debug("Deleting datasets");
 			val allDataSets = probationAreaUserRepository.findProbationAreaUserEntitiesByUserUsername(user.getUsername());
@@ -189,19 +188,19 @@ public class UserEntityServiceImpl implements UserEntityService {
 			log.debug("Saving new datasets");
 			probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
 			log.debug("Saving user");
-			savedUser.set(repository.save(user));
-		},
-		() -> {
+			return repository.save(user);
+		}).orElseGet( () -> {
 			log.debug("Saving user");
-			savedUser.set(repository.save(user));
+			val userEntity = repository.save(user);
 			log.debug("Saving new datasets");
 			probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
+			return userEntity;
 		});
 		log.debug("Updating user history");
 		changeNoteRepository.saveAll(user.getHistory());
 
 		log.debug("Finished saving user to database in {}ms", MILLIS.between(t, LocalDateTime.now()));
-		return savedUser.get();
+		return savedUser;
 	}
 
 	private void unlinkOtherUsersFromStaff(UserEntity user, StaffEntity existingStaff) {
