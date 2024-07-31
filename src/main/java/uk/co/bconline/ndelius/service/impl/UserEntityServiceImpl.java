@@ -15,7 +15,12 @@ import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.entity.export.UserExportEntity;
-import uk.co.bconline.ndelius.repository.db.*;
+import uk.co.bconline.ndelius.repository.db.ChangeNoteRepository;
+import uk.co.bconline.ndelius.repository.db.ProbationAreaUserRepository;
+import uk.co.bconline.ndelius.repository.db.SearchResultRepository;
+import uk.co.bconline.ndelius.repository.db.StaffRepository;
+import uk.co.bconline.ndelius.repository.db.StaffTeamRepository;
+import uk.co.bconline.ndelius.repository.db.UserEntityRepository;
 import uk.co.bconline.ndelius.service.UserEntityService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.util.SearchUtils;
@@ -25,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 import static java.time.LocalDate.now;
@@ -32,7 +38,10 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.groupingByConcurrent;
+import static java.util.stream.Collectors.reducing;
+import static java.util.stream.Collectors.toList;
 import static org.springframework.util.CollectionUtils.isEmpty;
 import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
@@ -150,34 +159,49 @@ public class UserEntityServiceImpl implements UserEntityService {
 		// Staff/Teams
 		ofNullable(user.getStaff()).ifPresent(staff -> {
 			log.debug("Retrieving existing staff");
-			ofNullable(staff.getId()).flatMap(staffRepository::findById).ifPresent(existingStaff -> {
+			ofNullable(staff.getId()).flatMap(staffRepository::findById).ifPresentOrElse(existingStaff -> {
 				log.debug("Unlinking any other users with the same staff code");
 				unlinkOtherUsersFromStaff(user, existingStaff);
 				log.debug("Deleting team links");
-				staffTeamRepository.deleteAll(existingStaff.getTeamLinks());
+				val allTeamEntities = staffTeamRepository.findStaffTeamEntitiesByStaffId(existingStaff.getId());
+				staffTeamRepository.deleteAll(allTeamEntities);
+				log.debug("Saving team links");
+				staffTeamRepository.saveAll(staff.getTeamLinks());
+				log.debug("Saving staff");
+				staffRepository.save(staff);
+			},
+			() -> {
+				log.debug("Saving staff");
+				staffRepository.save(staff);
+				log.debug("Saving team links");
+				staffTeamRepository.saveAll(staff.getTeamLinks());
 			});
-			log.debug("Saving staff");
-			staffRepository.save(staff);
-			log.debug("Saving team links");
-			staffTeamRepository.saveAll(staff.getTeamLinks());
 		});
 
 		// User/Datasets
 		log.debug("Retrieving existing user");
-		ofNullable(user.getId()).flatMap(repository::findById).ifPresent(existingUser -> {
+		AtomicReference<UserEntity> savedUser = new AtomicReference<>();
+		ofNullable(user.getId()).flatMap(repository::findById).ifPresentOrElse(existingUser -> {
 			handlePreviousStaffRecord(user.getStaff(), existingUser.getStaff());
 			log.debug("Deleting datasets");
-			probationAreaUserRepository.deleteAll(existingUser.getProbationAreaLinks());
+			val allDataSets = probationAreaUserRepository.findProbationAreaUserEntitiesByUserUsername(user.getUsername());
+			probationAreaUserRepository.deleteAll(allDataSets);
+			log.debug("Saving new datasets");
+			probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
+			log.debug("Saving user");
+			savedUser.set(repository.save(user));
+		},
+		() -> {
+			log.debug("Saving user");
+			savedUser.set(repository.save(user));
+			log.debug("Saving new datasets");
+			probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
 		});
-		log.debug("Saving user");
-		val savedUser = repository.save(user);
-		log.debug("Saving new datasets");
-		probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
 		log.debug("Updating user history");
 		changeNoteRepository.saveAll(user.getHistory());
 
 		log.debug("Finished saving user to database in {}ms", MILLIS.between(t, LocalDateTime.now()));
-		return savedUser;
+		return savedUser.get();
 	}
 
 	private void unlinkOtherUsersFromStaff(UserEntity user, StaffEntity existingStaff) {
