@@ -7,5 +7,5 @@ import uk.co.bconline.ndelius.model.entity.ProbationAreaUserEntity;
 import java.util.List;
 
 public interface ProbationAreaUserRepository extends JpaRepository<ProbationAreaUserEntity, Long> {
-    List<ProbationAreaUserEntity> findProbationAreaUserEntitiesByUserUsername(String username);
+    List<ProbationAreaUserEntity> findProbationAreaUserEntitiesByUserId(Long id);
 }

@@ -187,7 +187,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			userEntityService.save(transformer.mapToUserEntity(user, new UserEntity()));
 			userEntryService.save(transformer.mapToUserEntry(user, new UserEntry()));
-		} catch (CancellationException | CompletionException e) {
+		} catch (Exception e) {
 			throw new AppException(String.format("Unable to create user (%s)", getMostSpecificCause(e).getMessage()), e);
 		}
 	}

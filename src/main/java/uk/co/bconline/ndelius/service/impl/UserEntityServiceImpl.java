@@ -183,7 +183,7 @@ public class UserEntityServiceImpl implements UserEntityService {
 		val savedUser = ofNullable(user.getId()).flatMap(repository::findById).map(existingUser -> {
 			handlePreviousStaffRecord(user.getStaff(), existingUser.getStaff());
 			log.debug("Deleting datasets");
-			val allDataSets = probationAreaUserRepository.findProbationAreaUserEntitiesByUserUsername(user.getUsername());
+			val allDataSets = probationAreaUserRepository.findProbationAreaUserEntitiesByUserId(user.getId());
 			probationAreaUserRepository.deleteAll(allDataSets);
 			log.debug("Saving new datasets");
 			probationAreaUserRepository.saveAll(user.getProbationAreaLinks());
