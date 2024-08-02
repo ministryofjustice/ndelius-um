@@ -100,7 +100,7 @@ export class UserComponent implements OnInit {
         }
       }))
       .subscribe((user: User) => {
-        this.user = user;
+        this.user = { groups: new Groups(), ...user }
         this.addSelectableRoles(user.roles || []);
         this.loaded = true;
         this.existingHomeAreaCode = user.homeArea?.code;
