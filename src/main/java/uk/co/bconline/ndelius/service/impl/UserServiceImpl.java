@@ -184,12 +184,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void addUser(User user) {
-		val dbFuture = runAsync(() -> userEntityService.save(transformer.mapToUserEntity(user, new UserEntity())), taskExecutor);
-		val ldapFuture = runAsync(() -> userEntryService.save(transformer.mapToUserEntry(user, new UserEntry())), taskExecutor);
-
 		try {
-			allOf(dbFuture, ldapFuture).join();
-		} catch (CancellationException | CompletionException e) {
+			userEntityService.save(transformer.mapToUserEntity(user, new UserEntity()));
+			userEntryService.save(transformer.mapToUserEntry(user, new UserEntry()));
+		} catch (Exception e) {
 			throw new AppException(String.format("Unable to create user (%s)", getMostSpecificCause(e).getMessage()), e);
 		}
 	}
@@ -197,24 +195,20 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateUser(User user) {
 		val existingHomeArea = userEntryService.getUserHomeArea(user.getExistingUsername());
-		val dbFuture = runAsync(() -> {
-			log.debug("Fetching existing DB value");
-			val existingUser = userEntityService.getUser(user.getExistingUsername()).orElse(new UserEntity());
-			log.debug("Transforming into DB user");
-			val updatedUser = transformer.mapToUserEntity(user, existingUser, existingHomeArea);
-			userEntityService.save(updatedUser);
-		}, taskExecutor);
-		val ldapFuture = runAsync(() -> {
-			log.debug("Fetching existing LDAP value");
-			val existingUser = userEntryService.getUser(user.getExistingUsername()).orElse(new UserEntry());
-			log.debug("Transforming into LDAP user");
-			val updatedUser = transformer.mapToUserEntry(user, existingUser);
-			userEntryService.save(user.getExistingUsername(), updatedUser);
-		}, taskExecutor);
 
 		try {
-			allOf(dbFuture, ldapFuture).join();
-		} catch (CancellationException | CompletionException e) {
+			log.debug("Fetching existing DB value");
+			val existingDBUser = userEntityService.getUser(user.getExistingUsername()).orElse(new UserEntity());
+			log.debug("Transforming into DB user");
+			val updatedDBUser = transformer.mapToUserEntity(user, existingDBUser, existingHomeArea);
+			userEntityService.save(updatedDBUser);
+
+			log.debug("Fetching existing LDAP value");
+			val existingLDAPUser = userEntryService.getUser(user.getExistingUsername()).orElse(new UserEntry());
+			log.debug("Transforming into LDAP user");
+			val updatedLDAPUser = transformer.mapToUserEntry(user, existingLDAPUser);
+			userEntryService.save(user.getExistingUsername(), updatedLDAPUser);
+		} catch (Exception e) {
 			throw new AppException(String.format("Unable to update user (%s)", getMostSpecificCause(e).getMessage()), e);
 		}
 	}
