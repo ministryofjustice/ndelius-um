@@ -18,4 +18,4 @@ runs:
         cache-dependency-path: ui/package-lock.json
 
     - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
+      uses: gradle/actions/setup-gradle@v4
