@@ -83,6 +83,10 @@ public class UserEntity implements Serializable
 	@Column(name = "LAST_UPDATED_DATETIME")
 	private LocalDateTime updatedAt;
 
+	@Column(name = "LAST_ACCESSED_DATETIME")
+	@Type(type = "java.time.LocalDate")
+	private LocalDate lastAccessedDate;
+
 	@Setter
 	@Builder.Default
 	@OneToMany(mappedBy = "user")

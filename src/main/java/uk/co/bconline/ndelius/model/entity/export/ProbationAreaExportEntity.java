@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
+import static java.time.LocalDate.now;
 import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
 @Entity
@@ -27,4 +30,13 @@ public class ProbationAreaExportEntity implements Serializable {
 
 	@Column(name = "DESCRIPTION")
 	private String description;
+
+	@Column(name = "END_DATE")
+	@Type(type = "java.time.LocalDate")
+	private LocalDate endDate;
+
+	public String getExportDescription()
+	{
+		return description + " (" + code + ") " + ((getEndDate() != null && getEndDate().isBefore(now())) ? " [Inactive]" : " [Active]");
+	}
 }

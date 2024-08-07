@@ -11,30 +11,62 @@ import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.ExportResult;
 import uk.co.bconline.ndelius.model.ReferenceData;
 import uk.co.bconline.ndelius.model.User;
-import uk.co.bconline.ndelius.model.entity.*;
-import uk.co.bconline.ndelius.model.entity.export.*;
+import uk.co.bconline.ndelius.model.entity.ChangeNoteEntity;
+import uk.co.bconline.ndelius.model.entity.OrganisationEntity;
+import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
+import uk.co.bconline.ndelius.model.entity.ProbationAreaUserEntity;
+import uk.co.bconline.ndelius.model.entity.ProbationAreaUserId;
+import uk.co.bconline.ndelius.model.entity.ReferenceDataEntity;
+import uk.co.bconline.ndelius.model.entity.StaffEntity;
+import uk.co.bconline.ndelius.model.entity.StaffTeamEntity;
+import uk.co.bconline.ndelius.model.entity.StaffTeamId;
+import uk.co.bconline.ndelius.model.entity.SubContractedProviderEntity;
+import uk.co.bconline.ndelius.model.entity.TeamEntity;
+import uk.co.bconline.ndelius.model.entity.UserEntity;
+import uk.co.bconline.ndelius.model.entity.export.BoroughExportEntity;
+import uk.co.bconline.ndelius.model.entity.export.ProbationAreaExportEntity;
+import uk.co.bconline.ndelius.model.entity.export.ReferenceDataExportEntity;
+import uk.co.bconline.ndelius.model.entity.export.StaffExportEntity;
+import uk.co.bconline.ndelius.model.entity.export.TeamExportEntity;
+import uk.co.bconline.ndelius.model.entity.export.UserExportEntity;
 import uk.co.bconline.ndelius.model.entry.ClientEntry;
+import uk.co.bconline.ndelius.model.entry.RoleEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
-import uk.co.bconline.ndelius.service.*;
+import uk.co.bconline.ndelius.service.DatasetService;
+import uk.co.bconline.ndelius.service.ReferenceDataService;
+import uk.co.bconline.ndelius.service.RoleService;
+import uk.co.bconline.ndelius.service.TeamService;
+import uk.co.bconline.ndelius.service.UserEntityService;
+import uk.co.bconline.ndelius.service.UserHistoryService;
+import uk.co.bconline.ndelius.service.UserRoleService;
 import uk.co.bconline.ndelius.util.LdapUtils;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.util.Collections.*;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.springframework.util.StringUtils.isEmpty;
 import static uk.co.bconline.ndelius.util.LdapUtils.mapLdapStringToDate;
 import static uk.co.bconline.ndelius.util.LdapUtils.mapToLdapString;
-import static uk.co.bconline.ndelius.util.NameUtils.*;
+import static uk.co.bconline.ndelius.util.NameUtils.combineNames;
+import static uk.co.bconline.ndelius.util.NameUtils.firstForename;
+import static uk.co.bconline.ndelius.util.NameUtils.subsequentForenames;
 
 @Slf4j
 @Component
@@ -55,6 +87,7 @@ public class UserTransformer
 	private final TeamTransformer teamTransformer;
 	private final GroupTransformer groupTransformer;
 	private final ChangeNoteTransformer changeNoteTransformer;
+	private final UserRoleService userRoleService;
 
 	@Autowired
 	public UserTransformer(
@@ -69,7 +102,8 @@ public class UserTransformer
 			ReferenceDataTransformer referenceDataTransformer,
 			TeamTransformer teamTransformer,
 			GroupTransformer groupTransformer,
-			ChangeNoteTransformer changeNoteTransformer)
+			ChangeNoteTransformer changeNoteTransformer,
+			UserRoleService userRoleService)
 	{
 		this.teamService = teamService;
 		this.referenceDataService = referenceDataService;
@@ -83,6 +117,7 @@ public class UserTransformer
 		this.teamTransformer = teamTransformer;
 		this.groupTransformer = groupTransformer;
 		this.changeNoteTransformer = changeNoteTransformer;
+		this.userRoleService = userRoleService;
 	}
 
 	public Optional<User> map(UserEntity user)
@@ -146,6 +181,14 @@ public class UserTransformer
 
 	public ExportResult combine(UserExportEntity db, UserEntry ldap) {
 		if (ldap == null) return null;
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		Set<RoleEntry> userRoles;
+		try {
+			userRoles = userRoleService.getUserRoles(ofNullable(ldap.getUsername()).orElseGet(db::getUsername));
+		} catch (Exception e)
+		{
+			userRoles = new HashSet<>();
+		}
 		return ExportResult.builder()
 				.username(ofNullable(ldap.getUsername()).orElseGet(db::getUsername))
 				.forenames(ofNullable(ldap.getForenames()).orElseGet(() -> combineNames(db.getForename(), db.getForename2())))
@@ -159,9 +202,18 @@ public class UserTransformer
 				.staffCode(ofNullable(db.getStaff()).map(StaffExportEntity::getCode).orElse(null))
 				.staffGrade(ofNullable(db.getStaff()).map(StaffExportEntity::getGrade).map(ReferenceDataExportEntity::getCode).orElse(null))
 				.teams(ofNullable(db.getStaff()).map(StaffExportEntity::getTeams).map(l -> l.stream()
-						.map(TeamExportEntity::getCode).distinct().sorted().collect(joining(","))).orElse(null))
+						.map(TeamExportEntity::getExportDescription).distinct().sorted().collect(joining(","))).orElse(null))
 				.datasets(ofNullable(db.getDatasets()).map(l -> l.stream()
 						.map(ProbationAreaExportEntity::getCode).distinct().sorted().collect(joining(","))).orElse(null))
+				.lastAccessedDate(db.getLastAccessedDate() != null ? db.getLastAccessedDate().format(format) : null)
+				.lau(ofNullable(db.getStaff()).map(StaffExportEntity::getTeams).map(l -> l.stream()
+						.map(TeamExportEntity::getLDUDescription).filter(Objects::nonNull).distinct().sorted().collect(joining(","))).orElse(null))
+				.pdu(ofNullable(db.getStaff()).map(StaffExportEntity::getTeams).map(l -> l.stream()
+						.map(TeamExportEntity::getBoroughDescription).filter(Objects::nonNull).distinct().sorted().collect(joining(","))).orElse(null))
+				.provider(ofNullable(db.getStaff()).map(StaffExportEntity::getTeams).map(l -> l.stream()
+						.map(TeamExportEntity::getBorough).filter(Objects::nonNull).map(BoroughExportEntity::getProbationArea).map(ProbationAreaExportEntity::getExportDescription).distinct().sorted().collect(joining(","))).orElse(null))
+				.roleDescriptions(ofNullable(userRoles).map(l -> l.stream()
+						.map(RoleEntry::getName).distinct().sorted().collect(joining(","))).orElse(null))
 				.build();
 	}
 
