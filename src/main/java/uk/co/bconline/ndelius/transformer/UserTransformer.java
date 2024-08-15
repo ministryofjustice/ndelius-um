@@ -182,13 +182,7 @@ public class UserTransformer
 	public ExportResult combine(UserExportEntity db, UserEntry ldap) {
 		if (ldap == null) return null;
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		Set<RoleEntry> userRoles;
-		try {
-			userRoles = userRoleService.getUserRoles(ofNullable(ldap.getUsername()).orElseGet(db::getUsername));
-		} catch (Exception e)
-		{
-			userRoles = new HashSet<>();
-		}
+		val userRoles = ofNullable(ldap.getUsername()).map(userRoleService::getUserRoles).orElse(emptySet());
 		return ExportResult.builder()
 				.username(ofNullable(ldap.getUsername()).orElseGet(db::getUsername))
 				.forenames(ofNullable(ldap.getForenames()).orElseGet(() -> combineNames(db.getForename(), db.getForename2())))
