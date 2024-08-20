@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.model;
 
+import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvBindByPosition;
 import lombok.*;
 
@@ -26,16 +27,30 @@ public final class ExportResult {
 	private LocalDate startDate;
 	@CsvBindByPosition(position = 6)
 	private LocalDate endDate;
+	@CsvBindByName(column = "Last Accessed Delius")
 	@CsvBindByPosition(position = 7)
-	private String homeArea;
+	private String lastAccessedDate;
 	@CsvBindByPosition(position = 8)
-	private String datasets;
+	private String homeArea;
 	@CsvBindByPosition(position = 9)
-	private String sector;
+	private String datasets;
 	@CsvBindByPosition(position = 10)
-	private String staffCode;
+	private String sector;
 	@CsvBindByPosition(position = 11)
-	private String staffGrade;
+	private String staffCode;
 	@CsvBindByPosition(position = 12)
+	private String staffGrade;
+	@CsvBindByName(column = "Team")
+	@CsvBindByPosition(position = 13)
 	private String teams;
+	@CsvBindByName(column = "LAU")
+	@CsvBindByPosition(position = 14)
+	private String lau;
+	@CsvBindByName(column = "PDU")
+	@CsvBindByPosition(position = 15)
+	private String pdu;
+	@CsvBindByPosition(position = 16)
+	private String provider;
+	@CsvBindByPosition(position = 17)
+	private String roleDescriptions;
 }

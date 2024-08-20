@@ -6,6 +6,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -56,4 +57,8 @@ public class UserExportEntity implements Serializable
 			joinColumns = @JoinColumn(name = "USER_ID"),
 			inverseJoinColumns = @JoinColumn(name = "PROBATION_AREA_ID"))
 	private List<ProbationAreaExportEntity> datasets;
+
+	@Column(name = "LAST_ACCESSED_DATETIME")
+	@Type(type = "java.time.LocalDateTime")
+	private LocalDateTime lastAccessedDate;
 }
