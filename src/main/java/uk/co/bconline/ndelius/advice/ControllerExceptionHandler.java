@@ -4,6 +4,7 @@ import io.github.resilience4j.bulkhead.BulkheadFullException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpStatus;
+import org.springframework.ldap.NoSuchAttributeException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.ObjectError;
@@ -105,6 +106,14 @@ public class ControllerExceptionHandler
 	public ErrorResponse handle(BulkheadFullException exception) {
 		log.debug("Returning 429 response", exception);
 		return new ErrorResponse("An export task is currently in progress. Please try again later.");
+	}
+
+	@ExceptionHandler
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public ErrorResponse handle(NoSuchAttributeException exception) {
+		log.error("Returning 409 response", exception);
+		return new ErrorResponse("User account is corrupted, please contact the help desk");
 	}
 
 	private <T> T getLast(Iterator<T> propertyPath) {
