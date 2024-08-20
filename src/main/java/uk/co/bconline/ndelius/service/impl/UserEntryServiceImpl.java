@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -259,7 +260,8 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	}
 
 	@Override
-	public void save(String existingUsername, UserEntry user) {
+	public void save(String existingUsername, UserEntry user) throws JsonProcessingException
+    {
 		// Keep hold of the new username, if it's different we'll rename it later
 		val newUsername = user.getUsername();
 		user.setUsername(existingUsername);
@@ -275,10 +277,11 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 			ldapTemplate.rename(oldDn, newDn);
 
 			// Send Domain event
-			HashMap<String, String> domainEventValues = new HashMap<>();
-			domainEventValues.put("fromUsername", existingUsername);
-			domainEventValues.put("toUsername", newUsername);
-			domainEventService.insertDomainEvent(HmppsDomainEventType.UMT_USERNAME_CHANGED, domainEventValues);
+			val additionalInformation = Map.of(
+					"fromUsername", existingUsername,
+					"toUsername", newUsername
+			);
+			domainEventService.insertDomainEvent(HmppsDomainEventType.UMT_USERNAME_CHANGED, additionalInformation);
 		}
 	}
 

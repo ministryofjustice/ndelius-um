@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.entry.GroupEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
@@ -19,5 +20,5 @@ public interface UserEntryService
 	Set<GroupEntry> getUserGroups(String username);
 	Map<String, UserEntry> export();
 	void save(UserEntry user);
-	void save(String username, UserEntry user);
+	void save(String username, UserEntry user) throws JsonProcessingException;
 }
