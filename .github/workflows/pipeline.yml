@@ -1,0 +1,69 @@
+name: Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version
+        required: true
+  registry_package:
+    types:
+      - published
+
+env:
+  version: ${{ inputs.version || github.event.registry_package.package_version.version }}
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-to-dev:
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      environment: dev
+      version: ${{ env.version }}
+
+  deploy-to-test:
+    needs: deploy-to-dev
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      environment: test
+      version: ${{ env.version }}
+
+  deploy-to-stage:
+    needs: deploy-to-dev
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      environment: stage
+      version: ${{ env.version }}
+
+  deploy-to-preprod:
+    needs:
+      - deploy-to-stage
+      - deploy-to-test
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      environment: preprod
+      version: ${{ env.version }}
+
+  deploy-to-training:
+    needs:
+      - deploy-to-stage
+      - deploy-to-test
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      environment: training
+      version: ${{ env.version }}
+
+  deploy-to-prod:
+    needs: deploy-to-preprod
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      environment: prod
+      version: ${{ env.version }}
