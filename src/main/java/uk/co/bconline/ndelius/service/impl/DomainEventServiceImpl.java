@@ -1,7 +1,7 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,8 @@ public class DomainEventServiceImpl implements DomainEventService
     }
 
     @Override
-    public void insertDomainEvent(HmppsDomainEventType eventType, Map<String, String> additionalInformation) throws JsonProcessingException
+    @SneakyThrows
+    public void insertDomainEvent(HmppsDomainEventType eventType, Map<String, String> additionalInformation)
     {
         val type = referenceDataRepository.findByCodeAndReferenceDataMasterCodeSetName(eventType.getEventType(), DOMAIN_EVENT_TYPE_REF_DATA_CODE_SET)
             .orElseThrow(() -> new IllegalStateException("Reference data for domain event type " + eventType.getEventType() + " not found"));

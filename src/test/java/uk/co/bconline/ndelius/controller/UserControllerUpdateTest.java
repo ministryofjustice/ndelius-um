@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.co.bconline.ndelius.model.*;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
+import uk.co.bconline.ndelius.repository.db.DomainEventRepository;
 import uk.co.bconline.ndelius.repository.db.StaffRepository;
 
 import java.time.LocalDate;
@@ -49,6 +50,9 @@ public class UserControllerUpdateTest
 
 	@Autowired
 	private StaffRepository staffRepository;
+
+	@Autowired
+	private DomainEventRepository domainEventRepository;
 
 	private MockMvc mvc;
 
@@ -156,6 +160,7 @@ public class UserControllerUpdateTest
 	{
 		String username = nextTestUsername();
 		String token = token(mvc);
+		int preDomainEventCount = domainEventRepository.findAll().size();
 
 		// Given
 		mvc.perform(post("/api/user")
@@ -183,6 +188,8 @@ public class UserControllerUpdateTest
 				.header("Authorization", "Bearer " + token))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.username", is(username + "-renamed")));
+
+		assertEquals(preDomainEventCount + 1, domainEventRepository.findAll().size());
 	}
 
 	@Test

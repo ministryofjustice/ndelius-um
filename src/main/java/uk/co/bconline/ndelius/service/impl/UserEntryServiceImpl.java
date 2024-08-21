@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -260,7 +259,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
 	}
 
 	@Override
-	public void save(String existingUsername, UserEntry user) throws JsonProcessingException
+	public void save(String existingUsername, UserEntry user)
     {
 		// Keep hold of the new username, if it's different we'll rename it later
 		val newUsername = user.getUsername();
