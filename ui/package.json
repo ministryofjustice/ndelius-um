@@ -27,7 +27,7 @@
     "@angular/router": "^18.2.0",
     "angular-oauth2-oidc": "^17.0.2",
     "bootstrap": "^4.6.0",
-    "core-js": "^3.38.0",
+    "core-js": "^3.38.1",
     "file-saver": "^2.0.5",
     "jquery": "^3.5.1",
     "karma-coverage": "^2.2.1",
@@ -66,7 +66,7 @@
     "karma-junit-reporter": "^2.0.1",
     "pa11y-ci": "^3.1.0",
     "pa11y-ci-reporter-html": "^6.0.2",
-    "puppeteer": "^23.0.2",
+    "puppeteer": "^23.1.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.5.4",
     "wait-port": "^1.1.0"
