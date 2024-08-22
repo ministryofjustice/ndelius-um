@@ -23,6 +23,7 @@ public class DomainEventEntity
     private Long id;
 
     @Column(name = "MESSAGE_BODY")
+    @Lob
     private String messageBody;
 
     @Column(name = "MESSAGE_ATTRIBUTES")
