@@ -36,6 +36,6 @@ public class DistrictExportEntity implements Serializable
 	private BoroughExportEntity borough;
 
 	public String getExportDescription() {
-		return description + " (" + code + ") " + (isSelectable() ? " [Active]" : " [Inactive]");
+		return description + " (" + code + ")" + (isSelectable() ? "" : " [Inactive]");
 	}
 }

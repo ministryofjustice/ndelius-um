@@ -35,6 +35,6 @@ public class BoroughExportEntity implements Serializable {
 	private ProbationAreaExportEntity probationArea;
 
 	public String getExportDescription() {
-		return description + " (" + code + ") " + (isSelectable() ? " [Active]" : " [Inactive]");
+		return description + " (" + code + ")" + (isSelectable() ? "" : " [Inactive]");
 	}
 }

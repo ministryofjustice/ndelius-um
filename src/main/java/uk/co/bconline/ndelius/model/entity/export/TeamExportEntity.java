@@ -37,8 +37,7 @@ public class TeamExportEntity implements Serializable {
 	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
-	public String getExportDescription()
-	{
-		return description + " (" + code + ") " + ((getEndDate() != null && getEndDate().isBefore(now())) ? " [Inactive]" : " [Active]");
+	public String getExportDescription() {
+		return description + " (" + code + ")" + ((getEndDate() != null && getEndDate().isBefore(now())) ? " [Inactive]" : "");
 	}
 }
