@@ -30,39 +30,14 @@ public class TeamExportEntity implements Serializable {
 	private String description;
 
 	@ManyToOne
-	@JoinColumn(name = "LOCAL_DELIVERY_UNIT_ID")
-	private LDUExportEntity localDeliveryUnit;
-
-	@ManyToOne
 	@JoinColumn(name = "DISTRICT_ID")
-	private BoroughExportEntity borough;
+	private DistrictExportEntity district;
 
 	@Column(name = "END_DATE")
 	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
-	public String getExportDescription()
-	{
-		return description + " (" + code + ") " + ((getEndDate() != null && getEndDate().isBefore(now())) ? " [Inactive]" : " [Active]");
-	}
-
-	public String getLDUDescription()
-	{
-		if (localDeliveryUnit != null)
-		{
-			return localDeliveryUnit.getDescription() + " (" + localDeliveryUnit.getCode() + ") " + ((localDeliveryUnit.getEndDate() != null && localDeliveryUnit.getEndDate().isBefore(now())) ? " [Inactive]" : " [Active]");
-		} else {
-			return null;
-		}
-	}
-
-	public String getBoroughDescription()
-	{
-		if (borough != null)
-		{
-			return borough.getDescription() + " (" + borough.getCode() + ") " + ((borough.getEndDate() != null && borough.getEndDate().isBefore(now())) ? " [Inactive]" : " [Active]");
-		} else {
-			return null;
-		}
+	public String getExportDescription() {
+		return description + " (" + code + ")" + ((getEndDate() != null && getEndDate().isBefore(now())) ? " [Inactive]" : "");
 	}
 }

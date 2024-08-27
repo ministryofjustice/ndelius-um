@@ -521,7 +521,7 @@ dn: cn=UABT0052,cn=test.user.private,ou=Users,dc=bcl,dc=local
 objectclass: top
 objectclass: alias
 objectclass: NDRoleAssociation
-cn: UABT0051
+cn: UABT0052
 aliasedObjectName: cn=UABT0052,cn=ndRoleCatalogue,ou=Users,dc=bcl,dc=local
 
 dn: cn=TestUser1,ou=Users,dc=bcl,dc=local

@@ -11,62 +11,31 @@ import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.ExportResult;
 import uk.co.bconline.ndelius.model.ReferenceData;
 import uk.co.bconline.ndelius.model.User;
-import uk.co.bconline.ndelius.model.entity.ChangeNoteEntity;
-import uk.co.bconline.ndelius.model.entity.OrganisationEntity;
-import uk.co.bconline.ndelius.model.entity.ProbationAreaEntity;
-import uk.co.bconline.ndelius.model.entity.ProbationAreaUserEntity;
-import uk.co.bconline.ndelius.model.entity.ProbationAreaUserId;
-import uk.co.bconline.ndelius.model.entity.ReferenceDataEntity;
-import uk.co.bconline.ndelius.model.entity.StaffEntity;
-import uk.co.bconline.ndelius.model.entity.StaffTeamEntity;
-import uk.co.bconline.ndelius.model.entity.StaffTeamId;
-import uk.co.bconline.ndelius.model.entity.SubContractedProviderEntity;
-import uk.co.bconline.ndelius.model.entity.TeamEntity;
-import uk.co.bconline.ndelius.model.entity.UserEntity;
-import uk.co.bconline.ndelius.model.entity.export.BoroughExportEntity;
-import uk.co.bconline.ndelius.model.entity.export.ProbationAreaExportEntity;
-import uk.co.bconline.ndelius.model.entity.export.ReferenceDataExportEntity;
-import uk.co.bconline.ndelius.model.entity.export.StaffExportEntity;
-import uk.co.bconline.ndelius.model.entity.export.TeamExportEntity;
-import uk.co.bconline.ndelius.model.entity.export.UserExportEntity;
+import uk.co.bconline.ndelius.model.entity.*;
+import uk.co.bconline.ndelius.model.entity.export.*;
 import uk.co.bconline.ndelius.model.entry.ClientEntry;
-import uk.co.bconline.ndelius.model.entry.RoleEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
-import uk.co.bconline.ndelius.service.DatasetService;
-import uk.co.bconline.ndelius.service.ReferenceDataService;
-import uk.co.bconline.ndelius.service.RoleService;
-import uk.co.bconline.ndelius.service.TeamService;
-import uk.co.bconline.ndelius.service.UserEntityService;
-import uk.co.bconline.ndelius.service.UserHistoryService;
-import uk.co.bconline.ndelius.service.UserRoleService;
+import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.util.LdapUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.MILLIS;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 import static org.springframework.util.StringUtils.isEmpty;
 import static uk.co.bconline.ndelius.util.LdapUtils.mapLdapStringToDate;
 import static uk.co.bconline.ndelius.util.LdapUtils.mapToLdapString;
-import static uk.co.bconline.ndelius.util.NameUtils.combineNames;
-import static uk.co.bconline.ndelius.util.NameUtils.firstForename;
-import static uk.co.bconline.ndelius.util.NameUtils.subsequentForenames;
+import static uk.co.bconline.ndelius.util.NameUtils.*;
 
 @Slf4j
 @Component
@@ -182,7 +151,7 @@ public class UserTransformer
 	public ExportResult combine(UserExportEntity db, UserEntry ldap) {
 		if (ldap == null) return null;
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		val userRoles = ofNullable(ldap.getUsername()).map(userRoleService::getUserRoles).orElse(emptySet());
+		val userRoles = ofNullable(ldap.getUsername()).map(userRoleService::getUserRoleNames).orElse(emptySet());
 		return ExportResult.builder()
 				.username(ofNullable(ldap.getUsername()).orElseGet(db::getUsername))
 				.forenames(ofNullable(ldap.getForenames()).orElseGet(() -> combineNames(db.getForename(), db.getForename2())))
@@ -200,14 +169,23 @@ public class UserTransformer
 				.datasets(ofNullable(db.getDatasets()).map(l -> l.stream()
 						.map(ProbationAreaExportEntity::getCode).distinct().sorted().collect(joining(","))).orElse(null))
 				.lastAccessedDate(db.getLastAccessedDate() != null ? db.getLastAccessedDate().format(format) : null)
-				.lau(ofNullable(db.getStaff()).map(StaffExportEntity::getTeams).map(l -> l.stream()
-						.map(TeamExportEntity::getLDUDescription).filter(Objects::nonNull).distinct().sorted().collect(joining(","))).orElse(null))
-				.pdu(ofNullable(db.getStaff()).map(StaffExportEntity::getTeams).map(l -> l.stream()
-						.map(TeamExportEntity::getBoroughDescription).filter(Objects::nonNull).distinct().sorted().collect(joining(","))).orElse(null))
+				.localAdminUnit(ofNullable(db.getStaff()).map(StaffExportEntity::getTeams).map(l -> l.stream()
+						.map(TeamExportEntity::getDistrict)
+						.map(DistrictExportEntity::getExportDescription)
+						.filter(Objects::nonNull)
+						.distinct().sorted().collect(joining(","))).orElse(null))
+				.probationDeliveryUnit(ofNullable(db.getStaff()).map(StaffExportEntity::getTeams).map(l -> l.stream()
+						.map(TeamExportEntity::getDistrict)
+						.map(DistrictExportEntity::getBorough)
+						.map(BoroughExportEntity::getExportDescription)
+						.filter(Objects::nonNull).distinct().sorted().collect(joining(","))).orElse(null))
 				.provider(ofNullable(db.getStaff()).map(StaffExportEntity::getTeams).map(l -> l.stream()
-						.map(TeamExportEntity::getBorough).filter(Objects::nonNull).map(BoroughExportEntity::getProbationArea).map(ProbationAreaExportEntity::getExportDescription).distinct().sorted().collect(joining(","))).orElse(null))
-				.roleDescriptions(ofNullable(userRoles).map(l -> l.stream()
-						.map(RoleEntry::getName).distinct().sorted().collect(joining(","))).orElse(null))
+						.map(TeamExportEntity::getDistrict)
+						.map(DistrictExportEntity::getBorough)
+						.map(BoroughExportEntity::getProbationArea)
+						.map(ProbationAreaExportEntity::getExportDescription)
+						.filter(Objects::nonNull).distinct().sorted().collect(joining(","))).orElse(null))
+				.roleNames(userRoles.stream().sorted().collect(joining(",")))
 				.build();
 	}
 
