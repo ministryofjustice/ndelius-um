@@ -45,12 +45,12 @@ public final class ExportResult {
 	private String teams;
 	@CsvBindByName(column = "LAU")
 	@CsvBindByPosition(position = 14)
-	private String lau;
+	private String localAdminUnit;
 	@CsvBindByName(column = "PDU")
 	@CsvBindByPosition(position = 15)
-	private String pdu;
+	private String probationDeliveryUnit;
 	@CsvBindByPosition(position = 16)
 	private String provider;
 	@CsvBindByPosition(position = 17)
-	private String roleDescriptions;
+	private String roleNames;
 }

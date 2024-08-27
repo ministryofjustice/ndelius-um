@@ -12,12 +12,13 @@ import java.io.Serializable;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "BOROUGH")
-public class BoroughExportEntity implements Serializable {
+@Table(name = "DISTRICT")
+public class DistrictExportEntity implements Serializable
+{
 	@Id
-	@Column(name = "BOROUGH_ID")
-	@GeneratedValue(generator = "BOROUGH_ID_SEQ")
-	@SequenceGenerator(name = "BOROUGH_ID_SEQ", sequenceName = "BOROUGH_ID_SEQ", allocationSize = 1)
+	@Column(name = "DISTRICT_ID")
+	@GeneratedValue(generator = "DISTRICT_ID_SEQ")
+	@SequenceGenerator(name = "DISTRICT_ID_SEQ", sequenceName = "DISTRICT_ID_SEQ", allocationSize = 1)
 	private Long id;
 
 	@Column(name = "CODE")
@@ -31,8 +32,8 @@ public class BoroughExportEntity implements Serializable {
 	private boolean selectable;
 
 	@ManyToOne
-	@JoinColumn(name = "PROBATION_AREA_ID")
-	private ProbationAreaExportEntity probationArea;
+	@JoinColumn(name = "BOROUGH_ID")
+	private BoroughExportEntity borough;
 
 	public String getExportDescription() {
 		return description + " (" + code + ") " + (isSelectable() ? " [Active]" : " [Inactive]");
