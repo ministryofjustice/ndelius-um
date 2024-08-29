@@ -52,5 +52,5 @@ public final class ExportResult {
 	@CsvBindByPosition(position = 16)
 	private String provider;
 	@CsvBindByPosition(position = 17)
-	private String roleNames;
+	private String roleDescriptions;
 }

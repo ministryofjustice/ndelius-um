@@ -91,13 +91,6 @@ public class UserRoleServiceImpl implements UserRoleService {
 	}
 
 	@Override
-	public Set<String> getUserRoleNames(String username) {
-		return stream(getAssignedRoleAssociations(username, usersBase).spliterator(), false)
-				.map(RoleAssociationEntry::getCn)
-				.collect(toSet());
-	}
-
-	@Override
 	public Set<RoleEntry> getClientRoles(String clientId) {
 		return getAssignedRoles(clientId, clientsBase);
 	}

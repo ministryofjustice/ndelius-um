@@ -14,6 +14,7 @@ import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.model.entity.*;
 import uk.co.bconline.ndelius.model.entity.export.*;
 import uk.co.bconline.ndelius.model.entry.ClientEntry;
+import uk.co.bconline.ndelius.model.entry.RoleEntry;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.service.*;
 import uk.co.bconline.ndelius.util.LdapUtils;
@@ -151,7 +152,14 @@ public class UserTransformer
 	public ExportResult combine(UserExportEntity db, UserEntry ldap) {
 		if (ldap == null) return null;
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		val userRoles = ofNullable(ldap.getUsername()).map(userRoleService::getUserRoleNames).orElse(emptySet());
+		val userRoles = ofNullable(ldap.getUsername()).map(userRoleService::getUserRoles).orElse(emptySet());
+		String userRoleDescriptions = Optional.of(userRoles).map(l -> l.stream()
+				.map(RoleEntry::getDescription)
+				.distinct()
+				.sorted()
+				.collect(joining(",")))
+				.orElse(null);
+
 		return ExportResult.builder()
 				.username(ofNullable(ldap.getUsername()).orElseGet(db::getUsername))
 				.forenames(ofNullable(ldap.getForenames()).orElseGet(() -> combineNames(db.getForename(), db.getForename2())))
@@ -185,7 +193,7 @@ public class UserTransformer
 						.map(BoroughExportEntity::getProbationArea)
 						.map(ProbationAreaExportEntity::getExportDescription)
 						.filter(Objects::nonNull).distinct().sorted().collect(joining(","))).orElse(null))
-				.roleNames(userRoles.stream().sorted().collect(joining(",")))
+				.roleDescriptions(userRoleDescriptions)
 				.build();
 	}
 

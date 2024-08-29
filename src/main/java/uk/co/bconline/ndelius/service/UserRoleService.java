@@ -9,7 +9,6 @@ public interface UserRoleService
 {
 	Set<RoleEntry> getRolesICanAssign();
 	Set<RoleEntry> getUserRoles(String username);
-	Set<String> getUserRoleNames(String username);
 	List<String> getAllUsersWithRole(String role);
 	Set<RoleEntry> getClientRoles(String clientId);
 	Set<String> getUserInteractions(String username);
