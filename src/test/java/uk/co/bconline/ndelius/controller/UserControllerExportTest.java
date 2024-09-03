@@ -187,15 +187,15 @@ public class UserControllerExportTest {
 
 	@Test
 	public void dataIsDisplayedCorrectlyForFullExport() throws Exception {
-		String expectedHeader = "\"Username\",\"Forenames\",\"Surname\",\"Email\",\"Telephone Number\",\"Start Date\",\"End Date\",\"Last Accessed Delius\",\"Home Area\",\"Datasets\",\"Sector\",\"Staff Code\",\"Staff Grade\",\"Team\",\"LAU\",\"PDU\",\"Provider\",\"Role Names\"";
+		String expectedHeader = "\"Username\",\"Forenames\",\"Surname\",\"Email\",\"Telephone Number\",\"Start Date\",\"End Date\",\"Last Accessed Delius\",\"Home Area\",\"Datasets\",\"Sector\",\"Staff Code\",\"Staff Grade\",\"Team\",\"LAU\",\"PDU\",\"Provider\",\"Role Descriptions\"";
 		String expectedStartDate = now().minusDays(10).format(ISO_LOCAL_DATE);
 		String expectedLoginDate = now().format(ISO_LOCAL_DATE);// see data.sql
 		String[] expectedUsers = {
 				"\n\"Abdul.Austria\",\"Abdul\",\"Austria\",\"\",\"\",\"" + expectedStartDate + "\",\"\",\"\",\"N01\",\"\",\"Public\",\"N01A168\",\"GRADE1\",\"\",\"\",\"\",\"\",\"\"",
 				"\n\"Leia.Leaman\",\"Leia\",\"Leaman\",\"\",\"\",\"" + expectedStartDate + "\",\"\",\"\",\"N01\",\"\",\"Public\",\"N01A086\",\"GRADE1\",\"\",\"\",\"\",\"\",\"\"",
 				"\n\"Zina.Zenon\",\"Zina\",\"Zenon\",\"\",\"\",\"" + expectedStartDate + "\",\"\",\"\",\"N01\",\"\",\"Public\",\"N01A131\",\"GRADE1\",\"\",\"\",\"\",\"\",\"\"",
-				"\n\"test.user\",\"Test\",\"User\",\"test.user@test.com\",\"0123 456 789\",\"2000-01-02\",\"\",\"" + expectedLoginDate + " 00:00:00\",\"N01\",\"N01,N02,N03\",\"Public\",\"N01A001\",\"GRADE1\",\"Another (N03TST),Other team (N02TST),Test team (N01TST)\",\"Local Admin Unit A (LAU1),Local Admin Unit B (LAU2)\",\"Borough A (B1) [Inactive],Borough B (B2)\",\"NPS London (N01),NPS North East (N02)\",\"APBT001,APBT002,RDBT001,SPGADBT005,UABT0050,UMBT001,UMBT003\"",
-				"\n\"test.user.private\",\"Test\",\"User (Private)\",\"test.user.private@test.com\",\"\",\"\",\"\",\"" + expectedLoginDate + " 00:00:00\",\"C01\",\"C01,C02\",\"Public\",\"\",\"\",\"\",\"\",\"\",\"\",\"UABT0052,UMBT001\""};
+				"\n\"test.user\",\"Test\",\"User\",\"test.user@test.com\",\"0123 456 789\",\"2000-01-02\",\"\",\"" + expectedLoginDate + " 00:00:00\",\"N01\",\"N01,N02,N03\",\"Public\",\"N01A001\",\"GRADE1\",\"Another (N03TST),Other team (N02TST),Test team (N01TST)\",\"Local Admin Unit A (LAU1),Local Admin Unit B (LAU2)\",\"Borough A (B1) [Inactive],Borough B (B2)\",\"NPS London (N01),NPS North East (N02)\",\"AP Vacancy Tracker API Admin,Local AP Admin,National AP Admin,National Public Reference Data Admin,National Reference Code List Maintenance,User Administrator\"",
+				"\n\"test.user.private\",\"Test\",\"User (Private)\",\"test.user.private@test.com\",\"\",\"\",\"\",\"" + expectedLoginDate + " 00:00:00\",\"C01\",\"C01,C02\",\"Public\",\"\",\"\",\"\",\"\",\"\",\"\",\"Private RBAC Admin,User Administrator\""};
 
 		MvcResult asyncResult = mvc.perform(get("/api/users/export/all")
 				.header("Authorization", "Bearer " + token(mvc)))
