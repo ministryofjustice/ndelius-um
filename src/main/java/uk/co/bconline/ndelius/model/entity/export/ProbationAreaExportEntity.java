@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
+import uk.co.bconline.ndelius.model.entity.converter.YNConverter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,8 +34,12 @@ public class ProbationAreaExportEntity implements Serializable {
 	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
+	@Column(name = "SELECTABLE")
+	@Convert(converter = YNConverter.class)
+	private boolean selectable;
+
 	public String getExportDescription()
 	{
-		return description + " (" + code + ")" + ((getEndDate() != null && getEndDate().isBefore(now())) ? " [Inactive]" : "");
+		return description + " (" + code + ")" + (selectable ? "" : " [Inactive]");
 	}
 }
