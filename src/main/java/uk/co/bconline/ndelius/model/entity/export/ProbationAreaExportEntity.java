@@ -30,10 +30,6 @@ public class ProbationAreaExportEntity implements Serializable {
 	@Column(name = "DESCRIPTION")
 	private String description;
 
-	@Column(name = "END_DATE")
-	@Type(type = "java.time.LocalDate")
-	private LocalDate endDate;
-
 	@Column(name = "SELECTABLE")
 	@Convert(converter = YNConverter.class)
 	private boolean selectable;
