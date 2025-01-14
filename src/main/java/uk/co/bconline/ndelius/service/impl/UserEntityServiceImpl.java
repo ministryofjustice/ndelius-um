@@ -15,12 +15,14 @@ import uk.co.bconline.ndelius.model.entity.SearchResultEntity;
 import uk.co.bconline.ndelius.model.entity.StaffEntity;
 import uk.co.bconline.ndelius.model.entity.UserEntity;
 import uk.co.bconline.ndelius.model.entity.export.UserExportEntity;
+import uk.co.bconline.ndelius.model.notification.HmppsDomainEventType;
 import uk.co.bconline.ndelius.repository.db.ChangeNoteRepository;
 import uk.co.bconline.ndelius.repository.db.ProbationAreaUserRepository;
 import uk.co.bconline.ndelius.repository.db.SearchResultRepository;
 import uk.co.bconline.ndelius.repository.db.StaffRepository;
 import uk.co.bconline.ndelius.repository.db.StaffTeamRepository;
 import uk.co.bconline.ndelius.repository.db.UserEntityRepository;
+import uk.co.bconline.ndelius.service.DomainEventService;
 import uk.co.bconline.ndelius.service.UserEntityService;
 import uk.co.bconline.ndelius.transformer.SearchResultTransformer;
 import uk.co.bconline.ndelius.util.SearchUtils;
@@ -28,6 +30,7 @@ import uk.co.bconline.ndelius.util.SearchUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -59,6 +62,7 @@ public class UserEntityServiceImpl implements UserEntityService {
 	private final StaffTeamRepository staffTeamRepository;
 	private final ChangeNoteRepository changeNoteRepository;
 	private final SearchResultTransformer searchResultTransformer;
+	private final DomainEventService domainEventService;
 
 	@Autowired
 	public UserEntityServiceImpl(
@@ -68,7 +72,8 @@ public class UserEntityServiceImpl implements UserEntityService {
 			ProbationAreaUserRepository probationAreaUserRepository,
 			StaffTeamRepository staffTeamRepository,
 			ChangeNoteRepository changeNoteRepository,
-			SearchResultTransformer searchResultTransformer) {
+			SearchResultTransformer searchResultTransformer,
+			DomainEventService domainEventService) {
 		this.repository = repository;
 		this.staffRepository = staffRepository;
 		this.searchResultRepository = searchResultRepository;
@@ -76,6 +81,7 @@ public class UserEntityServiceImpl implements UserEntityService {
 		this.staffTeamRepository = staffTeamRepository;
 		this.changeNoteRepository = changeNoteRepository;
 		this.searchResultTransformer = searchResultTransformer;
+		this.domainEventService = domainEventService;
 	}
 
 	@Override
@@ -198,6 +204,13 @@ public class UserEntityServiceImpl implements UserEntityService {
 		});
 		log.debug("Updating user history");
 		changeNoteRepository.saveAll(user.getHistory());
+
+		// Send Domain event if user has staff code
+		if (user.getStaff() != null && user.getStaff().getCode() != null && !user.getStaff().getCode().isEmpty())
+		{
+			val additionalInformation = Map.of("staffCode", user.getStaff().getCode());
+			domainEventService.insertDomainEvent(HmppsDomainEventType.UMT_STAFF_UPDATED, additionalInformation);
+		}
 
 		log.debug("Finished saving user to database in {}ms", MILLIS.between(t, LocalDateTime.now()));
 		return savedUser;
