@@ -594,4 +594,33 @@ public class UserControllerUpdateTest
 		assertEquals(LocalDate.now().minusDays(1), previousStaff.getEndDate());
 		assertEquals(LocalDate.now().minusDays(1), previousStaff.getStartDate());
 	}
+
+	@Test
+	public void staffCodeAddAndUpdateSendsDomainEventCorrectly() throws Exception
+	{
+		int preDomainEventCount = domainEventRepository.findAll().size();
+		// Given user with no staff code, no domain events to be sent
+		User noCodeUser = createUser(mvc,
+				aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.startDate(LocalDate.now())
+						.build());
+		assertEquals(preDomainEventCount, domainEventRepository.findAll().size());
+		updateUser(mvc, noCodeUser.toBuilder().surname("Update").build()).andExpect(status().isNoContent());
+		assertEquals(preDomainEventCount, domainEventRepository.findAll().size());
+
+		// Given a user with staff code
+		User codeUser = createUser(mvc,
+				aValidUser().toBuilder()
+						.username(nextTestUsername())
+						.startDate(LocalDate.now())
+						.staffCode("N01A201")
+						.staffGrade(ReferenceData.builder().code("GRADE 1").description("Grade 1").build())
+						.build());
+
+		assertEquals(preDomainEventCount + 1, domainEventRepository.findAll().size());
+		// Updating the user should also update the domainEvent
+		updateUser(mvc, codeUser.toBuilder().surname("Update").build()).andExpect(status().isNoContent());
+		assertEquals(preDomainEventCount + 2, domainEventRepository.findAll().size());
+	}
 }
