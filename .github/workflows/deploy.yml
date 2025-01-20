@@ -1,6 +1,13 @@
 name: Deploy
 
 on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+      environment:
+        required: true
+        type: environment
   workflow_dispatch:
     inputs:
       version:
