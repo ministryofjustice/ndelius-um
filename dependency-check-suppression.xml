@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-    <suppress>
-        <notes>This only impacts applications running on Java version 6 and lower</notes>
-        <packageUrl regex="true">^pkg:maven/io\.netty/netty\-.*$</packageUrl>
-        <cve>CVE-2022-24823</cve>
-    </suppress>
-</suppressions>

@@ -1,10 +1,12 @@
 name: Security
 
 on:
+  schedule:
+    - cron: "30 5 * * MON-FRI" # Every weekday at 05:30 UTC
+  workflow_dispatch:
   push:
     paths:
-      - build.gradle
-      - dependency-check-suppression.xml
+      - '**/.trivyignore'
 
 jobs:
   check-dependencies:
@@ -13,12 +15,27 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
 
-      - name: Analyze Gradle dependencies
-        run: ./gradlew dependencyCheckAnalyze
+      - name: Build image
+        run: ./gradlew bootBuildImage --info --build-cache
+        env:
+          ORG_GRADLE_PROJECT_version: local
 
-      - name: Upload test report
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Scan image
+        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0 # v0.29.0
         with:
-          name: vulnerability-report
-          path: build/reports/dependency-check-report.html
+          image-ref: delius-user-management:local
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+          exit-code: 0
+          format: sarif
+          output: trivy-results.sarif
+          limit-severities-for-sarif: true
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2,ghcr.io/aquasecurity/trivy-db:2
+          TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db:1,ghcr.io/aquasecurity/trivy-java-db:1
+
+      - name: Upload Trivy scan results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
