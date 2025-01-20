@@ -68,7 +68,7 @@ dependencies {
 	implementation      'com.unboundid:unboundid-ldapsdk'
 	implementation      'org.signal:embedded-redis:0.9.1'
 	implementation      'org.springdoc:springdoc-openapi-ui:1.8.0'
-	implementation      'com.opencsv:opencsv:5.9'
+	implementation      'com.opencsv:opencsv:5.10'
 	implementation      'io.github.resilience4j:resilience4j-bulkhead:2.2.0'
 	implementation      'io.github.resilience4j:resilience4j-spring-boot2:2.2.0'
 	compileOnly         'org.projectlombok:lombok'
