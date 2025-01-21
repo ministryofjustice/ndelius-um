@@ -70,7 +70,7 @@ dependencies {
 	implementation      'org.springdoc:springdoc-openapi-ui:1.8.0'
 	implementation      'com.opencsv:opencsv:5.10'
 	implementation      'io.github.resilience4j:resilience4j-bulkhead:2.2.0'
-	implementation      'io.github.resilience4j:resilience4j-spring-boot2:2.2.0'
+	implementation      'io.github.resilience4j:resilience4j-spring-boot2:2.3.0'
 	compileOnly         'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
