@@ -27,7 +27,7 @@
     "@angular/router": "^18.2.0",
     "angular-oauth2-oidc": "^17.0.2",
     "bootstrap": "^4.6.0",
-    "core-js": "^3.38.0",
+    "core-js": "^3.40.0",
     "file-saver": "^2.0.5",
     "jquery": "^3.5.1",
     "karma-coverage": "^2.2.1",
@@ -35,8 +35,8 @@
     "open-iconic": "^1.1.1",
     "popper.js": "^1.16.1",
     "rxjs": "^7.8.1",
-    "tslib": "^2.0.0",
-    "zone.js": "^0.14.10"
+    "tslib": "^2.8.1",
+    "zone.js": "^0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "18.2.12",
@@ -48,14 +48,14 @@
     "@angular/cli": "^18.2.0",
     "@angular/compiler-cli": "^18.2.0",
     "@angular/language-service": "^18.2.0",
-    "@types/jasmine": "~5.1.4",
+    "@types/jasmine": "~5.1.5",
     "@types/jasminewd2": "~2.0.8",
     "@types/node": "^12.11.1",
-    "@typescript-eslint/eslint-plugin": "8.2.0",
-    "@typescript-eslint/parser": "8.2.0",
+    "@typescript-eslint/eslint-plugin": "8.23.0",
+    "@typescript-eslint/parser": "8.23.0",
     "concurrently": "^8.2.2",
     "eslint": "8.57.0",
-    "jasmine-core": "~5.2.0",
+    "jasmine-core": "~5.5.0",
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
@@ -68,7 +68,7 @@
     "pa11y-ci-reporter-html": "^6.0.2",
     "puppeteer": "^23.0.2",
     "ts-node": "^10.9.2",
-    "typescript": "~5.5.4",
+    "typescript": "~5.6.3",
     "wait-port": "^1.1.0"
   }
 }
