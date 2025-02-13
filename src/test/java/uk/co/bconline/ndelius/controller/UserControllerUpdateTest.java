@@ -619,8 +619,11 @@ public class UserControllerUpdateTest
 						.build());
 
 		assertEquals(preDomainEventCount + 1, domainEventRepository.findAll().size());
-		// Updating the user should also update the domainEvent
-		updateUser(mvc, codeUser.toBuilder().surname("Update").build()).andExpect(status().isNoContent());
+		// Updating the user on email should NOT update the count
+		updateUser(mvc, codeUser.toBuilder().email("TEST").build()).andExpect(status().isNoContent());
+		assertEquals(preDomainEventCount + 1, domainEventRepository.findAll().size());
+		// Updating the user on surname should also update the domainEvent
+		updateUser(mvc, codeUser.toBuilder().surname("AnotherSurname").build()).andExpect(status().isNoContent());
 		assertEquals(preDomainEventCount + 2, domainEventRepository.findAll().size());
 	}
 }
