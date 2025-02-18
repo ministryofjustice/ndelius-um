@@ -162,6 +162,17 @@ public class UserEntityServiceImpl implements UserEntityService {
 	@Override
 	public UserEntity save(UserEntity user) {
 		val t = LocalDateTime.now();
+
+		boolean sendDomainEvent = ofNullable(user.getId()).flatMap(repository::findById).map(userEntity ->
+		{
+			// Only send for changes in forenames/surname/grade/code
+			return !user.getForename().equals(userEntity.getForename())
+					|| !user.getSurname().equals(userEntity.getSurname())
+					|| !user.getNullSafeStaffGradeId().equals(userEntity.getNullSafeStaffGradeId())
+					|| !user.getNullSafeForename2().equals(userEntity.getNullSafeForename2())
+					|| !user.getNullSafeStaffCode().equals(userEntity.getNullSafeStaffCode());
+		}).orElse(true);
+
 		// Staff/Teams
 		ofNullable(user.getStaff()).ifPresent(staff -> {
 			log.debug("Retrieving existing staff");
@@ -206,7 +217,7 @@ public class UserEntityServiceImpl implements UserEntityService {
 		changeNoteRepository.saveAll(user.getHistory());
 
 		// Send Domain event if user has staff code
-		if (user.getStaff() != null && user.getStaff().getCode() != null && !user.getStaff().getCode().isEmpty())
+		if (user.getStaff() != null && user.getStaff().getCode() != null && !user.getStaff().getCode().isEmpty() && sendDomainEvent)
 		{
 			val additionalInformation = Map.of("staffCode", user.getStaff().getCode());
 			domainEventService.insertDomainEvent(HmppsDomainEventType.UMT_STAFF_UPDATED, additionalInformation);

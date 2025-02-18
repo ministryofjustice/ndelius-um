@@ -105,4 +105,19 @@ public class UserEntity implements Serializable
 						.collect(Collectors.toSet()))
 				.orElse(emptySet());
 	}
+
+	public Long getNullSafeStaffGradeId()
+	{
+		return (staff != null && staff.getGrade() != null) ? staff.getGrade().getId() : -1L;
+	}
+
+	public String getNullSafeForename2()
+	{
+		return (forename2 != null && !forename2.isEmpty()) ? forename2 : "";
+	}
+
+	public String getNullSafeStaffCode()
+	{
+		return (staff != null && staff.getCode() != null) ? staff.getCode() : "";
+	}
 }
