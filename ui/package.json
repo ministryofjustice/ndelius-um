@@ -64,7 +64,7 @@
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "karma-junit-reporter": "^2.0.1",
-    "pa11y-ci": "^3.1.0",
+    "@aarongoldenthal/pa11y-ci": "^4.6.2",
     "pa11y-ci-reporter-html": "^6.0.2",
     "puppeteer": "^23.0.2",
     "ts-node": "^10.9.2",
