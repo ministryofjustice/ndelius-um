@@ -20,9 +20,10 @@ import {Dataset} from "../../model/dataset";
 import {Role} from "../../model/role";
 
 @Component({
-  selector: 'search',
-  providers: [AuthorisationService],
-  templateUrl: './search.component.html'
+    selector: 'search',
+    providers: [AuthorisationService],
+    templateUrl: './search.component.html',
+    standalone: false
 })
 export class SearchComponent implements AfterViewInit {
   // utils

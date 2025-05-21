@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "module": "es2020",
+    "esModuleInterop": true,
     "paths": {
       "stream": [
         "node_modules/readable-stream"

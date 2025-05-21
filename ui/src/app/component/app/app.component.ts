@@ -8,8 +8,9 @@ import {saveAs} from 'file-saver';
 import {finalize} from 'rxjs/operators';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html'
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    standalone: false
 })
 export class AppComponent implements OnInit {
   static globalMessage: string;

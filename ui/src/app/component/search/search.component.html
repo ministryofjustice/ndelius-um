@@ -9,8 +9,8 @@
       <form #form="ngForm" (submit)="formSubmit.next()">
         <div class="form-group">
           <label for="query" [class.mb-0]="RecentUsersUtils.getRecentUsers().length > 0">
-            Use this screen to search for an existing user
-            <ng-container *ngIf="auth.canAddUser()">, or <a id="add-user-link" routerLink="/user">click here to add a new user</a></ng-container>.
+            Use this screen to search for an existing user<ng-container *ngIf="auth.canAddUser()">,
+            or <a id="add-user-link" routerLink="/user">click here to add a new user</a></ng-container>.
           </label>
           <p class="small" *ngIf="RecentUsersUtils.getRecentUsers().length > 0">
             Recently viewed:

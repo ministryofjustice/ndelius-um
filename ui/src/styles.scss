@@ -1,7 +1,6 @@
-/* peeet */
-@import "styles-variables";
-@import 'bootstrap/scss/bootstrap';
-@import "bootstrap-icons/font/bootstrap-icons";
+@use "styles-variables";
+@use 'bootstrap/scss/bootstrap' as bootstrap;
+@use "bootstrap-icons/font/bootstrap-icons";
 
 .animate-padding {
   transition: padding 100ms;
@@ -25,10 +24,10 @@
 
   // Darken links and coloured text in jumbotron to maintain an accessible contrast ratio (>4.5)
   & a {
-    color: shade-color($link-color, 15%);
-    &:hover { color: shade-color($link-hover-color, 15%); }
+    color: shade-color(bootstrap.$link-color, 15%);
+    &:hover { color: shade-color(bootstrap.$link-hover-color, 15%); }
   }
-  @each $color, $value in $theme-colors {
+  @each $color, $value in bootstrap.$theme-colors {
     .text-#{$color} {
       color: shade-color($value, 15%) !important;
     }
@@ -50,7 +49,7 @@ thead.thead-light th {
 
 // Style readonly inputs like disabled ones
 .form-control.readonly {
-  background-color: $input-disabled-bg;
+  background-color: bootstrap.$input-disabled-bg;
   opacity: 1;
 }
 
