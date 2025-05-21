@@ -23,21 +23,22 @@ import {
 declare let $: any;
 
 @Component({
-  selector: 'item-selector',
-  templateUrl: './item-selector.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ItemSelectorComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => ItemSelectorComponent),
-      multi: true,
-    }],
-
+    selector: 'item-selector',
+    templateUrl: './item-selector.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => ItemSelectorComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => ItemSelectorComponent),
+            multi: true,
+        }
+    ],
+    standalone: false
 })
 
 export class ItemSelectorComponent

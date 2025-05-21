@@ -11,19 +11,21 @@ import {
 } from '@angular/forms';
 
 @Component({
-  selector: 'date',
-  templateUrl: './date.component.html',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DateComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => DateComponent),
-      multi: true,
-    }]
+    selector: 'date',
+    templateUrl: './date.component.html',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => DateComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => DateComponent),
+            multi: true,
+        }
+    ],
+    standalone: false
 })
 export class DateComponent implements Validator, ControlValueAccessor {
   @Input() id: string;

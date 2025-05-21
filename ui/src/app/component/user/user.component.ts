@@ -26,8 +26,9 @@ import {HistoryService} from '../../service/history.service';
 import {UserConstants} from './user.constants';
 
 @Component({
-  selector: 'user',
-  templateUrl: './user.component.html',
+    selector: 'user',
+    templateUrl: './user.component.html',
+    standalone: false
 })
 
 export class UserComponent implements OnInit {
