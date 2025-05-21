@@ -20,7 +20,7 @@
         startdate.invalid ||
         enddate.invalid)">Section incomplete</small>
         <hr/>
-        <div class="row form-group">
+        <div class="form-group row">
           <label for="username" class="col-sm-2 col-form-label">Username</label>
           <div class="col-sm-4">
             <input #username="ngModel" id="username" name="username" [(ngModel)]="user.username"
@@ -37,7 +37,7 @@
             </div>
           </div>
         </div>
-        <div class="row form-group">
+        <div class="form-group row">
           <label for="forenames" class="col-sm-2 col-form-label">Forenames</label>
           <div class="col-sm-4">
             <input id="forenames" name="forenames" #forenames="ngModel" class="form-control"
@@ -69,7 +69,7 @@
             </div>
           </div>
         </div>
-        <div class="row form-group">
+        <div class="form-group row">
           <label for="email" class="col-sm-2 col-form-label">Email</label>
           <div class="col-sm-4">
             <input id="email" name="email" #email="ngModel" class="form-control" [(ngModel)]="user.email"
@@ -94,7 +94,7 @@
             </div>
           </div>
         </div>
-        <div class="row form-group">
+        <div class="form-group row">
           <label [for]="'start-date-d'" class="col-sm-2 col-form-label">Start Date</label>
           <div class="col-sm-4">
             <date id="start-date" name="start-date" #startdate="ngModel"
@@ -158,7 +158,7 @@
         sectorSelector.invalid ||
         homeArea.invalid)">Section incomplete</small>
         <hr>
-        <div class="row form-group">
+        <div class="form-group row">
           <label [for]="'role-groups-toggle-btn'" class="col-sm-2 col-form-label">Role Groups</label>
           <div class="col-sm-{{selectedRoleGroups && selectedRoleGroups.length !== 0 && mode !== 'View'? '3  pe-sm-0': 4}}">
             <item-selector id="role-groups" #roleGroupField multiple="true" maxHeight="300px"
@@ -188,7 +188,7 @@
                            [idMapper]="LabelMappingUtils.nameToLabel"></item-selector>
           </div>
         </div>
-        <div class="row form-group">
+        <div class="form-group row">
           <label [for]="'datasets-toggle-btn'" class="col-sm-2 col-form-label">Datasets</label>
           <div class="col-sm-4">
             <item-selector id="datasets" name="datasets" multiple="true" #datasetsList="ngModel" maxHeight="300px"
@@ -292,7 +292,7 @@
       <section class="mb-4 card card-body">
         <h2 class="card-title mb-0" id="staff-details">Staff Details</h2>
         <hr>
-        <div class="row form-group">
+        <div class="form-group row">
           <div class="col-sm-2">
             <label for="staff-code" class="col-form-label">Staff Code</label>
             <div class="spinner-border spinner-border-sm ms-1" role="status" *ngIf="loadingStaffCode">
@@ -324,7 +324,7 @@
                 Warning: Home Area has changed. Please either remove the user's Staff Details, or generate a new {{ user.homeArea.code }} Staff Code using the <span class="bi bi-loop-circular small" title="Generate"></span> button above.
                 Otherwise the Staff Code will be automatically unlinked from this user.
               </p>
-              <p class="small" *ngIf="userWithStaffCode">
+              <p *ngIf="userWithStaffCode">
                 <ng-container *ngIf="userWithStaffCode.username && userWithStaffCode.username !== user.username">
                   Warning: This staff code already belongs to <strong>{{ userWithStaffCode.username }}</strong> ({{ userWithStaffCode.forenames }} {{ userWithStaffCode.surname }}).
                   Saving this value will cause the staff record to be unlinked from <strong>{{ userWithStaffCode.username }}</strong> and linked to <strong>{{ user.username }}</strong>.
