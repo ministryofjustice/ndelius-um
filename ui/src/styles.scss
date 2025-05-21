@@ -1,7 +1,7 @@
 /* peeet */
 @import "styles-variables";
 @import 'bootstrap/scss/bootstrap';
-@import 'open-iconic/font/css/open-iconic-bootstrap.css';
+@import "bootstrap-icons/font/bootstrap-icons";
 
 .animate-padding {
   transition: padding 100ms;
@@ -14,19 +14,38 @@
 }
 
 .jumbotron {
+  padding: 4rem 2rem;
+  margin-bottom: 2rem;
+  background-color: var(--bs-secondary-bg);
+  border-radius: .3rem;
   &.jumbotron-compact {
-    padding-top: $jumbotron-padding * 0.67;
-    padding-bottom: $jumbotron-padding * 0.5;
+    padding-top: 2rem * 0.67;
+    padding-bottom: 2rem * 0.5;
   }
 
   // Darken links and coloured text in jumbotron to maintain an accessible contrast ratio (>4.5)
   & a {
-    color: darken($link-color, 15%);
-    @include hover() { color: darken($link-hover-color, 15%); }
+    color: shade-color($link-color, 15%);
+    &:hover { color: shade-color($link-hover-color, 15%); }
   }
   @each $color, $value in $theme-colors {
-    @include text-emphasis-variant(".text-#{$color}", darken($value, 15%), true);
+    .text-#{$color} {
+      color: shade-color($value, 15%) !important;
+    }
   }
+}
+
+// Bootstrap 4 to 5 migration
+.form-group {
+  @extend .mb-3
+}
+
+.table-lg td, .table-lg th {
+  @extend .p-3
+}
+
+thead.thead-light th {
+  @extend .bg-light
 }
 
 // Style readonly inputs like disabled ones
@@ -48,16 +67,6 @@ date.ng-dirty input, item-selector.ng-dirty button{
   @extend .is-invalid;
 }
 
-// Workaround for Firefox bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1430196
-.custom-file:focus-within > .custom-file-label {
-  border-color: $custom-file-focus-border-color;
-  box-shadow: $custom-file-focus-box-shadow;
-
-  &::after {
-    border-color: $custom-file-focus-border-color;
-  }
-}
-
 // Used for overlaying the 'Advanced' link over the search bar on the homepage
 .input-group.input-group-link-overlay {
   > input {
@@ -73,17 +82,17 @@ date.ng-dirty input, item-selector.ng-dirty button{
   }
 }
 
-[data-toggle="collapse"].collapsed > .oi-chevron-top,
-[data-toggle="collapse"]:not(.collapsed) > .oi-chevron-bottom {
+[data-bs-toggle="collapse"].collapsed > .bi-funnel-fill,
+[data-bs-toggle="collapse"]:not(.collapsed) > .bi-funnel {
   @extend .d-none;
 }
 
 ul.history-list {
   @extend .list-unstyled;
-  @extend .ml-2;
-  @extend .border-left;
-  @extend .pt-4;
-  @extend .pl-3;
+  @extend .ms-3;
+  @extend .border-start;
+  @extend .pt-3;
+  @extend .ps-3;
   > li {
     @extend .position-relative;
     &:last-child {
@@ -92,9 +101,10 @@ ul.history-list {
     &:not(:last-child) {
       @extend .mb-2;
     }
-    > .oi {
+    > .bi {
       left: -27px;
       font-size: 64%;
+      line-height: 1;
       @extend .position-absolute;
       @extend .p-1;
       @extend .rounded-circle;

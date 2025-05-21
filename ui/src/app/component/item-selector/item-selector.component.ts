@@ -7,7 +7,6 @@ import {
   forwardRef,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges,
   ViewChild
@@ -22,7 +21,6 @@ import {
 } from '@angular/forms';
 
 declare let $: any;
-declare let Popper: any;
 
 @Component({
   selector: 'item-selector',
@@ -43,7 +41,7 @@ declare let Popper: any;
 })
 
 export class ItemSelectorComponent
-  implements ControlValueAccessor, Validator, OnInit, DoCheck, OnChanges {
+  implements ControlValueAccessor, Validator, DoCheck, OnChanges {
   @ViewChild('filterControl', {static: true}) filterControl: ElementRef;
   @ViewChild('toggleBtn', {static: true}) toggleBtn: ElementRef;
   @ViewChild('dropdown', {static: true}) dropdown: ElementRef;
@@ -275,10 +273,6 @@ export class ItemSelectorComponent
 
   updateDropDown() {
     $(this.toggleBtn.nativeElement).dropdown('update');
-  }
-
-  ngOnInit(): void {
-    Popper.Defaults.modifiers.computeStyle.gpuAcceleration = false;
   }
 
   collapseDropdown(): boolean {

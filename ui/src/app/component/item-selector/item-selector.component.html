@@ -1,49 +1,49 @@
 <div #dropdown class="dropdown">
   <button #toggleBtn [id]="id+'-toggle-btn'" type="button"
-          class="form-control text-left d-flex justify-content-between align"
-          data-toggle="dropdown"
+          class="form-control text-start d-flex justify-content-between align"
+          data-bs-toggle="dropdown"
           (click)="focusOnFilter()"
-          (keydown.arrowup)="collapseDropdown() && $event.stopPropagation()"
-          (keydown.arrowdown)="collapseDropdown() && $event.stopPropagation()"
-          (keydown.alt.arrowup)="collapseDropdown() && $event.stopPropagation()"
-          (keydown.alt.arrowdown)="collapseDropdown() && $event.stopPropagation()"
+          (keydown.arrowUp)="collapseDropdown() && $event.stopPropagation()"
+          (keydown.arrowDown)="collapseDropdown() && $event.stopPropagation()"
+          (keydown.alt.arrowUp)="collapseDropdown() && $event.stopPropagation()"
+          (keydown.alt.arrowDown)="collapseDropdown() && $event.stopPropagation()"
           [disabled]="disableComponent()"
           [class.readonly]="readonly"
           [class.ng-dirty]="dirty"
           [title]="displayText"
           aria-haspopup="true" aria-expanded="false">
-    <span class="text-truncate mr-2" [class.text-black-50]="displayText === placeholder">{{displayText}}</span>
-    <span class="oi oi-chevron-bottom float-right"></span>
+    <span class="text-truncate me-2" [class.text-black-50]="displayText === placeholder">{{displayText}}</span>
+    <span class="bi bi-chevron-down float-end"></span>
   </button>
   <div class="dropdown-menu bg-light p-2"
        style="overflow-y: auto; min-width: 100%; max-width: 200%" tabindex="0"
-       [class.dropdown-menu-right]="alignRight"
+       [class.dropdown-menu-end]="alignRight"
        [ngStyle]="{maxHeight: maxHeight}"
        (click)="!multiple || $event.stopPropagation()"
        (keyup.escape)="collapseDropdown()"
-       (keyup.alt.arrowup)="collapseDropdown()"
-       (keyup.alt.arrowdown)="collapseDropdown()"
+       (keyup.alt.arrowUp)="collapseDropdown()"
+       (keyup.alt.arrowDown)="collapseDropdown()"
        [attr.aria-labelledby]="id+'-toggle-btn'">
     <div class="text-truncate text-muted small border-bottom mb-2">
-      <div class="custom-control custom-checkbox float-left" [class.d-none]="readonly"
+      <div class="form-check float-start" [class.d-none]="readonly"
            *ngIf="multiple && (!maxSelectable || available.length <= maxSelectable)">
-        <div class="pl-1">
-          <input #toggleAllBtn [id]="id + '-toggle-all'" class="custom-control-input" type="checkbox"
+        <div class="ps-1">
+          <input #toggleAllBtn [id]="id + '-toggle-all'" class="form-check-input" type="checkbox"
                  title="Toggle all items"
                  (change)="!subMenuItems ? toggleAllItems() : toggleAllSubMenuItems(); updateDropDown()"
                  [checked]="toggleAllCheckboxState()"
                  [indeterminate]="toggleCheckboxIndeterminateState()"/>
           <label [for]="id+'-toggle-all'"
-                 class="custom-control-label"
+                 class="form-check-label"
                  title="Toggle all items">&nbsp;</label>
         </div>
       </div>
-      <div class="pl-1 py-1 float-left" *ngIf="!multiple">
+      <div class="ps-1 py-1 float-start" *ngIf="!multiple">
         <a href="javascript:"
            (click)="toggle(null)"
            (keyup.space)="toggle(null)">Clear</a>
       </div>
-      <ul class="nav nav-tabs float-right" style="margin-bottom: -1px"
+      <ul class="nav nav-tabs float-end" style="margin-bottom: -1px"
           (click)="$event.stopPropagation()" (keyup.enter)="$event.stopPropagation()" tabindex="0">
         <li class="nav-item">
           <a class="nav-link py-1" [class.active]="onlyShowSelected"
@@ -87,23 +87,21 @@
     </div>
     <div class="form-group mb-2">
       <div class="input-group">
-        <div class="input-group-prepend">
-          <div class="input-group-text bg-white"><i class="oi oi-magnifying-glass"></i></div>
-        </div>
+        <div class="input-group-text bg-white"><i class="bi bi-search"></i></div>
         <input #filterControl [id]="id+'-filter'"
                [(ngModel)]="filter"
                (input)="updateDropDown()"
                type="search"
-               class="form-control form-control-sm border-left-0"
+               class="form-control form-control-sm border-start-0"
                title="Filter selectable options" placeholder="Search&hellip;" aria-label="Filter">
       </div>
     </div>
     <div *ngIf="!available || available.length === 0">{{ subMenuMessage }}</div>
-    <div class="text-truncate custom-control custom-{{multiple? 'checkbox': 'radio'}}"
+    <div class="text-truncate form-check"
          [class.d-none]="onlyShowSelected && !isSelected(item)"
          *ngFor="let item of filtered; let i = index">
-      <div class="pl-1">
-        <input [id]="id+'-opt-'+i" [name]="id" class="custom-control-input"
+      <div class="ps-1">
+        <input [id]="id+'-opt-'+i" [name]="id" class="form-check-input"
                [type]="multiple? 'checkbox': 'radio'"
                (change)="toggle(item)"
                [checked]="isSelected(item)"
@@ -112,7 +110,7 @@
                [title]="mapToLabel(item)"/>
         <label [for]="id+'-opt-'+i"
                [title]="mapToLabel(item)"
-               class="custom-control-label w-100">{{mapToLabel(item)}}</label>
+               class="form-check-label w-100">{{mapToLabel(item)}}</label>
       </div>
     </div>
   </div>
