@@ -28,9 +28,9 @@ import {UserConstants} from './user.constants';
 @Component({
     selector: 'user',
     templateUrl: './user.component.html',
+    // eslint-disable-next-line
     standalone: false
 })
-
 export class UserComponent implements OnInit {
   loaded: boolean;
   saving: boolean;

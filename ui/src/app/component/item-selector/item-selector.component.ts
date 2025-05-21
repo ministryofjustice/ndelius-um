@@ -38,9 +38,9 @@ declare let $: any;
             multi: true,
         }
     ],
+    // eslint-disable-next-line
     standalone: false
 })
-
 export class ItemSelectorComponent
   implements ControlValueAccessor, Validator, DoCheck, OnChanges {
   @ViewChild('filterControl', {static: true}) filterControl: ElementRef;
