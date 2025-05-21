@@ -7,7 +7,7 @@
   </div>
   <div class="container">
     <div class="mt-4">
-      <h1 class="pl-3">{{mode}} user</h1>
+      <h1 class="ps-3">{{mode}} user</h1>
       <hr/>
     </div>
     <form #form="ngForm" (submit)="submit()" autocomplete="off">
@@ -160,19 +160,19 @@
         <hr>
         <div class="form-group row">
           <label [for]="'role-groups-toggle-btn'" class="col-sm-2 col-form-label">Role Groups</label>
-          <div class="col-sm-{{selectedRoleGroups && selectedRoleGroups.length !== 0 && mode !== 'View'? '3  pr-sm-0': 4}}">
+          <div class="col-sm-{{selectedRoleGroups && selectedRoleGroups.length !== 0 && mode !== 'View'? '3  pe-sm-0': 4}}">
             <item-selector id="role-groups" #roleGroupField multiple="true" maxHeight="300px"
                            [(selected)]="selectedRoleGroups"
                            [available]="roleGroups"
                            [readonly]="mode === 'View'"
                            [labelMapper]="LabelMappingUtils.nameToLabel"></item-selector>
           </div>
-          <div class="col-sm-1 pl-sm-1" *ngIf="selectedRoleGroups && selectedRoleGroups.length !== 0 && mode !== 'View'">
+          <div class="col-sm-1 ps-sm-1" *ngIf="selectedRoleGroups && selectedRoleGroups.length !== 0 && mode !== 'View'">
             <button class="btn btn-sm btn-outline-secondary w-100 py-2" (click)="applyRoleGroup()"
                     title="Apply selected role groups to this user"
                     type="button">
               <span class="d-none d-lg-inline">Apply</span>
-              <small class="d-sm-inline d-lg-none oi oi-plus"></small>
+              <small class="d-sm-inline d-lg-none bi bi-plus"></small>
             </button>
           </div>
           <label [for]="'roles-toggle-btn'" class="col-sm-2 col-form-label">Roles</label>
@@ -295,8 +295,8 @@
         <div class="form-group row">
           <div class="col-sm-2">
             <label for="staff-code" class="col-form-label">Staff Code</label>
-            <div class="spinner-border spinner-border-sm ml-1" role="status" *ngIf="loadingStaffCode">
-              <span class="sr-only">Loading...</span>
+            <div class="spinner-border spinner-border-sm ms-1" role="status" *ngIf="loadingStaffCode">
+              <span class="visually-hidden">Loading...</span>
             </div>
           </div>
           <div class="col-sm-4">
@@ -305,14 +305,12 @@
                      [(ngModel)]="user.staffCode"
                      [readonly]="mode === 'View'"
                      pattern="[A-Z0-9]{7}$" minlength="7" maxlength="7"/>
-              <div class="input-group-append" *ngIf="mode !== 'View'">
-                <button type="button" class="btn btn-outline-secondary" (click)="generateStaffCode()"
-                        title="Click to set to the next available staff code">
-                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="generatingStaffCode"></span>
-                  <span class="sr-only" *ngIf="generatingStaffCode">Loading...</span>
-                  <span class="oi oi-loop-circular" *ngIf="!generatingStaffCode"></span>
-                </button>
-              </div>
+              <button type="button" class="btn btn-outline-secondary" (click)="generateStaffCode()" *ngIf="mode !== 'View' && user.homeArea"
+                      title="Click to set to the next available staff code">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="generatingStaffCode"></span>
+                <span class="visually-hidden" *ngIf="generatingStaffCode">Loading...</span>
+                <span class="bi bi-arrow-clockwise" *ngIf="!generatingStaffCode"></span>
+              </button>
             </div>
             <div class="text-muted small">
               <p *ngIf="staffCode.dirty && staffCode.invalid && staffCode.errors['pattern']" class="text-danger">
@@ -323,7 +321,7 @@
               </p>
               <p *ngIf="mode === 'Update' && user.homeArea && user.homeArea.code !== existingHomeAreaCode &&
                         !staffCode.dirty && staffCode.valid && user.staffCode && user.staffCode !== ''">
-                Warning: Home Area has changed. Please either remove the user's Staff Details, or generate a new {{ user.homeArea.code }} Staff Code using the <span class="oi oi-loop-circular small" title="Generate"></span> button above.
+                Warning: Home Area has changed. Please either remove the user's Staff Details, or generate a new {{ user.homeArea.code }} Staff Code using the <span class="bi bi-loop-circular small" title="Generate"></span> button above.
                 Otherwise the Staff Code will be automatically unlinked from this user.
               </p>
               <p *ngIf="userWithStaffCode">
@@ -392,7 +390,7 @@
                     class="form-control" aria-labelledby="changes" maxlength="4000"
                     [(ngModel)] = "user.changeNote"
                     placeholder="Enter any additional information about what has changed and why"></textarea>
-          <span *ngIf="user.changeNote" class="small float-right"
+          <span *ngIf="user.changeNote" class="small float-end"
                 [class]="user.changeNote.length >= 4000? 'text-danger': 'text-muted'">
             {{ user.changeNote.length }}/4000
           </span>
@@ -401,7 +399,7 @@
             <div id="history" class="history-collapse collapse pl-1">
               <ul class="history-list">
                 <li *ngFor="let item of history; let isLast = last" tabindex="0">
-                  <span class="oi oi-pencil" title="Updated" rel="icon"></span>
+                  <span class="bi bi-pencil" title="Updated" rel="icon"></span>
                   <div class="update-info">
                     <span [title]="item.time | date: 'full'">{{ item.time | date: 'dd/MM/yyyy HH:mm' }}</span>
                     &middot;
@@ -417,19 +415,19 @@
                   </div>
                 </li>
                 <li *ngIf="!history">
-                  <small class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></small>
+                  <small class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></small>
                   Loading&hellip;
                 </li>
                 <li>
-                  <span class="oi oi-chevron-top" title="Hide history" rel="icon"></span>
-                  <a class="small" data-toggle="collapse" href="#history" data-target=".history-collapse"
+                  <span class="bi bi-chevron-up" title="Hide history" rel="icon"></span>
+                  <a class="small" data-bs-toggle="collapse" href="#history" data-bs-target=".history-collapse"
                      aria-expanded="true" aria-controls="history">Hide history</a>
                 </li>
               </ul>
             </div>
             <div class="history-collapse collapse show small pt-4">
               <div id="last-updated-details">
-                <small class="oi oi-pencil"></small>
+                <small class="bi bi-pencil"></small>
                 Last updated by
                 <a *ngIf="!isSystemUser(user.updated.user.username) else systemUser"
                    routerLink="/user/{{user.updated.user.username }}">{{ user.updated.user.forenames }} {{ user.updated.user.surname }}</a>
@@ -442,9 +440,9 @@
                 </span>
               </div>
               <ng-container *ngIf="history?.length > 0">
-                <small class="oi oi-ellipses"></small>
+                <small class="bi bi-three-dots"></small>
                 &ngsp;
-                <a data-toggle="collapse" href="#history" data-target=".history-collapse"
+                <a data-bs-toggle="collapse" href="#history" data-bs-target=".history-collapse"
                    aria-expanded="false" aria-controls="history">Show history</a>
               </ng-container>
             </div>
@@ -453,20 +451,20 @@
       </section>
       <hr/>
       <div class="clearfix mb-4">
-        <div class="btn-toolbar float-sm-right">
-          <button id="save-btn" type="submit" class="btn btn-primary ml-2"
+        <div class="btn-toolbar float-end">
+          <button id="save-btn" type="submit" class="btn btn-primary ms-2"
                   *ngIf="mode !== 'View'"
                   [disabled]="saving">
             <ng-container *ngIf="saving">
-              <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
               Saving&hellip;
             </ng-container>
             <ng-container *ngIf="!saving">Save</ng-container>
           </button>
-          <button id="copy-btn" type="button" class="btn btn-secondary ml-2"
+          <button id="copy-btn" type="button" class="btn btn-secondary ms-2"
                   routerLink="/user" [queryParams]="{copy: user.username}"
                   *ngIf="mode !== 'Add' && auth.canAddUser()">Create another&hellip;</button>
-          <button id="back-btn" type="button" class="btn btn-secondary ml-2"
+          <button id="back-btn" type="button" class="btn btn-secondary ms-2"
                   (click)="backButtonAlert()">Back</button>
         </div>
       </div>
