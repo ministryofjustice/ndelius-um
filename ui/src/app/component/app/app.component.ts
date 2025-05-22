@@ -10,6 +10,7 @@ import {finalize} from 'rxjs/operators';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
+    // eslint-disable-next-line
     standalone: false
 })
 export class AppComponent implements OnInit {

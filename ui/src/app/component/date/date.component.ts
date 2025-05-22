@@ -25,6 +25,7 @@ import {
             multi: true,
         }
     ],
+    // eslint-disable-next-line
     standalone: false
 })
 export class DateComponent implements Validator, ControlValueAccessor {

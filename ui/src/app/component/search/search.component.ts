@@ -23,6 +23,7 @@ import {Role} from "../../model/role";
     selector: 'search',
     providers: [AuthorisationService],
     templateUrl: './search.component.html',
+    // eslint-disable-next-line
     standalone: false
 })
 export class SearchComponent implements AfterViewInit {

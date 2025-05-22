@@ -19,7 +19,8 @@
           "options": {
             "baseHref": "/umt/",
             "outputPath": {
-              "base": "dist/static"
+              "base": "dist",
+              "browser": "static"
             },
             "index": "src/index.html",
             "polyfills": [

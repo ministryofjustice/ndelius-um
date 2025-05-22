@@ -1,5 +1,6 @@
 @use "styles-variables";
 @use 'bootstrap/scss/bootstrap' as bootstrap;
+@use "bootstrap/scss/functions" as fn;
 @use "bootstrap-icons/font/bootstrap-icons";
 
 .animate-padding {
@@ -24,12 +25,12 @@
 
   // Darken links and coloured text in jumbotron to maintain an accessible contrast ratio (>4.5)
   & a {
-    color: shade-color(bootstrap.$link-color, 15%);
-    &:hover { color: shade-color(bootstrap.$link-hover-color, 15%); }
+    color: fn.shade-color(bootstrap.$link-color, 15%);
+    &:hover { color: fn.shade-color(bootstrap.$link-hover-color, 15%); }
   }
   @each $color, $value in bootstrap.$theme-colors {
     .text-#{$color} {
-      color: shade-color($value, 15%) !important;
+      color: fn.shade-color($value, 15%) !important;
     }
   }
 }
