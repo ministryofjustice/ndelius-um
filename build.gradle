@@ -6,7 +6,7 @@ plugins {
 	id 'org.springframework.boot'               version '2.7.18'
 	id 'io.spring.dependency-management'        version '1.1.7'
 	id 'com.github.node-gradle.node'            version '7.1.0'
-	id 'io.gatling.gradle'                      version '3.14.1.4'
+	id 'io.gatling.gradle'                      version '3.14.3'
 	id 'com.gorylenko.gradle-git-properties'    version '2.5.0'
 }
 
@@ -68,7 +68,7 @@ dependencies {
 	implementation      'com.unboundid:unboundid-ldapsdk'
 	implementation      'org.signal:embedded-redis:0.9.1'
 	implementation      'org.springdoc:springdoc-openapi-ui:1.8.0'
-	implementation      'com.opencsv:opencsv:5.11'
+	implementation      'com.opencsv:opencsv:5.11.1'
 	implementation      'io.github.resilience4j:resilience4j-bulkhead:2.3.0'
 	implementation      'io.github.resilience4j:resilience4j-spring-boot2:2.3.0'
 	compileOnly         'org.projectlombok:lombok'
