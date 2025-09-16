@@ -33,7 +33,7 @@ public class UserHistoryController
 	}
 
 	@GetMapping(path="/user/{username}/history")
-	@PreAuthorize("#oauth2.hasScope('UMBI002')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI002')")
 	public ResponseEntity<List<ChangeNote>> getUserHistory(@PathVariable("username") String username) {
 		try {
 			return ok(this.userHistoryService.getHistory(username));

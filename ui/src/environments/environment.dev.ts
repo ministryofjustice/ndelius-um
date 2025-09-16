@@ -13,8 +13,8 @@ const authConfig: AuthConfig = {
   useHttpBasicAuth: true,
   oidc: false,
   requireHttps: false,
-  loginUrl: 'http://localhost:8080/umt/oauth/authorize',
-  tokenEndpoint: 'http://localhost:8080/umt/oauth/token',
+  loginUrl: 'http://localhost:8080/umt/oauth2/authorize',
+  tokenEndpoint: 'http://localhost:8080/umt/oauth2/token',
   redirectUri: window.location.origin + '/umt/',
 };
 

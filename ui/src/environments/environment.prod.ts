@@ -13,8 +13,8 @@ const authConfig: AuthConfig = {
   useHttpBasicAuth: true,
   oidc: false,
   requireHttps: false,
-  loginUrl: '/umt/oauth/authorize',
-  tokenEndpoint: '/umt/oauth/token',
+  loginUrl: '/umt/oauth2/authorize',
+  tokenEndpoint: '/umt/oauth2/token',
   redirectUri: '/umt/',
 };
 

@@ -2,7 +2,6 @@ spring:
   jpa:
     hibernate.ddl-auto: create
     defer-datasource-initialization: true
-    database-platform: org.hibernate.dialect.Oracle12cDialect
   h2.console:
     enabled: true
     settings.web-allow-others: false # explicitly disabled to mitigate CVE-2021-42392
@@ -36,3 +35,6 @@ delius:
 
 logging.level:
   uk.co.bconline.ndelius: DEBUG
+  # TODO remove after debugging:
+  org.springframework.security.oauth2: TRACE
+  org.springframework.security.web: TRACE

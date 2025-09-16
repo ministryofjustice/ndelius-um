@@ -18,7 +18,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static uk.co.bconline.ndelius.test.util.TokenUtils.clientCredentialsToken;
 
 @SpringBootTest
@@ -44,21 +45,20 @@ public class ClientCredentialsAuthTest
 	@Test
 	public void invalidClientCredentialsReturnsUnauthorized() throws Exception
 	{
-		mvc.perform(post("/oauth/token")
+		mvc.perform(post("/oauth2/token")
 				.with(httpBasic("INVALID", "INVALID"))
 				.param("grant_type", "client_credentials"))
-				.andExpect(status().isUnauthorized())
-				.andExpect(header().string("WWW-Authenticate", "Basic realm=\"ndelius-clients\""));
+				.andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	public void successfulClientLoginReturnsBearerToken() throws Exception
 	{
-		mvc.perform(post("/oauth/token")
+		mvc.perform(post("/oauth2/token")
 				.with(httpBasic("test.server.client", "secret"))
 				.param("grant_type", "client_credentials"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("token_type", is("bearer")))
+				.andExpect(jsonPath("token_type", is("Bearer")))
 				.andExpect(jsonPath("access_token", notNullValue()));
 	}
 

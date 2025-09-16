@@ -3,7 +3,7 @@ package uk.co.bconline.ndelius.util;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import net.bytebuddy.utility.RandomString;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 
 import java.time.LocalDate;
@@ -38,7 +38,7 @@ public class LdapUtils
 	}
 
 	public static String randomPassword() {
-		val password = RandomString.make(32);
+		val password = RandomStringUtils.secure().next(32);
 		if (log.isDebugEnabled()) log.debug("Generating randomized password: {}", password);
 		return new LdapShaPasswordEncoder().encode(password);
 	}

@@ -42,16 +42,15 @@ public class AuthorizationServerConfigTest {
 
 	@Test
 	public void noCredentialsReturnsUnauthorized() throws Exception {
-		mvc.perform(post("/oauth/token"))
-				.andExpect(status().isUnauthorized())
-				.andExpect(header().string("WWW-Authenticate", "Basic realm=\"ndelius-clients\""));
+		mvc.perform(post("/oauth2/token"))
+				.andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	public void accessingASecureEndpointWithoutATokenIsForbidden() throws Exception {
 		mvc.perform(get("/api/user/test.user"))
 				.andExpect(status().isUnauthorized())
-				.andExpect(jsonPath("error_description", is("Full authentication is required to access this resource")));
+				.andExpect(header().string("WWW-Authenticate", "Bearer"));
 	}
 
 	@Test
@@ -80,7 +79,7 @@ public class AuthorizationServerConfigTest {
 	public void tokenCanBeUsedToAuthoriseBothRolesAndInteractions() throws Exception {
 		String authCode = TokenUtils.getAuthCode(mvc, "test.user");
 
-		mvc.perform(post("/oauth/token")
+		mvc.perform(post("/oauth2/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.param("code", authCode)
 				.param("grant_type", "authorization_code")

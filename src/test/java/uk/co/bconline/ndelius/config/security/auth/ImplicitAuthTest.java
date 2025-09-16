@@ -43,10 +43,10 @@ public class ImplicitAuthTest
 	@Test
 	public void invalidUserCredentialsReturnsUnauthorized() throws Exception
 	{
-		mvc.perform(get("/oauth/authorize")
+		mvc.perform(get("/oauth2/authorize")
 				.with(httpBasic("INVALID", "INVALID"))
-				.param("client_id", "test.web.client")
-				.param("response_type", "token"))
+				.queryParam("client_id", "test.web.client")
+				.queryParam("response_type", "token"))
 				.andExpect(status().isUnauthorized())
 				.andExpect(header().string("WWW-Authenticate", "Basic realm=\"ndelius-users\""));
 	}
@@ -54,11 +54,11 @@ public class ImplicitAuthTest
 	@Test
 	public void successfulLoginRedirectsWithAccessTokenInFragment() throws Exception
 	{
-		mvc.perform(get("/oauth/authorize")
+		mvc.perform(get("/oauth2/authorize")
 				.with(httpBasic("test.user", "secret"))
-				.param("client_id", "test.web.client")
-				.param("response_type", "token")
-				.param("redirect_uri", "https://example.com/login-success"))
+				.queryParam("client_id", "test.web.client")
+				.queryParam("response_type", "token")
+				.queryParam("redirect_uri", "https://example.com/login-success"))
 				.andExpect(status().isSeeOther())
 				.andExpect(header().string("Location", containsString("#access_token=")));
 	}

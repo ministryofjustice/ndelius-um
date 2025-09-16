@@ -55,8 +55,8 @@ public class UserControllerSearchTest {
 	public void maxPageSizeForSearchIs100() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "")
-				.param("pageSize", "101"))
+				.queryParam("q", "")
+				.queryParam("pageSize", "101"))
 				.andExpect(status().isBadRequest());
 	}
 
@@ -64,8 +64,8 @@ public class UserControllerSearchTest {
 	public void minPageSizeIs1() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "")
-				.param("pageSize", "0"))
+				.queryParam("q", "")
+				.queryParam("pageSize", "0"))
 				.andExpect(status().isBadRequest());
 	}
 
@@ -73,7 +73,7 @@ public class UserControllerSearchTest {
 	public void searchOnName() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "j blog"))
+				.queryParam("q", "j blog"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].forenames", startsWith("J")))
 				.andExpect(jsonPath("$[1].forenames", startsWith("J")));
@@ -83,7 +83,7 @@ public class UserControllerSearchTest {
 	public void searchOnUsername() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "joe.bloggs"))
+				.queryParam("q", "joe.bloggs"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", not(empty())))
 				.andExpect(jsonPath("$[0].username", is("Joe.Bloggs")));
@@ -93,7 +93,7 @@ public class UserControllerSearchTest {
 	public void searchOnTeamDescriptionReturnsWholeTeam() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "test team"))
+				.queryParam("q", "test team"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", not(empty())))
 				.andExpect(jsonPath("$[*].username", hasItems("test.user", "Joe.Bloggs", "Jane.Bloggs")));
@@ -103,7 +103,7 @@ public class UserControllerSearchTest {
 	public void searchOnStaffCode() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "N01A001"))
+				.queryParam("q", "N01A001"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", not(empty())))
 				.andExpect(jsonPath("$[0].staffCode", is("N01A001")));
@@ -113,7 +113,7 @@ public class UserControllerSearchTest {
 	public void emptyQueryReturnsNoResult() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", ""))
+				.queryParam("q", ""))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(0)));
 	}
@@ -122,8 +122,8 @@ public class UserControllerSearchTest {
 	public void limitedToPageSize() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "j blog")
-				.param("pageSize", "1"))
+				.queryParam("q", "j blog")
+				.queryParam("pageSize", "1"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(1)));
 	}
@@ -136,14 +136,14 @@ public class UserControllerSearchTest {
 		// When I search for an N04 user, Then I should get no results
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token)
-				.param("q", "Jim.Bloggs"))
+				.queryParam("q", "Jim.Bloggs"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", not(hasItem("Jim.Bloggs"))));
 
 		// When I search for an N01 user, Then I should get results
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token)
-				.param("q", "Tiffiny.Thrasher"))
+				.queryParam("q", "Tiffiny.Thrasher"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", hasItem("Tiffiny.Thrasher")));
 	}
@@ -152,7 +152,7 @@ public class UserControllerSearchTest {
 	public void combinedUserIsReturnedInSearchResults() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "test.user"))
+				.queryParam("q", "test.user"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].username", equalTo("test.user")))
 				.andExpect(jsonPath("$[0].forenames", equalTo("Test")))
@@ -165,7 +165,7 @@ public class UserControllerSearchTest {
 	public void combinedUserIsReturnedInSearchResultsWhenSearchingByTeam() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "N03TST"))
+				.queryParam("q", "N03TST"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].username", equalTo("test.user")))
 				.andExpect(jsonPath("$[0].forenames", equalTo("Test")))
@@ -178,7 +178,7 @@ public class UserControllerSearchTest {
 	public void inactiveUsersAreNotReturnedByDefault() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "test.user"))
+				.queryParam("q", "test.user"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", hasItem("test.user")))
 				.andExpect(jsonPath("$[*].username", not(hasItem("test.user.inactive"))))
@@ -190,8 +190,8 @@ public class UserControllerSearchTest {
 	public void inactiveUsersAreReturnedWhenFlagIsSpecified() throws Exception {
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "test.user")
-				.param("includeInactiveUsers", "true"))
+				.queryParam("q", "test.user")
+				.queryParam("includeInactiveUsers", "true"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", hasItems(
 						"test.user", "test.user.inactive", "test.user.inactive.dbonly", "test.user.inactive.oidonly")));
@@ -207,16 +207,16 @@ public class UserControllerSearchTest {
 		// When I search for an N02 user, Then I should get no results
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token)
-				.param("q", "Joe.Bloggs")
-				.param("dataset", datasetFilter))
+				.queryParam("q", "Joe.Bloggs")
+				.queryParam("dataset", datasetFilter))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", not(hasItem("Joe.Bloggs"))));
 
 		// When I search for an N01 user, Then I should get results
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token)
-				.param("q", "Tiffiny.Thrasher")
-				.param("dataset", datasetFilter))
+				.queryParam("q", "Tiffiny.Thrasher")
+				.queryParam("dataset", datasetFilter))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[*].username", hasItem("Tiffiny.Thrasher")));
 	}
@@ -229,8 +229,8 @@ public class UserControllerSearchTest {
 		// When I attempt to search for N02 users, Then I should get no results
 		mvc.perform(get("/api/users")
 				.header("Authorization", "Bearer " + token)
-				.param("q", "")
-				.param("dataset", "N02"))
+				.queryParam("q", "")
+				.queryParam("dataset", "N02"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", is(empty())));
 

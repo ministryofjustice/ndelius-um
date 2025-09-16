@@ -34,14 +34,14 @@ public class RoleGroupController
 	}
 
 	@GetMapping(path="/rolegroups")
-	@PreAuthorize("#oauth2.hasScope('UMBI007')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI007')")
 	public ResponseEntity<List<RoleGroup>> getRoleGroups()
 	{
 		val roleGroups = roleGroupService.getAssignableRoleGroups();
 		return roleGroups.iterator().hasNext() ? new ResponseEntity<>(roleGroups, OK) : new ResponseEntity<>(NOT_FOUND);
 	}
 
-	@PreAuthorize("#oauth2.hasScope('UMBI007')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI007')")
 	@GetMapping(path="/rolegroup/{rolegroupname}")
 	public ResponseEntity<RoleGroup> getRoleGroup(final @PathVariable("rolegroupname") String roleGroupName)
 	{

@@ -1,11 +1,19 @@
 package uk.co.bconline.ndelius.model.entity.export;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import uk.co.bconline.ndelius.model.entity.converter.YNConverter;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 @Getter

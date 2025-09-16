@@ -4,7 +4,6 @@ spring:
     username: example
     password: example
   jpa:
-    database-platform: org.hibernate.dialect.Oracle12cDialect
     hibernate.ddl-auto: none
   ldap:
     base: dc=moj,dc=com

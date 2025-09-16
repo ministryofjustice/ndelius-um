@@ -1,12 +1,21 @@
 package uk.co.bconline.ndelius.model.entity.export;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
@@ -45,11 +54,9 @@ public class StaffExportEntity implements Serializable
 	private Boolean privateStaff;
 
 	@Column(name = "START_DATE")
-	@Type(type = "java.time.LocalDate")
 	private LocalDate startDate;
 
 	@Column(name = "END_DATE")
-	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
 	@ManyToOne

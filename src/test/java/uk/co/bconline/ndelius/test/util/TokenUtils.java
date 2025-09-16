@@ -10,71 +10,72 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
+import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
 public class TokenUtils {
-	public static String token(MockMvc mvc) throws Exception {
-		return token(mvc, "test.user");
-	}
+    public static String token(MockMvc mvc) throws Exception {
+        return token(mvc, "test.user");
+    }
 
-	public static String token(MockMvc mvc, String username) throws Exception {
-		return authCodeToken(mvc, username);
-	}
+    public static String token(MockMvc mvc, String username) throws Exception {
+        return authCodeToken(mvc, username);
+    }
 
-	public static String getAuthCode(MockMvc mvc, String username) throws Exception
-	{
-		return fromHttpUrl(requireNonNull(mvc.perform(get("/oauth/authorize")
-				.with(httpBasic(username, "secret"))
-				.param("client_id", "test.web.client")
-				.param("response_type", "code")
-				.param("redirect_uri", "https://example.com/login-success"))
-				.andExpect(status().isSeeOther())
-				.andExpect(header().string("Location", containsString("?code=")))
-				.andReturn()
-				.getResponse()
-				.getHeader("Location"))).build()
-				.getQueryParams()
-				.getFirst("code");
-	}
+    public static String getAuthCode(MockMvc mvc, String username) throws Exception {
+        return getAuthCode(mvc, username, "UMBI001 UMBI002 UMBI003 UMBI004 UMBI005 UMBI006 UMBI007 UMBI008 UMBI009 UMBI010 UMBI011 UMBI012 UABT0050 UABI020 UABI025");
+    }
 
-	public static String authCodeToken(MockMvc mvc, String username) throws Exception
-	{
-		String authCode = getAuthCode(mvc, username);
+    public static String getAuthCode(MockMvc mvc, String username, String scopes) throws Exception {
+        return fromUriString(requireNonNull(mvc.perform(get("/oauth2/authorize")
+                .with(httpBasic(username, "secret"))
+                .queryParam("client_id", "test.web.client")
+                .queryParam("response_type", "code")
+                .queryParam("redirect_uri", "https://example.com/login-success")
+                .queryParam("scope", scopes))
+            .andExpect(status().isFound())
+            .andExpect(header().string("Location", containsString("?code=")))
+            .andReturn()
+            .getResponse()
+            .getHeader("Location"))).build()
+            .getQueryParams()
+            .getFirst("code");
+    }
 
-		return JsonPath.read(mvc.perform(post("/oauth/token")
-				.with(httpBasic("test.web.client", "secret"))
-				.param("code", authCode)
-				.param("grant_type", "authorization_code")
-				.param("redirect_uri", "https://example.com/login-success"))
-				.andExpect(status().isOk())
-				.andReturn()
-				.getResponse()
-				.getContentAsString(), "access_token");
-	}
+    public static String authCodeToken(MockMvc mvc, String username) throws Exception {
+        String authCode = getAuthCode(mvc, username);
 
-	public static String clientCredentialsToken(MockMvc mvc, String clientId) throws Exception
-	{
-		return JsonPath.read(mvc.perform(post("/oauth/token")
-				.with(httpBasic(clientId, "secret"))
-				.param("grant_type", "client_credentials")
-				.param("resource_id", "NDelius"))
-				.andExpect(status().isOk())
-				.andReturn()
-				.getResponse()
-				.getContentAsString(), "access_token");
-	}
+        return JsonPath.read(mvc.perform(post("/oauth2/token")
+                .with(httpBasic("test.web.client", "secret"))
+                .param("code", authCode)
+                .param("grant_type", "authorization_code")
+                .param("redirect_uri", "https://example.com/login-success"))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString(), "access_token");
+    }
 
-	public static String implicitToken(MockMvc mvc, String username) throws Exception
-	{
-		return requireNonNull(mvc.perform(get("/oauth/authorize")
-				.with(httpBasic(username, "secret"))
-				.param("client_id", "test.web.client")
-				.param("response_type", "token")
-				.param("redirect_uri", "https://example.com/login-success"))
-				.andExpect(status().isSeeOther())
-				.andReturn()
-				.getResponse()
-				.getHeader("Location"))
-				.replaceAll(".*access_token=(.+?)&.*", "$1");
-	}
+    public static String clientCredentialsToken(MockMvc mvc, String clientId) throws Exception {
+        return JsonPath.read(mvc.perform(post("/oauth2/token")
+                .with(httpBasic(clientId, "secret"))
+                .param("grant_type", "client_credentials")
+                .param("resource_id", "NDelius"))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString(), "access_token");
+    }
+
+    public static String implicitToken(MockMvc mvc, String username) throws Exception {
+        return requireNonNull(mvc.perform(get("/oauth2/authorize")
+                .with(httpBasic(username, "secret"))
+                .queryParam("client_id", "test.web.client")
+                .queryParam("response_type", "token")
+                .queryParam("redirect_uri", "https://example.com/login-success"))
+            .andExpect(status().isSeeOther())
+            .andReturn()
+            .getResponse()
+            .getHeader("Location"))
+            .replaceAll(".*access_token=(.+?)&.*", "$1");
+    }
 }

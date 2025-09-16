@@ -5,6 +5,7 @@ import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
+import org.springframework.boot.autoconfigure.ldap.LdapConnectionDetails;
 import org.springframework.boot.autoconfigure.ldap.LdapProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.DirContextAuthenticationStrategy;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 import org.thymeleaf.util.StringUtils;
 import uk.co.bconline.ndelius.model.entry.UserEntry;
 import uk.co.bconline.ndelius.repository.ldap.UserEntryRepository;
@@ -38,9 +40,9 @@ public class LdapConfig extends LdapAutoConfiguration {
 	@Bean
 	@Primary
 	@Override
-	public LdapContextSource ldapContextSource(LdapProperties properties, Environment environment,
+	public LdapContextSource ldapContextSource(LdapConnectionDetails connectionDetails, LdapProperties properties,
 											   ObjectProvider<DirContextAuthenticationStrategy> dirContextAuthenticationStrategy) {
-		val ctxSource = super.ldapContextSource(properties, environment, dirContextAuthenticationStrategy);
+		val ctxSource = super.ldapContextSource(connectionDetails, properties, dirContextAuthenticationStrategy);
 		val pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
 		ctxSource.setPooled(pooled);
 		return ctxSource;
@@ -49,8 +51,9 @@ public class LdapConfig extends LdapAutoConfiguration {
 	@Bean
 	@Primary
 	@Override
-	public LdapTemplate ldapTemplate(LdapProperties properties, ContextSource contextSource) {
-		return super.ldapTemplate(properties, contextSource);
+	public LdapTemplate ldapTemplate(LdapProperties properties, ContextSource contextSource,
+									 ObjectDirectoryMapper objectDirectoryMapper) {
+		return super.ldapTemplate(properties, contextSource, objectDirectoryMapper);
 	}
 
 	/*

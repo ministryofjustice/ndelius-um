@@ -30,7 +30,7 @@ public class ReferenceDataController
 	}
 
 	@GetMapping("/staffgrades")
-	@PreAuthorize("#oauth2.hasScope('UMBI008')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI008')")
 	public ResponseEntity<List<ReferenceData>> getStaffGrades()
 	{
 		return new ResponseEntity<>(service.getStaffGrades(), HttpStatus.OK);

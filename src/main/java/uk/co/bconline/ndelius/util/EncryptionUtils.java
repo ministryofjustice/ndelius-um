@@ -1,20 +1,18 @@
 package uk.co.bconline.ndelius.util;
 
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+import lombok.experimental.UtilityClass;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.tomcat.util.codec.binary.Base64;
-
-import lombok.experimental.UtilityClass;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Base64;
 
 @UtilityClass
 public class EncryptionUtils
@@ -25,7 +23,7 @@ public class EncryptionUtils
 		try
 		{
 			final Cipher cipher = cipherFromSecret(Cipher.ENCRYPT_MODE, secret);
-			return cipher != null ? new String(Base64.encodeBase64(cipher.doFinal(plainText.getBytes()))) : null;
+			return cipher != null ? new String(Base64.getEncoder().encode(cipher.doFinal(plainText.getBytes()))) : null;
 		}
 		catch (IllegalBlockSizeException | BadPaddingException ex)
 		{
@@ -38,7 +36,7 @@ public class EncryptionUtils
 		try
 		{
 			final Cipher cipher = cipherFromSecret(Cipher.DECRYPT_MODE, secret);
-			return cipher != null ? new String(cipher.doFinal(Base64.decodeBase64(encrypted.getBytes()))) : null;
+			return cipher != null ? new String(cipher.doFinal(Base64.getDecoder().decode(encrypted.getBytes()))) : null;
 		}
 		catch (IllegalBlockSizeException | BadPaddingException ex)
 		{

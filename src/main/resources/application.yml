@@ -22,8 +22,6 @@ spring:
     hikari:
       maximum-pool-size: 50
       leak-detection-threshold: 20000
-  jpa:
-    database-platform: org.hibernate.dialect.Oracle12cDialect
 
 spring.ldap.base-environment:
   java.naming.ldap.derefAliases: never

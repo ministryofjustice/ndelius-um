@@ -28,7 +28,6 @@ generic-service:
     SERVER_FORWARD-HEADERS-STRATEGY: "native"
     SPRING_DATASOURCE_TYPE: "com.zaxxer.hikari.HikariDataSource"
     SPRING_DATASOURCE_HIKARI_MAXIMUM-POOL-SIZE: "50"
-    SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "org.hibernate.dialect.Oracle12cDialect"
     SPRING_JPA_HIBERNATE_DDL-AUTO: "none"
     SPRING_LDAP_USEORACLEATTRIBUTES: "false"
     SPRING_REDIS_SSL: "true"

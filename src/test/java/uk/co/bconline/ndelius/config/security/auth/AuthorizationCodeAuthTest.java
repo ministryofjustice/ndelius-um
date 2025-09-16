@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.config.security.auth;
 
+import com.jayway.jsonpath.JsonPath;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,106 +25,106 @@ import static uk.co.bconline.ndelius.test.util.TokenUtils.getAuthCode;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class AuthorizationCodeAuthTest
-{
-	@Autowired
-	private WebApplicationContext context;
+public class AuthorizationCodeAuthTest {
+    @Autowired
+    private WebApplicationContext context;
 
-	private MockMvc mvc;
+    private MockMvc mvc;
 
-	@Before
-	public void setup()
-	{
-		mvc = MockMvcBuilders
-				.webAppContextSetup(context)
-				.apply(springSecurity())
-				.alwaysDo(print())
-				.build();
-	}
+    @Before
+    public void setup() {
+        mvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .alwaysDo(print())
+            .build();
+    }
 
-	@Test
-	public void invalidUserCredentialsReturnsUnauthorized() throws Exception
-	{
-		mvc.perform(get("/oauth/authorize")
-				.with(httpBasic("INVALID", "INVALID"))
-				.param("client_id", "test.web.client")
-				.param("response_type", "code"))
-				.andExpect(status().isUnauthorized())
-				.andExpect(header().string("WWW-Authenticate", "Basic realm=\"ndelius-users\""));
-	}
+    @Test
+    public void invalidUserCredentialsReturnsUnauthorized() throws Exception {
+        mvc.perform(get("/oauth2/authorize")
+                .with(httpBasic("INVALID", "INVALID"))
+                .queryParam("client_id", "test.web.client")
+                .queryParam("response_type", "code")
+                .queryParam("redirect_uri", "https://example.com/login-success"))
+            .andExpect(status().isUnauthorized());
+    }
 
-	@Test
-	public void successfulLoginRedirectsWithAuthorizationCodeInQueryParams() throws Exception
-	{
-		mvc.perform(get("/oauth/authorize")
-				.with(httpBasic("test.user", "secret"))
-				.param("client_id", "test.web.client")
-				.param("response_type", "code")
-				.param("redirect_uri", "https://example.com/login-success"))
-				.andExpect(status().isSeeOther())
-				.andExpect(header().string("Location", containsString("?code=")));
-	}
+    @Test
+    public void successfulLoginRedirectsWithAuthorizationCodeInQueryParams() throws Exception {
+        mvc.perform(get("/oauth2/authorize")
+                .with(httpBasic("test.user", "secret"))
+                .queryParam("client_id", "test.web.client")
+                .queryParam("response_type", "code")
+                .queryParam("redirect_uri", "https://example.com/login-success"))
+            .andExpect(status().isFound())
+            .andExpect(header().string("Location", containsString("?code=")));
+    }
 
-	@Test
-	public void invalidClientLoginIsUnauthorized() throws Exception
-	{
-		String authCode = getAuthCode(mvc, "test.user");
+    @Test
+    public void invalidClientLoginIsUnauthorized() throws Exception {
+        String authCode = getAuthCode(mvc, "test.user");
 
-		mvc.perform(get("/oauth/token")
-				.with(httpBasic("INVALID", "INVALID"))
-				.param("code", authCode)
-				.param("grant_type", "authorization_code"))
-				.andExpect(status().isUnauthorized())
-				.andExpect(header().string("WWW-Authenticate", "Basic realm=\"ndelius-clients\""));
-	}
+        mvc.perform(post("/oauth2/token")
+                .with(httpBasic("INVALID", "INVALID"))
+                .param("code", authCode)
+                .param("grant_type", "authorization_code"))
+            .andExpect(status().isUnauthorized())
+            .andExpect(jsonPath("error").value("invalid_client"));
+    }
 
-	@Test
-	public void userScopesAreReturnedCorrectly() throws Exception {
-		String authCode = getAuthCode(mvc, "test.user");
-		mvc.perform(post("/oauth/token")
-				.with(httpBasic("test.web.client", "secret"))
-				.param("code", authCode)
-				.param("grant_type", "authorization_code")
-				.param("redirect_uri", "https://example.com/login-success")
-				.param("scope", "UMBI001 CWBI006"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("scope", containsString("UMBI001")))
-				.andExpect(jsonPath("scope", not(containsString("CWBI006"))));
-	}
+    @Test
+    public void userScopesAreReturnedCorrectly() throws Exception {
+        String authCode = getAuthCode(mvc, "test.user", "UMBI001");
+        String token = JsonPath.read(mvc.perform(
+                post("/oauth2/token")
+                    .with(httpBasic("test.web.client", "secret"))
+                    .param("code", authCode)
+                    .param("grant_type", "authorization_code")
+                    .param("redirect_uri", "https://example.com/login-success")
+            )
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString(), "access_token");
 
-	@Test
-	public void authorizationCodeCanBeSwappedForAccessToken() throws Exception
-	{
-		String authCode = getAuthCode(mvc, "test.user");
+        mvc.perform(post("/oauth2/introspect")
+                .with(httpBasic("test.web.client", "secret"))
+                .param("token", token))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("sub", is("test.user")))
+            .andExpect(jsonPath("scope", containsString("UMBI001")))
+            .andExpect(jsonPath("scope", not(containsString("UMBI002"))));
+    }
 
-		mvc.perform(post("/oauth/token")
-				.with(httpBasic("test.web.client", "secret"))
-				.param("code", authCode)
-				.param("grant_type", "authorization_code")
-				.param("redirect_uri", "https://example.com/login-success"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("token_type", is("bearer")))
-				.andExpect(jsonPath("access_token", notNullValue()));
-	}
+    @Test
+    public void authorizationCodeCanBeSwappedForAccessToken() throws Exception {
+        String authCode = getAuthCode(mvc, "test.user");
 
-	@Test
-	public void accessingASecureEndpointWithAValidTokenIsAllowed() throws Exception
-	{
-		mvc.perform(get("/api/whoami")
-				.header("Authorization", "Bearer " + authCodeToken(mvc, "test.user")))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("username", is("test.user")));
-	}
+        mvc.perform(post("/oauth2/token")
+                .with(httpBasic("test.web.client", "secret"))
+                .param("code", authCode)
+                .param("grant_type", "authorization_code")
+                .param("redirect_uri", "https://example.com/login-success"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("token_type", is("Bearer")))
+            .andExpect(jsonPath("access_token", notNullValue()));
+    }
 
-	@Test
-	public void pathBasedRedirectUriCanBeUsed() throws Exception
-	{
-		mvc.perform(get("/oauth/authorize")
-				.with(httpBasic("test.user", "secret"))
-				.param("client_id", "test.web.client")
-				.param("redirect_uri", "/login-success")
-				.param("response_type", "code"))
-				.andExpect(status().isSeeOther())
-				.andExpect(header().string("Location", startsWith("/login-success")));
-	}
+    @Test
+    public void accessingASecureEndpointWithAValidTokenIsAllowed() throws Exception {
+        mvc.perform(get("/api/whoami")
+                .header("Authorization", "Bearer " + authCodeToken(mvc, "test.user")))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("username", is("test.user")));
+    }
+
+    @Test
+    public void pathBasedRedirectUriCanBeUsed() throws Exception {
+        mvc.perform(get("/oauth2/authorize")
+                .with(httpBasic("test.user", "secret"))
+                .queryParam("client_id", "test.web.client")
+                .queryParam("redirect_uri", "/login-success")
+                .queryParam("response_type", "code"))
+            .andExpect(status().isFound())
+            .andExpect(header().string("Location", startsWith("/login-success")));
+    }
 }

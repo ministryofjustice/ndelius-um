@@ -6,6 +6,7 @@ import com.unboundid.ldap.listener.InMemoryListenerConfig;
 import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.schema.Schema;
 import com.unboundid.ldif.LDIFReader;
+import jakarta.annotation.PreDestroy;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
@@ -33,7 +34,6 @@ import org.springframework.util.StringUtils;
 import uk.co.bconline.ndelius.config.data.embedded.interceptor.AliasInterceptor;
 import uk.co.bconline.ndelius.config.data.embedded.interceptor.MemberOfInterceptor;
 
-import javax.annotation.PreDestroy;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;

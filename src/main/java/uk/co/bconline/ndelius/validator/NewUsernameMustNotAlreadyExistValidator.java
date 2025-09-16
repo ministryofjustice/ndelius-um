@@ -1,13 +1,12 @@
 package uk.co.bconline.ndelius.validator;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.constraintvalidation.SupportedValidationTarget;
+import jakarta.validation.constraintvalidation.ValidationTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.UserService;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraintvalidation.SupportedValidationTarget;
-import javax.validation.constraintvalidation.ValidationTarget;
 
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)
 public class NewUsernameMustNotAlreadyExistValidator implements ConstraintValidator<NewUsernameMustNotAlreadyExist, Object[]>

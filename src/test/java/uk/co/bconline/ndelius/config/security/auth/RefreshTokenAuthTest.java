@@ -46,7 +46,7 @@ public class RefreshTokenAuthTest
 	@Test
 	public void tokenCanBeRefreshed() throws Exception
 	{
-		String refreshToken = JsonPath.read(mvc.perform(post("/oauth/token")
+		String refreshToken = JsonPath.read(mvc.perform(post("/oauth2/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.param("code", getAuthCode(mvc, "test.user"))
 				.param("grant_type", "authorization_code")
@@ -56,7 +56,7 @@ public class RefreshTokenAuthTest
 				.getResponse()
 				.getContentAsString(), "refresh_token");
 
-		mvc.perform(post("/oauth/token")
+		mvc.perform(post("/oauth2/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.param("grant_type", "refresh_token")
 				.param("refresh_token", refreshToken))
@@ -68,7 +68,7 @@ public class RefreshTokenAuthTest
 	@Test
 	public void preAuthenticatedTokenCanBeRefreshed() throws Exception
 	{
-		String refreshToken = JsonPath.read(mvc.perform(post("/oauth/token")
+		String refreshToken = JsonPath.read(mvc.perform(post("/oauth2/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.param("u", encrypt("test.user", "ThisIsASecretKey"))
 				.param("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
@@ -78,7 +78,7 @@ public class RefreshTokenAuthTest
 				.getResponse()
 				.getContentAsString(), "refresh_token");
 
-		mvc.perform(post("/oauth/token")
+		mvc.perform(post("/oauth2/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.param("grant_type", "refresh_token")
 				.param("refresh_token", refreshToken))

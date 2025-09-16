@@ -1,19 +1,26 @@
 package uk.co.bconline.ndelius.model.entry;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 import org.springframework.ldap.odm.annotations.Transient;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import uk.co.bconline.ndelius.util.AuthUtils;
 
 import javax.naming.Name;
-import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 @Getter
 @NoArgsConstructor
@@ -21,7 +28,7 @@ import java.util.stream.Collectors;
 @Builder(toBuilder = true)
 @ToString(exclude = "clientSecret")
 @Entry(objectClasses = {"NDClient", "inetOrgPerson", "top"}, base = "delius.ldap.base.clients")
-public final class ClientEntry implements ClientDetails {
+public final class ClientEntry {
 	@Id
 	private Name dn;
 
@@ -44,39 +51,16 @@ public final class ClientEntry implements ClientDetails {
 	@Transient
 	private Set<RoleEntry> roles;
 
-	@Transient
-	private Integer accessTokenValiditySeconds;
-
-	@Transient
-	private Integer refreshTokenValiditySeconds;
-
-	@Transient
-	private Map<String, Object> additionalInformation;
-
-	@Override
-	public boolean isSecretRequired() {
-		return this.clientSecret != null;
-	}
-
-	@Override
-	public boolean isScoped() {
-		return this.roles != null && !this.roles.isEmpty();
-	}
-
-	@Override
-	public Set<String> getScope() {
-		return AuthUtils.mapToScopes(roles)
-				.collect(Collectors.toUnmodifiableSet());
-	}
-
-	@Override
-	public Collection<GrantedAuthority> getAuthorities() {
-		return AuthUtils.mapToAuthorities(roles)
-				.collect(Collectors.<GrantedAuthority>toUnmodifiableSet());
-	}
-
-	@Override
-	public boolean isAutoApprove(String scope) {
-		return true;
+	public RegisteredClient toRegisteredClient() {
+		return RegisteredClient
+				.withId(clientId)
+				.clientId(clientId)
+				.clientSecret(clientSecret)
+				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+				.tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE).build())
+				.scopes(scopes -> scopes.addAll(AuthUtils.mapToScopes(roles).collect(toSet())))
+				.redirectUris(uris -> uris.addAll(registeredRedirectUri))
+				.authorizationGrantTypes(types -> authorizedGrantTypes.stream().map(AuthorizationGrantType::new).forEach(types::add))
+				.build();
 	}
 }
