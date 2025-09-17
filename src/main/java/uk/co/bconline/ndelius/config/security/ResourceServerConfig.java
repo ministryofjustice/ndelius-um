@@ -4,14 +4,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import uk.co.bconline.ndelius.util.LdapUtils;
 
 @Configuration
-@EnableWebSecurity
 public class ResourceServerConfig {
 
     @Bean
@@ -22,32 +22,11 @@ public class ResourceServerConfig {
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll())
             .oauth2ResourceServer(oauth2 -> oauth2.opaqueToken(Customizer.withDefaults()))
+            .cors(Customizer.withDefaults())
+            .csrf(AbstractHttpConfigurer::disable)
+            .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .build();
     }
-
-//	@Override
-//	public void configure(HttpSecurity http) throws Exception {
-//		http.authorizeRequests()
-//				.mvcMatchers("/api/**").authenticated()
-//				.and().cors()
-//				.and().headers().frameOptions().disable()
-//				.and().csrf().disable();
-//	}
-//
-//	@Bean
-//	public WebMvcConfigurer corsConfigurer() {
-//		return new WebMvcConfigurer() {
-//			@Override
-//			public void addCorsMappings(CorsRegistry registry) {
-//				registry.addMapping("/**").allowedMethods(ALL);
-//			}
-//		};
-//	}
-//
-//	@Override
-//	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-//		resources.resourceId("NDelius");
-//	}
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -1,18 +1,16 @@
 package uk.co.bconline.ndelius.config.security.introspector;
 
+import lombok.val;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
+import org.springframework.security.oauth2.server.resource.introspection.BadOpaqueTokenException;
 import org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionAuthenticatedPrincipal;
-import org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionException;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +20,6 @@ import static org.springframework.security.oauth2.core.OAuth2TokenIntrospectionC
 
 /**
  * The UMT API resource server runs in the same process as the UMT authorization server.
- *
  * This allows the resource server to skip the extra HTTP request for token introspection and validate the token in-process.
  */
 @Component
@@ -35,27 +32,22 @@ public class InMemoryOpaqueTokenIntrospector implements OpaqueTokenIntrospector 
 
 	@Override
 	public OAuth2IntrospectionAuthenticatedPrincipal introspect(String token) {
-		OAuth2Authorization authorization = authorizationService.findByToken(token, OAuth2TokenType.ACCESS_TOKEN);
+        val authorization = authorizationService.findByToken(token, OAuth2TokenType.ACCESS_TOKEN);
 		if (authorization == null) {
-			throw new OAuth2IntrospectionException("Token not found");
+            throw new BadOpaqueTokenException("Invalid access token");
 		}
 
-		OAuth2AccessToken source = authorization.getAccessToken().getToken();
-		Instant exp = source.getExpiresAt();
-		if (exp != null && exp.isBefore(Instant.now())) {
-			throw new OAuth2IntrospectionException("Token expired");
-		}
-
+        val accessToken = authorization.getAccessToken();
 		Map<String, Object> attributes = new HashMap<>();
-		attributes.put(ACTIVE, true);
+        attributes.put(ACTIVE, accessToken.isActive());
 		attributes.put(USERNAME, authorization.getPrincipalName());
 		attributes.put(CLIENT_ID, authorization.getRegisteredClientId());
-        attributes.put(SCOPE, StringUtils.collectionToDelimitedString(source.getScopes(), " "));
+        attributes.put(SCOPE, StringUtils.collectionToDelimitedString(accessToken.getToken().getScopes(), " "));
 		attributes.put("grant_type", authorization.getAuthorizationGrantType());
-		if (source.getExpiresAt() != null) attributes.put(EXP, source.getExpiresAt());
-		if (source.getIssuedAt() != null) attributes.put(IAT, source.getIssuedAt());
+        if (accessToken.getToken().getExpiresAt() != null) attributes.put(EXP, accessToken.getToken().getExpiresAt());
+        if (accessToken.getToken().getIssuedAt() != null) attributes.put(IAT, accessToken.getToken().getIssuedAt());
 
-		List<GrantedAuthority> authorities = source.getScopes().stream()
+        List<GrantedAuthority> authorities = accessToken.getToken().getScopes().stream()
 				.map(s -> new SimpleGrantedAuthority("SCOPE_" + s))
 				.collect(Collectors.toList());
 

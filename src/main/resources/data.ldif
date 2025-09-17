@@ -131,14 +131,13 @@ sn: Client
 mail: test.web.client@test.com
 userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
-description: Test front-end client for OAuth authorization_code and implicit flow
+description: Test front-end client for OAuth authorization_code flow
 resourceId: NDelius
 registeredRedirectUri: https://example.com/login-success
 registeredRedirectUri: /login-success
 registeredRedirectUri: http://localhost:4200/aptracker-api/errors
 authorizedGrantType: preauthenticated
 authorizedGrantType: authorization_code
-authorizedGrantType: implicit
 authorizedGrantType: refresh_token
 
 dn: cn=UMBT001,cn=test.web.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
@@ -216,7 +215,7 @@ sn: Client
 mail: test.gdpr.client@test.com
 userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
-description: Test front-end client for OAuth authorization_code and implicit flow
+description: Test front-end client for OAuth authorization_code flow
 resourceId: NDelius
 registeredRedirectUri: https://example.com/login-success
 registeredRedirectUri: /login-success
@@ -226,7 +225,6 @@ registeredRedirectUri: http://nd-systest-nt01.bcl.local/homepage
 registeredRedirectUri: http://nd-systest-nt01/homepage
 authorizedGrantType: preauthenticated
 authorizedGrantType: authorization_code
-authorizedGrantType: implicit
 authorizedGrantType: refresh_token
 
 dn: cn=UMBT001,cn=test.gdpr.client,cn=EISUsers,ou=Users,dc=bcl,dc=local
@@ -10968,7 +10966,7 @@ sn: Client
 mail: test.merge.client@test.com
 userHomeArea: N01
 userPassword: {SSHA}bB9klX1/fmNUorRLy3wMTHsoD9WDAA7lO0V9FQ==
-description: Test front-end client for OAuth authorization_code and implicit flow
+description: Test front-end client for OAuth authorization_code flow
 resourceId: NDelius
 registeredRedirectUri: https://example.com/login-success
 registeredRedirectUri: /login-success
@@ -10979,7 +10977,6 @@ registeredRedirectUri: http://nd-systest-nt01.bcl.local/homepage
 registeredRedirectUri: http://nd-systest-nt01/homepage
 authorizedGrantType: preauthenticated
 authorizedGrantType: authorization_code
-authorizedGrantType: implicit
 authorizedGrantType: refresh_token
 
 dn: cn=MERGEBT000,cn=test.merge.client,cn=EISUsers,ou=Users,dc=bcl,dc=local

@@ -10,7 +10,6 @@ const authConfig: AuthConfig = {
     'UABT0050 UABI020 UABI021 UABI022 UABI023 UABI024 UABI025 UABI026',
   resource: 'NDelius',
   responseType: 'code',
-  useHttpBasicAuth: true,
   oidc: false,
   requireHttps: false,
   loginUrl: 'http://localhost:8080/umt/oauth2/authorize',

@@ -6,7 +6,8 @@
 [![Tests](https://github.com/ministryofjustice/ndelius-um/actions/workflows/test.yml/badge.svg)](https://github.com/ministryofjustice/ndelius-um/actions/workflows/test.yml)
 
 Developed by [Unilink](https://www.unilink.com) using Angular and Spring Boot to enable NPS-ICT and CRC admins to effectively create and maintain user accounts in the National Delius application, and to allow external services to securely authenticate Probation staff.
-User accounts are stored across an LDAP cluster (for authentication, user preferences and functional authorisation), and an Oracle database (for data authorisation and caseload management). 
+User accounts are stored across an LDAP cluster (for authentication, user preferences and functional authorisation), and an Oracle database (for data authorisation and caseload
+management).
 
 ## Build
 ### Dependencies
@@ -27,11 +28,13 @@ To build a docker image, using [Cloud Native Buildpacks](https://buildpacks.io/)
 ```
 
 ## Run
-To run the application using a configuration file, use the command: 
+
+To run the application using a configuration file, use the command:
 ```shell script
 java -jar build/libs/delius-user-management.jar --spring.config.location=file:/path/to/application.properties
 ```
-By default, the app will run on http://localhost:8080/umt. 
+
+By default, the app will run on http://localhost:8080/umt.
 This can be overridden with the properties `server.address`, `server.port` and `server.servlet.context-path`.
 See [Configure](#configure).
 
@@ -65,7 +68,7 @@ Note: This expects the back-end to also be running on http://localhost:8080/umt.
 ## Configure
 The application is configured with [conventional Spring parameters](https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html).
 
-See [application-example.yml](src/main/resources/application-example.yml) for an example configuration file. 
+See [application-example.yml](src/main/resources/application-example.yml) for an example configuration file.
 Alternatively, look at [application-dev.yml](src/main/resources/application-dev.yml) to see how the app can be configured with in-memory datasources (see: [Dev Profile](#dev-profile))
 
 ### Data Sources
@@ -79,7 +82,7 @@ Alternatively, look at [application-dev.yml](src/main/resources/application-dev.
 
 ## Performance Testing
 Load tests are written in Scala using the [Gatling](https://gatling.io) library.
-These tests run from an [AWS CodeBuild project](https://eu-west-2.console.aws.amazon.com/codesuite/codebuild/130975965028/projects/del-perf-usermanagement-performance-tests-build) 
+These tests run from an [AWS CodeBuild project](https://eu-west-2.console.aws.amazon.com/codesuite/codebuild/130975965028/projects/del-perf-usermanagement-performance-tests-build)
 in the Delius performance test environment  (see [buildspec.load-test.yml](buildspec.load-test.yml) and [performance-test-umt.tf](https://github.com/ministryofjustice/hmpps-delius-pipelines/blob/master/components/delius-core/performance-test-umt.tf)).
 
 To run the tests locally,
@@ -93,7 +96,9 @@ DURATION=300 \
 ```
 
 ## Authentication
-The User Management Tool acts as an [OAuth2](https://oauth.net/2/) identity provider for National Delius, and supports the `implicit`, `authorization_code`, `client_credentials` and `refresh_token` grant types as well as a custom `preauthenticated` grant type.
+
+The User Management Tool acts as an [OAuth2](https://oauth.net/2/) identity provider for National Delius, and supports the `authorization_code`, `client_credentials` and
+`refresh_token` grant types as well as a custom `preauthenticated` grant type.
 
 OAuth clients are registered in the LDAP under the `cn=EISUsers` container, with scopes being defined by the Delius roles assigned to them. To register a new client, follow the instructions in the [hmpps-ndelius-rbac](https://github.com/ministryofjustice/hmpps-ndelius-rbac#service-users--clients) repository.
 
@@ -116,11 +121,13 @@ The following commands show how you can authenticate as a user (`test.user`) to 
 See [AuthorizationCodeAuthTest.java](src/test/java/uk/co/bconline/ndelius/config/security/auth/AuthorizationCodeAuthTest.java).
 
 ### Preauthenticated grant
-Currently the NDelius application authenticates against the LDAP directly, and this authentication can't be shared with other services. 
+
+Currently the NDelius application authenticates against the LDAP directly, and this authentication can't be shared with other services.
 This means that when NDelius redirects to external applications, users would have to reauthenticate against the OAuth identity provider.
 
-To improve user experience, the `preauthenticated` grant type has been introduced. 
-This works by allowing NDelius to pass the signed/encrypted username to the external application as a request parameter, which can then be used for password-less authentication for a limited period of time. 
+To improve user experience, the `preauthenticated` grant type has been introduced.
+This works by allowing NDelius to pass the signed/encrypted username to the external application as a request parameter, which can then be used for password-less authentication for
+a limited period of time.
 When NDelius constructs the URL for the external service, it will append two parameters:
 * `u` - The username of the authenticated user
 * `t` - The timestamp of when the URL was constructed

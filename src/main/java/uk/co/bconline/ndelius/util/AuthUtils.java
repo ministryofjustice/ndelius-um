@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -35,17 +34,18 @@ public class AuthUtils {
         return ofNullable(me())
             .map(me -> {
                 val principal = me().getPrincipal();
-                if (principal instanceof UserDetails) {
-                    return ((UserDetails) principal).getUsername();
-                } else if (principal instanceof RegisteredClient) {
-                    return ((RegisteredClient) principal).getClientId();
-                } else if (principal instanceof OAuth2AuthenticatedPrincipal && AuthorizationGrantType.AUTHORIZATION_CODE.equals(((OAuth2AuthenticatedPrincipal) me().getPrincipal()).getAttribute("grant_type"))) {
-                    return ((OAuth2AuthenticatedPrincipal) principal).getAttribute("username");
-                } else if (principal instanceof OAuth2AuthenticatedPrincipal && AuthorizationGrantType.CLIENT_CREDENTIALS.equals(((OAuth2AuthenticatedPrincipal) me().getPrincipal()).getAttribute("grant_type"))) {
-                    return ((OAuth2AuthenticatedPrincipal) principal).getAttribute("client_id");
-                } else {
-                    return (String) principal;
-                }
+                return switch (principal) {
+                    case UserDetails userDetails -> userDetails.getUsername();
+                    case RegisteredClient registeredClient -> registeredClient.getClientId();
+                    case
+                        OAuth2AuthenticatedPrincipal oauth2Principal when AuthorizationGrantType.AUTHORIZATION_CODE.equals(((OAuth2AuthenticatedPrincipal) me().getPrincipal()).getAttribute("grant_type")) ->
+                        oauth2Principal.getAttribute("username");
+                    case
+                        OAuth2AuthenticatedPrincipal oauth2Principal when AuthorizationGrantType.CLIENT_CREDENTIALS.equals(((OAuth2AuthenticatedPrincipal) me().getPrincipal()).getAttribute("grant_type")) ->
+                        oauth2Principal.getAttribute("client_id");
+                    case String str -> str;
+                    case null, default -> null;
+                };
             })
             .orElse("UNKNOWN");
     }
@@ -62,18 +62,8 @@ public class AuthUtils {
             || (principal instanceof OAuth2AuthenticatedPrincipal && AuthorizationGrantType.AUTHORIZATION_CODE.equals(((OAuth2AuthenticatedPrincipal) principal).getAttribute("grant_type")));
     }
 
-    public static String myToken() {
-        val details = me().getDetails();
-        return null; // TODO check how to get token (used for revoking on logout)
-//		if (details instanceof OAuth2AuthenticationDetails) {
-//			return ((OAuth2AuthenticationDetails) details).getTokenValue();
-//		} else {
-//			return null;
-//		}
-    }
-
     public static Stream<String> myInteractions() {
-        return me().getAuthorities().stream().map(GrantedAuthority::getAuthority);
+        return me().getAuthorities().stream().map(a -> a.getAuthority().replaceAll("^SCOPE_", ""));
     }
 
     public static Stream<String> mapToScopes(Collection<RoleEntry> roles) {
@@ -97,7 +87,7 @@ public class AuthUtils {
     }
 
     public static String getRequiredScope(PreAuthorize annotation) {
-        val matcher = Pattern.compile("#oauth2\\.hasScope\\('(.*)'\\)").matcher(annotation.value());
+        val matcher = Pattern.compile("hasAuthority\\('SCOPE_(.*)'\\)").matcher(annotation.value());
         if (matcher.find()) {
             return matcher.group(1);
         } else {

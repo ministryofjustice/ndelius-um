@@ -22,7 +22,7 @@ public class TokenUtils {
     }
 
     public static String getAuthCode(MockMvc mvc, String username) throws Exception {
-        return getAuthCode(mvc, username, "UMBI001 UMBI002 UMBI003 UMBI004 UMBI005 UMBI006 UMBI007 UMBI008 UMBI009 UMBI010 UMBI011 UMBI012 UABT0050 UABI020 UABI025");
+        return getAuthCode(mvc, username, "UMBT001 UMBI001 UMBI002 UMBI003 UMBI004 UMBI005 UMBI006 UMBI007 UMBI008 UMBI009 UMBI010 UMBI011 UMBI012 UABT0050 UABI020 UABI025");
     }
 
     public static String getAuthCode(MockMvc mvc, String username, String scopes) throws Exception {
@@ -64,18 +64,5 @@ public class TokenUtils {
             .andReturn()
             .getResponse()
             .getContentAsString(), "access_token");
-    }
-
-    public static String implicitToken(MockMvc mvc, String username) throws Exception {
-        return requireNonNull(mvc.perform(get("/oauth2/authorize")
-                .with(httpBasic(username, "secret"))
-                .queryParam("client_id", "test.web.client")
-                .queryParam("response_type", "token")
-                .queryParam("redirect_uri", "https://example.com/login-success"))
-            .andExpect(status().isSeeOther())
-            .andReturn()
-            .getResponse()
-            .getHeader("Location"))
-            .replaceAll(".*access_token=(.+?)&.*", "$1");
     }
 }

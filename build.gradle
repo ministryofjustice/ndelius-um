@@ -26,7 +26,7 @@ gitProperties { failOnNoGitDirectory = false }
 jar { enabled = false }
 
 // Node/NPM
-// TODO re-enable after completing java testing:
+// TODO re-enable UI build:
 //node {
 //	version = '22.2.0'
 //	download = true

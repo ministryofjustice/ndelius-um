@@ -152,7 +152,7 @@ public class UserController
 			userService.updateUser(user);
 			if (username.equals(myUsername()) && !username.equals(user.getUsername())) {
 				log.debug("Username has changed! Revoking access token for {}", username);
-//				loginController.revokeToken(); // TODO revoke token
+                loginController.revokeToken();
 			}
 			return noContent().build();
 		}
