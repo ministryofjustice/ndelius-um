@@ -7,7 +7,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import uk.co.bconline.ndelius.model.auth.UserInteraction;
@@ -21,6 +20,9 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Lists.asList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toSet;
+import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
+import static org.springframework.security.oauth2.core.AuthorizationGrantType.CLIENT_CREDENTIALS;
+import static uk.co.bconline.ndelius.config.security.token.PreAuthenticatedGrantAuthenticationToken.PREAUTHENTICATED;
 import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 
 @Slf4j
@@ -33,15 +35,18 @@ public class AuthUtils {
     public static String myUsername() {
         return ofNullable(me())
             .map(me -> {
-                val principal = me().getPrincipal();
+                val principal = me.getPrincipal();
                 return switch (principal) {
                     case UserDetails userDetails -> userDetails.getUsername();
                     case RegisteredClient registeredClient -> registeredClient.getClientId();
                     case
-                        OAuth2AuthenticatedPrincipal oauth2Principal when AuthorizationGrantType.AUTHORIZATION_CODE.equals(((OAuth2AuthenticatedPrincipal) me().getPrincipal()).getAttribute("grant_type")) ->
+                        OAuth2AuthenticatedPrincipal oauth2Principal when PREAUTHENTICATED.equals(oauth2Principal.getAttribute("grant_type")) ->
                         oauth2Principal.getAttribute("username");
                     case
-                        OAuth2AuthenticatedPrincipal oauth2Principal when AuthorizationGrantType.CLIENT_CREDENTIALS.equals(((OAuth2AuthenticatedPrincipal) me().getPrincipal()).getAttribute("grant_type")) ->
+                        OAuth2AuthenticatedPrincipal oauth2Principal when AUTHORIZATION_CODE.equals(oauth2Principal.getAttribute("grant_type")) ->
+                        oauth2Principal.getAttribute("username");
+                    case
+                        OAuth2AuthenticatedPrincipal oauth2Principal when CLIENT_CREDENTIALS.equals(oauth2Principal.getAttribute("grant_type")) ->
                         oauth2Principal.getAttribute("client_id");
                     case String str -> str;
                     case null, default -> null;
@@ -52,14 +57,21 @@ public class AuthUtils {
 
     public static boolean isClient() {
         val principal = me().getPrincipal();
-        return principal instanceof RegisteredClient
-            || (principal instanceof OAuth2AuthenticatedPrincipal && AuthorizationGrantType.CLIENT_CREDENTIALS.equals(((OAuth2AuthenticatedPrincipal) principal).getAttribute("grant_type")));
+        if (principal instanceof RegisteredClient) return true;
+        if (principal instanceof OAuth2AuthenticatedPrincipal oauth) {
+            return CLIENT_CREDENTIALS.equals(oauth.getAttribute("grant_type"));
+        }
+        return false;
     }
 
     public static boolean isUser() {
         val principal = me().getPrincipal();
-        return principal instanceof UserDetails
-            || (principal instanceof OAuth2AuthenticatedPrincipal && AuthorizationGrantType.AUTHORIZATION_CODE.equals(((OAuth2AuthenticatedPrincipal) principal).getAttribute("grant_type")));
+        if (principal instanceof UserDetails) return true;
+        if (principal instanceof OAuth2AuthenticatedPrincipal oauth) {
+            return AUTHORIZATION_CODE.equals(oauth.getAttribute("grant_type"))
+                || PREAUTHENTICATED.equals(oauth.getAttribute("grant_type"));
+        }
+        return false;
     }
 
     public static Stream<String> myInteractions() {

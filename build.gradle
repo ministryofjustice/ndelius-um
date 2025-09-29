@@ -26,21 +26,20 @@ gitProperties { failOnNoGitDirectory = false }
 jar { enabled = false }
 
 // Node/NPM
-// TODO re-enable UI build:
-//node {
-//	version = '22.2.0'
-//	download = true
-//	nodeProjectDir = file('ui')
-//	npmInstallCommand = "ci"
-//}
-//tasks.register('npmBuild', NpmTask) {
-//	dependsOn npmInstall
-//	npmCommand = ['run', 'build-prod']
-//}
-//processResources.dependsOn(npmBuild)
-//test.dependsOn(npm_test)
-//sourceSets { main.resources.srcDirs 'ui/dist' }
-//clean { delete 'ui/dist' }
+node {
+    version = '22.2.0'
+    download = true
+    nodeProjectDir = file('ui')
+    npmInstallCommand = "ci"
+}
+tasks.register('npmBuild', NpmTask) {
+    dependsOn npmInstall
+    npmCommand = ['run', 'build-prod']
+}
+processResources.dependsOn(npmBuild)
+test.dependsOn(npm_test)
+sourceSets { main.resources.srcDirs 'ui/dist' }
+clean { delete 'ui/dist' }
 
 // Tests
 jacoco.toolVersion '0.8.12'
