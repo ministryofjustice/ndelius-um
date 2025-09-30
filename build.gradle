@@ -65,7 +65,7 @@ dependencies {
 	implementation      'org.springframework.session:spring-session-data-redis'
 	implementation      'com.unboundid:unboundid-ldapsdk'
 	implementation      'org.signal:embedded-redis:0.9.1'
-	implementation      'org.springdoc:springdoc-openapi-ui:1.8.0'
+    implementation      'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
 	implementation      'com.opencsv:opencsv:5.11'
 	implementation      'io.github.resilience4j:resilience4j-bulkhead:2.3.0'
 	implementation      'io.github.resilience4j:resilience4j-spring-boot2:2.3.0'

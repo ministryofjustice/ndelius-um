@@ -20,7 +20,7 @@ spring:
       ldif: classpath:data.ldif
       port: 3060
       validation.enabled: false
-  redis:
+  data.redis:
     embedded: true
     port: 6379
 
@@ -35,6 +35,3 @@ delius:
 
 logging.level:
   uk.co.bconline.ndelius: DEBUG
-  # TODO remove after debugging:
-  org.springframework.security.oauth2: TRACE
-  org.springframework.security.web: TRACE

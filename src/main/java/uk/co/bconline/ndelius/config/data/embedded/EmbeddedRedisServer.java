@@ -10,10 +10,10 @@ import redis.embedded.RedisServer;
 import java.io.IOException;
 
 @Component
-@ConditionalOnProperty("spring.redis.embedded")
+@ConditionalOnProperty("spring.data.redis.embedded")
 public class EmbeddedRedisServer {
 
-	@Value("${spring.redis.port}")
+    @Value("${spring.data.redis.port}")
 	private int redisPort;
 
 	private RedisServer redisServer;

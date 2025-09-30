@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
@@ -90,6 +91,13 @@ public class AuthUtils {
         return ofNullable(roles)
             .map(r -> mapToScopes(roles)
                 .map(UserInteraction::new))
+            .orElseGet(Stream::empty);
+    }
+
+    public static Stream<SimpleGrantedAuthority> mapToSimpleAuthorities(Collection<RoleEntry> roles) {
+        return ofNullable(roles)
+            .map(r -> mapToScopes(roles)
+                .map(SimpleGrantedAuthority::new))
             .orElseGet(Stream::empty);
     }
 

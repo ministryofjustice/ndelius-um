@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.context.AuthorizationServerContextHolder;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.token.DefaultOAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import uk.co.bconline.ndelius.config.security.token.PreAuthenticatedGrantAuthenticationToken;
@@ -131,7 +132,10 @@ public class PreAuthenticatedGrantAuthenticationProvider implements Authenticati
             scopes
         );
         if (generatedAccessToken instanceof ClaimAccessor claimAccessor) {
-            authorizationBuilder.token(accessToken, (metadata) -> metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME, claimAccessor.getClaims()));
+            authorizationBuilder.token(accessToken, (metadata) -> {
+                metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME, claimAccessor.getClaims());
+                metadata.put(OAuth2TokenFormat.class.getName(), OAuth2TokenFormat.REFERENCE.getValue());
+            });
         } else {
             authorizationBuilder.accessToken(accessToken);
         }

@@ -21,8 +21,8 @@
         enddate.invalid)">Section incomplete</small>
         <hr/>
         <div class="form-group row">
-          <label for="username" class="col-sm-2 col-form-label">Username</label>
-          <div class="col-sm-4">
+          <label for="username" class="col-md-2 col-form-label">Username</label>
+          <div class="col-md-4">
             <input #username="ngModel" id="username" name="username" [(ngModel)]="user.username"
                    class="form-control" [readonly]="mode === 'View'"
                    autoFocus required pattern="^[a-zA-Z0-9_\-.']*$"
@@ -38,8 +38,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="forenames" class="col-sm-2 col-form-label">Forenames</label>
-          <div class="col-sm-4">
+          <label for="forenames" class="col-md-2 col-form-label">Forenames</label>
+          <div class="col-md-4">
             <input id="forenames" name="forenames" #forenames="ngModel" class="form-control"
                    [(ngModel)]="user.forenames"
                    [readonly]="mode === 'View'"
@@ -53,8 +53,8 @@
               </small>
             </div>
           </div>
-          <label for="surname" class="col-sm-2 col-form-label">Surname</label>
-          <div class="col-sm-4">
+          <label for="surname" class="col-md-2 col-form-label">Surname</label>
+          <div class="col-md-4">
             <input id="surname" name="surname" #surname="ngModel" class="form-control"
                    [(ngModel)]="user.surname"
                    [readonly]="mode === 'View'"
@@ -70,8 +70,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label for="email" class="col-sm-2 col-form-label">Email</label>
-          <div class="col-sm-4">
+          <label for="email" class="col-md-2 col-form-label">Email</label>
+          <div class="col-md-4">
             <input id="email" name="email" #email="ngModel" class="form-control" [(ngModel)]="user.email"
                    [readonly]="mode === 'View'" maxlength="255" required>
             <div *ngIf="email.invalid && email.dirty" class = text-danger>
@@ -83,8 +83,8 @@
               </small>
             </div>
           </div>
-          <label for="telephone-number" class="col-sm-2 col-form-label">Phone Number</label>
-          <div class="col-sm-4">
+          <label for="telephone-number" class="col-md-2 col-form-label">Phone Number</label>
+          <div class="col-md-4">
             <input #telephoneNumber="ngModel" id="telephone-number" name="telephone-number" class="form-control" [(ngModel)]="user.telephoneNumber"
                    [readonly]="mode === 'View'" maxlength="35" pattern="^[0-9 ]*$">
             <div *ngIf="telephoneNumber.invalid && telephoneNumber.dirty" class="text-danger">
@@ -95,8 +95,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label [for]="'start-date-d'" class="col-sm-2 col-form-label">Start Date</label>
-          <div class="col-sm-4">
+          <label [for]="'start-date-d'" class="col-md-2 col-form-label">Start Date</label>
+          <div class="col-md-4">
             <date id="start-date" name="start-date" #startdate="ngModel"
                   [(ngModel)]="user.startDate"
                   [required]="!!user.staffCode"
@@ -124,8 +124,8 @@
               </small>
             </div>
           </div>
-          <label [for]="'end-date-d'" class="col-sm-2 col-form-label">End Date</label>
-          <div class="col-sm-4">
+          <label [for]="'end-date-d'" class="col-md-2 col-form-label">End Date</label>
+          <div class="col-md-4">
             <date id="end-date" name="end-date" #enddate="ngModel"
                   [required]="false"
                   [(ngModel)]="user.endDate"
@@ -159,24 +159,24 @@
         homeArea.invalid)">Section incomplete</small>
         <hr>
         <div class="form-group row">
-          <label [for]="'role-groups-toggle-btn'" class="col-sm-2 col-form-label">Role Groups</label>
-          <div class="col-sm-{{selectedRoleGroups && selectedRoleGroups.length !== 0 && mode !== 'View'? '3  pe-sm-0': 4}}">
+          <label [for]="'role-groups-toggle-btn'" class="col-md-2 col-form-label">Role Groups</label>
+          <div class="col-md-{{selectedRoleGroups && selectedRoleGroups.length !== 0 && mode !== 'View'? '3  pe-md-0': 4}}">
             <item-selector id="role-groups" #roleGroupField multiple="true" maxHeight="300px"
                            [(selected)]="selectedRoleGroups"
                            [available]="roleGroups"
                            [readonly]="mode === 'View'"
                            [labelMapper]="LabelMappingUtils.nameToLabel"></item-selector>
           </div>
-          <div class="col-sm-1 ps-sm-1" *ngIf="selectedRoleGroups && selectedRoleGroups.length !== 0 && mode !== 'View'">
+          <div class="col-md-1 ps-md-1" *ngIf="selectedRoleGroups && selectedRoleGroups.length !== 0 && mode !== 'View'">
             <button class="btn btn-sm btn-outline-secondary w-100 py-2" (click)="applyRoleGroup()"
                     title="Apply selected role groups to this user"
                     type="button">
               <span class="d-none d-lg-inline">Apply</span>
-              <small class="d-sm-inline d-lg-none bi bi-plus"></small>
+              <small class="d-md-inline d-lg-none bi bi-plus"></small>
             </button>
           </div>
-          <label [for]="'roles-toggle-btn'" class="col-sm-2 col-form-label">Roles</label>
-          <div class="col-sm-4">
+          <label [for]="'roles-toggle-btn'" class="col-md-2 col-form-label">Roles</label>
+          <div class="col-md-4">
             <item-selector #rolesControl="ngModel" id="roles" name="roles" multiple="true" maxHeight="300px"
                            [required]="false"
                            [(ngModel)]="user.roles"
@@ -189,8 +189,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label [for]="'datasets-toggle-btn'" class="col-sm-2 col-form-label">Datasets</label>
-          <div class="col-sm-4">
+          <label [for]="'datasets-toggle-btn'" class="col-md-2 col-form-label">Datasets</label>
+          <div class="col-md-4">
             <item-selector id="datasets" name="datasets" multiple="true" #datasetsList="ngModel" maxHeight="300px"
                            required="true"
                            [(ngModel)]="user.datasets"
@@ -208,8 +208,8 @@
               </small>
             </div>
           </div>
-          <label [for]="'establishments-toggle-btn'" class="col-sm-2 col-form-label">Establishments</label>
-          <div class="col-sm-4">
+          <label [for]="'establishments-toggle-btn'" class="col-md-2 col-form-label">Establishments</label>
+          <div class="col-md-4">
             <item-selector id="establishments" name="establishments" #establishmentsList="ngModel" multiple="true" maxHeight="300px"
                            [(ngModel)]="user.establishments"
                            [(selected)]="user.establishments"
@@ -225,8 +225,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label [for]="'home-area-toggle-btn'" class="col-sm-2 col-form-label">Home Area</label>
-          <div class="col-sm-4">
+          <label [for]="'home-area-toggle-btn'" class="col-md-2 col-form-label">Home Area</label>
+          <div class="col-md-4">
             <item-selector id="home-area" name="homearea" #homeArea="ngModel" maxHeight="300px"
                            required="true"
                            [(ngModel)]="user.homeArea"
@@ -244,8 +244,8 @@
               Datasets must be entered before selecting a Home Area
             </div>
           </div>
-          <label [for]="'sector-toggle-btn'" class="col-sm-2 col-form-label">Sector</label>
-          <div class="col-sm-4">
+          <label [for]="'sector-toggle-btn'" class="col-md-2 col-form-label">Sector</label>
+          <div class="col-md-4">
             <item-selector id="sector" name="sector" #sectorSelector="ngModel"
                            required="true"
                            [(ngModel)]="user.privateSector"
@@ -262,11 +262,11 @@
           </div>
         </div>
         <div class="form-group row">
-          <label [for]="'fileshare-groups-toggle-btn'" class="col-sm-2 col-form-label"
+          <label [for]="'fileshare-groups-toggle-btn'" class="col-md-2 col-form-label"
                  title="Manage access to folders in the NextCloud File Share application. This is only editable by NPS administrators, external users should contact the Helpdesk.">
             File Shares
           </label>
-          <div class="col-sm-4">
+          <div class="col-md-4">
             <item-selector id="fileshare-groups" name="fileshare-groups" maxHeight="300px" multiple="true"
                            [(ngModel)]="user.groups.Fileshare"
                            [(selected)]="user.groups.Fileshare"
@@ -274,11 +274,11 @@
                            [readonly]="mode === 'View' || !auth.isPublicAdmin()"
                            [labelMapper]="LabelMappingUtils.descriptionToLabel"></item-selector>
           </div>
-          <label [for]="'reporting-groups-toggle-btn'" class="col-sm-2 col-form-label"
+          <label [for]="'reporting-groups-toggle-btn'" class="col-md-2 col-form-label"
                  title="Manage access to groups in the NDelius MIS Reporting tool. This is only editable by NPS administrators, external users should contact the Helpdesk.">
             Reporting
           </label>
-          <div class="col-sm-4">
+          <div class="col-md-4">
             <item-selector id="reporting-groups" name="reporting-groups" maxHeight="300px" multiple="true"
                            [(ngModel)]="user.groups['NDMIS-Reporting']"
                            [(selected)]="user.groups['NDMIS-Reporting']"
@@ -293,13 +293,13 @@
         <h2 class="card-title mb-0" id="staff-details">Staff Details</h2>
         <hr>
         <div class="form-group row">
-          <div class="col-sm-2">
+          <div class="col-md-2">
             <label for="staff-code" class="col-form-label">Staff Code</label>
             <div class="spinner-border spinner-border-sm ms-1" role="status" *ngIf="loadingStaffCode">
               <span class="visually-hidden">Loading...</span>
             </div>
           </div>
-          <div class="col-sm-4">
+          <div class="col-md-4">
             <div class="input-group">
               <input id="staff-code" name="staff-code" #staffCode="ngModel" class="form-control"
                      [(ngModel)]="user.staffCode"
@@ -338,8 +338,8 @@
               </p>
             </div>
           </div>
-          <label [for]="'staff-grade-toggle-btn'" class="col-sm-2 col-form-label">Staff Grade</label>
-          <div class="col-sm-4">
+          <label [for]="'staff-grade-toggle-btn'" class="col-md-2 col-form-label">Staff Grade</label>
+          <div class="col-md-4">
             <item-selector id="staff-grade" name="staffGrade" #staffGrade="ngModel" maxHeight="300px"
                            [required]="user.staffCode && user.staffCode !== '' && staffCode.valid === true"
                            [(ngModel)]="user.staffGrade"
@@ -356,8 +356,8 @@
           </div>
         </div>
         <div class="form-group row">
-          <label [for]="'teams-toggle-btn'" class="col-sm-2 col-form-label">Team(s)</label>
-          <div class="col-sm-4">
+          <label [for]="'teams-toggle-btn'" class="col-md-2 col-form-label">Team(s)</label>
+          <div class="col-md-4">
             <item-selector id="teams" name="teams" multiple="true" #teamsList="ngModel" maxHeight="300px"
                            [(ngModel)] = "user.teams"
                            [disabled]="!user.staffCode || user.staffCode === ''"
@@ -369,8 +369,8 @@
                            [readonly]="mode === 'View'"
                            [labelMapper]="LabelMappingUtils.codeDescriptionToLabel"></item-selector>
           </div>
-          <label [for]="'sub-contracted-provider-toggle-btn'" class="col-sm-2 col-form-label">Sub-contracted Provider</label>
-          <div class="col-sm-4">
+          <label [for]="'sub-contracted-provider-toggle-btn'" class="col-md-2 col-form-label">Sub-contracted Provider</label>
+          <div class="col-md-4">
             <item-selector id="sub-contracted-provider" name="sub-contracted-provider" #subContractedProvidersList="ngModel" maxHeight="300px"
                            [(ngModel)] = "user.subContractedProvider"
                            [(selected)]="user.subContractedProvider"

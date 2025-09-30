@@ -23,10 +23,10 @@ import static org.springframework.security.oauth2.core.OAuth2TokenIntrospectionC
  * This allows the resource server to skip the extra HTTP request for token introspection and validate the token in-process.
  */
 @Component
-public class InMemoryOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
+public class InProcessOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
 	private final OAuth2AuthorizationService authorizationService;
 
-	public InMemoryOpaqueTokenIntrospector(OAuth2AuthorizationService authorizationService) {
+    public InProcessOpaqueTokenIntrospector(OAuth2AuthorizationService authorizationService) {
 		this.authorizationService = authorizationService;
 	}
 
