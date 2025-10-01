@@ -74,7 +74,7 @@ Alternatively, look at [application-dev.yml](src/main/resources/application-dev.
 ### Data Sources
 * `spring.datasource` defines the Database connection, which is used for user, staff and dataset access information.
 * `spring.ldap` defines the LDAP connection, which contains user authentication, role-based access control (RBAC), and NDelius user preferences.
-* `spring.redis` defines the Redis connection details, which is used for storing OAuth2 access tokens and authorisation codes.
+* `spring.data.redis` defines the Redis connection details, which is used for storing OAuth2 access tokens and authorisation codes.
 
 ### Custom configuration items
 * `delius.secret` is a shared secret key between this application and Delius to support authenticating users who have already logged in to Delius (See [Preauthenticated grant](#Preauthenticated grant)).
@@ -143,4 +143,9 @@ For example,
 < {"token_type":"bearer","access_token":"...","refresh_token":"...","expires_in":43199,"scope":"UMBI001"}
 ```
 
-For more details on how this is implemented, see [PreAuthenticatedTokenGranter.java](src/main/java/uk/co/bconline/ndelius/config/security/provider/token/PreAuthenticatedTokenGranter.java).
+For more details on how this is implemented, see [PreAuthenticatedGrantAuthenticationProvider.java](src/main/java/uk/co/bconline/ndelius/config/security/provider/PreAuthenticatedGrantAuthenticationProvider.java).
+
+## Support
+For any issues or questions, please contact the National Delius service team via the [#ndelius_service_team](https://moj.enterprise.slack.com/archives/C6C1KGRME)
+Slack channel. Or feel free to create a [new issue](https://github.com/ministryofjustice/ndelius-um/issues/new)
+in this repository.
