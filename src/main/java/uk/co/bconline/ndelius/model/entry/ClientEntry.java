@@ -66,7 +66,9 @@ public final class ClientEntry {
             .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
             .tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE).build())
             .scopes(scopes -> scopes.addAll(AuthUtils.mapToScopes(roles).collect(toSet())))
-            .redirectUris(uris -> uris.addAll(registeredRedirectUri))
+            .redirectUris(uris -> uris.addAll(registeredRedirectUri.stream()
+                // Workaround for the new redirect strategy in spring authorization server. See org.springframework.security.web.DefaultRedirectStrategy
+                .map(uri -> "/umt/".equals(uri) ? "/" : uri).collect(toSet())))
             .authorizationGrantTypes(types -> authorizedGrantTypes.stream().map(AuthorizationGrantType::new).forEach(types::add))
             .build();
     }
