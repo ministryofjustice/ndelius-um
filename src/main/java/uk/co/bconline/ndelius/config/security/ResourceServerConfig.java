@@ -19,7 +19,7 @@ public class ResourceServerConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain resourceServerFilterChain(HttpSecurity http) throws Exception {
         return http
-            .securityMatcher("/api/**")
+            .securityMatcher("/api/**", "/actuator/**", "/swagger-ui/**", "/v3/api-docs.yaml", "/v3/api-docs/**")
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll())
