@@ -22,7 +22,7 @@ jobs:
       ghcr_image_name: ghcr.io/${{ github.repository_owner }}/delius-core-user-management
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: ./.github/actions/setup
 
