@@ -1,5 +1,7 @@
 package uk.co.bconline.ndelius.validator;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,6 @@ import uk.co.bconline.ndelius.service.DatasetService;
 import uk.co.bconline.ndelius.service.UserEntityService;
 import uk.co.bconline.ndelius.service.UserEntryService;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 import static java.util.Collections.emptyList;

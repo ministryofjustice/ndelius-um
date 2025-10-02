@@ -1,31 +1,39 @@
 package uk.co.bconline.ndelius.config.security;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Order(1)
+import static org.springframework.web.cors.CorsConfiguration.ALL;
+
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	@Bean
-	@Override
-	public AuthenticationManager authenticationManager() throws Exception {
-		return super.authenticationManager();
-	}
+public class WebSecurityConfig {
+    @Bean
+    SecurityFilterChain uiSecurityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/login").permitAll()
+                .anyRequest().authenticated())
+            .formLogin(formLogin -> formLogin.loginPage("/login").permitAll())
+            .httpBasic(httpBasic -> httpBasic.realmName("ndelius-users"))
+            .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+            .build();
+    }
 
-	@Override
-	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.requestMatchers()
-				.antMatchers("/login", "/oauth/authorize")
-				.and().authorizeRequests()
-				.anyRequest().authenticated()
-				.and().formLogin().loginPage("/login").permitAll()
-				.and().httpBasic().realmName("ndelius-users")
-				.and().headers().frameOptions().disable();
-	}
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(@NotNull CorsRegistry registry) {
+                registry.addMapping("/**").allowedMethods(ALL);
+            }
+        };
+    }
 }

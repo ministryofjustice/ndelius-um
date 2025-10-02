@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.advice;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.aspectj.lang.JoinPoint;
@@ -13,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import uk.co.bconline.ndelius.util.AuthUtils;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static java.util.Optional.ofNullable;
 import static org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_HANDLER_ATTRIBUTE;

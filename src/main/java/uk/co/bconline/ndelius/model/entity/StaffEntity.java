@@ -1,10 +1,23 @@
 package uk.co.bconline.ndelius.model.entity;
 
-import lombok.*;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.Type;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,10 +25,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static jakarta.persistence.FetchType.EAGER;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
-import static javax.persistence.FetchType.EAGER;
-import static org.hibernate.annotations.NotFoundAction.IGNORE;
 
 @Getter
 @Entity
@@ -53,11 +65,9 @@ public class StaffEntity implements Serializable
 	private Boolean privateStaff;
 
 	@Column(name = "START_DATE")
-	@Type(type = "java.time.LocalDate")
 	private LocalDate startDate;
 
 	@Column(name = "END_DATE")
-	@Type(type = "java.time.LocalDate")
 	private LocalDate endDate;
 
 	@Column(name = "PROBATION_AREA_ID")
@@ -89,7 +99,6 @@ public class StaffEntity implements Serializable
 	private LocalDateTime updatedAt;
 
 	@Builder.Default
-	@NotFound(action = IGNORE)
 	@OneToMany(mappedBy = "staff", fetch = EAGER)
 	private Set<StaffTeamEntity> teamLinks = new HashSet<>();
 

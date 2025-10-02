@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.config.security.auth;
 
+import com.jayway.jsonpath.JsonPath;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,47 +44,55 @@ public class PreAuthenticatedAuthTest {
 
 	@Test
 	public void canLoginWithEncryptedRequestParams() throws Exception {
-		mvc.perform(post("/oauth/token")
+		mvc.perform(post("/oauth2/token")
 				.with(httpBasic("test.web.client", "secret"))
-				.param("u", encrypt("test.user", "ThisIsASecretKey"))
-				.param("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
+				.queryParam("u", encrypt("test.user", "ThisIsASecretKey"))
+				.queryParam("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
 				.param("grant_type", "preauthenticated")
 				.param("scope", "UMBI001"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("token_type", is("bearer")))
+            .andExpect(jsonPath("token_type", is("Bearer")))
 				.andExpect(jsonPath("scope", is("UMBI001")))
 				.andExpect(jsonPath("access_token", notNullValue()));
 	}
 
 	@Test
 	public void userScopesAreReturnedCorrectly() throws Exception {
-		mvc.perform(post("/oauth/token")
+        String token = JsonPath.read(mvc.perform(post("/oauth2/token")
 				.with(httpBasic("test.web.client", "secret"))
-				.param("u", encrypt("test.user", "ThisIsASecretKey"))
-				.param("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
+				.queryParam("u", encrypt("test.user", "ThisIsASecretKey"))
+				.queryParam("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
 				.param("grant_type", "preauthenticated")
 				.param("scope", "UMBI001 CWBI006"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("scope", containsString("UMBI001")))
-				.andExpect(jsonPath("scope", not(containsString("CWBI006"))));
+            .andReturn().getResponse().getContentAsString(), "access_token");
+
+        mvc.perform(post("/oauth2/introspect")
+                .with(httpBasic("test.web.client", "secret"))
+                .param("token", token))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("sub", is("test.user")))
+            .andExpect(jsonPath("client_id", is("test.web.client")))
+            .andExpect(jsonPath("scope", containsString("UMBI001")))
+            .andExpect(jsonPath("scope", not(containsString("CWBI006"))));
 	}
 
 	@Test
-	public void missingTimestampIsUnauthorized() throws Exception {
-		mvc.perform(post("/oauth/token")
+    public void missingTimestampIsBadRequest() throws Exception {
+		mvc.perform(post("/oauth2/token")
 				.with(httpBasic("test.web.client", "secret"))
-				.param("u", encrypt("test.user", "ThisIsASecretKey"))
+				.queryParam("u", encrypt("test.user", "ThisIsASecretKey"))
 				.param("grant_type", "preauthenticated")
 				.param("scope", "UMBI001"))
-				.andExpect(status().isUnauthorized());
+            .andExpect(status().isBadRequest());
 	}
 
 	@Test
 	public void timestampOutOfDateIsUnauthorized() throws Exception {
-		mvc.perform(post("/oauth/token")
+		mvc.perform(post("/oauth2/token")
 				.with(httpBasic("test.web.client", "secret"))
-				.param("u", encrypt("test.user", "ThisIsASecretKey"))
-				.param("t", encrypt(String.valueOf(now().minus(2, HOURS).toEpochMilli()), "ThisIsASecretKey"))
+				.queryParam("u", encrypt("test.user", "ThisIsASecretKey"))
+				.queryParam("t", encrypt(String.valueOf(now().minus(2, HOURS).toEpochMilli()), "ThisIsASecretKey"))
 				.param("grant_type", "preauthenticated")
 				.param("scope", "UMBI001"))
 				.andExpect(status().isUnauthorized());
@@ -91,12 +100,23 @@ public class PreAuthenticatedAuthTest {
 
 	@Test
 	public void incorrectKeyIsUnauthorized() throws Exception {
-		mvc.perform(post("/oauth/token")
+		mvc.perform(post("/oauth2/token")
 				.with(httpBasic("test.web.client", "secret"))
-				.param("u", encrypt("test.user", "INVALID-KEY"))
-				.param("t", encrypt(String.valueOf(now().toEpochMilli()), "INVALID-KEY"))
-				.param("grant_type", "preauthenticated")
-				.param("scope", "UMBI001"))
+				.queryParam("u", encrypt("test.user", "INVALID-KEY"))
+				.queryParam("t", encrypt(String.valueOf(now().toEpochMilli()), "INVALID-KEY"))
+				.queryParam("grant_type", "preauthenticated")
+				.queryParam("scope", "UMBI001"))
 				.andExpect(status().isUnauthorized());
 	}
+
+    @Test
+    public void incorrectClientSecretIsUnauthorized() throws Exception {
+        mvc.perform(post("/oauth2/token")
+                .with(httpBasic("test.web.client", "INVALID-SECRET"))
+                .queryParam("u", encrypt("test.user", "ThisIsASecretKey"))
+                .queryParam("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
+                .param("grant_type", "preauthenticated")
+                .param("scope", "UMBI001"))
+            .andExpect(status().isUnauthorized());
+    }
 }

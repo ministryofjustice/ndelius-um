@@ -37,19 +37,19 @@ public class GroupController {
 	}
 
 	@GetMapping("/groups")
-	@PreAuthorize("#oauth2.hasScope('UMBI012')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI012')")
 	public ResponseEntity<Map<String, List<Group>>> getGroups() {
 		return ok(groupTransformer.map(groupService.getGroups()));
 	}
 
 	@GetMapping("/groups/{type}")
-	@PreAuthorize("#oauth2.hasScope('UMBI012')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI012')")
 	public ResponseEntity<List<Group>> getGroupsByType(@PathVariable String type) {
 		return ok(groupTransformer.map(groupService.getGroups(type)));
 	}
 
 	@GetMapping("/group/{name}")
-	@PreAuthorize("#oauth2.hasScope('UMBI012')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI012')")
 	public ResponseEntity<Group> getTopLevelGroup(@PathVariable String name) {
 		return groupService.getGroup(name)
 				.map(groupTransformer::mapWithMembers)
@@ -58,7 +58,7 @@ public class GroupController {
 	}
 
 	@GetMapping("/group/{type}/{name}")
-	@PreAuthorize("#oauth2.hasScope('UMBI012')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI012')")
 	public ResponseEntity<Group> getGroupByTypeAndName(@PathVariable String type, @PathVariable String name) {
 		return groupService.getGroup(type, name)
 				.map(groupTransformer::mapWithMembers)

@@ -3,6 +3,9 @@ package uk.co.bconline.ndelius.controller;
 import com.google.common.collect.ImmutableMap;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.User;
@@ -20,9 +30,6 @@ import uk.co.bconline.ndelius.util.CSVUtils;
 import uk.co.bconline.ndelius.validator.NewUsernameMustNotAlreadyExist;
 import uk.co.bconline.ndelius.validator.UsernameMustNotAlreadyExist;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -53,7 +60,7 @@ public class UserController
 	}
 
 	@GetMapping("/users")
-	@PreAuthorize("#oauth2.hasScope('UMBI001')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI001')")
 	public ResponseEntity<List<SearchResult>> search(
 			// search terms
 			@RequestParam("q") String query,
@@ -72,7 +79,7 @@ public class UserController
 	}
 
 	@GetMapping(value = "/users/export", produces = "text/csv")
-	@PreAuthorize("#oauth2.hasScope('UMBI001')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI001')")
 	public void exportSearchResults(
 			HttpServletResponse response,
 			// search terms
@@ -92,7 +99,7 @@ public class UserController
 
 	@ResponseBody
 	@GetMapping(value = "/users/export/all", produces = "text/csv")
-	@PreAuthorize("#oauth2.hasScope('UABT0050')")
+	@PreAuthorize("hasAuthority('SCOPE_UABT0050')")
 	public ResponseEntity<StreamingResponseBody> exportAll() {
 		val filename = DateTimeFormatter.ofPattern("'DeliusUsers_'uuuuMMdd'T'HHmmss'.csv'").format(LocalDateTime.now());
 		return ok()
@@ -102,7 +109,7 @@ public class UserController
 	}
 
 	@GetMapping(path="/user/{username}")
-	@PreAuthorize("#oauth2.hasScope('UMBI002')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI002')")
 	public ResponseEntity<User> getUser(@PathVariable("username") String username)
 	{
 		return userService.getUser(username)
@@ -111,7 +118,7 @@ public class UserController
 	}
 
 	@GetMapping(path="/staff/{staffCode}")
-	@PreAuthorize("#oauth2.hasScope('UMBI002')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI002')")
 	public ResponseEntity<User> getUserByStaffCode(@PathVariable("staffCode") String staffCode)
 	{
 		return userService.getUserByStaffCode(staffCode)
@@ -122,7 +129,7 @@ public class UserController
 	@Transactional
 	@PostMapping(path="/user")
 	@UsernameMustNotAlreadyExist
-	@PreAuthorize("#oauth2.hasScope('UMBI003')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI003')")
 	public ResponseEntity addUser(@RequestBody User user) throws URISyntaxException
 	{
 		userService.addUser(user);
@@ -132,7 +139,7 @@ public class UserController
 	@Transactional
 	@NewUsernameMustNotAlreadyExist
 	@PostMapping(path="/user/{username}")
-	@PreAuthorize("#oauth2.hasScope('UMBI004')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI004')")
 	public ResponseEntity updateUser(@RequestBody User user, @PathVariable("username") String username)
 	{
 		if (!userService.usernameExists(username))
@@ -145,7 +152,7 @@ public class UserController
 			userService.updateUser(user);
 			if (username.equals(myUsername()) && !username.equals(user.getUsername())) {
 				log.debug("Username has changed! Revoking access token for {}", username);
-				loginController.revokeToken();
+                loginController.revokeToken();
 			}
 			return noContent().build();
 		}

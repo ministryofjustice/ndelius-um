@@ -53,7 +53,7 @@ public class UserControllerExportTest {
 		String expectedHeader = "\"Username\",\"Forenames\",\"Surname\",\"End Date\",\"Staff Code\",\"Teams\"";
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "test.user"))
+				.queryParam("q", "test.user"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
 				.andExpect(content().string(startsWith(expectedHeader + "\n")));
@@ -64,7 +64,7 @@ public class UserControllerExportTest {
 		String expectedTestUser = "\"test.user\"";
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "test.user"))
+				.queryParam("q", "test.user"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
 				.andExpect(content().string(containsString(expectedTestUser)));
@@ -75,8 +75,8 @@ public class UserControllerExportTest {
 		String expectedTestUser = "test.user.inactive";
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc))
-				.param("q", "test.user")
-				.param("includeInactiveUsers", "true"))
+				.queryParam("q", "test.user")
+				.queryParam("includeInactiveUsers", "true"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
 				.andExpect(content().string(containsString(expectedTestUser)));
@@ -92,8 +92,8 @@ public class UserControllerExportTest {
 		// When I search for an N02 user, Then I should get no results
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token)
-				.param("q", "Joe.Bloggs")
-				.param("dataset", datasetFilter))
+				.queryParam("q", "Joe.Bloggs")
+				.queryParam("dataset", datasetFilter))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
 				.andExpect(content().string(not(containsString("Joe.Bloggs"))));
@@ -101,8 +101,8 @@ public class UserControllerExportTest {
 		// When I search for an N01 user, Then I should get results
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token)
-				.param("q", "Tiffiny.Thrasher")
-				.param("dataset", datasetFilter))
+				.queryParam("q", "Tiffiny.Thrasher")
+				.queryParam("dataset", datasetFilter))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
 				.andExpect(content().string(containsString("Tiffiny.Thrasher")));
@@ -116,8 +116,8 @@ public class UserControllerExportTest {
 		// When I attempt to search for N02 users, Then I should get no results
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token)
-				.param("q", "")
-				.param("dataset", "N02"))
+				.queryParam("q", "")
+				.queryParam("dataset", "N02"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
 				.andExpect(content().string(hasLength(0)));
@@ -125,8 +125,8 @@ public class UserControllerExportTest {
 		// When I attempt to search for N01 users, Then I should get results
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token)
-				.param("q", "")
-				.param("dataset", "N01"))
+				.queryParam("q", "")
+				.queryParam("dataset", "N01"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
 				.andExpect(content().string(not(emptyOrNullString())));
@@ -136,8 +136,8 @@ public class UserControllerExportTest {
 	public void CsvGetAllUsersInFileshareGroup() throws Exception {
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
-				.param("q", "")
-				.param("fileshareGroup", "Group 1"))
+				.queryParam("q", "")
+				.queryParam("fileshareGroup", "Group 1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
 				.andExpect(content().string(stringContainsInOrder("Jane.Bloggs", "Joe.Bloggs", "test.user")));
@@ -147,8 +147,8 @@ public class UserControllerExportTest {
 	public void CsvGetAllUsersInReportingGroup() throws Exception {
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
-				.param("q", "")
-				.param("reportingGroup", "Group 2"))
+				.queryParam("q", "")
+				.queryParam("reportingGroup", "Group 2"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
 				.andExpect(content().string(stringContainsInOrder("Jane.Bloggs", "Joe.Bloggs", "test.user")));
@@ -158,9 +158,9 @@ public class UserControllerExportTest {
 	public void CsvFilterOnMultipleGroupsIsInclusive() throws Exception {
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
-				.param("q", "")
-				.param("fileshareGroup", "Group 1")		// contains Jane.Bloggs (and test.user)
-				.param("reportingGroup", "Group 3"))	// contains Joe.Bloggs
+				.queryParam("q", "")
+				.queryParam("fileshareGroup", "Group 1")		// contains Jane.Bloggs (and test.user)
+				.queryParam("reportingGroup", "Group 3"))	// contains Joe.Bloggs
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
 				.andExpect(content().string(stringContainsInOrder("Jane.Bloggs", "Joe.Bloggs", "test.user")));
@@ -170,9 +170,9 @@ public class UserControllerExportTest {
 	public void searchQueryWithGroupFilters() throws Exception {
 		mvc.perform(get("/api/users/export")
 				.header("Authorization", "Bearer " + token(mvc, "test.user"))
-				.param("q", "j bloggs")
-				.param("fileshareGroup", "Group 1")		// contains Jane.Bloggs (and test.user)
-				.param("reportingGroup", "Group 3"))	// contains Joe.Bloggs
+				.queryParam("q", "j bloggs")
+				.queryParam("fileshareGroup", "Group 1")		// contains Jane.Bloggs (and test.user)
+				.queryParam("reportingGroup", "Group 3"))	// contains Joe.Bloggs
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/csv"))
 				.andExpect(content().string(stringContainsInOrder("Joe.Bloggs", "Jane.Bloggs")));

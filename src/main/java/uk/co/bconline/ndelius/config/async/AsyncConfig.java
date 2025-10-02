@@ -1,7 +1,7 @@
 package uk.co.bconline.ndelius.config.async;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.task.TaskExecutorBuilder;
+import org.springframework.boot.task.ThreadPoolTaskExecutorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -11,7 +11,7 @@ import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecu
 @Configuration
 public class AsyncConfig {
 	@Bean
-	public ThreadPoolTaskExecutor applicationTaskExecutor(TaskExecutorBuilder builder) {
+	public ThreadPoolTaskExecutor applicationTaskExecutor(ThreadPoolTaskExecutorBuilder builder) {
 		return builder.build();
 	}
 

@@ -31,7 +31,7 @@ public class TeamController
 	}
 
 	@GetMapping("/teams")
-	@PreAuthorize("#oauth2.hasScope('UMBI009')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI009')")
 	public ResponseEntity<List<Team>> getTeams(final @RequestParam(value = "provider", required = false) String provider)
 	{
 		return new ResponseEntity<>(teamService.getTeams(provider), HttpStatus.OK);

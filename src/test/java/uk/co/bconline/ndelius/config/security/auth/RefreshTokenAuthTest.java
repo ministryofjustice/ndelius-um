@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static java.time.Instant.now;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -26,63 +27,74 @@ import static uk.co.bconline.ndelius.util.EncryptionUtils.encrypt;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class RefreshTokenAuthTest
-{
-	@Autowired
-	private WebApplicationContext context;
+public class RefreshTokenAuthTest {
+    @Autowired
+    private WebApplicationContext context;
 
-	private MockMvc mvc;
+    private MockMvc mvc;
 
-	@Before
-	public void setup()
-	{
-		mvc = MockMvcBuilders
-				.webAppContextSetup(context)
-				.apply(springSecurity())
-				.alwaysDo(print())
-				.build();
-	}
+    @Before
+    public void setup() {
+        mvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .alwaysDo(print())
+            .build();
+    }
 
-	@Test
-	public void tokenCanBeRefreshed() throws Exception
-	{
-		String refreshToken = JsonPath.read(mvc.perform(post("/oauth/token")
-				.with(httpBasic("test.web.client", "secret"))
-				.param("code", getAuthCode(mvc, "test.user"))
-				.param("grant_type", "authorization_code")
-				.param("redirect_uri", "https://example.com/login-success"))
-				.andExpect(status().isOk())
-				.andReturn()
-				.getResponse()
-				.getContentAsString(), "refresh_token");
+    @Test
+    public void tokenCanBeRefreshed() throws Exception {
+        String refreshToken = JsonPath.read(mvc.perform(post("/oauth2/token")
+                .with(httpBasic("test.web.client", "secret"))
+                .param("code", getAuthCode(mvc, "test.user"))
+                .param("grant_type", "authorization_code")
+                .param("redirect_uri", "https://example.com/login-success"))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString(), "refresh_token");
 
-		mvc.perform(post("/oauth/token")
-				.with(httpBasic("test.web.client", "secret"))
-				.param("grant_type", "refresh_token")
-				.param("refresh_token", refreshToken))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("access_token", notNullValue()));
-	}
+        mvc.perform(post("/oauth2/token")
+                .with(httpBasic("test.web.client", "secret"))
+                .param("grant_type", "refresh_token")
+                .param("refresh_token", refreshToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("access_token", notNullValue()));
+    }
 
 
-	@Test
-	public void preAuthenticatedTokenCanBeRefreshed() throws Exception
-	{
-		String refreshToken = JsonPath.read(mvc.perform(post("/oauth/token")
-				.with(httpBasic("test.web.client", "secret"))
-				.param("u", encrypt("test.user", "ThisIsASecretKey"))
-				.param("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
-				.param("grant_type", "preauthenticated"))
-				.andExpect(status().isOk())
-				.andReturn()
-				.getResponse()
-				.getContentAsString(), "refresh_token");
+    @Test
+    public void preAuthenticatedTokenCanBeRefreshed() throws Exception {
+        String accessTokenResponse = mvc.perform(post("/oauth2/token")
+                .with(httpBasic("test.web.client", "secret"))
+                .param("u", encrypt("test.user", "ThisIsASecretKey"))
+                .param("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
+                .param("grant_type", "preauthenticated"))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
+        String accessToken = JsonPath.read(accessTokenResponse, "access_token");
+        String refreshToken = JsonPath.read(accessTokenResponse, "refresh_token");
 
-		mvc.perform(post("/oauth/token")
-				.with(httpBasic("test.web.client", "secret"))
-				.param("grant_type", "refresh_token")
-				.param("refresh_token", refreshToken))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("access_token", notNullValue()));
-	}
+        String accessTokenDetails = mvc.perform(post("/oauth2/introspect")
+                .with(httpBasic("test.web.client", "secret"))
+                .param("token", accessToken))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
+
+        String newAccessToken = JsonPath.read(mvc.perform(post("/oauth2/token")
+                .with(httpBasic("test.web.client", "secret"))
+                .param("grant_type", "refresh_token")
+                .param("refresh_token", refreshToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("access_token", notNullValue()))
+            .andReturn().getResponse().getContentAsString(), "access_token");
+
+        mvc.perform(post("/oauth2/introspect")
+                .with(httpBasic("test.web.client", "secret"))
+                .param("token", newAccessToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("sub", is("test.user")))
+            .andExpect(jsonPath("client_id", is("test.web.client")))
+            .andExpect(jsonPath("scope", is(JsonPath.read(accessTokenDetails, "scope").toString())));
+    }
 }

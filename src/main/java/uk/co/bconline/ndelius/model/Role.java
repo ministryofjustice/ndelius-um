@@ -1,9 +1,13 @@
 package uk.co.bconline.ndelius.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;

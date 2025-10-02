@@ -22,17 +22,12 @@ spring:
     hikari:
       maximum-pool-size: 50
       leak-detection-threshold: 20000
-  jpa:
-    database-platform: org.hibernate.dialect.Oracle12cDialect
 
 spring.ldap.base-environment:
   java.naming.ldap.derefAliases: never
   com.sun.jndi.ldap.connect.pool: true
 
 spring.main.allow-circular-references: true # See RoleServiceImpl.java
-
-spring.session.store-type: redis
-spring.data.redis.repositories.enabled: false
 
 management.endpoints.web.exposure.include: ["health", "info", "metrics"]
 management.endpoint.health.show-details: always

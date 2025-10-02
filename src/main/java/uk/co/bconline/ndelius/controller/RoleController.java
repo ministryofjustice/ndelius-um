@@ -39,7 +39,7 @@ public class RoleController
 	}
 
 	@GetMapping(path="/roles")
-	@PreAuthorize("#oauth2.hasScope('UMBI007')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI007')")
 	public ResponseEntity<Set<Role>> getRoles()
 	{
 		val roles = roleService.getAllRoles().stream().map(roleTransformer::map).collect(toSet());

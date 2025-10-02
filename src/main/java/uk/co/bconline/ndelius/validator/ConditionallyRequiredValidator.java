@@ -1,11 +1,10 @@
 package uk.co.bconline.ndelius.validator;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import lombok.val;
 import org.springframework.beans.BeanWrapperImpl;
 import uk.co.bconline.ndelius.model.User;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 import static uk.co.bconline.ndelius.util.NameUtils.camelCaseToTitleCase;

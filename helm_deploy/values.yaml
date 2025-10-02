@@ -28,7 +28,6 @@ generic-service:
     SERVER_FORWARD-HEADERS-STRATEGY: "native"
     SPRING_DATASOURCE_TYPE: "com.zaxxer.hikari.HikariDataSource"
     SPRING_DATASOURCE_HIKARI_MAXIMUM-POOL-SIZE: "50"
-    SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "org.hibernate.dialect.Oracle12cDialect"
     SPRING_JPA_HIBERNATE_DDL-AUTO: "none"
     SPRING_LDAP_USEORACLEATTRIBUTES: "false"
     SPRING_REDIS_SSL: "true"
@@ -53,8 +52,8 @@ generic-service:
       JWT_SECRET: JWT_SECRET
       DELIUS_SECRET: DELIUS_SECRET
     elasticache-redis:
-      SPRING_REDIS_HOST: primary_endpoint_address
-      SPRING_REDIS_PASSWORD: auth_token
+      SPRING_DATA_REDIS_HOST: primary_endpoint_address
+      SPRING_DATA_REDIS_PASSWORD: auth_token
 
   allowlist:
     groups:

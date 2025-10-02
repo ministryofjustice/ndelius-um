@@ -30,7 +30,7 @@ public class OrganisationController
 	}
 
 	@GetMapping("/organisations")
-	@PreAuthorize("#oauth2.hasScope('UMBI011')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI011')")
 	public ResponseEntity<List<Organisation>> getOrganisations()
 	{
 		return new ResponseEntity<>(organisationService.getOrganisations(), HttpStatus.OK);

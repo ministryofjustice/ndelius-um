@@ -2,7 +2,6 @@ spring:
   jpa:
     hibernate.ddl-auto: create
     defer-datasource-initialization: true
-    database-platform: org.hibernate.dialect.Oracle12cDialect
   h2.console:
     enabled: true
     settings.web-allow-others: false # explicitly disabled to mitigate CVE-2021-42392
@@ -21,7 +20,7 @@ spring:
       ldif: classpath:data.ldif
       port: 3060
       validation.enabled: false
-  redis:
+  data.redis:
     embedded: true
     port: 6379
 

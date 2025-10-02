@@ -3,7 +3,7 @@ plugins {
 	id 'java'
 	id 'idea'
 	id 'jacoco'
-	id 'org.springframework.boot'               version '2.7.18'
+	id 'org.springframework.boot'               version '3.5.5'
 	id 'io.spring.dependency-management'        version '1.1.7'
 	id 'com.github.node-gradle.node'            version '7.1.0'
 	id 'io.gatling.gradle'                      version '3.14.1.4'
@@ -27,14 +27,14 @@ jar { enabled = false }
 
 // Node/NPM
 node {
-	version = '22.2.0'
-	download = true
-	nodeProjectDir = file('ui')
-	npmInstallCommand = "ci"
+    version = '22.2.0'
+    download = true
+    nodeProjectDir = file('ui')
+    npmInstallCommand = "ci"
 }
 tasks.register('npmBuild', NpmTask) {
-	dependsOn npmInstall
-	npmCommand = ['run', 'build-prod']
+    dependsOn npmInstall
+    npmCommand = ['run', 'build-prod']
 }
 processResources.dependsOn(npmBuild)
 test.dependsOn(npm_test)
@@ -50,7 +50,6 @@ tasks.named('test', Test).configure {
 }
 
 // Project dependencies
-ext['h2.version'] = '2.2.224' // overriding managed dependency due to various CVEs in h2 1.x
 repositories { mavenCentral() }
 dependencies {
 	implementation      'org.springframework.boot:spring-boot-starter-web'
@@ -61,13 +60,12 @@ dependencies {
 	implementation      'org.springframework.boot:spring-boot-starter-actuator'
 	implementation      'org.springframework.boot:spring-boot-starter-security'
 	implementation      'org.springframework.boot:spring-boot-starter-validation'
+	implementation      'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation      'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
 	implementation      'org.springframework.session:spring-session-data-redis'
-	implementation      'org.springframework.security.oauth:spring-security-oauth2:2.5.2.RELEASE'
-	implementation      'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.6.8'
-	implementation      'org.bouncycastle:bcpkix-jdk18on:1.80' // Overriding dependency of spring-security-oauth2-autoconfigure due to CVE-2020-15522
 	implementation      'com.unboundid:unboundid-ldapsdk'
 	implementation      'org.signal:embedded-redis:0.9.1'
-	implementation      'org.springdoc:springdoc-openapi-ui:1.8.0'
+    implementation      'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
 	implementation      'com.opencsv:opencsv:5.11'
 	implementation      'io.github.resilience4j:resilience4j-bulkhead:2.3.0'
 	implementation      'io.github.resilience4j:resilience4j-spring-boot2:2.3.0'

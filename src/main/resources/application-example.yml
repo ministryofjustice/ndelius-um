@@ -4,7 +4,6 @@ spring:
     username: example
     password: example
   jpa:
-    database-platform: org.hibernate.dialect.Oracle12cDialect
     hibernate.ddl-auto: none
   ldap:
     base: dc=moj,dc=com
@@ -12,7 +11,7 @@ spring:
     username: cn=example,dc=moj,dc=com
     password: example
     useOracleAttributes: false
-  redis:
+  data.redis:
     host: localhost
     port: 6379
 

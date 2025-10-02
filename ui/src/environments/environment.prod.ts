@@ -10,12 +10,11 @@ const authConfig: AuthConfig = {
     'UABT0050 UABI020 UABI021 UABI022 UABI023 UABI024 UABI025 UABI026',
   resource: 'NDelius',
   responseType: 'code',
-  useHttpBasicAuth: true,
   oidc: false,
   requireHttps: false,
-  loginUrl: '/umt/oauth/authorize',
-  tokenEndpoint: '/umt/oauth/token',
-  redirectUri: '/umt/',
+  loginUrl: '/umt/oauth2/authorize',
+  tokenEndpoint: '/umt/oauth2/token',
+  redirectUri: '/', // Spring's redirect strategy is not context-relative, so requesting "/" actually redirects to "/umt/". See org.springframework.security.web.DefaultRedirectStrategy
 };
 
 export const environment = {

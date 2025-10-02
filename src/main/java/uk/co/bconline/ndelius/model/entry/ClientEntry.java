@@ -1,19 +1,27 @@
 package uk.co.bconline.ndelius.model.entry;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 import org.springframework.ldap.odm.annotations.Transient;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import uk.co.bconline.ndelius.util.AuthUtils;
 
 import javax.naming.Name;
-import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 @Getter
 @NoArgsConstructor
@@ -21,62 +29,47 @@ import java.util.stream.Collectors;
 @Builder(toBuilder = true)
 @ToString(exclude = "clientSecret")
 @Entry(objectClasses = {"NDClient", "inetOrgPerson", "top"}, base = "delius.ldap.base.clients")
-public final class ClientEntry implements ClientDetails {
-	@Id
-	private Name dn;
+public final class ClientEntry {
+    @Id
+    private Name dn;
 
-	@Setter
-	@Attribute(name = "cn")
-	private String clientId;
+    @Setter
+    @Attribute(name = "cn")
+    private String clientId;
 
-	@Attribute(name = "userPassword")
-	private String clientSecret;
+    @Attribute(name = "userPassword")
+    private String clientSecret;
 
-	@Attribute(name = "authorizedGrantType")
-	private Set<String> authorizedGrantTypes;
+    @Attribute(name = "authorizedGrantType")
+    private Set<String> authorizedGrantTypes;
 
-	@Attribute(name = "resourceId")
-	private Set<String> resourceIds;
+    @Attribute(name = "resourceId")
+    private Set<String> resourceIds;
 
-	@Attribute
-	private Set<String> registeredRedirectUri;
+    @Attribute
+    private Set<String> registeredRedirectUri;
 
-	@Transient
-	private Set<RoleEntry> roles;
+    @Transient
+    private Set<RoleEntry> roles;
 
-	@Transient
-	private Integer accessTokenValiditySeconds;
-
-	@Transient
-	private Integer refreshTokenValiditySeconds;
-
-	@Transient
-	private Map<String, Object> additionalInformation;
-
-	@Override
-	public boolean isSecretRequired() {
-		return this.clientSecret != null;
-	}
-
-	@Override
-	public boolean isScoped() {
-		return this.roles != null && !this.roles.isEmpty();
-	}
-
-	@Override
-	public Set<String> getScope() {
-		return AuthUtils.mapToScopes(roles)
-				.collect(Collectors.toUnmodifiableSet());
-	}
-
-	@Override
-	public Collection<GrantedAuthority> getAuthorities() {
-		return AuthUtils.mapToAuthorities(roles)
-				.collect(Collectors.<GrantedAuthority>toUnmodifiableSet());
-	}
-
-	@Override
-	public boolean isAutoApprove(String scope) {
-		return true;
-	}
+    public RegisteredClient toRegisteredClient() {
+        return RegisteredClient
+            .withId(clientId)
+            .clientId(clientId)
+            .clientSecret(clientSecret)
+            .clientAuthenticationMethods(methods -> {
+                methods.add(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
+                if (authorizedGrantTypes != null && !authorizedGrantTypes.contains(AuthorizationGrantType.CLIENT_CREDENTIALS.getValue())) {
+                    methods.add(ClientAuthenticationMethod.NONE);
+                }
+            })
+            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+            .tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE).build())
+            .scopes(scopes -> scopes.addAll(AuthUtils.mapToScopes(roles).collect(toSet())))
+            .redirectUris(uris -> uris.addAll(registeredRedirectUri.stream()
+                // Workaround for the new redirect strategy in spring authorization server. See org.springframework.security.web.DefaultRedirectStrategy
+                .map(uri -> "/umt/".equals(uri) ? "/" : uri).collect(toSet())))
+            .authorizationGrantTypes(types -> authorizedGrantTypes.stream().map(AuthorizationGrantType::new).forEach(types::add))
+            .build();
+    }
 }

@@ -32,21 +32,21 @@ public class DatasetController
 		this.datasetService = datasetService;
 	}
 
-	@PreAuthorize("#oauth2.hasScope('UMBI006')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI006')")
 	@GetMapping(value = "/datasets", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Dataset>> getDatasets()
 	{
 		return ok(datasetService.getDatasets());
 	}
 
-	@PreAuthorize("#oauth2.hasScope('UMBI006')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI006')")
 	@GetMapping(value = "/establishments", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Dataset>> getEstablishments()
 	{
 		return ok(datasetService.getEstablishments());
 	}
 
-	@PreAuthorize("#oauth2.hasScope('UMBI006')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI006')")
 	@GetMapping(value = "/dataset/{datasetCode}/nextStaffCode", produces = MediaType.TEXT_PLAIN_VALUE)
 	public ResponseEntity<String> getNextStaffCode(@PathVariable("datasetCode") String datasetCode)
 	{
@@ -54,7 +54,7 @@ public class DatasetController
 		return ok(datasetService.getNextStaffCode(datasetCode));
 	}
 
-	@PreAuthorize("#oauth2.hasScope('UMBI006')")
+	@PreAuthorize("hasAuthority('SCOPE_UMBI006')")
 	@GetMapping(value = "/dataset/{datasetCode}/subContractedProviders", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Dataset>> getSubContractedProviders(@PathVariable("datasetCode") String datasetCode)
 	{

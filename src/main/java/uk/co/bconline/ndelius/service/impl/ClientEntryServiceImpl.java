@@ -3,10 +3,8 @@ package uk.co.bconline.ndelius.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.ClientRegistrationException;
-import org.springframework.security.oauth2.provider.NoSuchClientException;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.entry.ClientEntry;
 import uk.co.bconline.ndelius.repository.ldap.ClientEntryRepository;
@@ -19,7 +17,7 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 
 @Slf4j
 @Service
-public class ClientEntryServiceImpl implements ClientDetailsService
+public class ClientEntryServiceImpl implements RegisteredClientRepository
 {
 	private final ClientEntryRepository clientEntryRepository;
 	private final UserRoleService userRoleService;
@@ -50,9 +48,17 @@ public class ClientEntryServiceImpl implements ClientDetailsService
 	}
 
 	@Override
-	public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-		return getClient(clientId)
-				.orElseThrow(() -> new NoSuchClientException(String.format("Client '%s' not found", clientId)));
+	public RegisteredClient findById(String id) {
+		return findByClientId(id);
 	}
 
+	@Override
+	public RegisteredClient findByClientId(String clientId) {
+		return getClient(clientId).map(ClientEntry::toRegisteredClient).orElse(null);
+	}
+
+	@Override
+	public void save(RegisteredClient registeredClient) {
+		throw new RuntimeException("Clients are managed in code. Creating or updating clients at runtime is not supported.");
+	}
 }

@@ -12,8 +12,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.co.bconline.ndelius.test.util.TokenUtils;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,16 +41,15 @@ public class AuthorizationServerConfigTest {
 
 	@Test
 	public void noCredentialsReturnsUnauthorized() throws Exception {
-		mvc.perform(post("/oauth/token"))
-				.andExpect(status().isUnauthorized())
-				.andExpect(header().string("WWW-Authenticate", "Basic realm=\"ndelius-clients\""));
+		mvc.perform(post("/oauth2/token"))
+				.andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	public void accessingASecureEndpointWithoutATokenIsForbidden() throws Exception {
 		mvc.perform(get("/api/user/test.user"))
 				.andExpect(status().isUnauthorized())
-				.andExpect(jsonPath("error_description", is("Full authentication is required to access this resource")));
+				.andExpect(header().string("WWW-Authenticate", "Bearer"));
 	}
 
 	@Test
@@ -59,7 +57,7 @@ public class AuthorizationServerConfigTest {
 		mvc.perform(get("/api/user/test.user")
 				.header("Authorization", "Bearer INVALID-TOKEN"))
 				.andExpect(status().isUnauthorized())
-				.andExpect(jsonPath("error_description", is("Invalid access token")));
+            .andExpect(header().string("WWW-Authenticate", startsWith("Bearer error=\"invalid_token\", error_description=\"Invalid access token\"")));
 	}
 
 	@Test
@@ -80,7 +78,7 @@ public class AuthorizationServerConfigTest {
 	public void tokenCanBeUsedToAuthoriseBothRolesAndInteractions() throws Exception {
 		String authCode = TokenUtils.getAuthCode(mvc, "test.user");
 
-		mvc.perform(post("/oauth/token")
+		mvc.perform(post("/oauth2/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.param("code", authCode)
 				.param("grant_type", "authorization_code")

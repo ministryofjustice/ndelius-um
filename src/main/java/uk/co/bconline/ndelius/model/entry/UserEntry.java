@@ -1,14 +1,22 @@
 package uk.co.bconline.ndelius.model.entry;
 
-import lombok.*;
-import org.springframework.ldap.odm.annotations.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.ldap.odm.annotations.Attribute;
+import org.springframework.ldap.odm.annotations.DnAttribute;
+import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.odm.annotations.Transient;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import uk.co.bconline.ndelius.model.auth.UserInteraction;
 import uk.co.bconline.ndelius.model.entry.projections.UserHomeAreaProjection;
 import uk.co.bconline.ndelius.util.AuthUtils;
 
 import javax.naming.Name;
-import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,7 +26,7 @@ import java.util.stream.Collectors;
 @Builder(toBuilder = true)
 @ToString(exclude = "password")
 @Entry(objectClasses = {"NDUser", "inetOrgPerson", "top"}, base = "delius.ldap.base.users")
-public final class UserEntry implements UserHomeAreaProjection, UserDetails {
+public final class UserEntry implements UserHomeAreaProjection {
 	@Id
 	private Name dn;
 
@@ -74,29 +82,12 @@ public final class UserEntry implements UserHomeAreaProjection, UserDetails {
 	@Transient
 	private Set<RoleEntry> roles;
 
-	@Override
-	public Collection<UserInteraction> getAuthorities() {
-		return AuthUtils.mapToAuthorities(roles)
-				.collect(Collectors.toUnmodifiableSet());
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
+    public UserDetails toUserDetails() {
+        return User.builder()
+            .username(username)
+            .password(password)
+            .authorities(AuthUtils.mapToSimpleAuthorities(roles)
+                .collect(Collectors.toUnmodifiableSet()))
+            .build();
+    }
 }

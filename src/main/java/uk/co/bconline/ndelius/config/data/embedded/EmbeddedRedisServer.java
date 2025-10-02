@@ -1,19 +1,19 @@
 package uk.co.bconline.ndelius.config.data.embedded;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import redis.embedded.RedisServer;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.io.IOException;
 
 @Component
-@ConditionalOnProperty("spring.redis.embedded")
+@ConditionalOnProperty("spring.data.redis.embedded")
 public class EmbeddedRedisServer {
 
-	@Value("${spring.redis.port}")
+    @Value("${spring.data.redis.port}")
 	private int redisPort;
 
 	private RedisServer redisServer;

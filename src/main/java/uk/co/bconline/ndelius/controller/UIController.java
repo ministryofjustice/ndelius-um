@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-public class UIController
-{
-	@GetMapping({"/search", "/user", "/user/**", "/migrate"})
-	public ModelAndView redirect(ModelMap model)
-	{
-		model.addAttribute("attribute", "forwardWithForwardPrefix");
-		return new ModelAndView("forward:/", model);
-	}
+public class UIController {
+    @GetMapping({"/search", "/user", "/user/**"})
+    public ModelAndView redirect(ModelMap model) {
+        model.addAttribute("attribute", "forwardWithForwardPrefix");
+        return new ModelAndView("forward:/", model);
+    }
 }
