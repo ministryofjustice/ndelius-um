@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,6 +41,7 @@ public class AuthUtils {
                 return switch (principal) {
                     case UserDetails userDetails -> userDetails.getUsername();
                     case RegisteredClient registeredClient -> registeredClient.getClientId();
+                    case UsernamePasswordAuthenticationToken usernamePassword -> usernamePassword.getName();
                     case
                         OAuth2AuthenticatedPrincipal oauth2Principal when PREAUTHENTICATED.equals(oauth2Principal.getAttribute("grant_type")) ->
                         oauth2Principal.getAttribute("username");
