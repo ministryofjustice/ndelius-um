@@ -6,6 +6,7 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.OrFilter;
@@ -52,6 +53,7 @@ import static uk.co.bconline.ndelius.util.NameUtils.join;
 
 @Slf4j
 @Service
+@Primary
 public class UserEntryServiceImpl implements UserEntryService, UserDetailsService {
 
     @Value("${spring.ldap.base}")
