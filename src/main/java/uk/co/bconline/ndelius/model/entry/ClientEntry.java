@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.val;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
@@ -16,9 +17,11 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import uk.co.bconline.ndelius.config.security.token.PreAuthenticatedGrantAuthenticationToken;
 import uk.co.bconline.ndelius.util.AuthUtils;
 
 import javax.naming.Name;
+import java.util.List;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
@@ -59,7 +62,13 @@ public final class ClientEntry {
             .clientSecret(clientSecret)
             .clientAuthenticationMethods(methods -> {
                 methods.add(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
-                if (authorizedGrantTypes != null && !authorizedGrantTypes.contains(AuthorizationGrantType.CLIENT_CREDENTIALS.getValue())) {
+
+                // Allow public clients to skip authentication
+                val publicClientGrantTypes = List.of(
+                    AuthorizationGrantType.AUTHORIZATION_CODE.getValue(),
+                    PreAuthenticatedGrantAuthenticationToken.PREAUTHENTICATED
+                );
+                if (clientSecret == null && authorizedGrantTypes != null && authorizedGrantTypes.stream().anyMatch(publicClientGrantTypes::contains)) {
                     methods.add(ClientAuthenticationMethod.NONE);
                 }
             })
