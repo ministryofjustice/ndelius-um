@@ -41,7 +41,7 @@ public class AuthorizationServerConfigTest {
 
 	@Test
 	public void noCredentialsReturnsUnauthorized() throws Exception {
-		mvc.perform(post("/oauth2/token"))
+		mvc.perform(post("/oauth/token"))
 				.andExpect(status().isUnauthorized());
 	}
 
@@ -78,7 +78,7 @@ public class AuthorizationServerConfigTest {
 	public void tokenCanBeUsedToAuthoriseBothRolesAndInteractions() throws Exception {
 		String authCode = TokenUtils.getAuthCode(mvc, "test.user");
 
-		mvc.perform(post("/oauth2/token")
+		mvc.perform(post("/oauth/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.param("code", authCode)
 				.param("grant_type", "authorization_code")

@@ -26,7 +26,7 @@ public class TokenUtils {
     }
 
     public static String getAuthCode(MockMvc mvc, String username, String scopes) throws Exception {
-        return fromUriString(requireNonNull(mvc.perform(get("/oauth2/authorize")
+        return fromUriString(requireNonNull(mvc.perform(get("/oauth/authorize")
                 .with(httpBasic(username, "secret"))
                 .queryParam("client_id", "test.web.client")
                 .queryParam("response_type", "code")
@@ -44,7 +44,7 @@ public class TokenUtils {
     public static String authCodeToken(MockMvc mvc, String username) throws Exception {
         String authCode = getAuthCode(mvc, username);
 
-        return JsonPath.read(mvc.perform(post("/oauth2/token")
+        return JsonPath.read(mvc.perform(post("/oauth/token")
                 .with(httpBasic("test.web.client", "secret"))
                 .param("code", authCode)
                 .param("grant_type", "authorization_code")
@@ -56,7 +56,7 @@ public class TokenUtils {
     }
 
     public static String clientCredentialsToken(MockMvc mvc, String clientId) throws Exception {
-        return JsonPath.read(mvc.perform(post("/oauth2/token")
+        return JsonPath.read(mvc.perform(post("/oauth/token")
                 .with(httpBasic(clientId, "secret"))
                 .param("grant_type", "client_credentials")
                 .param("resource_id", "NDelius"))

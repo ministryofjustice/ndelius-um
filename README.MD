@@ -107,11 +107,11 @@ The front-end application authenticates with the back-end using the [Authorizati
 The following commands show how you can authenticate as a user (`test.user`) to authorize a client (`test.web.client`), using the Authorization Code flow.
 ```shell script
 # User gets an authorization code
-> curl -X GET -u 'test.user:secret' 'http://localhost:8080/umt/oauth2/authorize?client_id=test.web.client&response_type=code&redirect_uri=/login-success'
+> curl -X GET -u 'test.user:secret' 'http://localhost:8080/umt/oauth/authorize?client_id=test.web.client&response_type=code&redirect_uri=/login-success'
 < 303 See Other: /login-success?code=<auth_code>
 
 # Client swaps the authorization code for an access token
-> curl -X POST -u 'test.web.client:secret' 'http://localhost:8080/umt/oauth2/token?code=<auth_code>&grant_type=authorization_code&redirect_uri=/login-success'
+> curl -X POST -u 'test.web.client:secret' 'http://localhost:8080/umt/oauth/token?code=<auth_code>&grant_type=authorization_code&redirect_uri=/login-success'
 < {"access_token":"<token>", ...}
 
 # Client sends the access token in the Authoriation header to access API resources
@@ -134,12 +134,12 @@ When NDelius constructs the URL for the external service, it will append two par
 
 Both parameters will be encrypted by NDelius using a symmetric key that is shared between NDelius and UMT (configured using `delius.secret`).
 
-These two parameters should then be provided to the `/oauth2/token` endpoint with `grant_type=preauthenticated`.
+These two parameters should then be provided to the `/oauth/token` endpoint with `grant_type=preauthenticated`.
 The parameters will be verified for authenticity using the configured `delius.secret` key, and an OAuth2 access token will be returned on success.
 
 For example,
 ```shell script
-> curl -X POST -u test.web.client:secret "http://localhost:8080/umt/oauth2/token?u=${encryptedUsername}&t=${encryptedTimestamp}&client_id=test.web.client&grant_type=preauthenticated&scope=UMBI001"
+> curl -X POST -u test.web.client:secret "http://localhost:8080/umt/oauth/token?u=${encryptedUsername}&t=${encryptedTimestamp}&client_id=test.web.client&grant_type=preauthenticated&scope=UMBI001"
 < {"token_type":"bearer","access_token":"...","refresh_token":"...","expires_in":43199,"scope":"UMBI001"}
 ```
 

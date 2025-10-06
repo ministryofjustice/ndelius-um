@@ -45,7 +45,7 @@ public class ClientCredentialsAuthTest
 	@Test
 	public void invalidClientCredentialsReturnsUnauthorized() throws Exception
 	{
-		mvc.perform(post("/oauth2/token")
+		mvc.perform(post("/oauth/token")
 				.with(httpBasic("INVALID", "INVALID"))
 				.param("grant_type", "client_credentials"))
 				.andExpect(status().isUnauthorized());
@@ -54,7 +54,7 @@ public class ClientCredentialsAuthTest
 	@Test
 	public void successfulClientLoginReturnsBearerToken() throws Exception
 	{
-		mvc.perform(post("/oauth2/token")
+		mvc.perform(post("/oauth/token")
 				.with(httpBasic("test.server.client", "secret"))
 				.param("grant_type", "client_credentials"))
 				.andExpect(status().isOk())

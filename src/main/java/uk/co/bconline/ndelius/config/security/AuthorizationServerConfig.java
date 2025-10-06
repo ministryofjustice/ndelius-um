@@ -13,8 +13,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientCredentialsAuthenticationProvider;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2AccessTokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2RefreshTokenGenerator;
@@ -48,6 +50,7 @@ public class AuthorizationServerConfig {
         val basicAuthenticationFilter = new BasicAuthenticationFilter(authenticationManager);
         val preAuthenticatedGrantAuthenticationConverter = new PreAuthenticatedGrantAuthenticationConverter();
         val preAuthenticatedGrantAuthenticationProvider = new PreAuthenticatedGrantAuthenticationProvider(deliusSecret, registeredClientRepository, tokenGenerator, authorizationService, userDetailsService);
+        val clientCredentialsAuthenticationProvider = new OAuth2ClientCredentialsAuthenticationProvider(authorizationService, tokenGenerator);
 
         return http
             .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
@@ -56,6 +59,8 @@ public class AuthorizationServerConfig {
             .csrf(csrf -> csrf.ignoringRequestMatchers(authorizationServerConfigurer.getEndpointsMatcher()))
             .userDetailsService(userDetailsService)
             .with(authorizationServerConfigurer, server -> server
+                .clientAuthentication(clientAuthentication -> clientAuthentication
+                    .authenticationProvider(clientCredentialsAuthenticationProvider))
                 .tokenEndpoint(endpoint -> endpoint
                     .accessTokenRequestConverter(preAuthenticatedGrantAuthenticationConverter)
                     .authenticationProvider(preAuthenticatedGrantAuthenticationProvider)
@@ -68,14 +73,29 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
+    public AuthorizationServerSettings authorizationServerSettings() {
+        // to match values from Spring Boot 2's authorization server library:
+        return AuthorizationServerSettings.builder()
+            .authorizationEndpoint("/oauth/authorize")
+            .pushedAuthorizationRequestEndpoint("/oauth/par")
+            .deviceAuthorizationEndpoint("/oauth/device_authorization")
+            .deviceVerificationEndpoint("/oauth/device_verification")
+            .tokenEndpoint("/oauth/token")
+            .tokenIntrospectionEndpoint("/oauth/introspect")
+            .tokenRevocationEndpoint("/oauth/revoke")
+            .jwkSetEndpoint("/oauth/jwks")
+            .build();
+    }
+
+    @Bean
     public DelegatingOAuth2TokenGenerator delegatingOAuth2TokenGenerator() {
         return new DelegatingOAuth2TokenGenerator(new OAuth2AccessTokenGenerator(), new OAuth2RefreshTokenGenerator());
     }
 
     /*
-     * By default Spring updates the Redis configuration to enable 'notify-keyspace-events' for session expiration.
+     * By default, Spring updates the Redis configuration to enable 'notify-keyspace-events' for session expiration.
      * However in secure environments, the Redis CONFIG endpoints are disabled. In this scenario the configuration
-     * should be updated ourselves and the Spring auto-configuration should be disabled.
+     * should be updated ourselves and the Spring autoconfiguration should be disabled.
      *
      * This bean allows us to conditionally disable the Spring auto-configuration.
      *
