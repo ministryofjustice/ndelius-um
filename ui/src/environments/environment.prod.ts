@@ -14,7 +14,7 @@ const authConfig: AuthConfig = {
   requireHttps: false,
   loginUrl: '/umt/oauth/authorize',
   tokenEndpoint: '/umt/oauth/token',
-  redirectUri: '/', // Spring's redirect strategy is not context-relative, so requesting "/" actually redirects to "/umt/". See org.springframework.security.web.DefaultRedirectStrategy
+  redirectUri: '/umt/',
 };
 
 export const environment = {

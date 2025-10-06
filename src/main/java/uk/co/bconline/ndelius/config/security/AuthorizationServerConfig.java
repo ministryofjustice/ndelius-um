@@ -30,6 +30,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import uk.co.bconline.ndelius.config.security.converter.PreAuthenticatedGrantAuthenticationConverter;
 import uk.co.bconline.ndelius.config.security.converter.ScopeFilteringAuthorizationCodeRequestConverter;
+import uk.co.bconline.ndelius.config.security.handler.ContextRelativeRedirectAuthorizationEndpointSuccessHandler;
 import uk.co.bconline.ndelius.config.security.provider.PreAuthenticatedGrantAuthenticationProvider;
 
 @Configuration
@@ -65,7 +66,9 @@ public class AuthorizationServerConfig {
                     .accessTokenRequestConverter(preAuthenticatedGrantAuthenticationConverter)
                     .authenticationProvider(preAuthenticatedGrantAuthenticationProvider)
                 )
-                .authorizationEndpoint(endpoint -> endpoint.authorizationRequestConverter(new ScopeFilteringAuthorizationCodeRequestConverter())))
+                .authorizationEndpoint(endpoint -> endpoint
+                    .authorizationResponseHandler(new ContextRelativeRedirectAuthorizationEndpointSuccessHandler())
+                    .authorizationRequestConverter(new ScopeFilteringAuthorizationCodeRequestConverter())))
             .formLogin(formLogin -> formLogin.loginPage("/login").permitAll())
             .addFilterBefore(basicAuthenticationFilter, LogoutFilter.class) // To ensure basic authentication is applied before OAuthAuthorizationEndpointFilter
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
