@@ -76,7 +76,10 @@ public final class ClientEntry {
             .tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE).build())
             .scopes(scopes -> scopes.addAll(AuthUtils.mapToScopes(roles).collect(toSet())))
             .redirectUris(uris -> uris.addAll(registeredRedirectUri))
-            .authorizationGrantTypes(types -> authorizedGrantTypes.stream().map(AuthorizationGrantType::new).forEach(types::add))
+            .authorizationGrantTypes(types -> {
+                authorizedGrantTypes.stream().map(AuthorizationGrantType::new).forEach(types::add);
+                if (types.isEmpty()) types.add(AuthorizationGrantType.CLIENT_CREDENTIALS);
+            })
             .build();
     }
 }
