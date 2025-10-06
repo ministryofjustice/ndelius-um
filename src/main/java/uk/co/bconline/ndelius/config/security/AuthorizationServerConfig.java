@@ -84,7 +84,7 @@ public class AuthorizationServerConfig {
             .deviceAuthorizationEndpoint("/oauth/device_authorization")
             .deviceVerificationEndpoint("/oauth/device_verification")
             .tokenEndpoint("/oauth/token")
-            .tokenIntrospectionEndpoint("/oauth/introspect")
+            .tokenIntrospectionEndpoint("/oauth/check_token")
             .tokenRevocationEndpoint("/oauth/revoke")
             .jwkSetEndpoint("/oauth/jwks")
             .build();

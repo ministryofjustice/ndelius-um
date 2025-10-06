@@ -67,7 +67,7 @@ public class PreAuthenticatedAuthTest {
 				.andExpect(status().isOk())
             .andReturn().getResponse().getContentAsString(), "access_token");
 
-        mvc.perform(post("/oauth/introspect")
+        mvc.perform(post("/oauth/check_token")
                 .with(httpBasic("test.web.client", "secret"))
                 .param("token", token))
             .andExpect(status().isOk())

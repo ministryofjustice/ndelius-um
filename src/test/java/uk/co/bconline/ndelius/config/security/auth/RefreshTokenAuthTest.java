@@ -75,7 +75,7 @@ public class RefreshTokenAuthTest {
         String accessToken = JsonPath.read(accessTokenResponse, "access_token");
         String refreshToken = JsonPath.read(accessTokenResponse, "refresh_token");
 
-        String accessTokenDetails = mvc.perform(post("/oauth/introspect")
+        String accessTokenDetails = mvc.perform(post("/oauth/check_token")
                 .with(httpBasic("test.web.client", "secret"))
                 .param("token", accessToken))
             .andExpect(status().isOk())
@@ -89,7 +89,7 @@ public class RefreshTokenAuthTest {
             .andExpect(jsonPath("access_token", notNullValue()))
             .andReturn().getResponse().getContentAsString(), "access_token");
 
-        mvc.perform(post("/oauth/introspect")
+        mvc.perform(post("/oauth/check_token")
                 .with(httpBasic("test.web.client", "secret"))
                 .param("token", newAccessToken))
             .andExpect(status().isOk())
