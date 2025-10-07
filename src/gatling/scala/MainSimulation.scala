@@ -15,7 +15,7 @@ class MainSimulation extends Simulation {
         .check(css("title").is("Sign in to National Delius"))
         .check(css("input[name=_csrf]", "value").saveAs("csrf"))
       ),
-      feed(Data.usernames).exec(http("SubmitCredentials").get("/oauth2/authorize")
+      feed(Data.usernames).exec(http("SubmitCredentials").get("/oauth/authorize")
         .basicAuth("${username}", Config.password)
         .queryParam("response_type", "code")
         .queryParam("client_id", "UserManagement-UI")
@@ -25,7 +25,7 @@ class MainSimulation extends Simulation {
         .check(status.is(200))
         .check(currentLocationRegex(".*code=([^&]*).*").saveAs("authorization_code"))
       ),
-      exec(http("GetAccessToken").post("/oauth2/token")
+      exec(http("GetAccessToken").post("/oauth/token")
         .basicAuth("UserManagement-UI", "")
         .queryParam("grant_type", "authorization_code")
         .queryParam("code", "${authorization_code}")

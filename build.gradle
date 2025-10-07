@@ -1,25 +1,25 @@
 // Build plugins
 plugins {
-	id 'java'
-	id 'idea'
-	id 'jacoco'
-	id 'org.springframework.boot'               version '3.5.5'
-	id 'io.spring.dependency-management'        version '1.1.7'
-	id 'com.github.node-gradle.node'            version '7.1.0'
-	id 'io.gatling.gradle'                      version '3.14.5.1'
-	id 'com.gorylenko.gradle-git-properties'    version '2.5.3'
+    id 'java'
+    id 'idea'
+    id 'jacoco'
+    id 'org.springframework.boot'               version '3.5.5'
+    id 'io.spring.dependency-management'        version '1.1.7'
+    id 'com.github.node-gradle.node'            version '7.1.0'
+    id 'io.gatling.gradle'                      version '3.14.5.1'
+    id 'com.gorylenko.gradle-git-properties'    version '2.5.3'
 }
 
 // Java
 java {
-	toolchain { languageVersion = JavaLanguageVersion.of(21) }
+    toolchain { languageVersion = JavaLanguageVersion.of(21) }
 }
 
 // Spring Boot
 springBoot { buildInfo() }
 bootBuildImage {
-	environment['BPE_DELIM_JAVA_TOOL_OPTIONS'] = ' '
-	environment['BPE_APPEND_JAVA_TOOL_OPTIONS'] = '--add-opens=java.base/java.lang=ALL-UNNAMED'
+    environment['BPE_DELIM_JAVA_TOOL_OPTIONS'] = ' '
+    environment['BPE_APPEND_JAVA_TOOL_OPTIONS'] = '--add-opens=java.base/java.lang=ALL-UNNAMED'
 }
 bootRun.jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
 gitProperties { failOnNoGitDirectory = false }
@@ -45,38 +45,38 @@ clean { delete 'ui/dist' }
 jacoco.toolVersion '0.8.12'
 jacocoTestReport.reports.html.outputLocation.set(layout.buildDirectory.dir('reports/coverage/test'))
 tasks.named('test', Test).configure {
-	jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
-	finalizedBy jacocoTestReport
+    jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
+    finalizedBy jacocoTestReport
 }
 
 // Project dependencies
 repositories { mavenCentral() }
 dependencies {
-	implementation      'org.springframework.boot:spring-boot-starter-web'
-	implementation      'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation      'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation      'org.springframework.boot:spring-boot-starter-data-ldap'
-	implementation      'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation      'org.springframework.boot:spring-boot-starter-actuator'
-	implementation      'org.springframework.boot:spring-boot-starter-security'
-	implementation      'org.springframework.boot:spring-boot-starter-validation'
-	implementation      'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	implementation      'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
-	implementation      'org.springframework.session:spring-session-data-redis'
-	implementation      'com.unboundid:unboundid-ldapsdk'
-	implementation      'org.signal:embedded-redis:0.9.1'
+    implementation      'org.springframework.boot:spring-boot-starter-web'
+    implementation      'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation      'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation      'org.springframework.boot:spring-boot-starter-data-ldap'
+    implementation      'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation      'org.springframework.boot:spring-boot-starter-actuator'
+    implementation      'org.springframework.boot:spring-boot-starter-security'
+    implementation      'org.springframework.boot:spring-boot-starter-validation'
+    implementation      'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation      'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
+    implementation      'org.springframework.session:spring-session-data-redis'
+    implementation      'com.unboundid:unboundid-ldapsdk'
+    implementation      'org.signal:embedded-redis:0.9.1'
     implementation      'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
-	implementation      'com.opencsv:opencsv:5.12.0'
-	implementation      'io.github.resilience4j:resilience4j-bulkhead:2.3.0'
-	implementation      'io.github.resilience4j:resilience4j-spring-boot2:2.3.0'
-	compileOnly         'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	developmentOnly     'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly         'com.h2database:h2'
-	runtimeOnly         'com.oracle.database.jdbc:ojdbc11'
-	testImplementation  'org.junit.vintage:junit-vintage-engine'
-	testImplementation  'org.springframework.boot:spring-boot-starter-test'
-	testImplementation  'org.springframework.restdocs:spring-restdocs-mockmvc'
-	testImplementation  'org.springframework.security:spring-security-test'
+    implementation      'com.opencsv:opencsv:5.12.0'
+    implementation      'io.github.resilience4j:resilience4j-bulkhead:2.3.0'
+    implementation      'io.github.resilience4j:resilience4j-spring-boot2:2.3.0'
+    compileOnly         'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    developmentOnly     'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly         'com.h2database:h2'
+    runtimeOnly         'com.oracle.database.jdbc:ojdbc11'
+    testImplementation  'org.junit.vintage:junit-vintage-engine'
+    testImplementation  'org.springframework.boot:spring-boot-starter-test'
+    testImplementation  'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation  'org.springframework.security:spring-security-test'
 }

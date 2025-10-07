@@ -16,8 +16,8 @@ const authConfig: AuthConfig = {
   responseType: 'code',
   oidc: false,
   requireHttps: false,
-  loginUrl: 'http://localhost:8080/umt/oauth2/authorize',
-  tokenEndpoint: 'http://localhost:8080/umt/oauth2/token',
+  loginUrl: 'http://localhost:8080/umt/oauth/authorize',
+  tokenEndpoint: 'http://localhost:8080/umt/oauth/token',
   redirectUri: window.location.origin + '/umt/',
 };
 

@@ -42,7 +42,7 @@ public class AuthorizationCodeAuthTest {
 
     @Test
     public void invalidUserCredentialsReturnsUnauthorized() throws Exception {
-        mvc.perform(get("/oauth2/authorize")
+        mvc.perform(get("/oauth/authorize")
                 .with(httpBasic("INVALID", "INVALID"))
                 .queryParam("client_id", "test.web.client")
                 .queryParam("response_type", "code")
@@ -52,7 +52,7 @@ public class AuthorizationCodeAuthTest {
 
     @Test
     public void successfulLoginRedirectsWithAuthorizationCodeInQueryParams() throws Exception {
-        mvc.perform(get("/oauth2/authorize")
+        mvc.perform(get("/oauth/authorize")
                 .with(httpBasic("test.user", "secret"))
                 .queryParam("client_id", "test.web.client")
                 .queryParam("response_type", "code")
@@ -65,7 +65,7 @@ public class AuthorizationCodeAuthTest {
     public void invalidClientLoginIsUnauthorized() throws Exception {
         String authCode = getAuthCode(mvc, "test.user");
 
-        mvc.perform(post("/oauth2/token")
+        mvc.perform(post("/oauth/token")
                 .with(httpBasic("INVALID", "INVALID"))
                 .param("code", authCode)
                 .param("grant_type", "authorization_code"))
@@ -77,7 +77,7 @@ public class AuthorizationCodeAuthTest {
     public void userScopesAreReturnedCorrectly() throws Exception {
         String authCode = getAuthCode(mvc, "test.user", "UMBI001");
         String token = JsonPath.read(mvc.perform(
-                post("/oauth2/token")
+                post("/oauth/token")
                     .with(httpBasic("test.web.client", "secret"))
                     .param("code", authCode)
                     .param("grant_type", "authorization_code")
@@ -86,7 +86,7 @@ public class AuthorizationCodeAuthTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsString(), "access_token");
 
-        mvc.perform(post("/oauth2/introspect")
+        mvc.perform(post("/oauth/check_token")
                 .with(httpBasic("test.web.client", "secret"))
                 .param("token", token))
             .andExpect(status().isOk())
@@ -100,7 +100,7 @@ public class AuthorizationCodeAuthTest {
     public void authorizationCodeCanBeSwappedForAccessToken() throws Exception {
         String authCode = getAuthCode(mvc, "test.user");
 
-        mvc.perform(post("/oauth2/token")
+        mvc.perform(post("/oauth/token")
                 .with(httpBasic("test.web.client", "secret"))
                 .param("code", authCode)
                 .param("grant_type", "authorization_code")
@@ -120,7 +120,7 @@ public class AuthorizationCodeAuthTest {
 
     @Test
     public void pathBasedRedirectUriCanBeUsed() throws Exception {
-        mvc.perform(get("/oauth2/authorize")
+        mvc.perform(get("/oauth/authorize")
                 .with(httpBasic("test.user", "secret"))
                 .queryParam("client_id", "test.web.client")
                 .queryParam("redirect_uri", "/login-success")

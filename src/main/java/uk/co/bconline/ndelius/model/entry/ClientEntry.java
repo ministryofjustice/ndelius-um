@@ -59,17 +59,20 @@ public final class ClientEntry {
             .clientSecret(clientSecret)
             .clientAuthenticationMethods(methods -> {
                 methods.add(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
-                if (authorizedGrantTypes != null && !authorizedGrantTypes.contains(AuthorizationGrantType.CLIENT_CREDENTIALS.getValue())) {
+
+                // Allow public clients to skip authentication
+                if (clientSecret == null && authorizedGrantTypes != null && authorizedGrantTypes.contains(AuthorizationGrantType.AUTHORIZATION_CODE.getValue())) {
                     methods.add(ClientAuthenticationMethod.NONE);
                 }
             })
             .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
             .tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE).build())
             .scopes(scopes -> scopes.addAll(AuthUtils.mapToScopes(roles).collect(toSet())))
-            .redirectUris(uris -> uris.addAll(registeredRedirectUri.stream()
-                // Workaround for the new redirect strategy in spring authorization server. See org.springframework.security.web.DefaultRedirectStrategy
-                .map(uri -> "/umt/".equals(uri) ? "/" : uri).collect(toSet())))
-            .authorizationGrantTypes(types -> authorizedGrantTypes.stream().map(AuthorizationGrantType::new).forEach(types::add))
+            .redirectUris(uris -> uris.addAll(registeredRedirectUri))
+            .authorizationGrantTypes(types -> {
+                authorizedGrantTypes.stream().map(AuthorizationGrantType::new).forEach(types::add);
+                if (types.isEmpty()) types.add(AuthorizationGrantType.CLIENT_CREDENTIALS);
+            })
             .build();
     }
 }

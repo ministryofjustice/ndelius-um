@@ -44,7 +44,7 @@ public class PreAuthenticatedAuthTest {
 
 	@Test
 	public void canLoginWithEncryptedRequestParams() throws Exception {
-		mvc.perform(post("/oauth2/token")
+		mvc.perform(post("/oauth/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.queryParam("u", encrypt("test.user", "ThisIsASecretKey"))
 				.queryParam("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
@@ -58,7 +58,7 @@ public class PreAuthenticatedAuthTest {
 
 	@Test
 	public void userScopesAreReturnedCorrectly() throws Exception {
-        String token = JsonPath.read(mvc.perform(post("/oauth2/token")
+        String token = JsonPath.read(mvc.perform(post("/oauth/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.queryParam("u", encrypt("test.user", "ThisIsASecretKey"))
 				.queryParam("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
@@ -67,7 +67,7 @@ public class PreAuthenticatedAuthTest {
 				.andExpect(status().isOk())
             .andReturn().getResponse().getContentAsString(), "access_token");
 
-        mvc.perform(post("/oauth2/introspect")
+        mvc.perform(post("/oauth/check_token")
                 .with(httpBasic("test.web.client", "secret"))
                 .param("token", token))
             .andExpect(status().isOk())
@@ -79,7 +79,7 @@ public class PreAuthenticatedAuthTest {
 
 	@Test
     public void missingTimestampIsBadRequest() throws Exception {
-		mvc.perform(post("/oauth2/token")
+		mvc.perform(post("/oauth/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.queryParam("u", encrypt("test.user", "ThisIsASecretKey"))
 				.param("grant_type", "preauthenticated")
@@ -89,7 +89,7 @@ public class PreAuthenticatedAuthTest {
 
 	@Test
 	public void timestampOutOfDateIsUnauthorized() throws Exception {
-		mvc.perform(post("/oauth2/token")
+		mvc.perform(post("/oauth/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.queryParam("u", encrypt("test.user", "ThisIsASecretKey"))
 				.queryParam("t", encrypt(String.valueOf(now().minus(2, HOURS).toEpochMilli()), "ThisIsASecretKey"))
@@ -100,7 +100,7 @@ public class PreAuthenticatedAuthTest {
 
 	@Test
 	public void incorrectKeyIsUnauthorized() throws Exception {
-		mvc.perform(post("/oauth2/token")
+		mvc.perform(post("/oauth/token")
 				.with(httpBasic("test.web.client", "secret"))
 				.queryParam("u", encrypt("test.user", "INVALID-KEY"))
 				.queryParam("t", encrypt(String.valueOf(now().toEpochMilli()), "INVALID-KEY"))
@@ -111,7 +111,7 @@ public class PreAuthenticatedAuthTest {
 
     @Test
     public void incorrectClientSecretIsUnauthorized() throws Exception {
-        mvc.perform(post("/oauth2/token")
+        mvc.perform(post("/oauth/token")
                 .with(httpBasic("test.web.client", "INVALID-SECRET"))
                 .queryParam("u", encrypt("test.user", "ThisIsASecretKey"))
                 .queryParam("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))

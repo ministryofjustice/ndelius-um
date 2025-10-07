@@ -13,8 +13,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientCredentialsAuthenticationProvider;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2AccessTokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2RefreshTokenGenerator;
@@ -28,6 +30,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import uk.co.bconline.ndelius.config.security.converter.PreAuthenticatedGrantAuthenticationConverter;
 import uk.co.bconline.ndelius.config.security.converter.ScopeFilteringAuthorizationCodeRequestConverter;
+import uk.co.bconline.ndelius.config.security.handler.ContextRelativeRedirectAuthorizationEndpointSuccessHandler;
 import uk.co.bconline.ndelius.config.security.provider.PreAuthenticatedGrantAuthenticationProvider;
 
 @Configuration
@@ -48,6 +51,7 @@ public class AuthorizationServerConfig {
         val basicAuthenticationFilter = new BasicAuthenticationFilter(authenticationManager);
         val preAuthenticatedGrantAuthenticationConverter = new PreAuthenticatedGrantAuthenticationConverter();
         val preAuthenticatedGrantAuthenticationProvider = new PreAuthenticatedGrantAuthenticationProvider(deliusSecret, registeredClientRepository, tokenGenerator, authorizationService, userDetailsService);
+        val clientCredentialsAuthenticationProvider = new OAuth2ClientCredentialsAuthenticationProvider(authorizationService, tokenGenerator);
 
         return http
             .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
@@ -56,14 +60,33 @@ public class AuthorizationServerConfig {
             .csrf(csrf -> csrf.ignoringRequestMatchers(authorizationServerConfigurer.getEndpointsMatcher()))
             .userDetailsService(userDetailsService)
             .with(authorizationServerConfigurer, server -> server
+                .clientAuthentication(clientAuthentication -> clientAuthentication
+                    .authenticationProvider(clientCredentialsAuthenticationProvider))
                 .tokenEndpoint(endpoint -> endpoint
                     .accessTokenRequestConverter(preAuthenticatedGrantAuthenticationConverter)
                     .authenticationProvider(preAuthenticatedGrantAuthenticationProvider)
                 )
-                .authorizationEndpoint(endpoint -> endpoint.authorizationRequestConverter(new ScopeFilteringAuthorizationCodeRequestConverter())))
+                .authorizationEndpoint(endpoint -> endpoint
+                    .authorizationResponseHandler(new ContextRelativeRedirectAuthorizationEndpointSuccessHandler())
+                    .authorizationRequestConverter(new ScopeFilteringAuthorizationCodeRequestConverter())))
             .formLogin(formLogin -> formLogin.loginPage("/login").permitAll())
             .addFilterBefore(basicAuthenticationFilter, LogoutFilter.class) // To ensure basic authentication is applied before OAuthAuthorizationEndpointFilter
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+            .build();
+    }
+
+    @Bean
+    public AuthorizationServerSettings authorizationServerSettings() {
+        // to match values from Spring Boot 2's authorization server library:
+        return AuthorizationServerSettings.builder()
+            .authorizationEndpoint("/oauth/authorize")
+            .pushedAuthorizationRequestEndpoint("/oauth/par")
+            .deviceAuthorizationEndpoint("/oauth/device_authorization")
+            .deviceVerificationEndpoint("/oauth/device_verification")
+            .tokenEndpoint("/oauth/token")
+            .tokenIntrospectionEndpoint("/oauth/check_token")
+            .tokenRevocationEndpoint("/oauth/revoke")
+            .jwkSetEndpoint("/oauth/jwks")
             .build();
     }
 
@@ -73,9 +96,9 @@ public class AuthorizationServerConfig {
     }
 
     /*
-     * By default Spring updates the Redis configuration to enable 'notify-keyspace-events' for session expiration.
+     * By default, Spring updates the Redis configuration to enable 'notify-keyspace-events' for session expiration.
      * However in secure environments, the Redis CONFIG endpoints are disabled. In this scenario the configuration
-     * should be updated ourselves and the Spring auto-configuration should be disabled.
+     * should be updated ourselves and the Spring autoconfiguration should be disabled.
      *
      * This bean allows us to conditionally disable the Spring auto-configuration.
      *
