@@ -25,6 +25,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.CLIENT_CREDENTIALS;
 import static uk.co.bconline.ndelius.config.security.token.PreAuthenticatedGrantAuthenticationToken.PREAUTHENTICATED;
+import static uk.co.bconline.ndelius.config.security.token.PreAuthenticatedGrantAuthenticationToken.PREAUTHENTICATED_GRANT_TYPE;
 import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 
 @Slf4j
@@ -43,7 +44,7 @@ public class AuthUtils {
                     case RegisteredClient registeredClient -> registeredClient.getClientId();
                     case UsernamePasswordAuthenticationToken usernamePassword -> usernamePassword.getName();
                     case
-                        OAuth2AuthenticatedPrincipal oauth2Principal when PREAUTHENTICATED.equals(oauth2Principal.getAttribute("grant_type")) ->
+                        OAuth2AuthenticatedPrincipal oauth2Principal when PREAUTHENTICATED_GRANT_TYPE.equals(oauth2Principal.getAttribute("grant_type")) ->
                         oauth2Principal.getAttribute("username");
                     case
                         OAuth2AuthenticatedPrincipal oauth2Principal when AUTHORIZATION_CODE.equals(oauth2Principal.getAttribute("grant_type")) ->

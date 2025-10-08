@@ -29,9 +29,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import uk.co.bconline.ndelius.config.security.converter.PreAuthenticatedGrantAuthenticationConverter;
+import uk.co.bconline.ndelius.config.security.converter.PreAuthenticatedGrantPublicClientAuthenticationConverter;
 import uk.co.bconline.ndelius.config.security.converter.ScopeFilteringAuthorizationCodeRequestConverter;
 import uk.co.bconline.ndelius.config.security.handler.ContextRelativeRedirectAuthorizationEndpointSuccessHandler;
 import uk.co.bconline.ndelius.config.security.provider.PreAuthenticatedGrantAuthenticationProvider;
+import uk.co.bconline.ndelius.config.security.provider.PreAuthenticatedGrantPublicClientAuthenticationProvider;
 
 @Configuration
 public class AuthorizationServerConfig {
@@ -51,6 +53,8 @@ public class AuthorizationServerConfig {
         val basicAuthenticationFilter = new BasicAuthenticationFilter(authenticationManager);
         val preAuthenticatedGrantAuthenticationConverter = new PreAuthenticatedGrantAuthenticationConverter();
         val preAuthenticatedGrantAuthenticationProvider = new PreAuthenticatedGrantAuthenticationProvider(deliusSecret, registeredClientRepository, tokenGenerator, authorizationService, userDetailsService);
+        val preAuthenticatedGrantPublicClientAuthenticationConverter = new PreAuthenticatedGrantPublicClientAuthenticationConverter();
+        val preAuthenticatedGrantPublicClientAuthenticationProvider = new PreAuthenticatedGrantPublicClientAuthenticationProvider(registeredClientRepository);
         val clientCredentialsAuthenticationProvider = new OAuth2ClientCredentialsAuthenticationProvider(authorizationService, tokenGenerator);
 
         return http
@@ -61,6 +65,8 @@ public class AuthorizationServerConfig {
             .userDetailsService(userDetailsService)
             .with(authorizationServerConfigurer, server -> server
                 .clientAuthentication(clientAuthentication -> clientAuthentication
+                    .authenticationConverter(preAuthenticatedGrantPublicClientAuthenticationConverter)
+                    .authenticationProvider(preAuthenticatedGrantPublicClientAuthenticationProvider)
                     .authenticationProvider(clientCredentialsAuthenticationProvider))
                 .tokenEndpoint(endpoint -> endpoint
                     .accessTokenRequestConverter(preAuthenticatedGrantAuthenticationConverter)

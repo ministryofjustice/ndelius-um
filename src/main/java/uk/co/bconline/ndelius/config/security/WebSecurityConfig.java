@@ -18,10 +18,7 @@ public class WebSecurityConfig {
     @Bean
     SecurityFilterChain uiSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/login").permitAll()
-                .anyRequest().authenticated())
-            .formLogin(formLogin -> formLogin.loginPage("/login").permitAll())
+            .formLogin(formLogin -> formLogin.loginPage("/login"))
             .httpBasic(httpBasic -> httpBasic.realmName("ndelius-users"))
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .build();

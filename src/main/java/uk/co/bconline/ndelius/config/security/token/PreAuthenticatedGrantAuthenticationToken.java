@@ -12,12 +12,13 @@ import java.util.Set;
 @Getter
 public class PreAuthenticatedGrantAuthenticationToken extends OAuth2AuthorizationGrantAuthenticationToken {
     public static final String PREAUTHENTICATED = "preauthenticated";
+    public static final AuthorizationGrantType PREAUTHENTICATED_GRANT_TYPE = new AuthorizationGrantType(PREAUTHENTICATED);
     private final String username;
     private final String timestamp;
     private final Set<String> scopes;
 
     public PreAuthenticatedGrantAuthenticationToken(Authentication clientPrincipal, String username, String timestamp, Set<String> scopes) {
-        super(new AuthorizationGrantType(PREAUTHENTICATED), clientPrincipal, Map.of(
+        super(PREAUTHENTICATED_GRANT_TYPE, clientPrincipal, Map.of(
             "username", username,
             "timestamp", timestamp,
             OAuth2ParameterNames.SCOPE, scopes
