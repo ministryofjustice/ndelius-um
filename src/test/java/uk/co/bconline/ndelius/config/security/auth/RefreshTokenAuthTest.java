@@ -66,9 +66,9 @@ public class RefreshTokenAuthTest {
     @Test
     public void preAuthenticatedTokenCanBeRefreshed() throws Exception {
         String accessTokenResponse = mvc.perform(post("/oauth/token")
-                .with(httpBasic("test.web.client", "secret"))
                 .param("u", encrypt("test.user", "ThisIsASecretKey"))
                 .param("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
+                .param("client_id", "test.web.client")
                 .param("grant_type", "preauthenticated"))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsString();

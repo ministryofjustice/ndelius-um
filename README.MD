@@ -139,7 +139,7 @@ The parameters will be verified for authenticity using the configured `delius.se
 
 For example,
 ```shell script
-> curl -X POST -u test.web.client:secret "http://localhost:8080/umt/oauth/token?u=${encryptedUsername}&t=${encryptedTimestamp}&client_id=test.web.client&grant_type=preauthenticated&scope=UMBI001"
+> curl -X POST "http://localhost:8080/umt/oauth/token?u=${encryptedUsername}&t=${encryptedTimestamp}&client_id=test.web.client&grant_type=preauthenticated&scope=UMBI001"
 < {"token_type":"bearer","access_token":"...","refresh_token":"...","expires_in":43199,"scope":"UMBI001"}
 ```
 
