@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.co.bconline.ndelius.model.ChangeNote;
 import uk.co.bconline.ndelius.repository.db.ChangeNoteRepository;
 import uk.co.bconline.ndelius.service.UserEntityService;
@@ -15,6 +16,7 @@ import static java.util.Optional.ofNullable;
 
 @Slf4j
 @Service
+@Transactional
 public class UserHistoryServiceImpl implements UserHistoryService {
 
     private final ChangeNoteRepository repository;

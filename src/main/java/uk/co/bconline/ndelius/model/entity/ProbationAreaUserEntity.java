@@ -29,7 +29,7 @@ public class ProbationAreaUserEntity implements Serializable {
     @JoinColumn(name = "PROBATION_AREA_ID", insertable = false, updatable = false)
     private ProbationAreaEntity probationArea;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", insertable = false, updatable = false)
     private UserEntity user;
 
