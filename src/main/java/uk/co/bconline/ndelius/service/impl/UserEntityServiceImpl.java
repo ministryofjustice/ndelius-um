@@ -8,6 +8,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.util.Optionals;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import uk.co.bconline.ndelius.exception.AppException;
 import uk.co.bconline.ndelius.model.SearchResult;
@@ -45,6 +46,7 @@ import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Slf4j
 @Service
+@Transactional
 public class UserEntityServiceImpl implements UserEntityService {
 
     @Value("${spring.datasource.url}")

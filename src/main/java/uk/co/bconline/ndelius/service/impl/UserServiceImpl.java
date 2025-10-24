@@ -53,6 +53,7 @@ import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Slf4j
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     private final UserEntityService userEntityService;
     private final UserEntryService userEntryService;
@@ -87,7 +88,7 @@ public class UserServiceImpl implements UserService {
     public List<SearchResult> search(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
                                      String role, boolean includeInactiveUsers, Integer page, Integer pageSize) {
         val queryIsEmpty = query == null || query.length() < 3;
-        val roleIsEmpty = role == null || role.length() == 0;
+        val roleIsEmpty = role == null || role.isEmpty();
         val groupFilterIsEmpty = groupFilter.values().stream().allMatch(Set::isEmpty);
         if (queryIsEmpty && roleIsEmpty && groupFilterIsEmpty && datasetFilter.isEmpty()) {
             // not enough criteria to do a useful search
@@ -159,30 +160,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean usernameExists(String username) {
-        val dbFuture = supplyAsync(() -> userEntityService.usernameExists(username), taskExecutor);
-        val ldapFuture = supplyAsync(() -> userEntryService.usernameExists(username), taskExecutor);
-
         try {
-            return allOf(dbFuture, ldapFuture)
-                .thenApply(v -> dbFuture.join() || ldapFuture.join())
-                .join();
-        } catch (CancellationException | CompletionException e) {
+            return userEntityService.usernameExists(username) || userEntryService.usernameExists(username);
+        } catch (Exception e) {
             throw new AppException(String.format("Unable to check whether user exists with username %s", username), e);
         }
     }
 
     @Override
     public Optional<User> getUser(String username) {
-        val dbFuture = supplyAsync(() -> userEntityService.getUser(username).orElse(null), taskExecutor);
-        val ldapFuture = supplyAsync(() -> userEntryService.getUser(username).orElse(null), taskExecutor);
+        val dbUser = userEntityService.getUser(username).orElse(null);
+        val ldapUser = userEntryService.getUser(username).orElse(null);
 
         try {
             val datasetsFilter = datasetsFilter();
-            return allOf(dbFuture, ldapFuture)
-                .thenApply(v -> transformer.combine(dbFuture.join(), ldapFuture.join()))
-                .join()
+            return transformer.combine(dbUser, ldapUser)
                 .filter(user -> datasetsFilter.test(user.getUsername()));
-        } catch (CancellationException | CompletionException e) {
+        } catch (Exception e) {
             throw new AppException(String.format("Unable to retrieve user details for %s", username), e);
         }
     }

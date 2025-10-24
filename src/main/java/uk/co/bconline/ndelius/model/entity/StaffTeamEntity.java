@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.model.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -35,7 +36,7 @@ public class StaffTeamEntity implements Serializable {
     @Column(name = "CREATED_BY_USER_ID")
     private Long createdById;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CREATED_BY_USER_ID", insertable = false, updatable = false)
     private UserEntity createdBy;
 
@@ -45,7 +46,7 @@ public class StaffTeamEntity implements Serializable {
     @Column(name = "LAST_UPDATED_USER_ID")
     private Long updatedById;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LAST_UPDATED_USER_ID", insertable = false, updatable = false)
     private UserEntity updatedBy;
 

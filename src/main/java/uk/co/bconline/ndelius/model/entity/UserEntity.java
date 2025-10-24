@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -75,7 +76,7 @@ public class UserEntity implements Serializable {
     @Column(name = "CREATED_BY_USER_ID")
     private Long createdById;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CREATED_BY_USER_ID", insertable = false, updatable = false)
     private UserEntity createdBy;
 
@@ -85,7 +86,7 @@ public class UserEntity implements Serializable {
     @Column(name = "LAST_UPDATED_USER_ID")
     private Long updatedById;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LAST_UPDATED_USER_ID", insertable = false, updatable = false)
     private UserEntity updatedBy;
 

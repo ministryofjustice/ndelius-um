@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.model.entity;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ public class ProbationAreaUserId implements Serializable {
     @JoinColumn(name = "PROBATION_AREA_ID")
     private ProbationAreaEntity probationArea;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private UserEntity user;
 }
