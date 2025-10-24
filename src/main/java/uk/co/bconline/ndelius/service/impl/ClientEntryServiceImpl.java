@@ -17,48 +17,44 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 
 @Slf4j
 @Service
-public class ClientEntryServiceImpl implements RegisteredClientRepository
-{
-	private final ClientEntryRepository clientEntryRepository;
-	private final UserRoleService userRoleService;
+public class ClientEntryServiceImpl implements RegisteredClientRepository {
+    private final ClientEntryRepository clientEntryRepository;
+    private final UserRoleService userRoleService;
 
-	@Autowired
-	public ClientEntryServiceImpl(
-			ClientEntryRepository clientEntryRepository,
-			UserRoleService userRoleService)
-	{
-		this.clientEntryRepository = clientEntryRepository;
-		this.userRoleService = userRoleService;
-	}
+    @Autowired
+    public ClientEntryServiceImpl(
+        ClientEntryRepository clientEntryRepository,
+        UserRoleService userRoleService) {
+        this.clientEntryRepository = clientEntryRepository;
+        this.userRoleService = userRoleService;
+    }
 
-	public Optional<ClientEntry> getBasicClient(String clientId)
-	{
-		val t = LocalDateTime.now();
-		Optional<ClientEntry> client = clientEntryRepository.findByClientId(clientId);
-		log.trace("--{}ms	LDAP lookup", MILLIS.between(t, LocalDateTime.now()));
-		return client;
-	}
+    public Optional<ClientEntry> getBasicClient(String clientId) {
+        val t = LocalDateTime.now();
+        Optional<ClientEntry> client = clientEntryRepository.findByClientId(clientId);
+        log.trace("--{}ms	LDAP lookup", MILLIS.between(t, LocalDateTime.now()));
+        return client;
+    }
 
-	public Optional<ClientEntry> getClient(String clientId)
-	{
-		return getBasicClient(clientId)
-				.map(u -> u.toBuilder()
-						.roles(userRoleService.getClientRoles(clientId))
-						.build());
-	}
+    public Optional<ClientEntry> getClient(String clientId) {
+        return getBasicClient(clientId)
+            .map(u -> u.toBuilder()
+                .roles(userRoleService.getClientRoles(clientId))
+                .build());
+    }
 
-	@Override
-	public RegisteredClient findById(String id) {
-		return findByClientId(id);
-	}
+    @Override
+    public RegisteredClient findById(String id) {
+        return findByClientId(id);
+    }
 
-	@Override
-	public RegisteredClient findByClientId(String clientId) {
-		return getClient(clientId).map(ClientEntry::toRegisteredClient).orElse(null);
-	}
+    @Override
+    public RegisteredClient findByClientId(String clientId) {
+        return getClient(clientId).map(ClientEntry::toRegisteredClient).orElse(null);
+    }
 
-	@Override
-	public void save(RegisteredClient registeredClient) {
-		throw new RuntimeException("Clients are managed in code. Creating or updating clients at runtime is not supported.");
-	}
+    @Override
+    public void save(RegisteredClient registeredClient) {
+        throw new RuntimeException("Clients are managed in code. Creating or updating clients at runtime is not supported.");
+    }
 }

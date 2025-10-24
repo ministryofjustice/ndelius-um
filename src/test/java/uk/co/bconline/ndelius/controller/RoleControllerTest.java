@@ -22,41 +22,37 @@ import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class RoleControllerTest
-{
-	@Autowired
-	private WebApplicationContext context;
+public class RoleControllerTest {
+    @Autowired
+    private WebApplicationContext context;
 
-	private MockMvc mvc;
+    private MockMvc mvc;
 
-	@Before
-	public void setup()
-	{
-		mvc = MockMvcBuilders
-				.webAppContextSetup(context)
-				.apply(springSecurity())
-				.alwaysDo(print())
-				.build();
-	}
+    @Before
+    public void setup() {
+        mvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .alwaysDo(print())
+            .build();
+    }
 
-	@Test
-	public void rolesAreReturned() throws Exception
-	{
-		mvc.perform(get("/api/roles")
-				.header("Authorization", "Bearer " + token(mvc)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", not(empty())))
-				.andExpect(jsonPath("$[*].name", hasItem("UMBT001")))
-				.andExpect(jsonPath("$[*].name", hasItem("UMBT002")));
-	}
+    @Test
+    public void rolesAreReturned() throws Exception {
+        mvc.perform(get("/api/roles")
+                .header("Authorization", "Bearer " + token(mvc)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", not(empty())))
+            .andExpect(jsonPath("$[*].name", hasItem("UMBT001")))
+            .andExpect(jsonPath("$[*].name", hasItem("UMBT002")));
+    }
 
-	@Test
-	public void rolesAreFilteredBasedOnAttributes() throws Exception
-	{
-		// UABT001 has adminlevel set to local, test.user is not allowed access to local-level roles so should't see it
-		mvc.perform(get("/api/roles")
-				.header("Authorization", "Bearer " + token(mvc)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$[*].name", not(hasItem("UABT001"))));
-	}
+    @Test
+    public void rolesAreFilteredBasedOnAttributes() throws Exception {
+        // UABT001 has adminlevel set to local, test.user is not allowed access to local-level roles so should't see it
+        mvc.perform(get("/api/roles")
+                .header("Authorization", "Bearer " + token(mvc)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[*].name", not(hasItem("UABT001"))));
+    }
 }

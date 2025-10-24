@@ -22,12 +22,12 @@ public class CSVUtils {
         ColumnNameAndPositionCSVMappingStrategy<T> mappingStrategy = new ColumnNameAndPositionCSVMappingStrategy<>();
         mappingStrategy.setType(tClass);
         return new StatefulBeanToCsvBuilder<T>(writer)
-                .withMappingStrategy(mappingStrategy)
-                .build();
+            .withMappingStrategy(mappingStrategy)
+            .build();
     }
 
     public static void write(List<SearchResult> results, Writer writer)
-            throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
+        throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
         getCsvWriter(SearchResult.class, writer).write(results);
     }
 

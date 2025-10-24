@@ -10,15 +10,22 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public interface UserEntityService
-{
-	long getUserId(String username);
-	long getMyUserId();
-	boolean usernameExists(String username);
-	Optional<UserEntity> getUser(String username);
-	Optional<StaffEntity> getStaffByStaffCode(String code);
-	Optional<UserEntity> getUserByStaffCode(String staffCode);
-	Stream<UserExportEntity> export();
-	List<SearchResult> search(String searchTerm, boolean includeInactiveUsers, Set<String> datasets);
-	UserEntity save(UserEntity user);
+public interface UserEntityService {
+    long getUserId(String username);
+
+    long getMyUserId();
+
+    boolean usernameExists(String username);
+
+    Optional<UserEntity> getUser(String username);
+
+    Optional<StaffEntity> getStaffByStaffCode(String code);
+
+    Optional<UserEntity> getUserByStaffCode(String staffCode);
+
+    Stream<UserExportEntity> export();
+
+    List<SearchResult> search(String searchTerm, boolean includeInactiveUsers, Set<String> datasets);
+
+    UserEntity save(UserEntity user);
 }

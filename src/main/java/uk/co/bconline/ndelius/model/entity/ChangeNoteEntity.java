@@ -26,30 +26,30 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "USER_NOTE")
 public class ChangeNoteEntity implements Serializable {
-	@Id
-	@Column(name = "USER_NOTE_ID")
-	@GeneratedValue(generator = "USER_NOTE_ID_SEQ")
-	@SequenceGenerator(name = "USER_NOTE_ID_SEQ", sequenceName = "USER_NOTE_ID_SEQ", allocationSize = 1)
-	private Long id;
+    @Id
+    @Column(name = "USER_NOTE_ID")
+    @GeneratedValue(generator = "USER_NOTE_ID_SEQ")
+    @SequenceGenerator(name = "USER_NOTE_ID_SEQ", sequenceName = "USER_NOTE_ID_SEQ", allocationSize = 1)
+    private Long id;
 
-	@Version
-	@Column(name = "ROW_VERSION")
-	private Long version;
+    @Version
+    @Column(name = "ROW_VERSION")
+    private Long version;
 
-	@ManyToOne
-	@JoinColumn(name = "USER_ID")
-	private UserEntity user;
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private UserEntity user;
 
-	@Column(name = "LAST_UPDATED_USER_ID")
-	private Long updatedById;
+    @Column(name = "LAST_UPDATED_USER_ID")
+    private Long updatedById;
 
-	@ManyToOne
-	@JoinColumn(name = "LAST_UPDATED_USER_ID", insertable = false, updatable = false)
-	private UserEntity updatedBy;
+    @ManyToOne
+    @JoinColumn(name = "LAST_UPDATED_USER_ID", insertable = false, updatable = false)
+    private UserEntity updatedBy;
 
-	@Column(name = "LAST_UPDATED_DATETIME")
-	private LocalDateTime updatedAt;
+    @Column(name = "LAST_UPDATED_DATETIME")
+    private LocalDateTime updatedAt;
 
-	@Column(name = "NOTES", length = 4000)
-	private String notes;
+    @Column(name = "NOTES", length = 4000)
+    private String notes;
 }

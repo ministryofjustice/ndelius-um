@@ -22,32 +22,30 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "SC_PROVIDER")
-public class SubContractedProviderEntity implements Serializable
-{
-	public SubContractedProviderEntity(Long id)
-	{
-		this.id = id;
-	}
+public class SubContractedProviderEntity implements Serializable {
+    public SubContractedProviderEntity(Long id) {
+        this.id = id;
+    }
 
-	@Id
-	@GeneratedValue(generator = "SC_PROVIDER_ID_SEQ")
-	@SequenceGenerator(name = "SC_PROVIDER_ID_SEQ", sequenceName = "SC_PROVIDER_ID_SEQ", allocationSize = 1)
-	@Column(name = "SC_PROVIDER_ID")
-	private Long id;
+    @Id
+    @GeneratedValue(generator = "SC_PROVIDER_ID_SEQ")
+    @SequenceGenerator(name = "SC_PROVIDER_ID_SEQ", sequenceName = "SC_PROVIDER_ID_SEQ", allocationSize = 1)
+    @Column(name = "SC_PROVIDER_ID")
+    private Long id;
 
-	@Column
-	private String code;
+    @Column
+    private String code;
 
-	@Column
-	private String description;
+    @Column
+    private String description;
 
-	@Column(name = "ACTIVE_FLAG")
-	private Boolean active;
+    @Column(name = "ACTIVE_FLAG")
+    private Boolean active;
 
-	@Column(name = "END_DATE")
-	private LocalDate endDate;
+    @Column(name = "END_DATE")
+    private LocalDate endDate;
 
-	@ManyToOne
-	@JoinColumn(name = "PROVIDER_ID")
-	private ProbationAreaEntity provider;
+    @ManyToOne
+    @JoinColumn(name = "PROVIDER_ID")
+    private ProbationAreaEntity provider;
 }

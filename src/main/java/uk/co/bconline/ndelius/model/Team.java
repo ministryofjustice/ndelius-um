@@ -12,10 +12,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public final class Team
-{
-	@NotBlank
-	private String code;
-	private String description;
-	private String providerCode;
+public final class Team {
+    @NotBlank
+    private String code;
+    private String description;
+    private String providerCode;
 }

@@ -12,9 +12,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(TYPE)
 @Retention(RUNTIME)
 @Constraint(validatedBy = AssignableGroupsValidator.class)
-public @interface AssignableGroups
-{
-	String message() default "You are not permitted to modify Reporting/Fileshare group membership";
-	Class<?>[] groups() default {};
-	Class<? extends Payload>[] payload() default {};
+public @interface AssignableGroups {
+    String message() default "You are not permitted to modify Reporting/Fileshare group membership";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

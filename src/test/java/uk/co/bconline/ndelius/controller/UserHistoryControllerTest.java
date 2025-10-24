@@ -36,138 +36,138 @@ import static uk.co.bconline.ndelius.test.util.UserUtils.nextTestUsername;
 @RunWith(SpringRunner.class)
 public class UserHistoryControllerTest {
 
-	@Autowired
-	private WebApplicationContext context;
+    @Autowired
+    private WebApplicationContext context;
 
-	private MockMvc mvc;
+    private MockMvc mvc;
 
-	@Before
-	public void setup() {
-		mvc = MockMvcBuilders
-				.webAppContextSetup(context)
-				.apply(springSecurity())
-				.alwaysDo(print())
-				.build();
-	}
+    @Before
+    public void setup() {
+        mvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .alwaysDo(print())
+            .build();
+    }
 
-	@Test
-	public void historyIsReturned() throws Exception {
-		mvc.perform(get("/api/user/Joe.Bloggs/history")
-				.header("Authorization", "Bearer " + token(mvc)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(5)));
-	}
+    @Test
+    public void historyIsReturned() throws Exception {
+        mvc.perform(get("/api/user/Joe.Bloggs/history")
+                .header("Authorization", "Bearer " + token(mvc)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(5)));
+    }
 
-	@Test
-	public void historyIsPersistedOnCreate() throws Exception {
-		String token = token(mvc);
-		String username = nextTestUsername();
+    @Test
+    public void historyIsPersistedOnCreate() throws Exception {
+        String token = token(mvc);
+        String username = nextTestUsername();
 
-		// When a new user is created
-		mvc.perform(post("/api/user")
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
-						.username(username).build())))
-				.andExpect(status().isCreated());
+        // When a new user is created
+        mvc.perform(post("/api/user")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                    .username(username).build())))
+            .andExpect(status().isCreated());
 
-		// Then the last updated details on the user are correct
-		mvc.perform(get("/api/user/" + username)
-				.header("Authorization", "Bearer " + token))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.created.user.username", equalTo("test.user")))
-				.andExpect(jsonPath("$.created.time", isWithin(5, SECONDS).of(now())))
-				.andExpect(jsonPath("$.updated.user.username", equalTo("test.user")))
-				.andExpect(jsonPath("$.updated.time", isWithin(5, SECONDS).of(now())));
+        // Then the last updated details on the user are correct
+        mvc.perform(get("/api/user/" + username)
+                .header("Authorization", "Bearer " + token))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.created.user.username", equalTo("test.user")))
+            .andExpect(jsonPath("$.created.time", isWithin(5, SECONDS).of(now())))
+            .andExpect(jsonPath("$.updated.user.username", equalTo("test.user")))
+            .andExpect(jsonPath("$.updated.time", isWithin(5, SECONDS).of(now())));
 
-		// And the history shows the creation
-		mvc.perform(get("/api/user/" + username + "/history")
-				.header("Authorization", "Bearer " + token))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(1)))
-				.andExpect(jsonPath("$[0].user.username", equalTo("test.user")))
-				.andExpect(jsonPath("$[0].time", isWithin(5, SECONDS).of(now())));
-	}
+        // And the history shows the creation
+        mvc.perform(get("/api/user/" + username + "/history")
+                .header("Authorization", "Bearer " + token))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].user.username", equalTo("test.user")))
+            .andExpect(jsonPath("$[0].time", isWithin(5, SECONDS).of(now())));
+    }
 
-	@Test
-	public void historyIsPersistedOnUpdate() throws Exception {
-		String token = token(mvc);
-		String username = nextTestUsername();
-		User user = aValidUser().toBuilder().username(username).build();
+    @Test
+    public void historyIsPersistedOnUpdate() throws Exception {
+        String token = token(mvc);
+        String username = nextTestUsername();
+        User user = aValidUser().toBuilder().username(username).build();
 
-		// Given a user
-		mvc.perform(post("/api/user")
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
-				.andExpect(status().isCreated());
+        // Given a user
+        mvc.perform(post("/api/user")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+            .andExpect(status().isCreated());
 
-		// When they are updated with a change note
-		mvc.perform(post("/api/user/" + username)
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
-						.changeNote("Test note 123").build())))
-				.andExpect(status().isNoContent());
+        // When they are updated with a change note
+        mvc.perform(post("/api/user/" + username)
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+                    .changeNote("Test note 123").build())))
+            .andExpect(status().isNoContent());
 
-		// Then the last updated details on the user are correct
-		mvc.perform(get("/api/user/" + username)
-				.header("Authorization", "Bearer " + token))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.created.user.username", equalTo("test.user")))
-				.andExpect(jsonPath("$.created.time", isWithin(5, SECONDS).of(now())))
-				.andExpect(jsonPath("$.updated.user.username", equalTo("test.user")))
-				.andExpect(jsonPath("$.updated.time", isWithin(5, SECONDS).of(now())));
+        // Then the last updated details on the user are correct
+        mvc.perform(get("/api/user/" + username)
+                .header("Authorization", "Bearer " + token))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.created.user.username", equalTo("test.user")))
+            .andExpect(jsonPath("$.created.time", isWithin(5, SECONDS).of(now())))
+            .andExpect(jsonPath("$.updated.user.username", equalTo("test.user")))
+            .andExpect(jsonPath("$.updated.time", isWithin(5, SECONDS).of(now())));
 
-		// And the history reflects the update
-		mvc.perform(get("/api/user/" + username + "/history")
-				.header("Authorization", "Bearer " + token))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(2)))
-				.andExpect(jsonPath("$[0].user.username", equalTo("test.user")))
-				.andExpect(jsonPath("$[0].time", isWithin(5, SECONDS).of(now())))
-				.andExpect(jsonPath("$[0].note", equalTo("Test note 123")))
-				.andExpect(jsonPath("$[1].user.username", equalTo("test.user")))
-				.andExpect(jsonPath("$[1].time", isWithin(5, SECONDS).of(now())));
-	}
+        // And the history reflects the update
+        mvc.perform(get("/api/user/" + username + "/history")
+                .header("Authorization", "Bearer " + token))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(2)))
+            .andExpect(jsonPath("$[0].user.username", equalTo("test.user")))
+            .andExpect(jsonPath("$[0].time", isWithin(5, SECONDS).of(now())))
+            .andExpect(jsonPath("$[0].note", equalTo("Test note 123")))
+            .andExpect(jsonPath("$[1].user.username", equalTo("test.user")))
+            .andExpect(jsonPath("$[1].time", isWithin(5, SECONDS).of(now())));
+    }
 
-	@Test
-	public void changeNoteCannotBeLongerThan4000Characters() throws Exception {
-		mvc.perform(post("/api/user")
-				.header("Authorization", "Bearer " + token(mvc))
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
-						.username(nextTestUsername())
-						.changeNote(String.join("*", new String[4001])).build())))
-				.andExpect(status().isBadRequest());
-	}
+    @Test
+    public void changeNoteCannotBeLongerThan4000Characters() throws Exception {
+        mvc.perform(post("/api/user")
+                .header("Authorization", "Bearer " + token(mvc))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                    .username(nextTestUsername())
+                    .changeNote(String.join("*", new String[4001])).build())))
+            .andExpect(status().isBadRequest());
+    }
 
-	@Test
-	public void existingCreatedUpdatedDetailsAreCopiedIntoHistory() throws Exception {
-		String token = token(mvc);
+    @Test
+    public void existingCreatedUpdatedDetailsAreCopiedIntoHistory() throws Exception {
+        String token = token(mvc);
 
-		// Given a user with existing created and updated details, but no history records
-		// See data.ldif for user details
-		String username = "Jane.Bloggs";
-		String userJson = mvc.perform(get("/api/user/" + username)
-				.header("Authorization", "Bearer " + token))
-				.andExpect(status().isOk())
-				.andReturn().getResponse().getContentAsString();
+        // Given a user with existing created and updated details, but no history records
+        // See data.ldif for user details
+        String username = "Jane.Bloggs";
+        String userJson = mvc.perform(get("/api/user/" + username)
+                .header("Authorization", "Bearer " + token))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
 
-		// When they are updated
-		mvc.perform(post("/api/user/" + username)
-				.header("Authorization", "Bearer " + token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(userJson))
-				.andExpect(status().isNoContent());
+        // When they are updated
+        mvc.perform(post("/api/user/" + username)
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userJson))
+            .andExpect(status().isNoContent());
 
-		// Then there should be 3 history records (now + created + updated)
-		mvc.perform(get("/api/user/" + username + "/history")
-				.header("Authorization", "Bearer " + token))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(3)))
-				.andExpect(jsonPath("$[0].time", isWithin(5, SECONDS).of(now())))
-				.andExpect(jsonPath("$[1].time", isWithin(5, MINUTES).of(now().minus(2, DAYS))))
-				.andExpect(jsonPath("$[2].time", isWithin(5, MINUTES).of(now().minus(7, DAYS))));
-	}
+        // Then there should be 3 history records (now + created + updated)
+        mvc.perform(get("/api/user/" + username + "/history")
+                .header("Authorization", "Bearer " + token))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(3)))
+            .andExpect(jsonPath("$[0].time", isWithin(5, SECONDS).of(now())))
+            .andExpect(jsonPath("$[1].time", isWithin(5, MINUTES).of(now().minus(2, DAYS))))
+            .andExpect(jsonPath("$[2].time", isWithin(5, MINUTES).of(now().minus(7, DAYS))));
+    }
 }

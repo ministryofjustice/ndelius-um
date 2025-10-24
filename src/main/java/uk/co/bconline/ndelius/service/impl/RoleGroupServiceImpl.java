@@ -15,37 +15,34 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 
 @Service
-public class RoleGroupServiceImpl implements RoleGroupService
-{
+public class RoleGroupServiceImpl implements RoleGroupService {
     private final RoleGroupRepository roleGroupRepository;
     private final RoleGroupTransformer roleGroupTransformer;
-	private final RoleService roleService;
+    private final RoleService roleService;
 
     @Autowired
     public RoleGroupServiceImpl(
-    		RoleGroupRepository roleGroupRepository,
-			RoleGroupTransformer roleGroupTransformer,
-			RoleService roleService){
+        RoleGroupRepository roleGroupRepository,
+        RoleGroupTransformer roleGroupTransformer,
+        RoleService roleService) {
         this.roleGroupRepository = roleGroupRepository;
         this.roleGroupTransformer = roleGroupTransformer;
-		this.roleService = roleService;
+        this.roleService = roleService;
     }
 
     @Override
-	@Cacheable(value = "roleGroups", key = "'all'")
-    public List<RoleGroup> getRoleGroups()
-    {
+    @Cacheable(value = "roleGroups", key = "'all'")
+    public List<RoleGroup> getRoleGroups() {
         return roleGroupRepository.findAll().parallelStream()
-                .map(roleGroupTransformer::map)
-                .collect(toList());
+            .map(roleGroupTransformer::map)
+            .collect(toList());
     }
 
     @Override
-	@Cacheable(value = "roleGroups")
-    public Optional<RoleGroup> getRoleGroup(String name)
-	{
+    @Cacheable(value = "roleGroups")
+    public Optional<RoleGroup> getRoleGroup(String name) {
         return roleGroupRepository.findByName(name)
-				.map(g -> g.toBuilder().roles(roleService.getRolesInGroup(g.getName())).build())
-				.map(roleGroupTransformer::map);
+            .map(g -> g.toBuilder().roles(roleService.getRolesInGroup(g.getName())).build())
+            .map(roleGroupTransformer::map);
     }
 }

@@ -19,26 +19,26 @@ import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 @Slf4j
 @Configuration
 public class LdapExportConfig extends LdapAutoConfiguration {
-	@Value("${spring.ldap.export.username:${spring.ldap.username}}")
-	private String exportUser;
+    @Value("${spring.ldap.export.username:${spring.ldap.username}}")
+    private String exportUser;
 
-	@Override
-	@Bean("exportLdapContextSource")
-	public LdapContextSource ldapContextSource(LdapConnectionDetails connectionDetails, LdapProperties properties,
-											   ObjectProvider<DirContextAuthenticationStrategy> dirContextAuthenticationStrategy) {
-		properties.setUsername(exportUser);
-		val ctxSource = super.ldapContextSource(connectionDetails, properties, dirContextAuthenticationStrategy);
-		val pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
-		ctxSource.setPooled(pooled);
-		return ctxSource;
-	}
+    @Override
+    @Bean("exportLdapContextSource")
+    public LdapContextSource ldapContextSource(LdapConnectionDetails connectionDetails, LdapProperties properties,
+                                               ObjectProvider<DirContextAuthenticationStrategy> dirContextAuthenticationStrategy) {
+        properties.setUsername(exportUser);
+        val ctxSource = super.ldapContextSource(connectionDetails, properties, dirContextAuthenticationStrategy);
+        val pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
+        ctxSource.setPooled(pooled);
+        return ctxSource;
+    }
 
-	@Override
-	@Bean("exportLdapTemplate")
-	public LdapTemplate ldapTemplate(LdapProperties properties,
-									 @Qualifier("exportLdapContextSource") ContextSource contextSource,
-									 ObjectDirectoryMapper objectDirectoryMapper) {
-		properties.setUsername(exportUser);
-		return super.ldapTemplate(properties, contextSource, objectDirectoryMapper);
-	}
+    @Override
+    @Bean("exportLdapTemplate")
+    public LdapTemplate ldapTemplate(LdapProperties properties,
+                                     @Qualifier("exportLdapContextSource") ContextSource contextSource,
+                                     ObjectDirectoryMapper objectDirectoryMapper) {
+        properties.setUsername(exportUser);
+        return super.ldapTemplate(properties, contextSource, objectDirectoryMapper);
+    }
 }

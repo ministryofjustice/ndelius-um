@@ -12,11 +12,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(TYPE)
 @Retention(RUNTIME)
 @Constraint(validatedBy = ValidDatesValidator.class)
-public @interface ValidDates
-{
-	String message() default "Start Date must not be after End Date";
+public @interface ValidDates {
+    String message() default "Start Date must not be after End Date";
 
-	Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 }

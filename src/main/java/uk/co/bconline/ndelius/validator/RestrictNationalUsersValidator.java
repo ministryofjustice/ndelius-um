@@ -14,22 +14,20 @@ import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
 import static uk.co.bconline.ndelius.util.Constants.NATIONAL_ACCESS;
 
 @Slf4j
-public class RestrictNationalUsersValidator implements ConstraintValidator<RestrictNationalUsers, User>
-{
-	@Autowired
-	private UserRoleService userRoleService;
+public class RestrictNationalUsersValidator implements ConstraintValidator<RestrictNationalUsers, User> {
+    @Autowired
+    private UserRoleService userRoleService;
 
-	@Override
-	public boolean isValid(User user, ConstraintValidatorContext context)
-	{
-		val username = ofNullable(user.getExistingUsername()).orElse(user.getUsername());
+    @Override
+    public boolean isValid(User user, ConstraintValidatorContext context) {
+        val username = ofNullable(user.getExistingUsername()).orElse(user.getUsername());
 
-		try {
-			// I am a national admin OR I am updating a non-national (local) user => valid
-			return isNational() || !userRoleService.getUserInteractions(username).contains(NATIONAL_ACCESS);
-		} catch (NameNotFoundException e) {
-			// user doesn't exist => valid
-			return true;
-		}
-	}
+        try {
+            // I am a national admin OR I am updating a non-national (local) user => valid
+            return isNational() || !userRoleService.getUserInteractions(username).contains(NATIONAL_ACCESS);
+        } catch (NameNotFoundException e) {
+            // user doesn't exist => valid
+            return true;
+        }
+    }
 }

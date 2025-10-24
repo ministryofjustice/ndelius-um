@@ -20,37 +20,37 @@ import static uk.co.bconline.ndelius.util.NameUtils.combineNames;
 @Component
 public class ChangeNoteTransformer {
 
-	public List<ChangeNote> map(Collection<ChangeNoteEntity> entities) {
-		return entities.stream()
-				.map(this::map)
-				.flatMap(Optionals::toStream)
-				.sorted(comparing(ChangeNote::getTime).reversed())
-				.collect(toList());
-	}
+    public List<ChangeNote> map(Collection<ChangeNoteEntity> entities) {
+        return entities.stream()
+            .map(this::map)
+            .flatMap(Optionals::toStream)
+            .sorted(comparing(ChangeNote::getTime).reversed())
+            .collect(toList());
+    }
 
-	public Optional<ChangeNote> map(ChangeNoteEntity entity) {
-		return map(entity.getUpdatedBy(), entity.getUpdatedAt(), entity.getNotes());
-	}
+    public Optional<ChangeNote> map(ChangeNoteEntity entity) {
+        return map(entity.getUpdatedBy(), entity.getUpdatedAt(), entity.getNotes());
+    }
 
-	public Optional<ChangeNoteEntity> mapToEntity(UserEntity user, UserEntity modifiedBy, LocalDateTime modifiedAt) {
-		if (modifiedAt == null || modifiedBy == null) return Optional.empty();
-		return Optional.of(ChangeNoteEntity.builder()
-				.user(user)
-				.updatedAt(modifiedAt)
-				.updatedById(modifiedBy.getId())
-				.build());
-	}
+    public Optional<ChangeNoteEntity> mapToEntity(UserEntity user, UserEntity modifiedBy, LocalDateTime modifiedAt) {
+        if (modifiedAt == null || modifiedBy == null) return Optional.empty();
+        return Optional.of(ChangeNoteEntity.builder()
+            .user(user)
+            .updatedAt(modifiedAt)
+            .updatedById(modifiedBy.getId())
+            .build());
+    }
 
-	public Optional<ChangeNote> map(UserEntity modifiedBy, LocalDateTime modifiedAt, String note) {
-		if (modifiedAt == null || modifiedBy == null) return Optional.empty();
-		return Optional.of(ChangeNote.builder()
-				.user(ChangeNote.User.builder()
-						.forenames(combineNames(modifiedBy.getForename(), modifiedBy.getForename2()))
-						.surname(modifiedBy.getSurname())
-						.username(modifiedBy.getUsername())
-						.build())
-				.time(modifiedAt)
-				.note(note)
-				.build());
-	}
+    public Optional<ChangeNote> map(UserEntity modifiedBy, LocalDateTime modifiedAt, String note) {
+        if (modifiedAt == null || modifiedBy == null) return Optional.empty();
+        return Optional.of(ChangeNote.builder()
+            .user(ChangeNote.User.builder()
+                .forenames(combineNames(modifiedBy.getForename(), modifiedBy.getForename2()))
+                .surname(modifiedBy.getSurname())
+                .username(modifiedBy.getUsername())
+                .build())
+            .time(modifiedAt)
+            .note(note)
+            .build());
+    }
 }

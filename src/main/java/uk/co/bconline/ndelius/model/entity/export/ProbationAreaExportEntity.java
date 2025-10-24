@@ -20,24 +20,23 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Table(name = "PROBATION_AREA")
 public class ProbationAreaExportEntity implements Serializable {
-	@Id
-	@Column(name = "PROBATION_AREA_ID")
-	@GeneratedValue(generator = "PROBATION_AREA_ID_SEQ")
-	@SequenceGenerator(name = "PROBATION_AREA_ID_SEQ", sequenceName = "PROBATION_AREA_ID_SEQ", allocationSize = 1)
-	private Long id;
+    @Id
+    @Column(name = "PROBATION_AREA_ID")
+    @GeneratedValue(generator = "PROBATION_AREA_ID_SEQ")
+    @SequenceGenerator(name = "PROBATION_AREA_ID_SEQ", sequenceName = "PROBATION_AREA_ID_SEQ", allocationSize = 1)
+    private Long id;
 
-	@Column(name = "CODE")
-	private String code;
+    @Column(name = "CODE")
+    private String code;
 
-	@Column(name = "DESCRIPTION")
-	private String description;
+    @Column(name = "DESCRIPTION")
+    private String description;
 
-	@Column(name = "SELECTABLE")
-	@Convert(converter = YNConverter.class)
-	private boolean selectable;
+    @Column(name = "SELECTABLE")
+    @Convert(converter = YNConverter.class)
+    private boolean selectable;
 
-	public String getExportDescription()
-	{
-		return description + " (" + code + ")" + (selectable ? "" : " [Inactive]");
-	}
+    public String getExportDescription() {
+        return description + " (" + code + ")" + (selectable ? "" : " [Inactive]");
+    }
 }

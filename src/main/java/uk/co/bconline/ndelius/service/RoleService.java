@@ -7,10 +7,12 @@ import javax.naming.Name;
 import java.util.Optional;
 import java.util.Set;
 
-public interface RoleService
-{
-	Set<RoleEntry> getAllRoles();
-	Set<RoleEntry> getRolesInGroup(String group);
-	Optional<RoleEntry> getRole(Name id);
-	Optional<RoleEntry> dereference(RoleAssociationEntry association);
+public interface RoleService {
+    Set<RoleEntry> getAllRoles();
+
+    Set<RoleEntry> getRolesInGroup(String group);
+
+    Optional<RoleEntry> getRole(Name id);
+
+    Optional<RoleEntry> dereference(RoleAssociationEntry association);
 }

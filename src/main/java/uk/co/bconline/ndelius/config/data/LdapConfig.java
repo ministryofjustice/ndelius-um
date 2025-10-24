@@ -30,58 +30,58 @@ import uk.co.bconline.ndelius.util.ReflectionUtils;
 @Configuration
 @EnableLdapRepositories(basePackageClasses = UserEntryRepository.class)
 public class LdapConfig extends LdapAutoConfiguration {
-	private final Environment environment;
+    private final Environment environment;
 
-	@Autowired
-	public LdapConfig(Environment environment) {
-		this.environment = environment;
-	}
+    @Autowired
+    public LdapConfig(Environment environment) {
+        this.environment = environment;
+    }
 
-	@Bean
-	@Primary
-	@Override
-	public LdapContextSource ldapContextSource(LdapConnectionDetails connectionDetails, LdapProperties properties,
-											   ObjectProvider<DirContextAuthenticationStrategy> dirContextAuthenticationStrategy) {
-		val ctxSource = super.ldapContextSource(connectionDetails, properties, dirContextAuthenticationStrategy);
-		val pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
-		ctxSource.setPooled(pooled);
-		return ctxSource;
-	}
+    @Bean
+    @Primary
+    @Override
+    public LdapContextSource ldapContextSource(LdapConnectionDetails connectionDetails, LdapProperties properties,
+                                               ObjectProvider<DirContextAuthenticationStrategy> dirContextAuthenticationStrategy) {
+        val ctxSource = super.ldapContextSource(connectionDetails, properties, dirContextAuthenticationStrategy);
+        val pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
+        ctxSource.setPooled(pooled);
+        return ctxSource;
+    }
 
-	@Bean
-	@Primary
-	@Override
-	public LdapTemplate ldapTemplate(LdapProperties properties, ContextSource contextSource,
-									 ObjectDirectoryMapper objectDirectoryMapper) {
-		return super.ldapTemplate(properties, contextSource, objectDirectoryMapper);
-	}
+    @Bean
+    @Primary
+    @Override
+    public LdapTemplate ldapTemplate(LdapProperties properties, ContextSource contextSource,
+                                     ObjectDirectoryMapper objectDirectoryMapper) {
+        return super.ldapTemplate(properties, contextSource, objectDirectoryMapper);
+    }
 
-	/*
-	 * Spring-LDAP doesn't currently support dynamic `@Entry.base` attributes. This EventListener is a workaround to
-	 * allow us to set the attribute dynamically per-Entry via our environment properties.
-	 *
-	 * It works by using reflection to look up all our @Entry classes, and replaces the `base` value directly when the
-	 * application context is started/refreshed.
-	 *
-	 * This is quite a hacky solution, and should be replaced as soon as better support is added in Spring.
-	 *
-	 * See https://github.com/spring-projects/spring-ldap/issues/444
-	 */
-	@EventListener(ContextRefreshedEvent.class)
-	public void updateBases() throws ReflectiveOperationException {
-		// Get all classes annotated with @Entry
-		val entryClasses = ReflectionUtils.findAllAnnotatedClasses(UserEntry.class.getPackage().getName(), Entry.class);
-		for (val entryClass: entryClasses) {
-			val entryAnnotation = entryClass.getAnnotation(Entry.class);
-			if (StringUtils.isEmpty(entryAnnotation.base())) continue;
-			// Resolve the base attribute as an environment property
-			val newBase = environment.getProperty(entryAnnotation.base(), entryAnnotation.base());
-			// Replace the @Entry annotation with the updated base attribute
-			val attributes = AnnotationUtils.getAnnotationAttributes(entryClass, entryAnnotation);
-			attributes.put("base", newBase);
-			val newAnnotation = AnnotationUtils.synthesizeAnnotation(attributes, Entry.class, entryClass);
-			ReflectionUtils.replaceClassLevelAnnotation(entryClass, Entry.class, newAnnotation);
-			log.info("Updated base for {} to '{}'", entryClass, entryClass.getAnnotation(Entry.class).base());
-		}
-	}
+    /*
+     * Spring-LDAP doesn't currently support dynamic `@Entry.base` attributes. This EventListener is a workaround to
+     * allow us to set the attribute dynamically per-Entry via our environment properties.
+     *
+     * It works by using reflection to look up all our @Entry classes, and replaces the `base` value directly when the
+     * application context is started/refreshed.
+     *
+     * This is quite a hacky solution, and should be replaced as soon as better support is added in Spring.
+     *
+     * See https://github.com/spring-projects/spring-ldap/issues/444
+     */
+    @EventListener(ContextRefreshedEvent.class)
+    public void updateBases() throws ReflectiveOperationException {
+        // Get all classes annotated with @Entry
+        val entryClasses = ReflectionUtils.findAllAnnotatedClasses(UserEntry.class.getPackage().getName(), Entry.class);
+        for (val entryClass : entryClasses) {
+            val entryAnnotation = entryClass.getAnnotation(Entry.class);
+            if (StringUtils.isEmpty(entryAnnotation.base())) continue;
+            // Resolve the base attribute as an environment property
+            val newBase = environment.getProperty(entryAnnotation.base(), entryAnnotation.base());
+            // Replace the @Entry annotation with the updated base attribute
+            val attributes = AnnotationUtils.getAnnotationAttributes(entryClass, entryAnnotation);
+            attributes.put("base", newBase);
+            val newAnnotation = AnnotationUtils.synthesizeAnnotation(attributes, Entry.class, entryClass);
+            ReflectionUtils.replaceClassLevelAnnotation(entryClass, Entry.class, newAnnotation);
+            log.info("Updated base for {} to '{}'", entryClass, entryClass.getAnnotation(Entry.class).base());
+        }
+    }
 }

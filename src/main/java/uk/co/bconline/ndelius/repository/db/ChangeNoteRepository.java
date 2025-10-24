@@ -7,5 +7,6 @@ import java.util.Set;
 
 public interface ChangeNoteRepository extends JpaRepository<ChangeNoteEntity, Long> {
     Set<ChangeNoteEntity> getByUserId(long userId);
+
     boolean existsByUserId(long userId);
 }

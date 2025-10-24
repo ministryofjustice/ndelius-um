@@ -17,12 +17,11 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Entry(objectClasses = {"NDRoleGroup"}, base = "delius.ldap.base.role-groups")
-public final class RoleGroupEntry
-{
+public final class RoleGroupEntry {
     @Id
     private Name dn;
 
-    @Attribute(name="cn")
+    @Attribute(name = "cn")
     private String name;
 
     @Transient

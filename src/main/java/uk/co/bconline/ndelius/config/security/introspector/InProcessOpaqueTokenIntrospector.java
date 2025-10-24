@@ -24,33 +24,33 @@ import static org.springframework.security.oauth2.core.OAuth2TokenIntrospectionC
  */
 @Component
 public class InProcessOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
-	private final OAuth2AuthorizationService authorizationService;
+    private final OAuth2AuthorizationService authorizationService;
 
     public InProcessOpaqueTokenIntrospector(OAuth2AuthorizationService authorizationService) {
-		this.authorizationService = authorizationService;
-	}
+        this.authorizationService = authorizationService;
+    }
 
-	@Override
-	public OAuth2IntrospectionAuthenticatedPrincipal introspect(String token) {
+    @Override
+    public OAuth2IntrospectionAuthenticatedPrincipal introspect(String token) {
         val authorization = authorizationService.findByToken(token, OAuth2TokenType.ACCESS_TOKEN);
-		if (authorization == null) {
+        if (authorization == null) {
             throw new BadOpaqueTokenException("Invalid access token");
-		}
+        }
 
         val accessToken = authorization.getAccessToken();
-		Map<String, Object> attributes = new HashMap<>();
+        Map<String, Object> attributes = new HashMap<>();
         attributes.put(ACTIVE, accessToken.isActive());
-		attributes.put(USERNAME, authorization.getPrincipalName());
-		attributes.put(CLIENT_ID, authorization.getRegisteredClientId());
+        attributes.put(USERNAME, authorization.getPrincipalName());
+        attributes.put(CLIENT_ID, authorization.getRegisteredClientId());
         attributes.put(SCOPE, StringUtils.collectionToDelimitedString(accessToken.getToken().getScopes(), " "));
-		attributes.put("grant_type", authorization.getAuthorizationGrantType());
+        attributes.put("grant_type", authorization.getAuthorizationGrantType());
         if (accessToken.getToken().getExpiresAt() != null) attributes.put(EXP, accessToken.getToken().getExpiresAt());
         if (accessToken.getToken().getIssuedAt() != null) attributes.put(IAT, accessToken.getToken().getIssuedAt());
 
         List<GrantedAuthority> authorities = accessToken.getToken().getScopes().stream()
-				.map(s -> new SimpleGrantedAuthority("SCOPE_" + s))
-				.collect(Collectors.toList());
+            .map(s -> new SimpleGrantedAuthority("SCOPE_" + s))
+            .collect(Collectors.toList());
 
-		return new OAuth2IntrospectionAuthenticatedPrincipal(attributes, authorities);
-	}
+        return new OAuth2IntrospectionAuthenticatedPrincipal(attributes, authorities);
+    }
 }

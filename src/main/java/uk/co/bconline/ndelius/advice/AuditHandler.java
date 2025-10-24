@@ -23,30 +23,30 @@ import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 @Component
 @Slf4j(topic = "audit")
 public class AuditHandler {
-	@EventListener
-	public void authenticationFailure(AbstractAuthenticationFailureEvent event) {
-		val username = ofNullable(event.getAuthentication()).map(Authentication::getPrincipal).orElse("UNKNOWN");
-		val message = ofNullable(event.getException()).map(Exception::getMessage).orElse("Unknown error");
-		log.error("{} {} {}", username, "AUTHENTICATION_FAILURE", message);
-	}
+    @EventListener
+    public void authenticationFailure(AbstractAuthenticationFailureEvent event) {
+        val username = ofNullable(event.getAuthentication()).map(Authentication::getPrincipal).orElse("UNKNOWN");
+        val message = ofNullable(event.getException()).map(Exception::getMessage).orElse("Unknown error");
+        log.error("{} {} {}", username, "AUTHENTICATION_FAILURE", message);
+    }
 
-	@EventListener
-	public void authenticationSuccess(InteractiveAuthenticationSuccessEvent event) {
-		log.info("{} {}", myUsername(), "AUTHENTICATION_SUCCESS");
-	}
+    @EventListener
+    public void authenticationSuccess(InteractiveAuthenticationSuccessEvent event) {
+        log.info("{} {}", myUsername(), "AUTHENTICATION_SUCCESS");
+    }
 
-	@Before("@annotation(preauthorize)")
-	public void interactionSuccess(JoinPoint joinPoint, PreAuthorize preauthorize) {
-		log.info("{} {} {}", myUsername(), AuthUtils.getRequiredScope(preauthorize), joinPoint.getArgs());
-	}
+    @Before("@annotation(preauthorize)")
+    public void interactionSuccess(JoinPoint joinPoint, PreAuthorize preauthorize) {
+        log.info("{} {} {}", myUsername(), AuthUtils.getRequiredScope(preauthorize), joinPoint.getArgs());
+    }
 
-	public String interactionFailure(HttpServletRequest request) {
-		val requiredScope = ofNullable(request.getAttribute(BEST_MATCHING_HANDLER_ATTRIBUTE))
-				.map(HandlerMethod.class::cast)
-				.flatMap(method -> ofNullable(method.getMethodAnnotation(PreAuthorize.class)))
-				.map(AuthUtils::getRequiredScope)
-				.orElse(null);
-		log.error("{} {}", myUsername(), requiredScope);
-		return requiredScope;
-	}
+    public String interactionFailure(HttpServletRequest request) {
+        val requiredScope = ofNullable(request.getAttribute(BEST_MATCHING_HANDLER_ATTRIBUTE))
+            .map(HandlerMethod.class::cast)
+            .flatMap(method -> ofNullable(method.getMethodAnnotation(PreAuthorize.class)))
+            .map(AuthUtils::getRequiredScope)
+            .orElse(null);
+        log.error("{} {}", myUsername(), requiredScope);
+        return requiredScope;
+    }
 }

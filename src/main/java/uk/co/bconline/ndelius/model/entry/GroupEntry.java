@@ -19,19 +19,19 @@ import java.util.List;
 @AllArgsConstructor
 @Entry(objectClasses = {"groupOfNames"}, base = "delius.ldap.base.groups")
 public final class GroupEntry implements Serializable {
-	@Id
-	private Name dn;
+    @Id
+    private Name dn;
 
-	@Attribute(name = "cn")
-	private String name;
+    @Attribute(name = "cn")
+    private String name;
 
-	@Attribute
-	private String description;
+    @Attribute
+    private String description;
 
-	@Attribute(name = "member")
-	private List<Name> members;
+    @Attribute(name = "member")
+    private List<Name> members;
 
-	public String getType() {
-		return LdapUtils.getStringValue(dn, dn.size() - 2);
-	}
+    public String getType() {
+        return LdapUtils.getStringValue(dn, dn.size() - 2);
+    }
 }

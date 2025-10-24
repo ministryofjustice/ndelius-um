@@ -19,20 +19,17 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ReferenceDataController
-{
-	private final ReferenceDataService service;
+public class ReferenceDataController {
+    private final ReferenceDataService service;
 
-	@Autowired
-	public ReferenceDataController(ReferenceDataService service)
-	{
-		this.service = service;
-	}
+    @Autowired
+    public ReferenceDataController(ReferenceDataService service) {
+        this.service = service;
+    }
 
-	@GetMapping("/staffgrades")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI008')")
-	public ResponseEntity<List<ReferenceData>> getStaffGrades()
-	{
-		return new ResponseEntity<>(service.getStaffGrades(), HttpStatus.OK);
-	}
+    @GetMapping("/staffgrades")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI008')")
+    public ResponseEntity<List<ReferenceData>> getStaffGrades() {
+        return new ResponseEntity<>(service.getStaffGrades(), HttpStatus.OK);
+    }
 }

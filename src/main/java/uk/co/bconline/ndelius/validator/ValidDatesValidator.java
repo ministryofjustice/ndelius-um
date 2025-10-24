@@ -6,22 +6,17 @@ import uk.co.bconline.ndelius.model.User;
 
 import java.time.LocalDate;
 
-public class ValidDatesValidator implements ConstraintValidator<ValidDates, User>
-{
+public class ValidDatesValidator implements ConstraintValidator<ValidDates, User> {
 
-	@Override
-	public boolean isValid(User user, ConstraintValidatorContext context)
-	{
-		LocalDate startDate = user.getStartDate();
-		LocalDate endDate = user.getEndDate();
+    @Override
+    public boolean isValid(User user, ConstraintValidatorContext context) {
+        LocalDate startDate = user.getStartDate();
+        LocalDate endDate = user.getEndDate();
 
-		if (startDate != null && endDate != null)
-		{
-			return startDate.isBefore(endDate) || startDate.isEqual(endDate);
-		}
-		else
-		{
-			return true;
-		}
-	}
+        if (startDate != null && endDate != null) {
+            return startDate.isBefore(endDate) || startDate.isEqual(endDate);
+        } else {
+            return true;
+        }
+    }
 }

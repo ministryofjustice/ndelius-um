@@ -22,44 +22,40 @@ import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class RoleGroupControllerTest
-{
+public class RoleGroupControllerTest {
     @Autowired
     private WebApplicationContext context;
 
     private MockMvc mvc;
 
     @Before
-    public void setup()
-    {
+    public void setup() {
         mvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
-                .alwaysDo(print())
-                .build();
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .alwaysDo(print())
+            .build();
     }
 
     @Test
-    public void transactionGroupsAreReturned() throws Exception
-    {
+    public void transactionGroupsAreReturned() throws Exception {
         mvc.perform(get("/api/rolegroups")
                 .header("Authorization", "Bearer " + token(mvc)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", not(empty())))
-                .andExpect(jsonPath("$[*].name", hasItem("Read Only User")));
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", not(empty())))
+            .andExpect(jsonPath("$[*].name", hasItem("Read Only User")));
     }
 
     @Test
-    public void transactionGroupIsReturned() throws Exception
-    {
+    public void transactionGroupIsReturned() throws Exception {
         mvc.perform(get("/api/rolegroup/Read Only User")
                 .header("Authorization", "Bearer " + token(mvc)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", not(empty())))
-                .andExpect(jsonPath("$.name", is("Read Only User")))
-                .andExpect(jsonPath("$.roles", not(empty())))
-                .andExpect(jsonPath("$.roles[*].name", hasItem("CLBT007")))
-                .andExpect(jsonPath("$.roles[*].description", hasItem("Enhanced Search Contact Log")));
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", not(empty())))
+            .andExpect(jsonPath("$.name", is("Read Only User")))
+            .andExpect(jsonPath("$.roles", not(empty())))
+            .andExpect(jsonPath("$.roles[*].name", hasItem("CLBT007")))
+            .andExpect(jsonPath("$.roles[*].description", hasItem("Enhanced Search Contact Log")));
     }
 
 }

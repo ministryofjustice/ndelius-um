@@ -17,33 +17,33 @@ import static java.util.Optional.ofNullable;
 @Service
 public class UserHistoryServiceImpl implements UserHistoryService {
 
-	private final ChangeNoteRepository repository;
-	private final ChangeNoteTransformer transformer;
-	private final UserEntityService userEntityService;
+    private final ChangeNoteRepository repository;
+    private final ChangeNoteTransformer transformer;
+    private final UserEntityService userEntityService;
 
-	public UserHistoryServiceImpl(
-			ChangeNoteRepository repository,
-			ChangeNoteTransformer transformer,
-			UserEntityService userEntityService) {
-		this.repository = repository;
-		this.transformer = transformer;
-		this.userEntityService = userEntityService;
-	}
+    public UserHistoryServiceImpl(
+        ChangeNoteRepository repository,
+        ChangeNoteTransformer transformer,
+        UserEntityService userEntityService) {
+        this.repository = repository;
+        this.transformer = transformer;
+        this.userEntityService = userEntityService;
+    }
 
-	@Override
-	public List<ChangeNote> getHistory(String username) {
-		val userId = userEntityService.getUserId(username);
-		return getHistory(userId);
-	}
+    @Override
+    public List<ChangeNote> getHistory(String username) {
+        val userId = userEntityService.getUserId(username);
+        return getHistory(userId);
+    }
 
-	@Override
-	public List<ChangeNote> getHistory(Long userId) {
-		val entities = repository.getByUserId(userId);
-		return transformer.map(entities);
-	}
+    @Override
+    public List<ChangeNote> getHistory(Long userId) {
+        val entities = repository.getByUserId(userId);
+        return transformer.map(entities);
+    }
 
-	@Override
-	public boolean hasHistory(Long userId) {
-		return ofNullable(userId).map(repository::existsByUserId).orElse(false);
-	}
+    @Override
+    public boolean hasHistory(Long userId) {
+        return ofNullable(userId).map(repository::existsByUserId).orElse(false);
+    }
 }

@@ -26,47 +26,46 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "STAFF")
 @Builder(toBuilder = true)
-public class StaffExportEntity implements Serializable
-{
-	@Id
-	@Column(name = "STAFF_ID")
-	@GeneratedValue(generator = "STAFF_ID_SEQ")
-	@SequenceGenerator(name = "STAFF_ID_SEQ", sequenceName = "STAFF_ID_SEQ", allocationSize = 1)
-	private Long id;
+public class StaffExportEntity implements Serializable {
+    @Id
+    @Column(name = "STAFF_ID")
+    @GeneratedValue(generator = "STAFF_ID_SEQ")
+    @SequenceGenerator(name = "STAFF_ID_SEQ", sequenceName = "STAFF_ID_SEQ", allocationSize = 1)
+    private Long id;
 
-	@Version
-	@Column(name = "ROW_VERSION")
-	private Long version;
+    @Version
+    @Column(name = "ROW_VERSION")
+    private Long version;
 
-	@Column(name = "OFFICER_CODE")
-	private String code;
+    @Column(name = "OFFICER_CODE")
+    private String code;
 
-	@Column(name = "FORENAME")
-	private String forename;
+    @Column(name = "FORENAME")
+    private String forename;
 
-	@Column(name = "FORENAME2")
-	private String forename2;
+    @Column(name = "FORENAME2")
+    private String forename2;
 
-	@Column(name = "SURNAME")
-	private String surname;
+    @Column(name = "SURNAME")
+    private String surname;
 
-	@Column(name = "PRIVATE")
-	private Boolean privateStaff;
+    @Column(name = "PRIVATE")
+    private Boolean privateStaff;
 
-	@Column(name = "START_DATE")
-	private LocalDate startDate;
+    @Column(name = "START_DATE")
+    private LocalDate startDate;
 
-	@Column(name = "END_DATE")
-	private LocalDate endDate;
+    @Column(name = "END_DATE")
+    private LocalDate endDate;
 
-	@ManyToOne
-	@JoinColumn(name = "STAFF_GRADE_ID")
-	private ReferenceDataExportEntity grade;
+    @ManyToOne
+    @JoinColumn(name = "STAFF_GRADE_ID")
+    private ReferenceDataExportEntity grade;
 
-	@ManyToMany
-	@JoinTable(
-			name = "STAFF_TEAM",
-			joinColumns = @JoinColumn(name = "STAFF_ID"),
-			inverseJoinColumns = @JoinColumn(name = "TEAM_ID"))
-	private Set<TeamExportEntity> teams;
+    @ManyToMany
+    @JoinTable(
+        name = "STAFF_TEAM",
+        joinColumns = @JoinColumn(name = "STAFF_ID"),
+        inverseJoinColumns = @JoinColumn(name = "TEAM_ID"))
+    private Set<TeamExportEntity> teams;
 }

@@ -22,8 +22,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "DOMAIN_EVENT")
-public class DomainEventEntity
-{
+public class DomainEventEntity {
     @Id
     @Column(name = "DOMAIN_EVENT_ID")
     @SequenceGenerator(name = "DOMAIN_EVENT_ID_SEQ", sequenceName = "DOMAIN_EVENT_ID_SEQ", allocationSize = 1)

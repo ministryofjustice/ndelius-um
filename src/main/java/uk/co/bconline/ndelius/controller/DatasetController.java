@@ -22,42 +22,36 @@ import static org.springframework.http.ResponseEntity.ok;
 @Validated
 @RestController
 @RequestMapping(value = "/api")
-public class DatasetController
-{
-	private final DatasetService datasetService;
+public class DatasetController {
+    private final DatasetService datasetService;
 
-	@Autowired
-	public DatasetController(DatasetService datasetService)
-	{
-		this.datasetService = datasetService;
-	}
+    @Autowired
+    public DatasetController(DatasetService datasetService) {
+        this.datasetService = datasetService;
+    }
 
-	@PreAuthorize("hasAuthority('SCOPE_UMBI006')")
-	@GetMapping(value = "/datasets", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Dataset>> getDatasets()
-	{
-		return ok(datasetService.getDatasets());
-	}
+    @PreAuthorize("hasAuthority('SCOPE_UMBI006')")
+    @GetMapping(value = "/datasets", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Dataset>> getDatasets() {
+        return ok(datasetService.getDatasets());
+    }
 
-	@PreAuthorize("hasAuthority('SCOPE_UMBI006')")
-	@GetMapping(value = "/establishments", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Dataset>> getEstablishments()
-	{
-		return ok(datasetService.getEstablishments());
-	}
+    @PreAuthorize("hasAuthority('SCOPE_UMBI006')")
+    @GetMapping(value = "/establishments", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Dataset>> getEstablishments() {
+        return ok(datasetService.getEstablishments());
+    }
 
-	@PreAuthorize("hasAuthority('SCOPE_UMBI006')")
-	@GetMapping(value = "/dataset/{datasetCode}/nextStaffCode", produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> getNextStaffCode(@PathVariable("datasetCode") String datasetCode)
-	{
-		if (!datasetService.getDatasetByCode(datasetCode).isPresent()) return notFound().build();
-		return ok(datasetService.getNextStaffCode(datasetCode));
-	}
+    @PreAuthorize("hasAuthority('SCOPE_UMBI006')")
+    @GetMapping(value = "/dataset/{datasetCode}/nextStaffCode", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> getNextStaffCode(@PathVariable("datasetCode") String datasetCode) {
+        if (!datasetService.getDatasetByCode(datasetCode).isPresent()) return notFound().build();
+        return ok(datasetService.getNextStaffCode(datasetCode));
+    }
 
-	@PreAuthorize("hasAuthority('SCOPE_UMBI006')")
-	@GetMapping(value = "/dataset/{datasetCode}/subContractedProviders", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Dataset>> getSubContractedProviders(@PathVariable("datasetCode") String datasetCode)
-	{
-		return ok(datasetService.getSubContractedProviders(datasetCode));
-	}
+    @PreAuthorize("hasAuthority('SCOPE_UMBI006')")
+    @GetMapping(value = "/dataset/{datasetCode}/subContractedProviders", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Dataset>> getSubContractedProviders(@PathVariable("datasetCode") String datasetCode) {
+        return ok(datasetService.getSubContractedProviders(datasetCode));
+    }
 }

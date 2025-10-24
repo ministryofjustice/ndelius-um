@@ -14,18 +14,20 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Repeatable(ConditionallyRequired.List.class)
 @Constraint(validatedBy = ConditionallyRequiredValidator.class)
-public @interface ConditionallyRequired
-{
-	String required();
-	String ifPopulated();
+public @interface ConditionallyRequired {
+    String required();
 
-	String message() default "";
-	Class<?>[] groups() default {};
-	Class<? extends Payload>[] payload() default {};
+    String ifPopulated();
 
-	@Target(TYPE)
-	@Retention(RUNTIME)
-	@interface List {
-		ConditionallyRequired[] value();
-	}
+    String message() default "";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
+
+    @Target(TYPE)
+    @Retention(RUNTIME)
+    @interface List {
+        ConditionallyRequired[] value();
+    }
 }

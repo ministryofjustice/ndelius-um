@@ -16,29 +16,26 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class PasswordEncoderTest
-{
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+public class PasswordEncoderTest {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Test
-	public void oidPasswordFormatCanBeMatched()
-	{
-		byte[] bytes = new LdapShaPasswordEncoder().encode("secret").getBytes();
-		String oidPassword = Arrays.toString(bytes).replace("[", "").replace("]", "").replaceAll(" ", "");
+    @Test
+    public void oidPasswordFormatCanBeMatched() {
+        byte[] bytes = new LdapShaPasswordEncoder().encode("secret").getBytes();
+        String oidPassword = Arrays.toString(bytes).replace("[", "").replace("]", "").replaceAll(" ", "");
 
-		boolean match = passwordEncoder.matches("secret", oidPassword);
+        boolean match = passwordEncoder.matches("secret", oidPassword);
 
-		assertTrue(match);
-	}
+        assertTrue(match);
+    }
 
-	@Test
-	public void normalPasswordFormatCanBeMatched()
-	{
-		String encodedPassword = new LdapShaPasswordEncoder().encode("secret");
+    @Test
+    public void normalPasswordFormatCanBeMatched() {
+        String encodedPassword = new LdapShaPasswordEncoder().encode("secret");
 
-		boolean match = passwordEncoder.matches("secret", encodedPassword);
+        boolean match = passwordEncoder.matches("secret", encodedPassword);
 
-		assertTrue(match);
-	}
+        assertTrue(match);
+    }
 }

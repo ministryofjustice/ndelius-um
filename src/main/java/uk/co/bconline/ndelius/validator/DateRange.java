@@ -12,14 +12,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(FIELD)
 @Retention(RUNTIME)
 @Constraint(validatedBy = DateRangeValidator.class)
-public @interface DateRange
-{
-	String message() default "Date must be between {min} and {max}";
+public @interface DateRange {
+    String message() default "Date must be between {min} and {max}";
 
-	String min() default "1900-01-01";
-	String max() default "2099-12-31";
+    String min() default "1900-01-01";
 
-	Class<?>[] groups() default {};
+    String max() default "2099-12-31";
 
-	Class<? extends Payload>[] payload() default {};
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

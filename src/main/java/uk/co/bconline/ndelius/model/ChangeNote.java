@@ -2,7 +2,11 @@ package uk.co.bconline.ndelius.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -15,31 +19,30 @@ import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(NON_NULL)
-public class ChangeNote
-{
-	@Schema(accessMode = READ_ONLY)
-	private ChangeNote.User user;
+public class ChangeNote {
+    @Schema(accessMode = READ_ONLY)
+    private ChangeNote.User user;
 
-	@Schema(accessMode = READ_ONLY)
-	private LocalDateTime time;
+    @Schema(accessMode = READ_ONLY)
+    private LocalDateTime time;
 
-	@Schema(accessMode = READ_ONLY)
-	private String note;
+    @Schema(accessMode = READ_ONLY)
+    private String note;
 
 
-	@Getter
-	@Builder
-	@ToString
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class User {
-		@Schema(accessMode = READ_ONLY)
-		private String username;
+    @Getter
+    @Builder
+    @ToString
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class User {
+        @Schema(accessMode = READ_ONLY)
+        private String username;
 
-		@Schema(accessMode = READ_ONLY)
-		private String forenames;
+        @Schema(accessMode = READ_ONLY)
+        private String forenames;
 
-		@Schema(accessMode = READ_ONLY)
-		private String surname;
-	}
+        @Schema(accessMode = READ_ONLY)
+        private String surname;
+    }
 }

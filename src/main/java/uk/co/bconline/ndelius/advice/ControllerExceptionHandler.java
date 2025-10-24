@@ -31,94 +31,93 @@ import static uk.co.bconline.ndelius.util.NameUtils.camelCaseToTitleCase;
 @Slf4j
 @Component
 @ControllerAdvice
-public class ControllerExceptionHandler
-{
-	private final AuditHandler auditHandler;
+public class ControllerExceptionHandler {
+    private final AuditHandler auditHandler;
 
-	public ControllerExceptionHandler(AuditHandler auditHandler) {
-		this.auditHandler = auditHandler;
-	}
+    public ControllerExceptionHandler(AuditHandler auditHandler) {
+        this.auditHandler = auditHandler;
+    }
 
-	@ExceptionHandler
-	@ResponseBody
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorResponse handle(MethodArgumentNotValidException exception) {
-		log.debug("Returning 400 response", exception);
-		val result = exception.getBindingResult();
-		val errors = result
-				.getFieldErrors().stream()
-				.map(e -> camelCaseToTitleCase(e.getField()) + " " + e.getDefaultMessage())
-				.collect(toList());
-		errors.addAll(result
-				.getGlobalErrors().stream()
-				.map(ObjectError::getDefaultMessage)
-				.collect(toList()));
-		return new ErrorResponse(errors);
-	}
+    @ExceptionHandler
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(MethodArgumentNotValidException exception) {
+        log.debug("Returning 400 response", exception);
+        val result = exception.getBindingResult();
+        val errors = result
+            .getFieldErrors().stream()
+            .map(e -> camelCaseToTitleCase(e.getField()) + " " + e.getDefaultMessage())
+            .collect(toList());
+        errors.addAll(result
+            .getGlobalErrors().stream()
+            .map(ObjectError::getDefaultMessage)
+            .collect(toList()));
+        return new ErrorResponse(errors);
+    }
 
-	@ExceptionHandler
-	@ResponseBody
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorResponse handle(ConstraintViolationException exception) {
-		log.debug("Returning 400 response", exception);
-		return new ErrorResponse(exception
-				.getConstraintViolations().stream()
-				.map(e -> {
-					Path.Node node = getLast(e.getPropertyPath().iterator());
-					if (node == null || node.getKind() != ElementKind.PROPERTY) {
-						return e.getMessage();
-					} else {
-						return camelCaseToTitleCase(node.getName()) + " " + e.getMessage();
-					}
-				})
-				.collect(toList()));
-	}
+    @ExceptionHandler
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(ConstraintViolationException exception) {
+        log.debug("Returning 400 response", exception);
+        return new ErrorResponse(exception
+            .getConstraintViolations().stream()
+            .map(e -> {
+                Path.Node node = getLast(e.getPropertyPath().iterator());
+                if (node == null || node.getKind() != ElementKind.PROPERTY) {
+                    return e.getMessage();
+                } else {
+                    return camelCaseToTitleCase(node.getName()) + " " + e.getMessage();
+                }
+            })
+            .collect(toList()));
+    }
 
-	@ExceptionHandler
-	@ResponseBody
-	@ResponseStatus(HttpStatus.FORBIDDEN)
-	public ForbiddenResponse handle(AccessDeniedException exception, final HttpServletRequest request) {
-		val requiredScope = auditHandler.interactionFailure(request);
-		log.debug("Returning 403 response", exception);
-		return new ForbiddenResponse(myUsername(), new String[]{ requiredScope });
-	}
+    @ExceptionHandler
+    @ResponseBody
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ForbiddenResponse handle(AccessDeniedException exception, final HttpServletRequest request) {
+        val requiredScope = auditHandler.interactionFailure(request);
+        log.debug("Returning 403 response", exception);
+        return new ForbiddenResponse(myUsername(), new String[]{requiredScope});
+    }
 
-	@ExceptionHandler
-	@ResponseBody
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public ErrorResponse handle(AppException exception) {
-		log.error("Returning 500 response", exception);
-		if (exception.getMessage() == null) return null;
-		return new ErrorResponse(exception.getMessage());
-	}
+    @ExceptionHandler
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handle(AppException exception) {
+        log.error("Returning 500 response", exception);
+        if (exception.getMessage() == null) return null;
+        return new ErrorResponse(exception.getMessage());
+    }
 
-	@ExceptionHandler
-	@ResponseBody
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public ErrorResponse handle(RuntimeException exception) {
-		log.error("Returning 500 response", exception);
-		return new ErrorResponse(getMostSpecificCause(exception).getMessage());
-	}
+    @ExceptionHandler
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handle(RuntimeException exception) {
+        log.error("Returning 500 response", exception);
+        return new ErrorResponse(getMostSpecificCause(exception).getMessage());
+    }
 
-	@ExceptionHandler
-	@ResponseBody
-	@ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
-	public ErrorResponse handle(BulkheadFullException exception) {
-		log.debug("Returning 429 response", exception);
-		return new ErrorResponse("An export task is currently in progress. Please try again later.");
-	}
+    @ExceptionHandler
+    @ResponseBody
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    public ErrorResponse handle(BulkheadFullException exception) {
+        log.debug("Returning 429 response", exception);
+        return new ErrorResponse("An export task is currently in progress. Please try again later.");
+    }
 
-	@ExceptionHandler
-	@ResponseBody
-	@ResponseStatus(HttpStatus.CONFLICT)
-	public ErrorResponse handle(NoSuchAttributeException exception) {
-		log.error("Returning 409 response", exception);
-		return new ErrorResponse("User account is corrupted, please contact the help desk");
-	}
+    @ExceptionHandler
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handle(NoSuchAttributeException exception) {
+        log.error("Returning 409 response", exception);
+        return new ErrorResponse("User account is corrupted, please contact the help desk");
+    }
 
-	private <T> T getLast(Iterator<T> propertyPath) {
-		T node = null;
-		while (propertyPath.hasNext()) node = propertyPath.next();
-		return node;
-	}
+    private <T> T getLast(Iterator<T> propertyPath) {
+        T node = null;
+        while (propertyPath.hasNext()) node = propertyPath.next();
+        return node;
+    }
 }
