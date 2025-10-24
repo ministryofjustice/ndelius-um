@@ -24,3 +24,13 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Lint
         run: ./gradlew npm_run_lint
+
+  lint-java:
+    name: Lint Java
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check formatting
+        uses: ministryofjustice/hmpps-probation-integration-services/.github/actions/format-code@main
+        with:
+          dry: true
