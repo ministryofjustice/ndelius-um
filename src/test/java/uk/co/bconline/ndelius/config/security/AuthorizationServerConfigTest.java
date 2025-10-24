@@ -25,66 +25,66 @@ import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 public class AuthorizationServerConfigTest {
-	@Autowired
-	private WebApplicationContext context;
+    @Autowired
+    private WebApplicationContext context;
 
-	private MockMvc mvc;
+    private MockMvc mvc;
 
-	@Before
-	public void setup() {
-		mvc = MockMvcBuilders
-				.webAppContextSetup(context)
-				.apply(springSecurity())
-				.alwaysDo(print())
-				.build();
-	}
+    @Before
+    public void setup() {
+        mvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .alwaysDo(print())
+            .build();
+    }
 
-	@Test
-	public void noCredentialsReturnsUnauthorized() throws Exception {
-		mvc.perform(post("/oauth/token"))
-				.andExpect(status().isUnauthorized());
-	}
+    @Test
+    public void noCredentialsReturnsUnauthorized() throws Exception {
+        mvc.perform(post("/oauth/token"))
+            .andExpect(status().isUnauthorized());
+    }
 
-	@Test
-	public void accessingASecureEndpointWithoutATokenIsForbidden() throws Exception {
-		mvc.perform(get("/api/user/test.user"))
-				.andExpect(status().isUnauthorized())
-				.andExpect(header().string("WWW-Authenticate", "Bearer"));
-	}
+    @Test
+    public void accessingASecureEndpointWithoutATokenIsForbidden() throws Exception {
+        mvc.perform(get("/api/user/test.user"))
+            .andExpect(status().isUnauthorized())
+            .andExpect(header().string("WWW-Authenticate", "Bearer"));
+    }
 
-	@Test
-	public void accessingASecureEndpointWithAnInvalidTokenIsUnauthorized() throws Exception {
-		mvc.perform(get("/api/user/test.user")
-				.header("Authorization", "Bearer INVALID-TOKEN"))
-				.andExpect(status().isUnauthorized())
+    @Test
+    public void accessingASecureEndpointWithAnInvalidTokenIsUnauthorized() throws Exception {
+        mvc.perform(get("/api/user/test.user")
+                .header("Authorization", "Bearer INVALID-TOKEN"))
+            .andExpect(status().isUnauthorized())
             .andExpect(header().string("WWW-Authenticate", startsWith("Bearer error=\"invalid_token\", error_description=\"Invalid access token\"")));
-	}
+    }
 
-	@Test
-	public void accessingASecureEndpointWithAValidTokenIsAllowed() throws Exception {
-		mvc.perform(get("/api/user/test.user")
-				.header("Authorization", "Bearer " + token(mvc)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("username", is("test.user")));
-	}
+    @Test
+    public void accessingASecureEndpointWithAValidTokenIsAllowed() throws Exception {
+        mvc.perform(get("/api/user/test.user")
+                .header("Authorization", "Bearer " + token(mvc)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("username", is("test.user")));
+    }
 
-	@Test
-	public void actuatorDoesntRequireAuthentication() throws Exception {
-		mvc.perform(get("/actuator/info"))
-				.andExpect(status().isOk());
-	}
+    @Test
+    public void actuatorDoesntRequireAuthentication() throws Exception {
+        mvc.perform(get("/actuator/info"))
+            .andExpect(status().isOk());
+    }
 
-	@Test
-	public void tokenCanBeUsedToAuthoriseBothRolesAndInteractions() throws Exception {
-		String authCode = TokenUtils.getAuthCode(mvc, "test.user");
+    @Test
+    public void tokenCanBeUsedToAuthoriseBothRolesAndInteractions() throws Exception {
+        String authCode = TokenUtils.getAuthCode(mvc, "test.user");
 
-		mvc.perform(post("/oauth/token")
-				.with(httpBasic("test.web.client", "secret"))
-				.param("code", authCode)
-				.param("grant_type", "authorization_code")
-				.param("redirect_uri", "https://example.com/login-success"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("scope", containsString("UMBT001")))    // Granted role (business transaction)
-				.andExpect(jsonPath("scope", containsString("UMBI001")));   // Granted interaction (business interaction)
-	}
+        mvc.perform(post("/oauth/token")
+                .with(httpBasic("test.web.client", "secret"))
+                .param("code", authCode)
+                .param("grant_type", "authorization_code")
+                .param("redirect_uri", "https://example.com/login-success"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("scope", containsString("UMBT001")))    // Granted role (business transaction)
+            .andExpect(jsonPath("scope", containsString("UMBI001")));   // Granted interaction (business interaction)
+    }
 }

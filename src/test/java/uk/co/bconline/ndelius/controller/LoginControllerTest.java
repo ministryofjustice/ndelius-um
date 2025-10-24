@@ -24,31 +24,28 @@ import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class LoginControllerTest
-{
-	@Autowired
-	private WebApplicationContext context;
+public class LoginControllerTest {
+    @Autowired
+    private WebApplicationContext context;
 
-	private MockMvc mvc;
+    private MockMvc mvc;
 
-	@Before
-	public void setup()
-	{
-		mvc = MockMvcBuilders
-				.webAppContextSetup(context)
-				.apply(springSecurity())
-				.alwaysDo(print())
-				.build();
-	}
+    @Before
+    public void setup() {
+        mvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .alwaysDo(print())
+            .build();
+    }
 
-	@Test
-	public void userIsReturned() throws Exception
-	{
-		mvc.perform(get("/api/whoami")
-				.header("Authorization", "Bearer " + token(mvc)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.username", is("test.user")))
-				.andExpect(jsonPath("$.roles", not(empty())));
-	}
+    @Test
+    public void userIsReturned() throws Exception {
+        mvc.perform(get("/api/whoami")
+                .header("Authorization", "Bearer " + token(mvc)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.username", is("test.user")))
+            .andExpect(jsonPath("$.roles", not(empty())));
+    }
 
 }

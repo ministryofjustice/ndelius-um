@@ -22,17 +22,17 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 public class MemberOfInterceptorTest {
 
-	@Autowired
-	private UserEntryRepository userEntryRepository;
+    @Autowired
+    private UserEntryRepository userEntryRepository;
 
-	@Test
-	public void memberOfAttributeIsPopulatedDynamicallyBasedOnGroupMembers() {
-		Optional<UserEntry> user = userEntryRepository.findByUsername("test.user");
-		assertTrue(user.isPresent());
-		assertThat(user.get().getGroupNames(), hasSize(3));
-		assertThat(user.get().getGroupNames(), hasItems(
-				LdapUtils.newLdapName("cn=Group 1,ou=NDMIS-Reporting,ou=Groups,dc=bcl,dc=local"),
-				LdapUtils.newLdapName("cn=Group 2,ou=NDMIS-Reporting,ou=Groups,dc=bcl,dc=local"),
-				LdapUtils.newLdapName("cn=Group 1,ou=Fileshare,ou=Groups,dc=bcl,dc=local")));
-	}
+    @Test
+    public void memberOfAttributeIsPopulatedDynamicallyBasedOnGroupMembers() {
+        Optional<UserEntry> user = userEntryRepository.findByUsername("test.user");
+        assertTrue(user.isPresent());
+        assertThat(user.get().getGroupNames(), hasSize(3));
+        assertThat(user.get().getGroupNames(), hasItems(
+            LdapUtils.newLdapName("cn=Group 1,ou=NDMIS-Reporting,ou=Groups,dc=bcl,dc=local"),
+            LdapUtils.newLdapName("cn=Group 2,ou=NDMIS-Reporting,ou=Groups,dc=bcl,dc=local"),
+            LdapUtils.newLdapName("cn=Group 1,ou=Fileshare,ou=Groups,dc=bcl,dc=local")));
+    }
 }

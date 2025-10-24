@@ -14,14 +14,13 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class StaffTeamId implements Serializable
-{
-	@Setter
-	@ManyToOne
-	@JoinColumn(name = "STAFF_ID", nullable = false)
-	private StaffEntity staff;
+public class StaffTeamId implements Serializable {
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "STAFF_ID", nullable = false)
+    private StaffEntity staff;
 
-	@ManyToOne
-	@JoinColumn(name = "TEAM_ID", nullable = false)
-	private TeamEntity team;
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID", nullable = false)
+    private TeamEntity team;
 }

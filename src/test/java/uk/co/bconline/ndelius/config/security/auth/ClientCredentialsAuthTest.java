@@ -25,49 +25,44 @@ import static uk.co.bconline.ndelius.test.util.TokenUtils.clientCredentialsToken
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class ClientCredentialsAuthTest
-{
-	@Autowired
-	private WebApplicationContext context;
+public class ClientCredentialsAuthTest {
+    @Autowired
+    private WebApplicationContext context;
 
-	private MockMvc mvc;
+    private MockMvc mvc;
 
-	@Before
-	public void setup()
-	{
-		mvc = MockMvcBuilders
-				.webAppContextSetup(context)
-				.apply(springSecurity())
-				.alwaysDo(print())
-				.build();
-	}
+    @Before
+    public void setup() {
+        mvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .alwaysDo(print())
+            .build();
+    }
 
-	@Test
-	public void invalidClientCredentialsReturnsUnauthorized() throws Exception
-	{
-		mvc.perform(post("/oauth/token")
-				.with(httpBasic("INVALID", "INVALID"))
-				.param("grant_type", "client_credentials"))
-				.andExpect(status().isUnauthorized());
-	}
+    @Test
+    public void invalidClientCredentialsReturnsUnauthorized() throws Exception {
+        mvc.perform(post("/oauth/token")
+                .with(httpBasic("INVALID", "INVALID"))
+                .param("grant_type", "client_credentials"))
+            .andExpect(status().isUnauthorized());
+    }
 
-	@Test
-	public void successfulClientLoginReturnsBearerToken() throws Exception
-	{
-		mvc.perform(post("/oauth/token")
-				.with(httpBasic("test.server.client", "secret"))
-				.param("grant_type", "client_credentials"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("token_type", is("Bearer")))
-				.andExpect(jsonPath("access_token", notNullValue()));
-	}
+    @Test
+    public void successfulClientLoginReturnsBearerToken() throws Exception {
+        mvc.perform(post("/oauth/token")
+                .with(httpBasic("test.server.client", "secret"))
+                .param("grant_type", "client_credentials"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("token_type", is("Bearer")))
+            .andExpect(jsonPath("access_token", notNullValue()));
+    }
 
-	@Test
-	public void accessingASecureEndpointWithAValidTokenIsAllowed() throws Exception
-	{
-		mvc.perform(get("/api/whoami")
-				.header("Authorization", "Bearer " + clientCredentialsToken(mvc, "test.server.client")))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("username", is("test.server.client")));
-	}
+    @Test
+    public void accessingASecureEndpointWithAValidTokenIsAllowed() throws Exception {
+        mvc.perform(get("/api/whoami")
+                .header("Authorization", "Bearer " + clientCredentialsToken(mvc, "test.server.client")))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("username", is("test.server.client")));
+    }
 }

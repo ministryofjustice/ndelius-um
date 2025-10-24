@@ -12,8 +12,8 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReferenceData
-{
-	@NotBlank private String code;
-	private String description;
+public class ReferenceData {
+    @NotBlank
+    private String code;
+    private String description;
 }

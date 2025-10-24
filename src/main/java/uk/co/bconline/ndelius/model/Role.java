@@ -18,9 +18,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(NON_NULL)
-public final class Role
-{
-	private @NotBlank String name;
-	private String description;
-	private List<String> interactions;
+public final class Role {
+    private @NotBlank String name;
+    private String description;
+    private List<String> interactions;
 }

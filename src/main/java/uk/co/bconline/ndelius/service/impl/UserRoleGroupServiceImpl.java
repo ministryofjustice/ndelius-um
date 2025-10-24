@@ -17,39 +17,37 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 @Service
-public class UserRoleGroupServiceImpl implements UserRoleGroupService
-{
+public class UserRoleGroupServiceImpl implements UserRoleGroupService {
     private final RoleGroupService roleGroupService;
-	private final UserRoleService userRoleService;
-	private final RoleService roleService;
+    private final UserRoleService userRoleService;
+    private final RoleService roleService;
 
     @Autowired
     public UserRoleGroupServiceImpl(
-			RoleGroupService roleGroupService,
-			UserRoleService userRoleService,
-			RoleService roleService) {
+        RoleGroupService roleGroupService,
+        UserRoleService userRoleService,
+        RoleService roleService) {
         this.roleGroupService = roleGroupService;
-		this.userRoleService = userRoleService;
-		this.roleService = roleService;
+        this.userRoleService = userRoleService;
+        this.roleService = roleService;
     }
 
     @Override
-    public List<RoleGroup> getAssignableRoleGroups()
-    {
-		val rolesICanAssign = userRoleService.getRolesICanAssign().stream().map(RoleEntry::getName).collect(toSet());
+    public List<RoleGroup> getAssignableRoleGroups() {
+        val rolesICanAssign = userRoleService.getRolesICanAssign().stream().map(RoleEntry::getName).collect(toSet());
         return roleGroupService.getRoleGroups().stream()
-				.filter(g -> roleService.getRolesInGroup(g.getName()).stream()
-						.anyMatch(role -> rolesICanAssign.contains(role.getName())))
-                .collect(toList());
+            .filter(g -> roleService.getRolesInGroup(g.getName()).stream()
+                .anyMatch(role -> rolesICanAssign.contains(role.getName())))
+            .collect(toList());
     }
 
     @Override
-	public Optional<RoleGroup> getRoleGroup(String name) {
-		val rolesICanAssign = userRoleService.getRolesICanAssign().stream().map(RoleEntry::getName).collect(toSet());
-		return roleGroupService.getRoleGroup(name).map(g -> RoleGroup.builder()
-				.name(g.getName())
-				.roles(g.getRoles().stream()
-						.filter(role -> rolesICanAssign.contains(role.getName()))
-						.collect(toList())).build());
-	}
+    public Optional<RoleGroup> getRoleGroup(String name) {
+        val rolesICanAssign = userRoleService.getRolesICanAssign().stream().map(RoleEntry::getName).collect(toSet());
+        return roleGroupService.getRoleGroup(name).map(g -> RoleGroup.builder()
+            .name(g.getName())
+            .roles(g.getRoles().stream()
+                .filter(role -> rolesICanAssign.contains(role.getName()))
+                .collect(toList())).build());
+    }
 }

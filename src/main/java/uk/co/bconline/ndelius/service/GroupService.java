@@ -10,10 +10,16 @@ import java.util.Set;
 
 public interface GroupService {
     Map<String, Set<GroupEntry>> getGroups();
+
     Set<GroupEntry> getGroups(String type);
-	Set<GroupEntry> getGroups(Collection<Name> groupNames);
+
+    Set<GroupEntry> getGroups(Collection<Name> groupNames);
+
     Optional<GroupEntry> getGroup(String name);
+
     Optional<GroupEntry> getGroup(String type, String name);
-	Set<String> getAllUsersInGroups(Map<String, Set<String>> groups);
+
+    Set<String> getAllUsersInGroups(Map<String, Set<String>> groups);
+
     void save(GroupEntry group);
 }

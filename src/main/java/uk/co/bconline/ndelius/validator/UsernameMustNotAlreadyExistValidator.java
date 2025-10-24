@@ -9,16 +9,14 @@ import uk.co.bconline.ndelius.model.User;
 import uk.co.bconline.ndelius.service.UserService;
 
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)
-public class UsernameMustNotAlreadyExistValidator implements ConstraintValidator<UsernameMustNotAlreadyExist, Object[]>
-{
-	@Autowired
-	private UserService userService;
+public class UsernameMustNotAlreadyExistValidator implements ConstraintValidator<UsernameMustNotAlreadyExist, Object[]> {
+    @Autowired
+    private UserService userService;
 
-	@Override
-	public boolean isValid(Object[] params, ConstraintValidatorContext context)
-	{
-		String username = ((User) params[0]).getUsername();
+    @Override
+    public boolean isValid(Object[] params, ConstraintValidatorContext context) {
+        String username = ((User) params[0]).getUsername();
 
-		return !userService.usernameExists(username);
-	}
+        return !userService.usernameExists(username);
+    }
 }

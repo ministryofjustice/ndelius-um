@@ -13,13 +13,12 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProbationAreaUserId implements Serializable
-{
-	@ManyToOne
-	@JoinColumn(name = "PROBATION_AREA_ID")
-	private ProbationAreaEntity probationArea;
+public class ProbationAreaUserId implements Serializable {
+    @ManyToOne
+    @JoinColumn(name = "PROBATION_AREA_ID")
+    private ProbationAreaEntity probationArea;
 
-	@ManyToOne
-	@JoinColumn(name = "USER_ID")
-	private UserEntity user;
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private UserEntity user;
 }

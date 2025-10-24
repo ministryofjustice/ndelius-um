@@ -22,39 +22,35 @@ import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class TeamControllerTest
-{
-	@Autowired
-	private WebApplicationContext context;
+public class TeamControllerTest {
+    @Autowired
+    private WebApplicationContext context;
 
-	private MockMvc mvc;
+    private MockMvc mvc;
 
-	@Before
-	public void setup()
-	{
-		mvc = MockMvcBuilders
-				.webAppContextSetup(context)
-				.apply(springSecurity())
-				.alwaysDo(print())
-				.build();
-	}
+    @Before
+    public void setup() {
+        mvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .alwaysDo(print())
+            .build();
+    }
 
-	@Test
-	public void allTeamsAreReturned() throws Exception
-	{
-		mvc.perform(get("/api/teams")
-				.header("Authorization", "Bearer " + token(mvc)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$[*].code", hasItems("N01TST", "N02TST", "N03TST")));
-	}
+    @Test
+    public void allTeamsAreReturned() throws Exception {
+        mvc.perform(get("/api/teams")
+                .header("Authorization", "Bearer " + token(mvc)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[*].code", hasItems("N01TST", "N02TST", "N03TST")));
+    }
 
-	@Test
-	public void filteredTeamsAreReturned() throws Exception
-	{
-		mvc.perform(get("/api/teams?provider=N01")
-				.header("Authorization", "Bearer " + token(mvc)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(1)))
-				.andExpect(jsonPath("$[0].code", equalTo("N01TST")));
-	}
+    @Test
+    public void filteredTeamsAreReturned() throws Exception {
+        mvc.perform(get("/api/teams?provider=N01")
+                .header("Authorization", "Bearer " + token(mvc)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].code", equalTo("N01TST")));
+    }
 }

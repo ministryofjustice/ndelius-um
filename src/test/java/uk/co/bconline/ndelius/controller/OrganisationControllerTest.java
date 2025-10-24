@@ -24,30 +24,27 @@ import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 
-public class OrganisationControllerTest
-{
-	@Autowired
-	private WebApplicationContext context;
+public class OrganisationControllerTest {
+    @Autowired
+    private WebApplicationContext context;
 
-	private MockMvc mvc;
+    private MockMvc mvc;
 
-	@Before
-	public void setup()
-	{
-		mvc = MockMvcBuilders
-				.webAppContextSetup(context)
-				.apply(springSecurity())
-				.alwaysDo(print())
-				.build();
-	}
+    @Before
+    public void setup() {
+        mvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .alwaysDo(print())
+            .build();
+    }
 
-	@Test
-	public void allOrganisationsAreReturned() throws Exception
-	{
-		mvc.perform(get("/api/organisations")
-				.header("Authorization", "Bearer " + token(mvc)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(4)))
-				.andExpect(jsonPath("$[*].code", hasItems("NPS","PO1","PO2","EST")));
-	}
+    @Test
+    public void allOrganisationsAreReturned() throws Exception {
+        mvc.perform(get("/api/organisations")
+                .header("Authorization", "Bearer " + token(mvc)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(4)))
+            .andExpect(jsonPath("$[*].code", hasItems("NPS", "PO1", "PO2", "EST")));
+    }
 }

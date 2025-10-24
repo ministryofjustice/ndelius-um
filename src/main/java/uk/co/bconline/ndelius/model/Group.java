@@ -20,10 +20,9 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonInclude(NON_NULL)
 @Builder(toBuilder = true)
 @EqualsAndHashCode(of = {"name", "type"})
-public final class Group
-{
-	private @NotBlank String name;
-	private @NotBlank String type;
-	private String description;
-	private List<String> members;
+public final class Group {
+    private @NotBlank String name;
+    private @NotBlank String type;
+    private String description;
+    private List<String> members;
 }

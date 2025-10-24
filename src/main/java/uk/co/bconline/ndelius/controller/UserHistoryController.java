@@ -23,22 +23,21 @@ import static org.springframework.http.ResponseEntity.ok;
 @Validated
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserHistoryController
-{
-	private final UserHistoryService userHistoryService;
+public class UserHistoryController {
+    private final UserHistoryService userHistoryService;
 
-	@Autowired
-	public UserHistoryController(UserHistoryService userHistoryService) {
-		this.userHistoryService = userHistoryService;
-	}
+    @Autowired
+    public UserHistoryController(UserHistoryService userHistoryService) {
+        this.userHistoryService = userHistoryService;
+    }
 
-	@GetMapping(path="/user/{username}/history")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI002')")
-	public ResponseEntity<List<ChangeNote>> getUserHistory(@PathVariable("username") String username) {
-		try {
-			return ok(this.userHistoryService.getHistory(username));
-		} catch (UsernameNotFoundException e) {
-			return notFound().build();
-		}
-	}
+    @GetMapping(path = "/user/{username}/history")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI002')")
+    public ResponseEntity<List<ChangeNote>> getUserHistory(@PathVariable("username") String username) {
+        try {
+            return ok(this.userHistoryService.getHistory(username));
+        } catch (UsernameNotFoundException e) {
+            return notFound().build();
+        }
+    }
 }

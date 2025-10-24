@@ -16,28 +16,26 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toSet;
 
 @Slf4j
-public class AssignableRolesValidator implements ConstraintValidator<AssignableRoles, User>
-{
-	@Autowired
-	private UserEntryService userService;
+public class AssignableRolesValidator implements ConstraintValidator<AssignableRoles, User> {
+    @Autowired
+    private UserEntryService userService;
 
-	@Autowired
-	private UserRoleService userRoleService;
+    @Autowired
+    private UserRoleService userRoleService;
 
-	@Override
-	public boolean isValid(User user, ConstraintValidatorContext context)
-	{
-		val newRoles = ofNullable(user.getRoles()).orElse(emptyList()).stream()
-				.map(Role::getName)
-				.collect(toSet());
+    @Override
+    public boolean isValid(User user, ConstraintValidatorContext context) {
+        val newRoles = ofNullable(user.getRoles()).orElse(emptyList()).stream()
+            .map(Role::getName)
+            .collect(toSet());
 
-		if (newRoles.isEmpty()) return true;
+        if (newRoles.isEmpty()) return true;
 
-		val assignableRoles = userRoleService.getRolesICanAssign().stream()
-				.map(RoleEntry::getName).collect(toSet());
-		userService.getUser(ofNullable(user.getExistingUsername()).orElse(user.getUsername()))
-				.ifPresent(u -> assignableRoles.addAll(u.getRoles().stream().map(RoleEntry::getName).collect(toSet())));
+        val assignableRoles = userRoleService.getRolesICanAssign().stream()
+            .map(RoleEntry::getName).collect(toSet());
+        userService.getUser(ofNullable(user.getExistingUsername()).orElse(user.getUsername()))
+            .ifPresent(u -> assignableRoles.addAll(u.getRoles().stream().map(RoleEntry::getName).collect(toSet())));
 
-		return assignableRoles.containsAll(newRoles);
-	}
+        return assignableRoles.containsAll(newRoles);
+    }
 }

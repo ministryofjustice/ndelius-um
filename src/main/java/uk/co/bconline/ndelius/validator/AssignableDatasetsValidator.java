@@ -21,40 +21,38 @@ import static uk.co.bconline.ndelius.util.AuthUtils.isNational;
 import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 
 @Slf4j
-public class AssignableDatasetsValidator implements ConstraintValidator<AssignableDatasets, User>
-{
-	@Autowired
-	private UserEntityService userEntityService;
+public class AssignableDatasetsValidator implements ConstraintValidator<AssignableDatasets, User> {
+    @Autowired
+    private UserEntityService userEntityService;
 
-	@Autowired
-	private UserEntryService userEntryService;
+    @Autowired
+    private UserEntryService userEntryService;
 
-	@Autowired
-	private DatasetService datasetService;
+    @Autowired
+    private DatasetService datasetService;
 
-	@Override
-	public boolean isValid(User user, ConstraintValidatorContext context)
-	{
-		if (isNational()) return true;
+    @Override
+    public boolean isValid(User user, ConstraintValidatorContext context) {
+        if (isNational()) return true;
 
-		val newDatasets = ofNullable(user.getDatasets()).orElse(emptyList()).stream()
-				.filter(Objects::nonNull)
-				.map(Dataset::getCode)
-				.filter(s -> s != null && !s.isEmpty())
-				.collect(toSet());
+        val newDatasets = ofNullable(user.getDatasets()).orElse(emptyList()).stream()
+            .filter(Objects::nonNull)
+            .map(Dataset::getCode)
+            .filter(s -> s != null && !s.isEmpty())
+            .collect(toSet());
 
-		if (newDatasets.isEmpty()) return true;
+        if (newDatasets.isEmpty()) return true;
 
-		val assignableDatasets = datasetService.getDatasets(myUsername()).stream()
-				.map(Dataset::getCode)
-				.collect(toSet());
-		assignableDatasets.add(userEntryService.getUserHomeArea(myUsername()));
+        val assignableDatasets = datasetService.getDatasets(myUsername()).stream()
+            .map(Dataset::getCode)
+            .collect(toSet());
+        assignableDatasets.add(userEntryService.getUserHomeArea(myUsername()));
 
-		userEntityService.getUser(ofNullable(user.getExistingUsername()).orElse(user.getUsername())).ifPresent(
-				u -> assignableDatasets.addAll(u.getDatasets().stream()
-						.map(ProbationAreaEntity::getCode)
-						.collect(toSet())));
+        userEntityService.getUser(ofNullable(user.getExistingUsername()).orElse(user.getUsername())).ifPresent(
+            u -> assignableDatasets.addAll(u.getDatasets().stream()
+                .map(ProbationAreaEntity::getCode)
+                .collect(toSet())));
 
-		return assignableDatasets.containsAll(newDatasets);
-	}
+        return assignableDatasets.containsAll(newDatasets);
+    }
 }

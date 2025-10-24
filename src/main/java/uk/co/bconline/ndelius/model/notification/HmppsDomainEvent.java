@@ -13,8 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class HmppsDomainEvent
-{
+public class HmppsDomainEvent {
     private String eventType;
     private int version;
     private String description;

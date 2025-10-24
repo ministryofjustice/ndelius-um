@@ -28,35 +28,33 @@ import java.util.List;
 @Table(name = "TEAM")
 @ToString(exclude = "staffLinks")
 @EqualsAndHashCode(exclude = "staffLinks")
-public class TeamEntity implements Serializable
-{
-	public TeamEntity(Long id)
-	{
-		this.id = id;
-	}
+public class TeamEntity implements Serializable {
+    public TeamEntity(Long id) {
+        this.id = id;
+    }
 
-	@Id
-	@Column(name = "TEAM_ID")
-	@GeneratedValue(generator = "TEAM_ID_SEQ")
-	@SequenceGenerator(name = "TEAM_ID_SEQ", sequenceName = "TEAM_ID_SEQ", allocationSize = 1)
-	private Long id;
+    @Id
+    @Column(name = "TEAM_ID")
+    @GeneratedValue(generator = "TEAM_ID_SEQ")
+    @SequenceGenerator(name = "TEAM_ID_SEQ", sequenceName = "TEAM_ID_SEQ", allocationSize = 1)
+    private Long id;
 
-	@Column(name = "CODE")
-	private String code;
+    @Column(name = "CODE")
+    private String code;
 
-	@Column(name = "DESCRIPTION")
-	private String description;
+    @Column(name = "DESCRIPTION")
+    private String description;
 
-	@Column(name = "START_DATE")
-	private LocalDate startDate;
+    @Column(name = "START_DATE")
+    private LocalDate startDate;
 
-	@Column(name = "END_DATE")
-	private LocalDate endDate;
+    @Column(name = "END_DATE")
+    private LocalDate endDate;
 
-	@ManyToOne
-	@JoinColumn(name = "PROBATION_AREA_ID", insertable = false, updatable = false)
-	private ProbationAreaEntity probationArea;
+    @ManyToOne
+    @JoinColumn(name = "PROBATION_AREA_ID", insertable = false, updatable = false)
+    private ProbationAreaEntity probationArea;
 
-	@OneToMany(mappedBy = "team")
-	private List<StaffTeamEntity> staffLinks;
+    @OneToMany(mappedBy = "team")
+    private List<StaffTeamEntity> staffLinks;
 }

@@ -14,14 +14,13 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class TeamTransformer {
 
-	public List<Team> map(Collection<TeamEntity> teams)
-	{
-		return teams.stream()
-				.map(team -> Team.builder()
-						.code(team.getCode())
-						.description(team.getDescription())
-						.providerCode(Optional.ofNullable(team.getProbationArea()).map(ProbationAreaEntity::getCode).orElse(null))
-						.build())
-				.collect(toList());
-	}
+    public List<Team> map(Collection<TeamEntity> teams) {
+        return teams.stream()
+            .map(team -> Team.builder()
+                .code(team.getCode())
+                .description(team.getDescription())
+                .providerCode(Optional.ofNullable(team.getProbationArea()).map(ProbationAreaEntity::getCode).orElse(null))
+                .build())
+            .collect(toList());
+    }
 }

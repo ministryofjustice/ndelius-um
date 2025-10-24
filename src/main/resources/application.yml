@@ -29,7 +29,7 @@ spring.ldap.base-environment:
 
 spring.main.allow-circular-references: true # See RoleServiceImpl.java
 
-management.endpoints.web.exposure.include: ["health", "info", "metrics"]
+management.endpoints.web.exposure.include: [ "health", "info", "metrics" ]
 management.endpoint.health.show-details: always
 
 info:

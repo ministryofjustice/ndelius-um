@@ -18,35 +18,35 @@ import java.util.stream.Stream;
 @Configuration
 @EnableCaching
 public class CacheConfig {
-	private final RoleService roleService;
-	private final RoleGroupService roleGroupService;
+    private final RoleService roleService;
+    private final RoleGroupService roleGroupService;
 
-	@Autowired
-	public CacheConfig(RoleService roleService, RoleGroupService roleGroupService) {
-		this.roleService = roleService;
-		this.roleGroupService = roleGroupService;
-	}
+    @Autowired
+    public CacheConfig(RoleService roleService, RoleGroupService roleGroupService) {
+        this.roleService = roleService;
+        this.roleGroupService = roleGroupService;
+    }
 
-	@Bean
-	public CacheManager cacheManager() {
-		return new ConcurrentMapCacheManager();
-	}
+    @Bean
+    public CacheManager cacheManager() {
+        return new ConcurrentMapCacheManager();
+    }
 
-	public void evictCache() {
-		getCaches().forEach(Cache::clear);
-		log.info("Flushed all caches");
+    public void evictCache() {
+        getCaches().forEach(Cache::clear);
+        log.info("Flushed all caches");
 
-		// Populate role + rolegroup cache
-		roleService.getAllRoles();
-		roleGroupService.getRoleGroups().forEach(group -> roleGroupService.getRoleGroup(group.getName()));
-		log.info("Re-populated role and group caches");
-		getCaches();
-	}
+        // Populate role + rolegroup cache
+        roleService.getAllRoles();
+        roleGroupService.getRoleGroups().forEach(group -> roleGroupService.getRoleGroup(group.getName()));
+        log.info("Re-populated role and group caches");
+        getCaches();
+    }
 
-	private Stream<Cache> getCaches() {
-		return cacheManager().getCacheNames().parallelStream()
-				.map(cacheManager()::getCache)
-				.filter(Objects::nonNull)
-				.peek(cache -> log.debug("Cache {} = {}", cache.getName(), cache.getNativeCache()));
-	}
+    private Stream<Cache> getCaches() {
+        return cacheManager().getCacheNames().parallelStream()
+            .map(cacheManager()::getCache)
+            .filter(Objects::nonNull)
+            .peek(cache -> log.debug("Cache {} = {}", cache.getName(), cache.getNativeCache()));
+    }
 }

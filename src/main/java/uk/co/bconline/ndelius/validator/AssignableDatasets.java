@@ -12,9 +12,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(TYPE)
 @Retention(RUNTIME)
 @Constraint(validatedBy = AssignableDatasetsValidator.class)
-public @interface AssignableDatasets
-{
-	String message() default "attempting to assign invalid datasets";
-	Class<?>[] groups() default {};
-	Class<? extends Payload>[] payload() default {};
+public @interface AssignableDatasets {
+    String message() default "attempting to assign invalid datasets";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

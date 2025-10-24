@@ -1,7 +1,6 @@
 package uk.co.bconline.ndelius.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import uk.co.bconline.ndelius.model.Team;
 import uk.co.bconline.ndelius.model.entity.TeamEntity;
@@ -15,32 +14,29 @@ import java.util.Optional;
 import static java.util.Optional.ofNullable;
 
 @Service
-public class TeamServiceImpl implements TeamService
-{
-	private final TeamTransformer transformer;
-	private final TeamRepository repository;
+public class TeamServiceImpl implements TeamService {
+    private final TeamTransformer transformer;
+    private final TeamRepository repository;
 
-	@Autowired
-	public TeamServiceImpl(
-			TeamRepository repository,
-			TeamTransformer transformer)
-	{
-		this.repository = repository;
-		this.transformer = transformer;
-	}
+    @Autowired
+    public TeamServiceImpl(
+        TeamRepository repository,
+        TeamTransformer transformer) {
+        this.repository = repository;
+        this.transformer = transformer;
+    }
 
-	@Override
-	public List<Team> getTeams(String probationArea)
-	{
-		List<TeamEntity> teams = ofNullable(probationArea)
-				.map(repository::findAllByEndDateIsNullAndProbationAreaCode)
-				.orElseGet(repository::findAllByEndDateIsNull);
+    @Override
+    public List<Team> getTeams(String probationArea) {
+        List<TeamEntity> teams = ofNullable(probationArea)
+            .map(repository::findAllByEndDateIsNullAndProbationAreaCode)
+            .orElseGet(repository::findAllByEndDateIsNull);
 
-		return transformer.map(teams);
-	}
+        return transformer.map(teams);
+    }
 
-	@Override
-	public Optional<Long> getTeamId(String code) {
-		return repository.findIdByCode(code);
-	}
+    @Override
+    public Optional<Long> getTeamId(String code) {
+        return repository.findIdByCode(code);
+    }
 }

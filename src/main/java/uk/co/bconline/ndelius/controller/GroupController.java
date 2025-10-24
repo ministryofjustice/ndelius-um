@@ -24,45 +24,45 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GroupController {
-	private final GroupService groupService;
-	private final GroupTransformer groupTransformer;
+    private final GroupService groupService;
+    private final GroupTransformer groupTransformer;
 
-	@Autowired
-	public GroupController(
-			GroupService groupService,
-			GroupTransformer groupTransformer
-	) {
-		this.groupService = groupService;
-		this.groupTransformer = groupTransformer;
-	}
+    @Autowired
+    public GroupController(
+        GroupService groupService,
+        GroupTransformer groupTransformer
+    ) {
+        this.groupService = groupService;
+        this.groupTransformer = groupTransformer;
+    }
 
-	@GetMapping("/groups")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI012')")
-	public ResponseEntity<Map<String, List<Group>>> getGroups() {
-		return ok(groupTransformer.map(groupService.getGroups()));
-	}
+    @GetMapping("/groups")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI012')")
+    public ResponseEntity<Map<String, List<Group>>> getGroups() {
+        return ok(groupTransformer.map(groupService.getGroups()));
+    }
 
-	@GetMapping("/groups/{type}")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI012')")
-	public ResponseEntity<List<Group>> getGroupsByType(@PathVariable String type) {
-		return ok(groupTransformer.map(groupService.getGroups(type)));
-	}
+    @GetMapping("/groups/{type}")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI012')")
+    public ResponseEntity<List<Group>> getGroupsByType(@PathVariable String type) {
+        return ok(groupTransformer.map(groupService.getGroups(type)));
+    }
 
-	@GetMapping("/group/{name}")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI012')")
-	public ResponseEntity<Group> getTopLevelGroup(@PathVariable String name) {
-		return groupService.getGroup(name)
-				.map(groupTransformer::mapWithMembers)
-				.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    @GetMapping("/group/{name}")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI012')")
+    public ResponseEntity<Group> getTopLevelGroup(@PathVariable String name) {
+        return groupService.getGroup(name)
+            .map(groupTransformer::mapWithMembers)
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-	@GetMapping("/group/{type}/{name}")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI012')")
-	public ResponseEntity<Group> getGroupByTypeAndName(@PathVariable String type, @PathVariable String name) {
-		return groupService.getGroup(type, name)
-				.map(groupTransformer::mapWithMembers)
-				.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    @GetMapping("/group/{type}/{name}")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI012')")
+    public ResponseEntity<Group> getGroupByTypeAndName(@PathVariable String type, @PathVariable String name) {
+        return groupService.getGroup(type, name)
+            .map(groupTransformer::mapWithMembers)
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

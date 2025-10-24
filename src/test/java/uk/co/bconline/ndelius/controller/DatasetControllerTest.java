@@ -23,50 +23,45 @@ import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 @SpringBootTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class DatasetControllerTest
-{
-	@Autowired
-	private WebApplicationContext context;
+public class DatasetControllerTest {
+    @Autowired
+    private WebApplicationContext context;
 
-	private MockMvc mvc;
+    private MockMvc mvc;
 
-	@Before
-	public void setup()
-	{
-		mvc = MockMvcBuilders
-				.webAppContextSetup(context)
-				.apply(springSecurity())
-				.alwaysDo(print())
-				.build();
-	}
+    @Before
+    public void setup() {
+        mvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .alwaysDo(print())
+            .build();
+    }
 
-	@Test
-	public void datasetsAreReturned() throws Exception
-	{
-		mvc.perform(get("/api/datasets")
-				.header("Authorization", "Bearer " + token(mvc)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(6)))
-				.andExpect(jsonPath("$[*].code", hasItems("N01", "N02", "N03", "C01", "C02", "C03")));
-	}
+    @Test
+    public void datasetsAreReturned() throws Exception {
+        mvc.perform(get("/api/datasets")
+                .header("Authorization", "Bearer " + token(mvc)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(6)))
+            .andExpect(jsonPath("$[*].code", hasItems("N01", "N02", "N03", "C01", "C02", "C03")));
+    }
 
-	@Test
-	public void subContractedProvidersAreReturned() throws Exception
-	{
-		mvc.perform(get("/api/dataset/N01/subContractedProviders")
-				.header("Authorization", "Bearer " + token(mvc)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(3)))
-				.andExpect(jsonPath("$[*].code", hasItems("N01SC1", "N01SC2", "N01SC3")));
-	}
+    @Test
+    public void subContractedProvidersAreReturned() throws Exception {
+        mvc.perform(get("/api/dataset/N01/subContractedProviders")
+                .header("Authorization", "Bearer " + token(mvc)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(3)))
+            .andExpect(jsonPath("$[*].code", hasItems("N01SC1", "N01SC2", "N01SC3")));
+    }
 
-	@Test
-	public void inactiveOrEndDatedSubContractedProvidersAreNotReturned() throws Exception
-	{
-		mvc.perform(get("/api/dataset/C02/subContractedProviders")
-				.header("Authorization", "Bearer " + token(mvc)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(1)))
-				.andExpect(jsonPath("$[*].code", hasItems("C02SC1")));
-	}
+    @Test
+    public void inactiveOrEndDatedSubContractedProvidersAreNotReturned() throws Exception {
+        mvc.perform(get("/api/dataset/C02/subContractedProviders")
+                .header("Authorization", "Bearer " + token(mvc)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[*].code", hasItems("C02SC1")));
+    }
 }

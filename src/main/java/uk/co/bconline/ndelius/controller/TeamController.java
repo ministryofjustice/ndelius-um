@@ -20,20 +20,17 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class TeamController
-{
-	private final TeamService teamService;
+public class TeamController {
+    private final TeamService teamService;
 
-	@Autowired
-	public TeamController(TeamService teamService)
-	{
-		this.teamService = teamService;
-	}
+    @Autowired
+    public TeamController(TeamService teamService) {
+        this.teamService = teamService;
+    }
 
-	@GetMapping("/teams")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI009')")
-	public ResponseEntity<List<Team>> getTeams(final @RequestParam(value = "provider", required = false) String provider)
-	{
-		return new ResponseEntity<>(teamService.getTeams(provider), HttpStatus.OK);
-	}
+    @GetMapping("/teams")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI009')")
+    public ResponseEntity<List<Team>> getTeams(final @RequestParam(value = "provider", required = false) String provider) {
+        return new ResponseEntity<>(teamService.getTeams(provider), HttpStatus.OK);
+    }
 }

@@ -19,21 +19,18 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class OrganisationController
-{
-	private final OrganisationService organisationService;
+public class OrganisationController {
+    private final OrganisationService organisationService;
 
-	@Autowired
-	public OrganisationController(OrganisationService organisationService)
-	{
-		this.organisationService = organisationService;
-	}
+    @Autowired
+    public OrganisationController(OrganisationService organisationService) {
+        this.organisationService = organisationService;
+    }
 
-	@GetMapping("/organisations")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI011')")
-	public ResponseEntity<List<Organisation>> getOrganisations()
-	{
-		return new ResponseEntity<>(organisationService.getOrganisations(), HttpStatus.OK);
-	}
+    @GetMapping("/organisations")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI011')")
+    public ResponseEntity<List<Organisation>> getOrganisations() {
+        return new ResponseEntity<>(organisationService.getOrganisations(), HttpStatus.OK);
+    }
 
 }

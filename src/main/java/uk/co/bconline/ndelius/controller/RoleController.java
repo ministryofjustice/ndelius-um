@@ -24,26 +24,23 @@ import static org.springframework.http.ResponseEntity.ok;
 @Validated
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class RoleController
-{
-	private final RoleService roleService;
-	private final RoleTransformer roleTransformer;
+public class RoleController {
+    private final RoleService roleService;
+    private final RoleTransformer roleTransformer;
 
-	@Autowired
-	public RoleController(
-			RoleService roleService,
-			RoleTransformer roleTransformer)
-	{
-		this.roleService = roleService;
-		this.roleTransformer = roleTransformer;
-	}
+    @Autowired
+    public RoleController(
+        RoleService roleService,
+        RoleTransformer roleTransformer) {
+        this.roleService = roleService;
+        this.roleTransformer = roleTransformer;
+    }
 
-	@GetMapping(path="/roles")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI007')")
-	public ResponseEntity<Set<Role>> getRoles()
-	{
-		val roles = roleService.getAllRoles().stream().map(roleTransformer::map).collect(toSet());
+    @GetMapping(path = "/roles")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI007')")
+    public ResponseEntity<Set<Role>> getRoles() {
+        val roles = roleService.getAllRoles().stream().map(roleTransformer::map).collect(toSet());
 
-		return !roles.isEmpty()? ok(roles): notFound().build();
-	}
+        return !roles.isEmpty() ? ok(roles) : notFound().build();
+    }
 }

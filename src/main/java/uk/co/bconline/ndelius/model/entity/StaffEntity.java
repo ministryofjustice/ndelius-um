@@ -37,77 +37,75 @@ import static java.util.Optional.ofNullable;
 @Builder(toBuilder = true)
 @ToString(exclude = {"teamLinks", "user"})
 @EqualsAndHashCode(exclude = {"teamLinks", "user"})
-public class StaffEntity implements Serializable
-{
-	@Id
-	@Column(name = "STAFF_ID")
-	@GeneratedValue(generator = "STAFF_ID_SEQ")
-	@SequenceGenerator(name = "STAFF_ID_SEQ", sequenceName = "STAFF_ID_SEQ", allocationSize = 1)
-	private Long id;
+public class StaffEntity implements Serializable {
+    @Id
+    @Column(name = "STAFF_ID")
+    @GeneratedValue(generator = "STAFF_ID_SEQ")
+    @SequenceGenerator(name = "STAFF_ID_SEQ", sequenceName = "STAFF_ID_SEQ", allocationSize = 1)
+    private Long id;
 
-	@Version
-	@Column(name = "ROW_VERSION")
-	private Long version;
+    @Version
+    @Column(name = "ROW_VERSION")
+    private Long version;
 
-	@Column(name = "OFFICER_CODE")
-	private String code;
+    @Column(name = "OFFICER_CODE")
+    private String code;
 
-	@Column(name = "FORENAME")
-	private String forename;
+    @Column(name = "FORENAME")
+    private String forename;
 
-	@Column(name = "FORENAME2")
-	private String forename2;
+    @Column(name = "FORENAME2")
+    private String forename2;
 
-	@Column(name = "SURNAME")
-	private String surname;
+    @Column(name = "SURNAME")
+    private String surname;
 
-	@Column(name = "PRIVATE")
-	private Boolean privateStaff;
+    @Column(name = "PRIVATE")
+    private Boolean privateStaff;
 
-	@Column(name = "START_DATE")
-	private LocalDate startDate;
+    @Column(name = "START_DATE")
+    private LocalDate startDate;
 
-	@Column(name = "END_DATE")
-	private LocalDate endDate;
+    @Column(name = "END_DATE")
+    private LocalDate endDate;
 
-	@Column(name = "PROBATION_AREA_ID")
-	private Long probationAreaId;
+    @Column(name = "PROBATION_AREA_ID")
+    private Long probationAreaId;
 
-	@ManyToOne
-	@JoinColumn(name = "STAFF_GRADE_ID")
-	private ReferenceDataEntity grade;
+    @ManyToOne
+    @JoinColumn(name = "STAFF_GRADE_ID")
+    private ReferenceDataEntity grade;
 
-	@ManyToOne
-	@JoinColumn(name = "SC_PROVIDER_ID")
-	private SubContractedProviderEntity subContractedProvider;
+    @ManyToOne
+    @JoinColumn(name = "SC_PROVIDER_ID")
+    private SubContractedProviderEntity subContractedProvider;
 
-	@Setter
-	@Builder.Default
-	@OneToMany(mappedBy = "staff", fetch = EAGER)
-	private Set<UserEntity> user = new HashSet<>();
+    @Setter
+    @Builder.Default
+    @OneToMany(mappedBy = "staff", fetch = EAGER)
+    private Set<UserEntity> user = new HashSet<>();
 
-	@Column(name = "CREATED_BY_USER_ID")
-	private Long createdById;
+    @Column(name = "CREATED_BY_USER_ID")
+    private Long createdById;
 
-	@Column(name = "CREATED_DATETIME")
-	private LocalDateTime createdAt;
+    @Column(name = "CREATED_DATETIME")
+    private LocalDateTime createdAt;
 
-	@Column(name = "LAST_UPDATED_USER_ID")
-	private Long updatedById;
+    @Column(name = "LAST_UPDATED_USER_ID")
+    private Long updatedById;
 
-	@Column(name = "LAST_UPDATED_DATETIME")
-	private LocalDateTime updatedAt;
+    @Column(name = "LAST_UPDATED_DATETIME")
+    private LocalDateTime updatedAt;
 
-	@Builder.Default
-	@OneToMany(mappedBy = "staff", fetch = EAGER)
-	private Set<StaffTeamEntity> teamLinks = new HashSet<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "staff", fetch = EAGER)
+    private Set<StaffTeamEntity> teamLinks = new HashSet<>();
 
-	public Set<TeamEntity> getTeams()
-	{
-		return ofNullable(teamLinks)
-				.map(links -> links.stream()
-						.map(StaffTeamEntity::getTeam)
-						.collect(Collectors.toSet()))
-				.orElse(emptySet());
-	}
+    public Set<TeamEntity> getTeams() {
+        return ofNullable(teamLinks)
+            .map(links -> links.stream()
+                .map(StaffTeamEntity::getTeam)
+                .collect(Collectors.toSet()))
+            .orElse(emptySet());
+    }
 }

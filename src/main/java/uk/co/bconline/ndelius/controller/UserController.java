@@ -45,116 +45,105 @@ import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 @Validated
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserController
-{
-	private final UserService userService;
-	private final LoginController loginController;
+public class UserController {
+    private final UserService userService;
+    private final LoginController loginController;
 
-	@Autowired
-	public UserController(
-			UserService userService,
-			LoginController loginController)
-	{
-		this.userService = userService;
-		this.loginController = loginController;
-	}
+    @Autowired
+    public UserController(
+        UserService userService,
+        LoginController loginController) {
+        this.userService = userService;
+        this.loginController = loginController;
+    }
 
-	@GetMapping("/users")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI001')")
-	public ResponseEntity<List<SearchResult>> search(
-			// search terms
-			@RequestParam("q") String query,
-			// filters
-			@RequestParam(value = "reportingGroup", defaultValue = "") Set<String> reportingGroups,
-			@RequestParam(value = "fileshareGroup", defaultValue = "") Set<String> fileshareGroups,
-			@RequestParam(value = "dataset", defaultValue = "") Set<String> datasets,
-			@RequestParam(value = "role", defaultValue = "") String role,
-			@RequestParam(value = "includeInactiveUsers", defaultValue = "false") Boolean includeInactiveUsers,
-			// paging
-			@RequestParam(value = "page", defaultValue = "1") @Min(1)  Integer page,
-			@RequestParam(value = "pageSize", defaultValue = "50") @Min(1) @Max(100) Integer pageSize)
-	{
-		val groups = ImmutableMap.of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
-		return ok(userService.search(query, groups, datasets, role, includeInactiveUsers, page, pageSize));
-	}
+    @GetMapping("/users")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI001')")
+    public ResponseEntity<List<SearchResult>> search(
+        // search terms
+        @RequestParam("q") String query,
+        // filters
+        @RequestParam(value = "reportingGroup", defaultValue = "") Set<String> reportingGroups,
+        @RequestParam(value = "fileshareGroup", defaultValue = "") Set<String> fileshareGroups,
+        @RequestParam(value = "dataset", defaultValue = "") Set<String> datasets,
+        @RequestParam(value = "role", defaultValue = "") String role,
+        @RequestParam(value = "includeInactiveUsers", defaultValue = "false") Boolean includeInactiveUsers,
+        // paging
+        @RequestParam(value = "page", defaultValue = "1") @Min(1) Integer page,
+        @RequestParam(value = "pageSize", defaultValue = "50") @Min(1) @Max(100) Integer pageSize) {
+        val groups = ImmutableMap.of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
+        return ok(userService.search(query, groups, datasets, role, includeInactiveUsers, page, pageSize));
+    }
 
-	@GetMapping(value = "/users/export", produces = "text/csv")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI001')")
-	public void exportSearchResults(
-			HttpServletResponse response,
-			// search terms
-			@RequestParam("q") String query,
-			// filters
-			@RequestParam(value = "reportingGroup", defaultValue = "") Set<String> reportingGroups,
-			@RequestParam(value = "fileshareGroup", defaultValue = "") Set<String> fileshareGroups,
-			@RequestParam(value = "dataset", defaultValue = "") Set<String> datasets,
-			@RequestParam(value = "role", defaultValue = "") String role,
-			@RequestParam(value = "includeInactiveUsers", defaultValue = "false") Boolean includeInactiveUsers) throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException
-	{
-		val groups = ImmutableMap.of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
-		val results = userService.search(query, groups, datasets, role, includeInactiveUsers, null, null);
-		response.setContentType("text/csv");
-		CSVUtils.write(results, response.getWriter());
-	}
+    @GetMapping(value = "/users/export", produces = "text/csv")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI001')")
+    public void exportSearchResults(
+        HttpServletResponse response,
+        // search terms
+        @RequestParam("q") String query,
+        // filters
+        @RequestParam(value = "reportingGroup", defaultValue = "") Set<String> reportingGroups,
+        @RequestParam(value = "fileshareGroup", defaultValue = "") Set<String> fileshareGroups,
+        @RequestParam(value = "dataset", defaultValue = "") Set<String> datasets,
+        @RequestParam(value = "role", defaultValue = "") String role,
+        @RequestParam(value = "includeInactiveUsers", defaultValue = "false") Boolean includeInactiveUsers) throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+        val groups = ImmutableMap.of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
+        val results = userService.search(query, groups, datasets, role, includeInactiveUsers, null, null);
+        response.setContentType("text/csv");
+        CSVUtils.write(results, response.getWriter());
+    }
 
-	@ResponseBody
-	@GetMapping(value = "/users/export/all", produces = "text/csv")
-	@PreAuthorize("hasAuthority('SCOPE_UABT0050')")
-	public ResponseEntity<StreamingResponseBody> exportAll() {
-		val filename = DateTimeFormatter.ofPattern("'DeliusUsers_'uuuuMMdd'T'HHmmss'.csv'").format(LocalDateTime.now());
-		return ok()
-				.contentType(MediaType.parseMediaType("text/csv"))
-				.header("Content-Disposition", "attachment; filename=" + filename)
-				.body(userService::exportAllToCsv);
-	}
+    @ResponseBody
+    @GetMapping(value = "/users/export/all", produces = "text/csv")
+    @PreAuthorize("hasAuthority('SCOPE_UABT0050')")
+    public ResponseEntity<StreamingResponseBody> exportAll() {
+        val filename = DateTimeFormatter.ofPattern("'DeliusUsers_'uuuuMMdd'T'HHmmss'.csv'").format(LocalDateTime.now());
+        return ok()
+            .contentType(MediaType.parseMediaType("text/csv"))
+            .header("Content-Disposition", "attachment; filename=" + filename)
+            .body(userService::exportAllToCsv);
+    }
 
-	@GetMapping(path="/user/{username}")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI002')")
-	public ResponseEntity<User> getUser(@PathVariable("username") String username)
-	{
-		return userService.getUser(username)
-				.map(ResponseEntity::ok)
-				.orElse(notFound().build());
-	}
+    @GetMapping(path = "/user/{username}")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI002')")
+    public ResponseEntity<User> getUser(@PathVariable("username") String username) {
+        return userService.getUser(username)
+            .map(ResponseEntity::ok)
+            .orElse(notFound().build());
+    }
 
-	@GetMapping(path="/staff/{staffCode}")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI002')")
-	public ResponseEntity<User> getUserByStaffCode(@PathVariable("staffCode") String staffCode)
-	{
-		return userService.getUserByStaffCode(staffCode)
-				.map(ResponseEntity::ok)
-				.orElse(notFound().build());
-	}
+    @GetMapping(path = "/staff/{staffCode}")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI002')")
+    public ResponseEntity<User> getUserByStaffCode(@PathVariable("staffCode") String staffCode) {
+        return userService.getUserByStaffCode(staffCode)
+            .map(ResponseEntity::ok)
+            .orElse(notFound().build());
+    }
 
-	@Transactional
-	@PostMapping(path="/user")
-	@UsernameMustNotAlreadyExist
-	@PreAuthorize("hasAuthority('SCOPE_UMBI003')")
-	public ResponseEntity addUser(@RequestBody User user) throws URISyntaxException
-	{
-		userService.addUser(user);
-		return created(new URI(String.format("/user/%s", user.getUsername()))).build();
-	}
+    @Transactional
+    @PostMapping(path = "/user")
+    @UsernameMustNotAlreadyExist
+    @PreAuthorize("hasAuthority('SCOPE_UMBI003')")
+    public ResponseEntity addUser(@RequestBody User user) throws URISyntaxException {
+        userService.addUser(user);
+        return created(new URI(String.format("/user/%s", user.getUsername()))).build();
+    }
 
-	@Transactional
-	@NewUsernameMustNotAlreadyExist
-	@PostMapping(path="/user/{username}")
-	@PreAuthorize("hasAuthority('SCOPE_UMBI004')")
-	public ResponseEntity updateUser(@RequestBody User user, @PathVariable("username") String username)
-	{
-		if (!userService.usernameExists(username))
-		{
-			return notFound().build();
-		}
-		else
-		{
-			user.setExistingUsername(username);
-			userService.updateUser(user);
-			if (username.equals(myUsername()) && !username.equals(user.getUsername())) {
-				log.debug("Username has changed! Revoking access token for {}", username);
+    @Transactional
+    @NewUsernameMustNotAlreadyExist
+    @PostMapping(path = "/user/{username}")
+    @PreAuthorize("hasAuthority('SCOPE_UMBI004')")
+    public ResponseEntity updateUser(@RequestBody User user, @PathVariable("username") String username) {
+        if (!userService.usernameExists(username)) {
+            return notFound().build();
+        } else {
+            user.setExistingUsername(username);
+            userService.updateUser(user);
+            if (username.equals(myUsername()) && !username.equals(user.getUsername())) {
+                log.debug("Username has changed! Revoking access token for {}", username);
                 loginController.revokeToken();
-			}
-			return noContent().build();
-		}
-	}
+            }
+            return noContent().build();
+        }
+    }
 }

@@ -20,8 +20,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class DomainEventServiceImpl implements DomainEventService
-{
+public class DomainEventServiceImpl implements DomainEventService {
     private final ReferenceDataRepository referenceDataRepository;
 
     private final DomainEventRepository domainEventRepository;
@@ -32,9 +31,9 @@ public class DomainEventServiceImpl implements DomainEventService
 
     @Autowired
     public DomainEventServiceImpl(
-            ReferenceDataRepository referenceDataRepository,
-            DomainEventRepository domainEventRepository,
-            ObjectMapper mapper) {
+        ReferenceDataRepository referenceDataRepository,
+        DomainEventRepository domainEventRepository,
+        ObjectMapper mapper) {
         this.referenceDataRepository = referenceDataRepository;
         this.domainEventRepository = domainEventRepository;
         this.mapper = mapper;
@@ -42,24 +41,23 @@ public class DomainEventServiceImpl implements DomainEventService
 
     @Override
     @SneakyThrows
-    public void insertDomainEvent(HmppsDomainEventType eventType, Map<String, String> additionalInformation)
-    {
+    public void insertDomainEvent(HmppsDomainEventType eventType, Map<String, String> additionalInformation) {
         val type = referenceDataRepository.findByCodeAndReferenceDataMasterCodeSetName(eventType.getEventType(), DOMAIN_EVENT_TYPE_REF_DATA_CODE_SET)
             .orElseThrow(() -> new IllegalStateException("Reference data for domain event type " + eventType.getEventType() + " not found"));
         val message = HmppsDomainEvent.builder()
-              .eventType(eventType.getEventType())
-              .description(eventType.getEventDescription())
-              .occurredAt(ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
-              .additionalInformation(additionalInformation)
-              .version(1)
-              .build();
+            .eventType(eventType.getEventType())
+            .description(eventType.getEventDescription())
+            .occurredAt(ZonedDateTime.now().format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
+            .additionalInformation(additionalInformation)
+            .version(1)
+            .build();
         val attributes = Map.of("eventType", Map.of("Type", "String", "Value", eventType.getEventType()));
         val entity = DomainEventEntity.builder()
-              .messageBody(mapper.writeValueAsString(message))
-              .messageAttributes(mapper.writeValueAsString(attributes))
-              .domainEventTypeId(type.getId())
-              .createdDateTime(LocalDateTime.now())
-              .build();
+            .messageBody(mapper.writeValueAsString(message))
+            .messageAttributes(mapper.writeValueAsString(attributes))
+            .domainEventTypeId(type.getId())
+            .createdDateTime(LocalDateTime.now())
+            .build();
 
         domainEventRepository.save(entity);
     }

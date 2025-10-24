@@ -5,7 +5,6 @@ import uk.co.bconline.ndelius.model.entry.ClientEntry;
 
 import java.util.Optional;
 
-public interface ClientEntryRepository extends LdapRepository<ClientEntry>
-{
-	Optional<ClientEntry> findByClientId(String clientId);
+public interface ClientEntryRepository extends LdapRepository<ClientEntry> {
+    Optional<ClientEntry> findByClientId(String clientId);
 }

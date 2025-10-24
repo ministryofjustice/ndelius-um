@@ -14,46 +14,39 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-public class AuthUtilsTest
-{
-	@Before
-	public void user()
-	{
-		SecurityContextHolder.getContext()
-				.setAuthentication(new TestingAuthenticationToken("user", "password", "ROLE_USER"));
-	}
+public class AuthUtilsTest {
+    @Before
+    public void user() {
+        SecurityContextHolder.getContext()
+            .setAuthentication(new TestingAuthenticationToken("user", "password", "ROLE_USER"));
+    }
 
-	@Test
-	public void returnsUserDetailsFromSecurityContext()
-	{
-		Authentication me = AuthUtils.me();
-		assertEquals("user", me.getPrincipal());
-		assertEquals("password", me.getCredentials());
-	}
+    @Test
+    public void returnsUserDetailsFromSecurityContext() {
+        Authentication me = AuthUtils.me();
+        assertEquals("user", me.getPrincipal());
+        assertEquals("password", me.getCredentials());
+    }
 
-	@Test
-	public void usernameIsReturned()
-	{
-		assertEquals("user", AuthUtils.myUsername());
-	}
+    @Test
+    public void usernameIsReturned() {
+        assertEquals("user", AuthUtils.myUsername());
+    }
 
-	@Test
-	public void rolesAreReturned()
-	{
-		assertThat(AuthUtils.myInteractions().collect(toSet()), hasItem("ROLE_USER"));
-	}
+    @Test
+    public void rolesAreReturned() {
+        assertThat(AuthUtils.myInteractions().collect(toSet()), hasItem("ROLE_USER"));
+    }
 
-	@Test
-	public void checkNationalAccessIsFalse()
-	{
-		assertFalse(AuthUtils.isNational());
-	}
+    @Test
+    public void checkNationalAccessIsFalse() {
+        assertFalse(AuthUtils.isNational());
+    }
 
-	@Test
-	public void checkNationalAccessIsTrue()
-	{
-		SecurityContextHolder.getContext()
-				.setAuthentication(new TestingAuthenticationToken("user", "password", "UABI025"));
-		assertTrue(AuthUtils.isNational());
-	}
+    @Test
+    public void checkNationalAccessIsTrue() {
+        SecurityContextHolder.getContext()
+            .setAuthentication(new TestingAuthenticationToken("user", "password", "UABI025"));
+        assertTrue(AuthUtils.isNational());
+    }
 }

@@ -14,34 +14,27 @@ import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
 
 @Slf4j
 @Configuration
-public class AliasInterceptor extends InMemoryOperationInterceptor
-{
-	private LDAPInterface server;
+public class AliasInterceptor extends InMemoryOperationInterceptor {
+    private LDAPInterface server;
 
-	@Override
-	public void processSearchEntry(final InMemoryInterceptedSearchEntry entry)
-	{
-		if (entry.getRequest().getDereferencePolicy() == DereferencePolicy.NEVER) return;
+    @Override
+    public void processSearchEntry(final InMemoryInterceptedSearchEntry entry) {
+        if (entry.getRequest().getDereferencePolicy() == DereferencePolicy.NEVER) return;
 
-		val searchEntry = entry.getSearchEntry();
-		val isAlias = stream(searchEntry.getAttributeValues(OBJECTCLASS)).anyMatch("alias"::equalsIgnoreCase);
+        val searchEntry = entry.getSearchEntry();
+        val isAlias = stream(searchEntry.getAttributeValues(OBJECTCLASS)).anyMatch("alias"::equalsIgnoreCase);
 
-		if(isAlias)
-		{
-			try
-			{
-				val aliasedObjectName = searchEntry.getAttributeValue("aliasedobjectname");
-				entry.setSearchEntry(server.getEntry(aliasedObjectName));
-			}
-			catch (LDAPException e)
-			{
-				log.error("Unable to dereference entry {}", entry, e);
-			}
-		}
-	}
+        if (isAlias) {
+            try {
+                val aliasedObjectName = searchEntry.getAttributeValue("aliasedobjectname");
+                entry.setSearchEntry(server.getEntry(aliasedObjectName));
+            } catch (LDAPException e) {
+                log.error("Unable to dereference entry {}", entry, e);
+            }
+        }
+    }
 
-	public void setServer(LDAPInterface server)
-	{
-		this.server = server;
-	}
+    public void setServer(LDAPInterface server) {
+        this.server = server;
+    }
 }

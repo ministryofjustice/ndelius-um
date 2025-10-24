@@ -14,18 +14,18 @@ import java.io.IOException;
 public class EmbeddedRedisServer {
 
     @Value("${spring.data.redis.port}")
-	private int redisPort;
+    private int redisPort;
 
-	private RedisServer redisServer;
+    private RedisServer redisServer;
 
-	@PostConstruct
-	public void startRedis() throws IOException {
-		redisServer = new RedisServer(redisPort);
-		redisServer.start();
-	}
+    @PostConstruct
+    public void startRedis() throws IOException {
+        redisServer = new RedisServer(redisPort);
+        redisServer.start();
+    }
 
-	@PreDestroy
-	public void stopRedis() {
-		redisServer.stop();
-	}
+    @PreDestroy
+    public void stopRedis() {
+        redisServer.stop();
+    }
 }

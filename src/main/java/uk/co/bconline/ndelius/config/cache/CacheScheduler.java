@@ -14,25 +14,21 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 @Configuration
 @Profile("!test")
 @EnableScheduling
-public class CacheScheduler
-{
-	private final CacheConfig cacheConfig;
+public class CacheScheduler {
+    private final CacheConfig cacheConfig;
 
-	@Autowired
-	public CacheScheduler(CacheConfig cacheConfig)
-	{
-		this.cacheConfig = cacheConfig;
-	}
+    @Autowired
+    public CacheScheduler(CacheConfig cacheConfig) {
+        this.cacheConfig = cacheConfig;
+    }
 
-	@Scheduled(fixedDelayString = "${cache.evict.delay}", initialDelay = 1000)
-	public void evictSchedule()
-	{
-		cacheConfig.evictCache();
-	}
+    @Scheduled(fixedDelayString = "${cache.evict.delay}", initialDelay = 1000)
+    public void evictSchedule() {
+        cacheConfig.evictCache();
+    }
 
-	@Bean
-	public TaskScheduler taskScheduler()
-	{
-		return new ConcurrentTaskScheduler();
-	}
+    @Bean
+    public TaskScheduler taskScheduler() {
+        return new ConcurrentTaskScheduler();
+    }
 }

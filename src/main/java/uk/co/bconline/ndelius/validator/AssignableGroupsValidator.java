@@ -20,28 +20,26 @@ import static uk.co.bconline.ndelius.util.AuthUtils.myInteractions;
 import static uk.co.bconline.ndelius.util.Constants.PUBLIC_ACCESS;
 
 @Slf4j
-public class AssignableGroupsValidator implements ConstraintValidator<AssignableGroups, User>
-{
-	@Autowired
-	private UserEntryService userEntryService;
+public class AssignableGroupsValidator implements ConstraintValidator<AssignableGroups, User> {
+    @Autowired
+    private UserEntryService userEntryService;
 
-	@Autowired
-	private GroupTransformer groupTransformer;
+    @Autowired
+    private GroupTransformer groupTransformer;
 
-	@Override
-	public boolean isValid(User user, ConstraintValidatorContext context)
-	{
-		// Only users with Public RBAC Admin access are allowed to modify groups
-		if (myInteractions().anyMatch(PUBLIC_ACCESS::equals)) return true;
+    @Override
+    public boolean isValid(User user, ConstraintValidatorContext context) {
+        // Only users with Public RBAC Admin access are allowed to modify groups
+        if (myInteractions().anyMatch(PUBLIC_ACCESS::equals)) return true;
 
-		val username = ofNullable(user.getExistingUsername()).orElse(user.getUsername());
-		val newGroups = ofNullable(user.getGroups()).orElse(emptyMap()).values().stream()
-				.flatMap(List::stream)
-				.sorted(comparing(Group::getName))
-				.collect(toList());
-		val existingGroups = groupTransformer.map(userEntryService.getUserGroups(username));
+        val username = ofNullable(user.getExistingUsername()).orElse(user.getUsername());
+        val newGroups = ofNullable(user.getGroups()).orElse(emptyMap()).values().stream()
+            .flatMap(List::stream)
+            .sorted(comparing(Group::getName))
+            .collect(toList());
+        val existingGroups = groupTransformer.map(userEntryService.getUserGroups(username));
 
-		// If the groups haven't changed, then this is valid
-		return newGroups.equals(existingGroups);
-	}
+        // If the groups haven't changed, then this is valid
+        return newGroups.equals(existingGroups);
+    }
 }

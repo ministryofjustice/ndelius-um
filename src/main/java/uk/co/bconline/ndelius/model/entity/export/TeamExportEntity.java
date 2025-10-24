@@ -23,26 +23,26 @@ import static java.time.LocalDate.now;
 @AllArgsConstructor
 @Table(name = "TEAM")
 public class TeamExportEntity implements Serializable {
-	@Id
-	@Column(name = "TEAM_ID")
-	@GeneratedValue(generator = "TEAM_ID_SEQ")
-	@SequenceGenerator(name = "TEAM_ID_SEQ", sequenceName = "TEAM_ID_SEQ", allocationSize = 1)
-	private Long id;
+    @Id
+    @Column(name = "TEAM_ID")
+    @GeneratedValue(generator = "TEAM_ID_SEQ")
+    @SequenceGenerator(name = "TEAM_ID_SEQ", sequenceName = "TEAM_ID_SEQ", allocationSize = 1)
+    private Long id;
 
-	@Column(name = "CODE")
-	private String code;
+    @Column(name = "CODE")
+    private String code;
 
-	@Column(name = "DESCRIPTION")
-	private String description;
+    @Column(name = "DESCRIPTION")
+    private String description;
 
-	@ManyToOne
-	@JoinColumn(name = "DISTRICT_ID")
-	private DistrictExportEntity district;
+    @ManyToOne
+    @JoinColumn(name = "DISTRICT_ID")
+    private DistrictExportEntity district;
 
-	@Column(name = "END_DATE")
-	private LocalDate endDate;
+    @Column(name = "END_DATE")
+    private LocalDate endDate;
 
-	public String getExportDescription() {
-		return description + " (" + code + ")" + ((getEndDate() != null && getEndDate().isBefore(now())) ? " [Inactive]" : "");
-	}
+    public String getExportDescription() {
+        return description + " (" + code + ")" + ((getEndDate() != null && getEndDate().isBefore(now())) ? " [Inactive]" : "");
+    }
 }

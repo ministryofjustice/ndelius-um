@@ -14,15 +14,21 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 @Validated
-public interface UserService
-{
-	boolean usernameExists(String username);
-	List<SearchResult> search(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
-							  String role, boolean includeInactiveUsers, Integer page, Integer pageSize);
-	Optional<User> getUser(String username);
-	Optional<User> getUserByStaffCode(String staffCode);
-	void addUser(@Valid User user);
-	void updateUser(@Valid User user);
-	Stream<ExportResult> exportAll();
-	void exportAllToCsv(OutputStream outputStream);
+public interface UserService {
+    boolean usernameExists(String username);
+
+    List<SearchResult> search(String query, Map<String, Set<String>> groupFilter, Set<String> datasetFilter,
+                              String role, boolean includeInactiveUsers, Integer page, Integer pageSize);
+
+    Optional<User> getUser(String username);
+
+    Optional<User> getUserByStaffCode(String staffCode);
+
+    void addUser(@Valid User user);
+
+    void updateUser(@Valid User user);
+
+    Stream<ExportResult> exportAll();
+
+    void exportAllToCsv(OutputStream outputStream);
 }

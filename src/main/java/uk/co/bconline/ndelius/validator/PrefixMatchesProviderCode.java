@@ -12,11 +12,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(FIELD)
 @Retention(RUNTIME)
 @Constraint(validatedBy = PrefixMatchesProviderCodeValidator.class)
-public @interface PrefixMatchesProviderCode
-{
-	String message() default "prefix should correspond to a valid provider code";
+public @interface PrefixMatchesProviderCode {
+    String message() default "prefix should correspond to a valid provider code";
 
-	Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 }

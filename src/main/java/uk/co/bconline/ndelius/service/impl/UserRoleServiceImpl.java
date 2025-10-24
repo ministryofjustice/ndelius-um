@@ -40,128 +40,127 @@ import static uk.co.bconline.ndelius.util.NameUtils.join;
 @Service
 public class UserRoleServiceImpl implements UserRoleService {
 
-	private final RoleService roleService;
-	private final RoleRepository roleRepository;
-	private final RoleAssociationRepository roleAssociationRepository;
-	private final RoleTransformer roleTransformer;
+    private final RoleService roleService;
+    private final RoleRepository roleRepository;
+    private final RoleAssociationRepository roleAssociationRepository;
+    private final RoleTransformer roleTransformer;
 
-	@Value("${delius.ldap.base.users}")
-	private String usersBase;
+    @Value("${delius.ldap.base.users}")
+    private String usersBase;
 
-	@Value("${delius.ldap.base.clients}")
-	private String clientsBase;
+    @Value("${delius.ldap.base.clients}")
+    private String clientsBase;
 
-	@Autowired
-	public UserRoleServiceImpl(
-			RoleService roleService,
-			RoleRepository roleRepository,
-			RoleAssociationRepository roleAssociationRepository,
-			RoleTransformer roleTransformer) {
-		this.roleService = roleService;
-		this.roleRepository = roleRepository;
-		this.roleAssociationRepository = roleAssociationRepository;
-		this.roleTransformer = roleTransformer;
-	}
+    @Autowired
+    public UserRoleServiceImpl(
+        RoleService roleService,
+        RoleRepository roleRepository,
+        RoleAssociationRepository roleAssociationRepository,
+        RoleTransformer roleTransformer) {
+        this.roleService = roleService;
+        this.roleRepository = roleRepository;
+        this.roleAssociationRepository = roleAssociationRepository;
+        this.roleTransformer = roleTransformer;
+    }
 
-	@Override
-	public Set<RoleEntry> getRolesICanAssign() {
-		val myInteractions = myInteractions().collect(toSet());
-		val privateAccess = myInteractions.contains(PRIVATE_ACCESS);
-		val publicAccess = myInteractions.contains(PUBLIC_ACCESS);
-		val nationalAccess = myInteractions.contains(NATIONAL_ACCESS);
-		val localAccess = myInteractions.contains(LOCAL_ACCESS);
-		val level1Access = myInteractions.contains(LEVEL1_ACCESS);
-		val level2Access = myInteractions.contains(LEVEL2_ACCESS);
-		val level3Access = myInteractions.contains(LEVEL3_ACCESS);
+    @Override
+    public Set<RoleEntry> getRolesICanAssign() {
+        val myInteractions = myInteractions().collect(toSet());
+        val privateAccess = myInteractions.contains(PRIVATE_ACCESS);
+        val publicAccess = myInteractions.contains(PUBLIC_ACCESS);
+        val nationalAccess = myInteractions.contains(NATIONAL_ACCESS);
+        val localAccess = myInteractions.contains(LOCAL_ACCESS);
+        val level1Access = myInteractions.contains(LEVEL1_ACCESS);
+        val level2Access = myInteractions.contains(LEVEL2_ACCESS);
+        val level3Access = myInteractions.contains(LEVEL3_ACCESS);
 
-		return roleService.getAllRoles().stream()
-				.filter(role -> (privateAccess || !"private".equalsIgnoreCase(role.getSector()))
-						&& (publicAccess || !"public".equalsIgnoreCase(role.getSector()))
-						&& (nationalAccess || !"national".equalsIgnoreCase(role.getAdminLevel()))
-						&& (localAccess || !"local".equalsIgnoreCase(role.getAdminLevel()))
-						&& (level1Access || !role.isLevel1())
-						&& (level2Access || !role.isLevel2())
-						&& (level3Access || !role.isLevel3()))
-				.collect(toSet());
-	}
+        return roleService.getAllRoles().stream()
+            .filter(role -> (privateAccess || !"private".equalsIgnoreCase(role.getSector()))
+                && (publicAccess || !"public".equalsIgnoreCase(role.getSector()))
+                && (nationalAccess || !"national".equalsIgnoreCase(role.getAdminLevel()))
+                && (localAccess || !"local".equalsIgnoreCase(role.getAdminLevel()))
+                && (level1Access || !role.isLevel1())
+                && (level2Access || !role.isLevel2())
+                && (level3Access || !role.isLevel3()))
+            .collect(toSet());
+    }
 
-	@Override
-	public Set<RoleEntry> getUserRoles(String username) {
-		return getAssignedRoles(username, usersBase);
-	}
+    @Override
+    public Set<RoleEntry> getUserRoles(String username) {
+        return getAssignedRoles(username, usersBase);
+    }
 
-	@Override
-	public Set<RoleEntry> getClientRoles(String clientId) {
-		return getAssignedRoles(clientId, clientsBase);
-	}
+    @Override
+    public Set<RoleEntry> getClientRoles(String clientId) {
+        return getAssignedRoles(clientId, clientsBase);
+    }
 
-	private Set<RoleEntry> getAssignedRoles(String id, String base) {
-		val t = LocalDateTime.now();
-		val r = stream(getAssignedRoleAssociations(id, base).spliterator(), true)
-				.map(roleService::dereference)
-				.flatMap(Optionals::toStream)
-				.collect(toSet());
-		log.trace("--{}ms	LDAP lookup user roles", MILLIS.between(t, LocalDateTime.now()));
-		return r;
-	}
+    private Set<RoleEntry> getAssignedRoles(String id, String base) {
+        val t = LocalDateTime.now();
+        val r = stream(getAssignedRoleAssociations(id, base).spliterator(), true)
+            .map(roleService::dereference)
+            .flatMap(Optionals::toStream)
+            .collect(toSet());
+        log.trace("--{}ms	LDAP lookup user roles", MILLIS.between(t, LocalDateTime.now()));
+        return r;
+    }
 
-	private Iterable<RoleAssociationEntry> getAssignedRoleAssociations(String id, String base) {
-		return roleAssociationRepository.findAll(query()
-				.searchScope(ONELEVEL)
-				.base(join(",", "cn=" + id, base))
-				.where(OBJECTCLASS).is("NDRoleAssociation"));
-	}
+    private Iterable<RoleAssociationEntry> getAssignedRoleAssociations(String id, String base) {
+        return roleAssociationRepository.findAll(query()
+            .searchScope(ONELEVEL)
+            .base(join(",", "cn=" + id, base))
+            .where(OBJECTCLASS).is("NDRoleAssociation"));
+    }
 
-	@Override
-	public Set<String> getUserInteractions(String username) {
-		val t = LocalDateTime.now();
-		val r = getUserRoles(username).stream()
-				.map(RoleEntry::getInteractions)
-				.flatMap(List::stream)
-				.collect(toSet());
-		log.trace("--{}ms	LDAP lookup user interactions", MILLIS.between(t, LocalDateTime.now()));
-		return r;
-	}
+    @Override
+    public Set<String> getUserInteractions(String username) {
+        val t = LocalDateTime.now();
+        val r = getUserRoles(username).stream()
+            .map(RoleEntry::getInteractions)
+            .flatMap(List::stream)
+            .collect(toSet());
+        log.trace("--{}ms	LDAP lookup user interactions", MILLIS.between(t, LocalDateTime.now()));
+        return r;
+    }
 
-	@Override
-	public void updateUserRoles(String username, Set<RoleEntry> roles) {
-		log.debug("Deleting any invalid role associations (non-aliases)");
-		roleRepository.deleteAll(roleRepository.findAll(query()
-				.searchScope(SearchScope.ONELEVEL)
-				.base(join(",", "cn=" + username, usersBase))
-				.where(OBJECTCLASS).is("NDRole")));
+    @Override
+    public void updateUserRoles(String username, Set<RoleEntry> roles) {
+        log.debug("Deleting any invalid role associations (non-aliases)");
+        roleRepository.deleteAll(roleRepository.findAll(query()
+            .searchScope(SearchScope.ONELEVEL)
+            .base(join(",", "cn=" + username, usersBase))
+            .where(OBJECTCLASS).is("NDRole")));
 
-		log.debug("Fetching existing role associations");
-		val existingRoles = stream(getAssignedRoleAssociations(username, usersBase).spliterator(), true)
-				.map(RoleAssociationEntry::getCn)
-				.collect(toSet());
-		val newRoles = ofNullable(roles).map(r -> r.stream()
-				.map(RoleEntry::getName)
-				.collect(toSet())).orElse(emptySet());
-		val rolesToAdd = Sets.difference(newRoles, existingRoles);
-		val rolesToRemove = Sets.difference(existingRoles, newRoles);
+        log.debug("Fetching existing role associations");
+        val existingRoles = stream(getAssignedRoleAssociations(username, usersBase).spliterator(), true)
+            .map(RoleAssociationEntry::getCn)
+            .collect(toSet());
+        val newRoles = ofNullable(roles).map(r -> r.stream()
+            .map(RoleEntry::getName)
+            .collect(toSet())).orElse(emptySet());
+        val rolesToAdd = Sets.difference(newRoles, existingRoles);
+        val rolesToRemove = Sets.difference(existingRoles, newRoles);
 
-		log.debug("Removing {} role association(s)", rolesToRemove.size());
-		rolesToRemove.parallelStream()
-				.map(role -> roleTransformer.buildAssociation(username, role))
-				.forEach(roleAssociationRepository::delete);
+        log.debug("Removing {} role association(s)", rolesToRemove.size());
+        rolesToRemove.parallelStream()
+            .map(role -> roleTransformer.buildAssociation(username, role))
+            .forEach(roleAssociationRepository::delete);
 
-		log.debug("Adding {} role association(s)", rolesToAdd.size());
-		rolesToAdd.parallelStream()
-				.map(role -> roleTransformer.buildAssociation(username, role))
-				.forEach(roleAssociationRepository::save);
-	}
+        log.debug("Adding {} role association(s)", rolesToAdd.size());
+        rolesToAdd.parallelStream()
+            .map(role -> roleTransformer.buildAssociation(username, role))
+            .forEach(roleAssociationRepository::save);
+    }
 
-	@Override
-	public List<String> getAllUsersWithRole(String role)
-	{
-		if (role == null || role.isBlank()) return emptyList();
+    @Override
+    public List<String> getAllUsersWithRole(String role) {
+        if (role == null || role.isBlank()) return emptyList();
 
-		return stream(roleAssociationRepository.findAll(query()
-				.searchScope(SUBTREE)
-				.base(usersBase)
-				.where(OBJECTCLASS).is("NDRoleAssociation").and("cn").like(role)).spliterator(), false)
-				.map(user -> LdapUtils.getStringValue(user.getDn(), user.getDn().size() - 2).toLowerCase()) // username is 2nd-to-last part of distinguished name
-				.collect(toList());
-	}
+        return stream(roleAssociationRepository.findAll(query()
+            .searchScope(SUBTREE)
+            .base(usersBase)
+            .where(OBJECTCLASS).is("NDRoleAssociation").and("cn").like(role)).spliterator(), false)
+            .map(user -> LdapUtils.getStringValue(user.getDn(), user.getDn().size() - 2).toLowerCase()) // username is 2nd-to-last part of distinguished name
+            .collect(toList());
+    }
 }
