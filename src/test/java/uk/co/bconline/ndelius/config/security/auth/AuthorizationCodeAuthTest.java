@@ -12,6 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.ZonedDateTime;
+
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -74,7 +76,7 @@ public class AuthorizationCodeAuthTest {
     }
 
     @Test
-    public void userScopesAreReturnedCorrectly() throws Exception {
+    public void userScopesAndClaimsAreReturnedCorrectly() throws Exception {
         String authCode = getAuthCode(mvc, "test.user", "UMBI001");
         String token = JsonPath.read(mvc.perform(
                 post("/oauth/token")
@@ -92,6 +94,7 @@ public class AuthorizationCodeAuthTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("sub", is("test.user")))
             .andExpect(jsonPath("user_name", is("test.user")))
+            .andExpect(jsonPath("exp", is(lessThanOrEqualTo(Long.valueOf(ZonedDateTime.now().plusHours(12).toEpochSecond()).intValue()))))
             .andExpect(jsonPath("client_id", is("test.web.client")))
             .andExpect(jsonPath("scope", containsString("UMBI001")))
             .andExpect(jsonPath("scope", not(containsString("UMBI002"))));

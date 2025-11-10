@@ -100,6 +100,7 @@ public class AuthorizationServerConfig {
     public OAuth2TokenCustomizer<OAuth2TokenClaimsContext> tokenCustomizer() {
         return context -> {
             if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType()) && context.getPrincipal() != null) {
+                // Add a custom "user_name" claim to match Spring Boot 2's authorization server behaviour
                 context.getClaims().claim("user_name", context.getPrincipal().getName());
             }
         };
