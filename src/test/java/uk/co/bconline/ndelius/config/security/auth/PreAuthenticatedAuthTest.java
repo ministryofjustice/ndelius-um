@@ -72,6 +72,7 @@ public class PreAuthenticatedAuthTest {
                 .param("token", token))
             .andExpect(status().isOk())
             .andExpect(jsonPath("sub", is("test.user")))
+            .andExpect(jsonPath("user_name", is("test.user")))
             .andExpect(jsonPath("client_id", is("test.web.client")))
             .andExpect(jsonPath("scope", containsString("UMBI001")))
             .andExpect(jsonPath("scope", not(containsString("CWBI006"))));
