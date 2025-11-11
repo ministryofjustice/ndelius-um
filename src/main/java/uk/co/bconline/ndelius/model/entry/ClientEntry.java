@@ -21,6 +21,7 @@ import uk.co.bconline.ndelius.config.security.token.PreAuthenticatedGrantAuthent
 import uk.co.bconline.ndelius.util.AuthUtils;
 
 import javax.naming.Name;
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
@@ -73,7 +74,11 @@ public final class ClientEntry {
                 }
             })
             .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
-            .tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE).build())
+            .tokenSettings(TokenSettings.builder()
+                .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
+                .accessTokenTimeToLive(Duration.ofHours(12))
+                .refreshTokenTimeToLive(Duration.ofHours(16))
+                .build())
             .scopes(scopes -> scopes.addAll(AuthUtils.mapToScopes(roles).collect(toSet())))
             .redirectUris(uris -> uris.addAll(registeredRedirectUri))
             .authorizationGrantTypes(types -> {

@@ -13,13 +13,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientCredentialsAuthenticationProvider;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2AccessTokenGenerator;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2RefreshTokenGenerator;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -45,12 +45,13 @@ public class AuthorizationServerConfig {
         @Qualifier("userEntryServiceImpl") UserDetailsService userDetailsService,
         @Value("${delius.secret}") String deliusSecret,
         RegisteredClientRepository registeredClientRepository,
-        OAuth2TokenGenerator<?> tokenGenerator,
         OAuth2AuthorizationService authorizationService
     ) throws Exception {
         val authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer.authorizationServer();
+        authorizationServerConfigurer.init(http);
         val authenticationManager = authenticationConfiguration.getAuthenticationManager();
         val basicAuthenticationFilter = new BasicAuthenticationFilter(authenticationManager);
+        val tokenGenerator = http.getSharedObject(OAuth2TokenGenerator.class);
         val preAuthenticatedGrantAuthenticationConverter = new PreAuthenticatedGrantAuthenticationConverter();
         val preAuthenticatedGrantAuthenticationProvider = new PreAuthenticatedGrantAuthenticationProvider(deliusSecret, registeredClientRepository, tokenGenerator, authorizationService, userDetailsService);
         val preAuthenticatedGrantPublicClientAuthenticationConverter = new PreAuthenticatedGrantPublicClientAuthenticationConverter();
@@ -70,8 +71,7 @@ public class AuthorizationServerConfig {
                     .authenticationProvider(clientCredentialsAuthenticationProvider))
                 .tokenEndpoint(endpoint -> endpoint
                     .accessTokenRequestConverter(preAuthenticatedGrantAuthenticationConverter)
-                    .authenticationProvider(preAuthenticatedGrantAuthenticationProvider)
-                )
+                    .authenticationProvider(preAuthenticatedGrantAuthenticationProvider))
                 .authorizationEndpoint(endpoint -> endpoint
                     .authorizationResponseHandler(new ContextRelativeRedirectAuthorizationEndpointSuccessHandler())
                     .authorizationRequestConverter(new ScopeFilteringAuthorizationCodeRequestConverter())))
@@ -97,8 +97,13 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public DelegatingOAuth2TokenGenerator delegatingOAuth2TokenGenerator() {
-        return new DelegatingOAuth2TokenGenerator(new OAuth2AccessTokenGenerator(), new OAuth2RefreshTokenGenerator());
+    public OAuth2TokenCustomizer<OAuth2TokenClaimsContext> tokenCustomizer() {
+        return context -> {
+            if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType()) && context.getPrincipal() != null) {
+                // Add a custom "user_name" claim to match Spring Boot 2's authorization server behaviour
+                context.getClaims().claim("user_name", context.getPrincipal().getName());
+            }
+        };
     }
 
     /*
