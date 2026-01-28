@@ -12,8 +12,8 @@ public class OidcAuthorizationCodeGrantAuthorization extends OAuth2Authorization
 
     public OidcAuthorizationCodeGrantAuthorization(String id, String registeredClientId, String principalName, Set<String> authorizedScopes,
                                                    AccessToken accessToken, RefreshToken refreshToken, Principal principal, OAuth2AuthorizationRequest authorizationRequest,
-                                                   AuthorizationCode authorizationCode, String state, IdToken idToken) {
-        super(id, registeredClientId, principalName, authorizedScopes, accessToken, refreshToken, principal, authorizationRequest, authorizationCode, state);
+                                                   AuthorizationCode authorizationCode, String state, IdToken idToken, Long ttl) {
+        super(id, registeredClientId, principalName, authorizedScopes, accessToken, refreshToken, principal, authorizationRequest, authorizationCode, state, ttl);
         this.idToken = idToken;
     }
 

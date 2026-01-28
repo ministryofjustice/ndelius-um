@@ -8,8 +8,8 @@ public class OAuth2PreAuthenticatedGrantAuthorization extends OAuth2Authorizatio
     private final Principal principal;
 
     public OAuth2PreAuthenticatedGrantAuthorization(String id, String registeredClientId, String principalName, Set<String> authorizedScopes,
-                                                    AccessToken accessToken, RefreshToken refreshToken, Principal principal) {
-        super(id, registeredClientId, principalName, authorizedScopes, accessToken, refreshToken);
+                                                    AccessToken accessToken, RefreshToken refreshToken, Principal principal, Long ttl) {
+        super(id, registeredClientId, principalName, authorizedScopes, accessToken, refreshToken, ttl);
         this.principal = principal;
     }
 

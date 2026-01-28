@@ -1,5 +1,7 @@
 package uk.co.bconline.ndelius.config.security.redis.service;
 
+import lombok.val;
+import org.springframework.security.oauth2.core.AbstractOAuth2Token;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2DeviceCode;
@@ -25,6 +27,10 @@ import uk.co.bconline.ndelius.config.security.redis.entity.OidcAuthorizationCode
 import uk.co.bconline.ndelius.config.security.token.PreAuthenticatedGrantAuthenticationToken;
 
 import java.security.Principal;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 final class ModelMapper {
 
@@ -60,11 +66,12 @@ final class ModelMapper {
     static OAuth2AuthorizationGrantAuthorization convertOAuth2PreAuthenticatedGrantAuthorization(OAuth2Authorization authorization) {
         OAuth2AuthorizationGrantAuthorization.AccessToken accessToken = extractAccessToken(authorization);
         OAuth2AuthorizationGrantAuthorization.RefreshToken refreshToken = extractRefreshToken(authorization);
+        Long ttl = calculateTtl(authorization);
 
         return new OAuth2PreAuthenticatedGrantAuthorization(authorization.getId(),
             authorization.getRegisteredClientId(), authorization.getPrincipalName(),
             authorization.getAuthorizedScopes(), accessToken, refreshToken,
-            authorization.getAttribute(Principal.class.getName()));
+            authorization.getAttribute(Principal.class.getName()), ttl);
     }
 
     static OidcAuthorizationCodeGrantAuthorization convertOidcAuthorizationCodeGrantAuthorization(
@@ -74,12 +81,13 @@ final class ModelMapper {
         OAuth2AuthorizationGrantAuthorization.AccessToken accessToken = extractAccessToken(authorization);
         OAuth2AuthorizationGrantAuthorization.RefreshToken refreshToken = extractRefreshToken(authorization);
         OidcAuthorizationCodeGrantAuthorization.IdToken idToken = extractIdToken(authorization);
+        Long ttl = calculateTtl(authorization);
 
         return new OidcAuthorizationCodeGrantAuthorization(authorization.getId(), authorization.getRegisteredClientId(),
             authorization.getPrincipalName(), authorization.getAuthorizedScopes(), accessToken, refreshToken,
             authorization.getAttribute(Principal.class.getName()),
             authorization.getAttribute(OAuth2AuthorizationRequest.class.getName()), authorizationCode,
-            authorization.getAttribute(OAuth2ParameterNames.STATE), idToken);
+            authorization.getAttribute(OAuth2ParameterNames.STATE), idToken, ttl);
     }
 
     static OAuth2AuthorizationCodeGrantAuthorization convertOAuth2AuthorizationCodeGrantAuthorization(
@@ -89,23 +97,25 @@ final class ModelMapper {
             authorization);
         OAuth2AuthorizationGrantAuthorization.AccessToken accessToken = extractAccessToken(authorization);
         OAuth2AuthorizationGrantAuthorization.RefreshToken refreshToken = extractRefreshToken(authorization);
+        Long ttl = calculateTtl(authorization);
 
         return new OAuth2AuthorizationCodeGrantAuthorization(authorization.getId(),
             authorization.getRegisteredClientId(), authorization.getPrincipalName(),
             authorization.getAuthorizedScopes(), accessToken, refreshToken,
             authorization.getAttribute(Principal.class.getName()),
             authorization.getAttribute(OAuth2AuthorizationRequest.class.getName()), authorizationCode,
-            authorization.getAttribute(OAuth2ParameterNames.STATE));
+            authorization.getAttribute(OAuth2ParameterNames.STATE), ttl);
     }
 
     static OAuth2ClientCredentialsGrantAuthorization convertOAuth2ClientCredentialsGrantAuthorization(
         OAuth2Authorization authorization) {
 
         OAuth2AuthorizationGrantAuthorization.AccessToken accessToken = extractAccessToken(authorization);
+        Long ttl = calculateTtl(authorization);
 
         return new OAuth2ClientCredentialsGrantAuthorization(authorization.getId(),
             authorization.getRegisteredClientId(), authorization.getPrincipalName(),
-            authorization.getAuthorizedScopes(), accessToken);
+            authorization.getAuthorizedScopes(), accessToken, ttl);
     }
 
     static OAuth2DeviceCodeGrantAuthorization convertOAuth2DeviceCodeGrantAuthorization(
@@ -115,21 +125,23 @@ final class ModelMapper {
         OAuth2AuthorizationGrantAuthorization.RefreshToken refreshToken = extractRefreshToken(authorization);
         OAuth2DeviceCodeGrantAuthorization.DeviceCode deviceCode = extractDeviceCode(authorization);
         OAuth2DeviceCodeGrantAuthorization.UserCode userCode = extractUserCode(authorization);
+        Long ttl = calculateTtl(authorization);
 
         return new OAuth2DeviceCodeGrantAuthorization(authorization.getId(), authorization.getRegisteredClientId(),
             authorization.getPrincipalName(), authorization.getAuthorizedScopes(), accessToken, refreshToken,
             authorization.getAttribute(Principal.class.getName()), deviceCode, userCode,
             authorization.getAttribute(OAuth2ParameterNames.SCOPE),
-            authorization.getAttribute(OAuth2ParameterNames.STATE));
+            authorization.getAttribute(OAuth2ParameterNames.STATE), ttl);
     }
 
     static OAuth2TokenExchangeGrantAuthorization convertOAuth2TokenExchangeGrantAuthorization(
         OAuth2Authorization authorization) {
 
         OAuth2AuthorizationGrantAuthorization.AccessToken accessToken = extractAccessToken(authorization);
+        Long ttl = calculateTtl(authorization);
 
         return new OAuth2TokenExchangeGrantAuthorization(authorization.getId(), authorization.getRegisteredClientId(),
-            authorization.getPrincipalName(), authorization.getAuthorizedScopes(), accessToken);
+            authorization.getPrincipalName(), authorization.getAuthorizedScopes(), accessToken, ttl);
     }
 
     static OAuth2AuthorizationCodeGrantAuthorization.AuthorizationCode extractAuthorizationCode(
@@ -395,5 +407,25 @@ final class ModelMapper {
             userCode.getExpiresAt());
         builder.token(oauth2UserCode, (metadata) -> metadata.put(OAuth2Authorization.Token.INVALIDATED_METADATA_NAME,
             userCode.isInvalidated()));
+    }
+
+    private static Long calculateTtl(OAuth2Authorization authorization) {
+        val maxExpiresAt = Stream
+            .of(
+                authorization.getAccessToken(),
+                authorization.getRefreshToken(),
+                authorization.getToken(OAuth2AuthorizationCode.class),
+                authorization.getToken(OidcIdToken.class),
+                authorization.getToken(OAuth2DeviceCode.class),
+                authorization.getToken(OAuth2UserCode.class)
+            )
+            .filter(Objects::nonNull)
+            .map(OAuth2Authorization.Token::getToken)
+            .map(AbstractOAuth2Token::getExpiresAt)
+            .filter(Objects::nonNull)
+            .max(Instant::compareTo)
+            .orElse(Instant.now().plus(1, ChronoUnit.DAYS));
+
+        return ChronoUnit.SECONDS.between(Instant.now(), maxExpiresAt);
     }
 }

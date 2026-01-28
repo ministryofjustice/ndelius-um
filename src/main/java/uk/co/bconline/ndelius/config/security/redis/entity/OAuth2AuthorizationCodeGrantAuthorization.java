@@ -18,8 +18,8 @@ public class OAuth2AuthorizationCodeGrantAuthorization extends OAuth2Authorizati
 
     public OAuth2AuthorizationCodeGrantAuthorization(String id, String registeredClientId, String principalName, Set<String> authorizedScopes,
                                                      AccessToken accessToken, RefreshToken refreshToken, Principal principal, OAuth2AuthorizationRequest authorizationRequest,
-                                                     AuthorizationCode authorizationCode, String state) {
-        super(id, registeredClientId, principalName, authorizedScopes, accessToken, refreshToken);
+                                                     AuthorizationCode authorizationCode, String state, Long ttl) {
+        super(id, registeredClientId, principalName, authorizedScopes, accessToken, refreshToken, ttl);
         this.principal = principal;
         this.authorizationRequest = authorizationRequest;
         this.authorizationCode = authorizationCode;

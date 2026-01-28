@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.test.util;
 import com.jayway.jsonpath.JsonPath;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static java.time.Instant.now;
 import static java.util.Objects.requireNonNull;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -11,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
+import static uk.co.bconline.ndelius.util.EncryptionUtils.encrypt;
 
 public class TokenUtils {
     public static String token(MockMvc mvc) throws Exception {
@@ -60,6 +62,19 @@ public class TokenUtils {
                 .with(httpBasic(clientId, "secret"))
                 .param("grant_type", "client_credentials")
                 .param("resource_id", "NDelius"))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString(), "access_token");
+    }
+
+    public static String preAuthenticatedToken(MockMvc mvc, String username) throws Exception {
+        return JsonPath.read(mvc.perform(post("/oauth/token")
+                .queryParam("u", encrypt(username, "ThisIsASecretKey"))
+                .queryParam("t", encrypt(String.valueOf(now().toEpochMilli()), "ThisIsASecretKey"))
+                .param("client_id", "test.web.client")
+                .param("grant_type", "preauthenticated")
+                .param("scope", "UMBI001"))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()
