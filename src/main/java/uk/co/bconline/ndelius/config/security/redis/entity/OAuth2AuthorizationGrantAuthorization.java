@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.config.security.redis.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
@@ -9,6 +10,7 @@ import org.springframework.security.oauth2.server.authorization.settings.OAuth2T
 import java.time.Instant;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @RedisHash("oauth2_authorization")
 public abstract class OAuth2AuthorizationGrantAuthorization {
@@ -20,15 +22,18 @@ public abstract class OAuth2AuthorizationGrantAuthorization {
     private final Set<String> authorizedScopes;
     private final AccessToken accessToken;
     private final RefreshToken refreshToken;
+    @TimeToLive(unit = TimeUnit.SECONDS)
+    private final Long ttl;
 
     protected OAuth2AuthorizationGrantAuthorization(String id, String registeredClientId, String principalName, Set<String> authorizedScopes,
-                                                    AccessToken accessToken, RefreshToken refreshToken) {
+                                                    AccessToken accessToken, RefreshToken refreshToken, Long ttl) {
         this.id = id;
         this.registeredClientId = registeredClientId;
         this.principalName = principalName;
         this.authorizedScopes = authorizedScopes;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.ttl = ttl;
     }
 
     public String getId() {
@@ -53,6 +58,10 @@ public abstract class OAuth2AuthorizationGrantAuthorization {
 
     public RefreshToken getRefreshToken() {
         return this.refreshToken;
+    }
+
+    public Long getTtl() {
+        return this.ttl;
     }
 
     protected abstract static class AbstractToken {

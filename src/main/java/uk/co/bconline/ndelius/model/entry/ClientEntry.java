@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.val;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
@@ -34,6 +33,11 @@ import static java.util.stream.Collectors.toSet;
 @ToString(exclude = "clientSecret")
 @Entry(objectClasses = {"NDClient", "inetOrgPerson", "top"}, base = "delius.ldap.base.clients")
 public final class ClientEntry {
+    private static List<String> PUBLIC_GRANT_TYPES = List.of(
+        AuthorizationGrantType.AUTHORIZATION_CODE.getValue(),
+        PreAuthenticatedGrantAuthenticationToken.PREAUTHENTICATED
+    );
+
     @Id
     private Name dn;
 
@@ -63,20 +67,14 @@ public final class ClientEntry {
             .clientSecret(clientSecret)
             .clientAuthenticationMethods(methods -> {
                 methods.add(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
-
-                // Allow public clients to skip authentication
-                val publicClientGrantTypes = List.of(
-                    AuthorizationGrantType.AUTHORIZATION_CODE.getValue(),
-                    PreAuthenticatedGrantAuthenticationToken.PREAUTHENTICATED
-                );
-                if (authorizedGrantTypes != null && authorizedGrantTypes.stream().anyMatch(publicClientGrantTypes::contains)) {
+                if (authorizedGrantTypes != null && authorizedGrantTypes.stream().anyMatch(PUBLIC_GRANT_TYPES::contains)) {
                     methods.add(ClientAuthenticationMethod.NONE);
                 }
             })
             .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
             .tokenSettings(TokenSettings.builder()
                 .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
-                .accessTokenTimeToLive(Duration.ofHours(12))
+                .accessTokenTimeToLive(authorizedGrantTypes.stream().anyMatch(PUBLIC_GRANT_TYPES::contains) ? Duration.ofHours(12) : Duration.ofHours(1))
                 .refreshTokenTimeToLive(Duration.ofHours(16))
                 .build())
             .scopes(scopes -> scopes.addAll(AuthUtils.mapToScopes(roles).collect(toSet())))

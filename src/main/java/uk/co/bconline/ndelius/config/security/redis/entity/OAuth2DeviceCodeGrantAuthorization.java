@@ -16,8 +16,8 @@ public class OAuth2DeviceCodeGrantAuthorization extends OAuth2AuthorizationGrant
     private final String deviceState;
 
     public OAuth2DeviceCodeGrantAuthorization(String id, String registeredClientId, String principalName, Set<String> authorizedScopes, AccessToken accessToken,
-                                              RefreshToken refreshToken, Principal principal, DeviceCode deviceCode, UserCode userCode, Set<String> requestedScopes, String deviceState) {
-        super(id, registeredClientId, principalName, authorizedScopes, accessToken, refreshToken);
+                                              RefreshToken refreshToken, Principal principal, DeviceCode deviceCode, UserCode userCode, Set<String> requestedScopes, String deviceState, Long ttl) {
+        super(id, registeredClientId, principalName, authorizedScopes, accessToken, refreshToken, ttl);
         this.principal = principal;
         this.deviceCode = deviceCode;
         this.userCode = userCode;
