@@ -52,7 +52,7 @@ public class RedisTtlIntegrationTest {
         String accessToken = clientCredentialsToken(mvc, "test.server.client");
         String id = repository.findByAccessToken_TokenValue(accessToken).getId();
         Long expire = redisTemplate.getExpire("oauth2_authorization:" + id, TimeUnit.SECONDS);
-        assertExpiry(expire, 12);
+        assertExpiry(expire, 1);
     }
 
     @Test
