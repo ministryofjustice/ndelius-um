@@ -87,6 +87,7 @@ public class AuthorizationCodeAuthTest {
             )
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsString(), "access_token");
+        ZonedDateTime expiry = ZonedDateTime.now().plusHours(12);
 
         mvc.perform(post("/oauth/check_token")
                 .with(httpBasic("test.web.client", "secret"))
@@ -94,7 +95,8 @@ public class AuthorizationCodeAuthTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("sub", is("test.user")))
             .andExpect(jsonPath("user_name", is("test.user")))
-            .andExpect(jsonPath("exp", is(lessThanOrEqualTo(Long.valueOf(ZonedDateTime.now().plusHours(12).toEpochSecond()).intValue()))))
+            .andExpect(jsonPath("exp", lessThanOrEqualTo(Long.valueOf(expiry.toEpochSecond()).intValue())))
+            .andExpect(jsonPath("exp", greaterThan(Long.valueOf(expiry.minusMinutes(1).toEpochSecond()).intValue())))
             .andExpect(jsonPath("client_id", is("test.web.client")))
             .andExpect(jsonPath("scope", containsString("UMBI001")))
             .andExpect(jsonPath("scope", not(containsString("UMBI002"))));
