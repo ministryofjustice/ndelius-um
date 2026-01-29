@@ -1,17 +1,27 @@
 spring:
+#  main:
+#    allow-bean-definition-overriding: true
   jpa:
-    hibernate.ddl-auto: create
+    hibernate.ddl-auto: none
+#    hibernate.ddl-auto: create
     defer-datasource-initialization: true
   h2.console:
     enabled: true
-    settings.web-allow-others: false # explicitly disabled to mitigate CVE-2021-42392
+#    settings.web-allow-others: false # explicitly disabled to mitigate CVE-2021-42392
   datasource:
-    url: 'jdbc:h2:mem:testdb;Mode=Oracle'
+#    url: 'jdbc:h2:mem:testdb;Mode=Oracle'
+    #url: 'jdbc:oracle:thin:@localhost:1521/XEPDB1'
+    url: 'jdbc:oracle:thin:@nd-systest-orc12.bcl.local:1521:ST12NDA'
+    username: delius_app_schema
+    password: NDelius1
   ldap:
     base: dc=bcl,dc=local
-    urls: ldap://localhost:3060
-    username: cn=admin
-    password: secret
+    urls: ldap://nd-systest-orc12a.bcl.local:389
+    #urls: ldap://localhost:3060
+#    username: cn=admin
+#    password: secret
+    username: cn=root,dc=bcl,dc=local
+    password: LDAPManager1
     embedded:
       base-dn: ${spring.ldap.base}
       credential:
@@ -21,6 +31,7 @@ spring:
       port: 3060
       validation.enabled: false
   data.redis:
+    #host: nd-systest-orc12a.bcl.local
     embedded: true
     port: 6379
 
@@ -29,7 +40,8 @@ delius:
   ldap.base:
     users: ou=Users
     groups: ou=Groups
-    clients: cn=EISUsers,ou=Users
+#    clients: cn=EISUsers,ou=Users
+    clients: ou=EISUsers,ou=Users
     roles: cn=ndRoleCatalogue,ou=Users
     role-groups: cn=ndRoleGroups,ou=Users
 
