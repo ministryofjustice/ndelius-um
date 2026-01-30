@@ -27,7 +27,7 @@ jar { enabled = false }
 
 // Node/NPM
 node {
-    version = '22.13.1'
+    version = '24.11.0'
     download = true
     nodeProjectDir = file('ui')
     npmInstallCommand = "ci"
