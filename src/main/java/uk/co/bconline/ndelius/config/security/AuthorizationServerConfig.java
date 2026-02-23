@@ -77,7 +77,7 @@ public class AuthorizationServerConfig {
                     .authorizationResponseHandler(new ContextRelativeRedirectAuthorizationEndpointSuccessHandler())
                     .authorizationRequestConverter(new ScopeFilteringAuthorizationCodeRequestConverter())))
             .formLogin(formLogin -> formLogin.loginPage("/login").permitAll())
-            .addFilterBefore(new BasicAuthenticationFilter(authenticationManager){
+            .addFilterBefore(new BasicAuthenticationFilter(authenticationManager) {
                 @Override
                 protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
                     return !"/oauth/authorize".equals(request.getPathInfo());
