@@ -1,6 +1,8 @@
 package uk.co.bconline.ndelius.config.security;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.val;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -50,7 +52,6 @@ public class AuthorizationServerConfig {
         val authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer.authorizationServer();
         authorizationServerConfigurer.init(http);
         val authenticationManager = authenticationConfiguration.getAuthenticationManager();
-        val basicAuthenticationFilter = new BasicAuthenticationFilter(authenticationManager);
         val tokenGenerator = http.getSharedObject(OAuth2TokenGenerator.class);
         val preAuthenticatedGrantAuthenticationConverter = new PreAuthenticatedGrantAuthenticationConverter();
         val preAuthenticatedGrantAuthenticationProvider = new PreAuthenticatedGrantAuthenticationProvider(deliusSecret, registeredClientRepository, tokenGenerator, authorizationService, userDetailsService);
@@ -76,7 +77,12 @@ public class AuthorizationServerConfig {
                     .authorizationResponseHandler(new ContextRelativeRedirectAuthorizationEndpointSuccessHandler())
                     .authorizationRequestConverter(new ScopeFilteringAuthorizationCodeRequestConverter())))
             .formLogin(formLogin -> formLogin.loginPage("/login").permitAll())
-            .addFilterBefore(basicAuthenticationFilter, LogoutFilter.class) // To ensure basic authentication is applied before OAuthAuthorizationEndpointFilter
+            .addFilterBefore(new BasicAuthenticationFilter(authenticationManager) {
+                @Override
+                protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+                    return !"/oauth/authorize".equals(request.getPathInfo());
+                }
+            }, LogoutFilter.class) // To ensure basic authentication is applied before OAuthAuthorizationEndpointFilter
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .build();
     }
