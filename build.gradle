@@ -3,11 +3,11 @@ plugins {
     id 'java'
     id 'idea'
     id 'jacoco'
-    id 'org.springframework.boot'               version '3.5.10'
+    id 'org.springframework.boot'               version '3.5.11'
     id 'io.spring.dependency-management'        version '1.1.7'
     id 'com.github.node-gradle.node'            version '7.1.0'
-    id 'io.gatling.gradle'                      version '3.14.9'
-    id 'com.gorylenko.gradle-git-properties'    version '2.5.4'
+    id 'io.gatling.gradle'                      version '3.15.0'
+    id 'com.gorylenko.gradle-git-properties'    version '2.5.7'
 }
 
 // Java
@@ -65,7 +65,7 @@ dependencies {
     implementation      'org.springframework.session:spring-session-data-redis'
     implementation      'com.unboundid:unboundid-ldapsdk'
     implementation      'org.signal:embedded-redis:0.9.1'
-    implementation      'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.15'
+    implementation      'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.16'
     implementation      'com.opencsv:opencsv:5.12.0'
     implementation      'io.github.resilience4j:resilience4j-bulkhead:2.3.0'
     implementation      'io.github.resilience4j:resilience4j-spring-boot2:2.3.0'
