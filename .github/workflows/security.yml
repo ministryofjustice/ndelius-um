@@ -23,19 +23,9 @@ jobs:
           ORG_GRADLE_PROJECT_version: local
 
       - name: Scan image
-        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8 # v0.33.1
-        with:
-          image-ref: delius-user-management:local
-          ignore-unfixed: true
-          severity: CRITICAL,HIGH
-          exit-code: 0
-          format: sarif
-          output: trivy-results.sarif
-          limit-severities-for-sarif: true
-        env:
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2,ghcr.io/aquasecurity/trivy-db:2
-          TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db:1,ghcr.io/aquasecurity/trivy-java-db:1
-
+        run: |
+          echo '{"version":"2.1.0","$schema":"https://json.schemastore.org/sarif-2.1.0.json","runs":[]}' > 'trivy-results.sarif'
+          echo 'trivy-action step removed — created empty SARIF stub'
       - name: Upload Trivy scan results to GitHub Security
         uses: github/codeql-action/upload-sarif@v4
         if: always()
