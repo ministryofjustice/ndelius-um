@@ -1,77 +1,77 @@
 package uk.co.bconline.ndelius.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class NameUtilsTest {
 
     @Test
     public void combineForenames() {
         String result = NameUtils.combineNames("a b", "c d");
-        assertEquals("a b c d", result);
+        assertThat(result).isEqualTo("a b c d");
     }
 
     @Test
     public void combineForenamesWithNoSecondForename() {
         String result = NameUtils.combineNames("a b", null);
-        assertEquals("a b", result);
+        assertThat(result).isEqualTo("a b");
     }
 
     @Test
     public void combineForenamesWithNoFirstForename() {
         String result = NameUtils.combineNames(null, "a");
-        assertEquals(" a", result);
-        assertEquals("", NameUtils.firstForename(result));
-        assertEquals("a", NameUtils.subsequentForenames(result));
+        assertThat(result).isEqualTo(" a");
+        assertThat(NameUtils.firstForename(result)).isEmpty();
+        assertThat(NameUtils.subsequentForenames(result)).isEqualTo("a");
     }
 
     @Test
     public void combineLotsOfNames() {
         String result = NameUtils.combineNames("a b", "c d", "e f", "g h", "i j");
-        assertEquals("a b c d e f g h i j", result);
+        assertThat(result).isEqualTo("a b c d e f g h i j");
     }
 
     @Test
     public void combineLotsOfNamesWithNulls() {
         String result = NameUtils.combineNames(null, "c d", "e f", null, "i j");
-        assertEquals(" c d e f i j", result);
+        assertThat(result).isEqualTo(" c d e f i j");
     }
 
     @Test
     public void firstForename() {
         String result = NameUtils.firstForename("a b c d");
-        assertEquals("a", result);
+        assertThat(result).isEqualTo("a");
     }
 
     @Test
     public void firstForenameWithNoSubsequentForename() {
         String result = NameUtils.firstForename("a");
-        assertEquals("a", result);
+        assertThat(result).isEqualTo("a");
     }
 
     @Test
     public void firstForenameWhenNull() {
         String result = NameUtils.firstForename(null);
-        assertEquals("", result);
+        assertThat(result).isEmpty();
     }
 
     @Test
     public void subsequentForenames() {
         String result = NameUtils.subsequentForenames("a b c d");
-        assertEquals("b c d", result);
+        assertThat(result).isEqualTo("b c d");
     }
 
     @Test
     public void noSubsequentForeneames() {
         String result = NameUtils.subsequentForenames("a");
-        assertEquals("", result);
+        assertThat(result).isEmpty();
     }
 
     @Test
     public void subsequentForenamesWhenNull() {
         String result = NameUtils.subsequentForenames(null);
-        assertEquals("", result);
+        assertThat(result).isEmpty();
     }
 
 }
