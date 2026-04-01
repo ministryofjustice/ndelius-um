@@ -6,18 +6,18 @@ import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.LDAPInterface;
 import com.unboundid.ldap.sdk.ReadOnlySearchRequest;
 import com.unboundid.ldap.sdk.SearchResultEntry;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 public class AliasInterceptorTest {
     private LDAPInterface server = mock(LDAPInterface.class);
     private AliasInterceptor interceptor = new AliasInterceptor();
 
-    @Before
+    @BeforeEach
     public void setup() {
         interceptor.setServer(server);
     }
@@ -36,7 +36,7 @@ public class AliasInterceptorTest {
 
         ArgumentCaptor<SearchResultEntry> captor = ArgumentCaptor.forClass(SearchResultEntry.class);
         verify(entry).setSearchEntry(captor.capture());
-        assertEquals("cn=different", captor.getValue().getDN());
+        assertThat(captor.getValue().getDN()).isEqualTo("cn=different");
     }
 
     @Test
