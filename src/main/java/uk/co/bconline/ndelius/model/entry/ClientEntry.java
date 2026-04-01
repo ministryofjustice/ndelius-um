@@ -33,7 +33,7 @@ import static java.util.stream.Collectors.toSet;
 @ToString(exclude = "clientSecret")
 @Entry(objectClasses = {"NDClient", "inetOrgPerson", "top"}, base = "delius.ldap.base.clients")
 public final class ClientEntry {
-    private static List<String> PUBLIC_GRANT_TYPES = List.of(
+    private static final List<String> PUBLIC_GRANT_TYPES = List.of(
         AuthorizationGrantType.AUTHORIZATION_CODE.getValue(),
         PreAuthenticatedGrantAuthenticationToken.PREAUTHENTICATED
     );

@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
-import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
@@ -81,10 +80,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Cacheable(value = "rolesets")
     public Set<RoleEntry> getRolesInGroup(String group) {
-        return stream(roleAssociationRepository.findAll(query()
+        return roleAssociationRepository.findAll(query()
             .searchScope(ONELEVEL)
             .base(join(",", "cn=" + group, roleGroupsBase))
-            .where(OBJECTCLASS).is("NDRoleAssociation")).spliterator(), true)
+                .where(OBJECTCLASS).is("NDRoleAssociation")).parallelStream()
             .map(this::dereference)
             .flatMap(Optionals::toStream)
             .collect(toSet());

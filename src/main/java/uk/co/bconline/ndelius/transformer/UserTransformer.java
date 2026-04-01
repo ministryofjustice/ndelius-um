@@ -43,9 +43,9 @@ import uk.co.bconline.ndelius.util.LdapUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -128,7 +128,7 @@ public class UserTransformer {
                 .map(datasetTransformer::map)
                 .orElse(null))
             .startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
-            .endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElseGet(v::getEndDate))
+            .endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).orElseGet(v::getEndDate))
             .teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(teamTransformer::map).orElse(null))
             .created(changeNoteTransformer.map(v.getCreatedBy(), v.getCreatedAt(), null).orElse(null))
             .updated(changeNoteTransformer.map(v.getUpdatedBy(), v.getUpdatedAt(), null).orElse(null))
@@ -291,7 +291,7 @@ public class UserTransformer {
         entity.getProbationAreaLinks().clear();
         entity.getProbationAreaLinks().addAll(Stream
             .concat(user.getDatasets().stream(),
-                ofNullable(user.getEstablishments()).map(List::stream).orElseGet(Stream::empty))
+                ofNullable(user.getEstablishments()).stream().flatMap(Collection::stream))
             .map(dataset -> datasetService.getDatasetId(dataset.getCode()).orElse(null))
             .filter(Objects::nonNull)
             .map(ProbationAreaEntity::new)

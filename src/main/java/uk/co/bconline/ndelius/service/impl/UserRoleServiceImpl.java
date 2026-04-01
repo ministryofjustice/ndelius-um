@@ -156,10 +156,10 @@ public class UserRoleServiceImpl implements UserRoleService {
     public List<String> getAllUsersWithRole(String role) {
         if (role == null || role.isBlank()) return emptyList();
 
-        return stream(roleAssociationRepository.findAll(query()
+        return roleAssociationRepository.findAll(query()
             .searchScope(SUBTREE)
             .base(usersBase)
-            .where(OBJECTCLASS).is("NDRoleAssociation").and("cn").like(role)).spliterator(), false)
+                .where(OBJECTCLASS).is("NDRoleAssociation").and("cn").like(role)).stream()
             .map(user -> LdapUtils.getStringValue(user.getDn(), user.getDn().size() - 2).toLowerCase()) // username is 2nd-to-last part of distinguished name
             .collect(toList());
     }

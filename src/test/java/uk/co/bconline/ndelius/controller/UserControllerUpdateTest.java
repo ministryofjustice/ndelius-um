@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
-import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -407,7 +406,7 @@ public class UserControllerUpdateTest {
         // Then the old staff record (N01A601) should have an end date of today
         Optional<StaffEntity> oldStaff = staffRepository.findByCode("N01A601");
         assertThat(oldStaff).isPresent();
-        assertThat(oldStaff.orElseThrow().getEndDate()).isEqualTo(LocalDate.now().minus(1, DAYS));
+        assertThat(oldStaff.orElseThrow().getEndDate()).isEqualTo(LocalDate.now().minusDays(1));
     }
 
     @Test
@@ -446,7 +445,7 @@ public class UserControllerUpdateTest {
         // And the staff record should be end-dated
         Optional<StaffEntity> staff = staffRepository.findByCode("N01A603");
         assertThat(staff).isPresent();
-        assertThat(staff.orElseThrow().getEndDate()).isEqualTo(LocalDate.now().minus(1, DAYS));
+        assertThat(staff.orElseThrow().getEndDate()).isEqualTo(LocalDate.now().minusDays(1));
     }
 
     // Verify fix for defect DST-7302 - 500 Error when removing a user's phone number

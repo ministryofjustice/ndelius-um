@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.config.security.converter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationToken;
@@ -22,7 +23,7 @@ public class ScopeFilteringAuthorizationCodeRequestConverter implements Authenti
     private final OAuth2AuthorizationCodeRequestAuthenticationConverter delegate = new OAuth2AuthorizationCodeRequestAuthenticationConverter();
 
     @Override
-    public Authentication convert(HttpServletRequest request) {
+    public Authentication convert(@NonNull HttpServletRequest request) {
         val token = (OAuth2AuthorizationCodeRequestAuthenticationToken) delegate.convert(request);
         if (token == null) return null;
         return new OAuth2AuthorizationCodeRequestAuthenticationToken(

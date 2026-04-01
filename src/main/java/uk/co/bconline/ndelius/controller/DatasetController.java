@@ -45,7 +45,7 @@ public class DatasetController {
     @PreAuthorize("hasAuthority('SCOPE_UMBI006')")
     @GetMapping(value = "/dataset/{datasetCode}/nextStaffCode", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> getNextStaffCode(@PathVariable("datasetCode") String datasetCode) {
-        if (!datasetService.getDatasetByCode(datasetCode).isPresent()) return notFound().build();
+        if (datasetService.getDatasetByCode(datasetCode).isEmpty()) return notFound().build();
         return ok(datasetService.getNextStaffCode(datasetCode));
     }
 

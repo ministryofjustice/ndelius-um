@@ -124,7 +124,7 @@ public class UserController {
     @PostMapping(path = "/user")
     @UsernameMustNotAlreadyExist
     @PreAuthorize("hasAuthority('SCOPE_UMBI003')")
-    public ResponseEntity addUser(@RequestBody User user) throws URISyntaxException {
+    public ResponseEntity<?> addUser(@RequestBody User user) throws URISyntaxException {
         userService.addUser(user);
         return created(new URI(String.format("/user/%s", user.getUsername()))).build();
     }
@@ -133,7 +133,7 @@ public class UserController {
     @NewUsernameMustNotAlreadyExist
     @PostMapping(path = "/user/{username}")
     @PreAuthorize("hasAuthority('SCOPE_UMBI004')")
-    public ResponseEntity updateUser(@RequestBody User user, @PathVariable("username") String username) {
+    public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable("username") String username) {
         if (!userService.usernameExists(username)) {
             return notFound().build();
         } else {

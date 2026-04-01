@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.config.security.provider;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -59,7 +60,7 @@ public class PreAuthenticatedGrantAuthenticationProvider implements Authenticati
     }
 
     @Override
-    public Authentication authenticate(Authentication request) throws AuthenticationException {
+    public Authentication authenticate(@NonNull Authentication request) throws AuthenticationException {
         PreAuthenticatedGrantAuthenticationToken authenticationRequest = (PreAuthenticatedGrantAuthenticationToken) request;
 
         // Ensure the client is authenticated
@@ -164,7 +165,7 @@ public class PreAuthenticatedGrantAuthenticationProvider implements Authenticati
     }
 
     @Override
-    public boolean supports(Class<?> authentication) {
+    public boolean supports(@NonNull Class<?> authentication) {
         return PreAuthenticatedGrantAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

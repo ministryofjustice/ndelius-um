@@ -51,7 +51,7 @@ public class ControllerExceptionHandler {
         errors.addAll(result
             .getGlobalErrors().stream()
             .map(ObjectError::getDefaultMessage)
-            .collect(toList()));
+            .toList());
         return new ErrorResponse(errors);
     }
 

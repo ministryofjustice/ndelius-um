@@ -14,8 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 public class AliasInterceptorTest {
-    private LDAPInterface server = mock(LDAPInterface.class);
-    private AliasInterceptor interceptor = new AliasInterceptor();
+    private final LDAPInterface server = mock(LDAPInterface.class);
+    private final AliasInterceptor interceptor = new AliasInterceptor();
 
     @BeforeEach
     public void setup() {

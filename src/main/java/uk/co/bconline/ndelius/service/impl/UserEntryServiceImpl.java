@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,6 @@ import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toConcurrentMap;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
@@ -96,7 +96,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public @NonNull UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
         return getUser(username)
             .map(UserEntry::toUserDetails)
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
@@ -122,7 +122,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
      *
      * @param query    space-delimited query string
      * @param datasets a set of dataset codes to search within
-     * @return a set of matching users from LDAP
+     * @return a list of matching users from LDAP
      */
     @Override
     public List<SearchResult> search(String query, boolean includeInactiveUsers, Set<String> datasets) {
@@ -150,12 +150,12 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
         }
 
         val t = now();
-        val results = stream(userRepository
+        val results = userRepository
             .findAll(query()
                 .searchScope(ONELEVEL)
                 .base(usersBase)
                 .filter(filter))
-            .spliterator(), true)
+            .parallelStream()
             .map(u -> searchResultTransformer.map(u, deriveScore(query, u)))
             .collect(toList());
 

@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SubContractedProviderRepository extends JpaRepository<SubContractedProviderEntity, Long> {
-    @Query("SELECT s FROM SubContractedProviderEntity s " +
-        "WHERE s.provider.code = ?1 " +
-        "AND s.active = true " +
-        "AND (s.endDate IS NULL OR s.endDate >= CURRENT_DATE)")
+    @Query("""
+        SELECT s FROM SubContractedProviderEntity s
+        WHERE s.provider.code = ?1
+        AND s.active = true
+        AND (s.endDate IS NULL OR s.endDate >= CURRENT_DATE)
+        """)
     List<SubContractedProviderEntity> findAllByProviderCode(String providerCode);
 
     Optional<SubContractedProviderEntity> findByCode(String code);
