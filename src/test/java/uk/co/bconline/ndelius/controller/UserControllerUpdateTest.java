@@ -1,7 +1,5 @@
 package uk.co.bconline.ndelius.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import tools.jackson.databind.ObjectMapper;
 import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.Group;
 import uk.co.bconline.ndelius.model.ReferenceData;
@@ -25,6 +24,7 @@ import uk.co.bconline.ndelius.repository.db.DomainEventRepository;
 import uk.co.bconline.ndelius.repository.db.StaffRepository;
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
@@ -57,6 +57,9 @@ public class UserControllerUpdateTest {
 
     @Autowired
     private DomainEventRepository domainEventRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private MockMvc mvc;
 
@@ -91,7 +94,7 @@ public class UserControllerUpdateTest {
             .roles(singletonList(Role.builder()
                 .name("UMBT001")
                 .build()))
-            .groups(ImmutableMap.of(
+            .groups(Map.of(
                 "Fileshare", singletonList(Group.builder().name("Group 1").type("Fileshare").build())))
             .build();
 
@@ -99,7 +102,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(user)))
             .andExpect(status().isCreated())
             .andExpect(redirectedUrl("/user/" + username));
 
@@ -109,7 +112,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+                .content(objectMapper.writeValueAsString(user.toBuilder()
                     .email("test2@test.com")
                     .telephoneNumber("9999")
                     .forenames("A B C")
@@ -126,7 +129,7 @@ public class UserControllerUpdateTest {
                     .homeArea(Dataset.builder().code("N01").build())
                     .privateSector(false)
                     .roles(singletonList(Role.builder().name("UMBT002").build()))
-                    .groups(ImmutableMap.of(
+                    .groups(Map.of(
                         "Fileshare", singletonList(Group.builder().name("Group 2").type("Fileshare").build()),
                         "NDMIS-Reporting", singletonList(Group.builder().name("Group 1").type("NDMIS-Reporting").build())))
                     .build())))
@@ -167,7 +170,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(username)
                     .build())))
             .andExpect(status().isCreated());
@@ -176,7 +179,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(username + "-renamed")
                     .build())))
             .andExpect(status().isNoContent());
@@ -201,7 +204,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(username)
                     .build())))
             .andExpect(status().isCreated());
@@ -209,7 +212,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username("test.user")
                     .build())))
             .andExpect(status().isBadRequest());
@@ -230,14 +233,14 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(user)))
             .andExpect(status().isCreated());
 
         // When
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+                .content(objectMapper.writeValueAsString(user.toBuilder()
                     .username(username + "-renamed")
                     .build())))
             .andExpect(status().isNoContent());
@@ -276,19 +279,19 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user1)))
+                .content(objectMapper.writeValueAsString(user1)))
             .andExpect(status().isCreated());
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user2)))
+                .content(objectMapper.writeValueAsString(user2)))
             .andExpect(status().isCreated());
 
         // When I update user 2's staff code to that of user 1
         mvc.perform(post("/api/user/" + username2)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user2.toBuilder()
+                .content(objectMapper.writeValueAsString(user2.toBuilder()
                     .staffCode("N01B501")
                     .staffGrade(ReferenceData.builder().code("GRADE1").description("Grade 1").build())
                     .teams(singletonList(Team.builder().code("N01TST").build()))
@@ -318,7 +321,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(username)
                     .email(username + "@test.test")
                     .build())))
@@ -328,7 +331,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(username + "-renamed")
                     .email(username + "@test.test")
                     .build())))
@@ -353,7 +356,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user/test.user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username("test.user-renamed")
                     .build())))
             .andExpect(status().isNoContent());
@@ -372,7 +375,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user/test.user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder().username("test.user").build())))
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder().username("test.user").build())))
 
             // Then I should receive an error message
             .andExpect(status().isBadRequest())
@@ -393,14 +396,14 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(user)))
             .andExpect(status().isCreated());
 
         // When I update the staff code to N01A602
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+                .content(objectMapper.writeValueAsString(user.toBuilder()
                     .staffCode("N01A602")
                     .build())))
             .andExpect(status().isNoContent());
@@ -425,14 +428,14 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(user)))
             .andExpect(status().isCreated());
 
         // When I update the home area to N02
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+                .content(objectMapper.writeValueAsString(user.toBuilder()
                     .homeArea(Dataset.builder().code("N02").build())
                     .build())))
             .andExpect(status().isNoContent());

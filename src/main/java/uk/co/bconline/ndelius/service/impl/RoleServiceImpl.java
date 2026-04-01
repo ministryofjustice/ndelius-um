@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import com.google.common.collect.Sets;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -17,6 +16,7 @@ import uk.co.bconline.ndelius.repository.ldap.RoleRepository;
 import uk.co.bconline.ndelius.service.RoleService;
 
 import javax.naming.Name;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -60,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Cacheable(value = "rolesets", key = "'all'")
     public Set<RoleEntry> getAllRoles() {
-        return Sets.newHashSet(roleRepository.findAll(query()
+        return new HashSet<>(roleRepository.findAll(query()
             .searchScope(ONELEVEL)
             .base(rolesBase)
             .where(OBJECTCLASS).is("NDRole")));

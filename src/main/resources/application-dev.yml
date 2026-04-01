@@ -20,9 +20,6 @@ spring:
       ldif: classpath:data.ldif
       port: 3060
       validation.enabled: false
-  data.redis:
-    embedded: true
-    port: 6379
 
 delius:
   secret: ThisIsASecretKey

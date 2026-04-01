@@ -71,7 +71,7 @@ public final class ClientEntry {
                     methods.add(ClientAuthenticationMethod.NONE);
                 }
             })
-            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).requireProofKey(false).build())
             .tokenSettings(TokenSettings.builder()
                 .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
                 .accessTokenTimeToLive(authorizedGrantTypes.stream().anyMatch(PUBLIC_GRANT_TYPES::contains) ? Duration.ofHours(12) : Duration.ofHours(1))

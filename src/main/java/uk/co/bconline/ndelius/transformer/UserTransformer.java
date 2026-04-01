@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.transformer;
 
-import com.google.common.collect.ImmutableSet;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +44,7 @@ import uk.co.bconline.ndelius.util.LdapUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -275,18 +275,19 @@ public class UserTransformer {
             .updatedById(myUserId)
             .updatedAt(updateTime)
             .build();
-        val newHistory = ImmutableSet.<ChangeNoteEntity>builder();
+        val newHistory = new HashSet<ChangeNoteEntity>();
         if (!userHistoryService.hasHistory(existingUser.getId())) {
             // If a user has no history records but has created/updated details, then copy the created/updated details into the history
             changeNoteTransformer.mapToEntity(entity, existingUser.getCreatedBy(), existingUser.getCreatedAt()).ifPresent(newHistory::add);
             changeNoteTransformer.mapToEntity(entity, existingUser.getUpdatedBy(), existingUser.getUpdatedAt()).ifPresent(newHistory::add);
         }
-        entity.setHistory(newHistory.add(ChangeNoteEntity.builder()
+        newHistory.add(ChangeNoteEntity.builder()
             .user(entity)
             .updatedById(myUserId)
             .updatedAt(updateTime)
             .notes(user.getChangeNote())
-            .build()).build());
+            .build());
+        entity.setHistory(newHistory);
         entity.getProbationAreaLinks().clear();
         entity.getProbationAreaLinks().addAll(Stream
             .concat(user.getDatasets().stream(),

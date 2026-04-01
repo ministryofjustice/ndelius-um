@@ -49,7 +49,7 @@ public class AuthorizationServerConfigTest {
     public void accessingASecureEndpointWithoutATokenIsForbidden() throws Exception {
         mvc.perform(get("/api/user/test.user"))
             .andExpect(status().isUnauthorized())
-            .andExpect(header().string("WWW-Authenticate", "Bearer"));
+            .andExpect(header().string("WWW-Authenticate", startsWith("Bearer")));
     }
 
     @Test

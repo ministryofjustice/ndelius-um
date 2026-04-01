@@ -40,7 +40,7 @@ See [Configure](#configure).
 
 ### Dev profile
 To quickly get up and running, you can run the app using the `dev` profile.
-This will start the application with an in-memory LDAP server, H2 database and Redis cluster.
+This will start the application with an in-memory LDAP server and H2 database.
 Data is seeded from [data.ldif](src/main/resources/data.ldif). and [data.sql](src/main/resources/data.sql).
 
 * Using Java:
@@ -74,7 +74,6 @@ Alternatively, look at [application-dev.yml](src/main/resources/application-dev.
 ### Data Sources
 * `spring.datasource` defines the Database connection, which is used for user, staff and dataset access information.
 * `spring.ldap` defines the LDAP connection, which contains user authentication, role-based access control (RBAC), and NDelius user preferences.
-* `spring.data.redis` defines the Redis connection details, which is used for storing OAuth2 access tokens and authorisation codes.
 
 ### Custom configuration items
 * `delius.secret` is a shared secret key between this application and Delius to support authenticating users who have already logged in to Delius (See [Preauthenticated grant](#Preauthenticated grant)).

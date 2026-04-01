@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.time.LocalDateTime.now;
@@ -214,8 +214,8 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
         val userDn = LdapNameBuilder.newInstance(ldapBase).add(getDn(username)).build();
         val existingGroups = getBasicUser(username).map(UserEntry::getGroupNames).orElse(emptySet());
         val newGroups = ofNullable(groups).orElse(emptySet());
-        val groupsToAdd = Sets.difference(newGroups, existingGroups);
-        val groupsToRemove = Sets.difference(existingGroups, newGroups);
+        val groupsToAdd = newGroups.stream().filter(e -> !existingGroups.contains(e)).collect(Collectors.toSet());
+        val groupsToRemove = existingGroups.stream().filter(e -> !newGroups.contains(e)).collect(Collectors.toSet());
         // Note: We must use serial streams here, due to a bug in Spring LDAP meaning the commonPool loads the
         // incorrect DirContext class.
         // See https://github.com/spring-projects/spring-ldap/issues/501

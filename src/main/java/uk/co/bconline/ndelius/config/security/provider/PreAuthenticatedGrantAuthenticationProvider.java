@@ -134,7 +134,7 @@ public class PreAuthenticatedGrantAuthenticationProvider implements Authenticati
         if (generatedAccessToken instanceof ClaimAccessor claimAccessor) {
             authorizationBuilder.token(accessToken, (metadata) -> {
                 metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME, claimAccessor.getClaims());
-                metadata.put(OAuth2TokenFormat.class.getName(), OAuth2TokenFormat.REFERENCE.getValue());
+                metadata.put(OAuth2TokenFormat.class.getName(), OAuth2TokenFormat.SELF_CONTAINED.getValue());
             });
         } else {
             authorizationBuilder.accessToken(accessToken);
