@@ -7,6 +7,8 @@ spring:
     settings.web-allow-others: false # explicitly disabled to mitigate CVE-2021-42392
   datasource:
     url: 'jdbc:h2:mem:testdb;Mode=Oracle'
+    auth:
+      url: 'jdbc:tc:postgresql:18:///authdb'
   ldap:
     base: dc=bcl,dc=local
     urls: ldap://localhost:3060
@@ -20,9 +22,6 @@ spring:
       ldif: classpath:data.ldif
       port: 3060
       validation.enabled: false
-  data.redis:
-    embedded: true
-    port: 6379
 
 delius:
   secret: ThisIsASecretKey

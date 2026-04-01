@@ -6,8 +6,10 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapAutoConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.boot.ldap.autoconfigure.embedded.EmbeddedLdapAutoConfiguration;
+import org.springframework.boot.security.oauth2.server.authorization.autoconfigure.servlet.OAuth2AuthorizationServerAutoConfiguration;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @OpenAPIDefinition(
     info = @Info(
@@ -15,10 +17,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
         description = "REST API to enable NPS-ICT to effectively create and maintain user accounts in the National Delius application, and to allow external services to securely authenticate Probation staff.",
         contact = @Contact(name = "Unilink", url = "https://unilink.com")),
     externalDocs = @ExternalDocumentation(description = "GitHub", url = "https://github.com/ministryofjustice/ndelius-um"))
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 @SpringBootApplication(exclude = {EmbeddedLdapAutoConfiguration.class})
+@Import(OAuth2AuthorizationServerAutoConfiguration.class)
 public class UserManagementAPI {
-    public static void main(String[] args) {
+    static void main(String[] args) {
         SpringApplication.run(UserManagementAPI.class, args);
     }
 }

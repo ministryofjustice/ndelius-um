@@ -7,17 +7,18 @@ import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.schema.Schema;
 import com.unboundid.ldif.LDIFReader;
 import jakarta.annotation.PreDestroy;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
-import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
-import org.springframework.boot.autoconfigure.ldap.LdapProperties;
-import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.ldap.autoconfigure.LdapAutoConfiguration;
+import org.springframework.boot.ldap.autoconfigure.LdapProperties;
+import org.springframework.boot.ldap.autoconfigure.embedded.EmbeddedLdapProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -121,7 +122,7 @@ public class EmbeddedLdapServer {
         return StringUtils.hasText(credential.getUsername()) && StringUtils.hasText(credential.getPassword());
     }
 
-    private void importLdif(ApplicationContext applicationContext) throws LDAPException {
+    private void importLdif(ApplicationContext applicationContext) {
         String location = this.embeddedProperties.getLdif();
         if (StringUtils.hasText(location)) {
             try {
@@ -174,10 +175,10 @@ public class EmbeddedLdapServer {
         private static final Bindable<List<String>> STRING_LIST = Bindable.listOf(String.class);
 
         @Override
-        public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        public @NonNull ConditionOutcome getMatchOutcome(ConditionContext context, @NonNull AnnotatedTypeMetadata metadata) {
             ConditionMessage.Builder message = ConditionMessage.forCondition("Embedded LDAP");
             Environment environment = context.getEnvironment();
-            if (environment != null && !Binder.get(environment).bind("spring.ldap.embedded.base-dn", STRING_LIST)
+            if (!Binder.get(environment).bind("spring.ldap.embedded.base-dn", STRING_LIST)
                 .orElseGet(Collections::emptyList).isEmpty()) {
                 return ConditionOutcome.match(message.because("Found base-dn property"));
             }

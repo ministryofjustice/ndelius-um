@@ -1,11 +1,11 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.ObjectMapper;
 import uk.co.bconline.ndelius.model.entity.DomainEventEntity;
 import uk.co.bconline.ndelius.model.notification.HmppsDomainEvent;
 import uk.co.bconline.ndelius.model.notification.HmppsDomainEventType;

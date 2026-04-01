@@ -51,7 +51,7 @@ public class SearchResultEntity {
 
     @Transient
     @Builder.Default
-    private Set<TeamEntity> teams = new HashSet<>();
+    private final Set<TeamEntity> teams = new HashSet<>();
 
     public Set<TeamEntity> getTeams() {
         if (teams.isEmpty() && teamCode != null) {

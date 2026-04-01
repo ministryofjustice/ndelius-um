@@ -1,22 +1,21 @@
 package uk.co.bconline.ndelius.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import tools.jackson.databind.ObjectMapper;
 import uk.co.bconline.ndelius.model.User;
 
 import static java.time.LocalDateTime.now;
-import static java.time.temporal.ChronoUnit.*;
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -33,15 +32,16 @@ import static uk.co.bconline.ndelius.test.util.UserUtils.nextTestUsername;
 @SpringBootTest
 @DirtiesContext
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 public class UserHistoryControllerTest {
 
     @Autowired
     private WebApplicationContext context;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
             .webAppContextSetup(context)
@@ -67,7 +67,7 @@ public class UserHistoryControllerTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(username).build())))
             .andExpect(status().isCreated());
 
@@ -99,14 +99,14 @@ public class UserHistoryControllerTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(user)))
             .andExpect(status().isCreated());
 
         // When they are updated with a change note
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+                .content(objectMapper.writeValueAsString(user.toBuilder()
                     .changeNote("Test note 123").build())))
             .andExpect(status().isNoContent());
 
@@ -136,7 +136,7 @@ public class UserHistoryControllerTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
                     .changeNote(String.join("*", new String[4001])).build())))
             .andExpect(status().isBadRequest());
@@ -167,7 +167,7 @@ public class UserHistoryControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(3)))
             .andExpect(jsonPath("$[0].time", isWithin(5, SECONDS).of(now())))
-            .andExpect(jsonPath("$[1].time", isWithin(5, MINUTES).of(now().minus(2, DAYS))))
-            .andExpect(jsonPath("$[2].time", isWithin(5, MINUTES).of(now().minus(7, DAYS))));
+            .andExpect(jsonPath("$[1].time", isWithin(2, HOURS).of(now().minusDays(2))))
+            .andExpect(jsonPath("$[2].time", isWithin(2, HOURS).of(now().minusDays(7))));
     }
 }

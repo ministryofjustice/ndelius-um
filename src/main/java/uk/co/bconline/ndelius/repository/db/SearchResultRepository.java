@@ -8,82 +8,86 @@ import java.util.List;
 import java.util.Set;
 
 public interface SearchResultRepository extends JpaRepository<SearchResultEntity, String> {
-    @Query(value = "SELECT U.USER_ID||'-'||T.TEAM_ID AS ID, " +
-        "    U.DISTINGUISHED_NAME, " +
-        "    U.FORENAME, " +
-        "    U.FORENAME2, " +
-        "    U.SURNAME, " +
-        "    U.END_DATE, " +
-        "    S.OFFICER_CODE AS STAFF_CODE, " +
-        "    T.CODE AS TEAM_CODE, " +
-        "    T.DESCRIPTION AS TEAM_DESCRIPTION, " +
-        "    CASE WHEN ?1 IS NULL THEN 0 ELSE " +
-        "    GREATEST( " +
-        "        SYS.UTL_MATCH.EDIT_DISTANCE_SIMILARITY(UPPER(U.DISTINGUISHED_NAME), UPPER(?1)) / 100, " +
-        "        SYS.UTL_MATCH.EDIT_DISTANCE_SIMILARITY(UPPER(U.FORENAME), UPPER(?1)) / 100, " +
-        "        SYS.UTL_MATCH.EDIT_DISTANCE_SIMILARITY(UPPER(U.FORENAME2), UPPER(?1)) / 100, " +
-        "        SYS.UTL_MATCH.EDIT_DISTANCE_SIMILARITY(UPPER(U.SURNAME), UPPER(?1)) / 100, " +
-        "        CASE WHEN UPPER(S.OFFICER_CODE) LIKE '%'||UPPER(?1)||'%' THEN LENGTH(?1)/LENGTH(S.OFFICER_CODE) ELSE 0 END, " +
-        "        CASE WHEN UPPER(T.CODE) LIKE '%'||UPPER(?1)||'%' THEN LENGTH(?1)/LENGTH(T.CODE) ELSE 0 END, " +
-        "        CASE WHEN UPPER(T.DESCRIPTION) LIKE '%'||UPPER(?1)||'%' THEN LENGTH(?1)/LENGTH(T.DESCRIPTION) ELSE 0 END " +
-        "    ) END AS SCORE " +
-        "FROM USER_ U " +
-        "    LEFT OUTER JOIN STAFF S ON U.STAFF_ID = S.STAFF_ID " +
-        "    LEFT OUTER JOIN STAFF_TEAM ST ON U.STAFF_ID = ST.STAFF_ID " +
-        "    LEFT OUTER JOIN TEAM T ON ST.TEAM_ID = T.TEAM_ID " +
-        "WHERE (?2 = 1 OR U.END_DATE IS NULL OR U.END_DATE >= TRUNC(SYSDATE)) " +
-        "AND (?3 = 0 OR (SELECT COUNT(*) FROM PROBATION_AREA_USER WHERE ROWNUM = 1 AND USER_ID = U.USER_ID  " +
-        "    AND PROBATION_AREA_ID IN (SELECT PROBATION_AREA_ID FROM PROBATION_AREA WHERE CODE IN ?4)) > 0) " +
-        "AND (?1 IS NULL " +
-        "    OR SOUNDEX(U.DISTINGUISHED_NAME) = SOUNDEX(?1) " +
-        "    OR SOUNDEX(U.FORENAME) = SOUNDEX(?1) " +
-        "    OR SOUNDEX(U.FORENAME2) = SOUNDEX(?1) " +
-        "    OR SOUNDEX(U.SURNAME) = SOUNDEX(?1) " +
-        "    OR UPPER(S.OFFICER_CODE) LIKE '%'||UPPER(?1)||'%' " +
-        "    OR S.STAFF_ID IN (SELECT STAFF_ID FROM STAFF_TEAM WHERE TEAM_ID IN ( " +
-        "        SELECT TEAM_ID FROM TEAM  " +
-        "        WHERE UPPER(CODE) LIKE '%'||UPPER(?1)||'%' " +
-        "        OR UPPER(DESCRIPTION) LIKE '%'||UPPER(?1)||'%'))) " +
-        "ORDER BY SCORE DESC, UPPER(U.DISTINGUISHED_NAME)",
+    @Query(value = """
+        select u.user_id||'-'||t.team_id as id,
+            u.distinguished_name,
+            u.forename,
+            u.forename2,
+            u.surname,
+            u.end_date,
+            s.officer_code as staff_code,
+            t.code as team_code,
+            t.description as team_description,
+            case when ?1 is null then 0 else
+            greatest(
+                sys.utl_match.edit_distance_similarity(upper(u.distinguished_name), upper(?1)) / 100,
+                sys.utl_match.edit_distance_similarity(upper(u.forename), upper(?1)) / 100,
+                sys.utl_match.edit_distance_similarity(upper(u.forename2), upper(?1)) / 100,
+                sys.utl_match.edit_distance_similarity(upper(u.surname), upper(?1)) / 100,
+                case when upper(s.officer_code) like '%'||upper(?1)||'%' then length(?1)/length(s.officer_code) else 0 end,
+                case when upper(t.code) like '%'||upper(?1)||'%' then length(?1)/length(t.code) else 0 end,
+                case when upper(t.description) like '%'||upper(?1)||'%' then length(?1)/length(t.description) else 0 end
+            ) end as score
+        from user_ u
+            left outer join staff s on u.staff_id = s.staff_id
+            left outer join staff_team st on u.staff_id = st.staff_id
+            left outer join team t on st.team_id = t.team_id
+        where (?2 = 1 or u.end_date is null or u.end_date >= trunc(sysdate))
+        and (?3 = 0 or (select count(*) from probation_area_user where rownum = 1 and user_id = u.user_id
+            and probation_area_id in (select probation_area_id from probation_area where code in ?4)) > 0)
+        and (?1 is null
+            or soundex(u.distinguished_name) = soundex(?1)
+            or soundex(u.forename) = soundex(?1)
+            or soundex(u.forename2) = soundex(?1)
+            or soundex(u.surname) = soundex(?1)
+            or upper(s.officer_code) like '%'||upper(?1)||'%'
+            or s.staff_id in (select staff_id from staff_team where team_id in (
+                select team_id from team
+                where upper(code) like '%'||upper(?1)||'%'
+                or upper(description) like '%'||upper(?1)||'%')))
+        order by score desc, upper(u.distinguished_name)
+        """,
         nativeQuery = true)
     List<SearchResultEntity> search(String query, boolean includeInactiveUsers, boolean filterDatasets, Set<String> datasetCodes);
 
-    @Query(value = "SELECT U.USER_ID||'-'||T.TEAM_ID AS ID," +
-        "    U.DISTINGUISHED_NAME, " +
-        "    U.FORENAME, " +
-        "    U.FORENAME2, " +
-        "    U.SURNAME, " +
-        "    U.END_DATE, " +
-        "    S.OFFICER_CODE AS STAFF_CODE, " +
-        "    T.CODE AS TEAM_CODE, " +
-        "    T.DESCRIPTION AS TEAM_DESCRIPTION, " +
-        "    COALESCE(GREATEST( " +
-        "        LENGTH(?1)/LENGTH(U.DISTINGUISHED_NAME), " +
-        "        CASE WHEN U.FORENAME IS NULL OR LENGTH(U.FORENAME)=0 THEN 0 ELSE LENGTH(?1)/LENGTH(U.FORENAME) END, " +
-        "        CASE WHEN U.FORENAME2 IS NULL OR LENGTH(U.FORENAME2)=0 THEN 0 ELSE LENGTH(?1)/LENGTH(U.FORENAME2) END, " +
-        "        CASE WHEN U.SURNAME IS NULL OR LENGTH(U.SURNAME)=0 THEN 0 ELSE LENGTH(?1)/LENGTH(U.SURNAME) END, " +
-        "        CASE WHEN S.OFFICER_CODE IS NULL OR LENGTH(S.OFFICER_CODE)=0 THEN 0 ELSE LENGTH(?1)/LENGTH(S.OFFICER_CODE) END, " +
-        "        CASE WHEN T.CODE IS NULL OR LENGTH(T.CODE)=0 THEN 0 ELSE LENGTH(?1)/LENGTH(T.CODE) END, " +
-        "        CASE WHEN T.DESCRIPTION IS NULL OR LENGTH(T.DESCRIPTION)=0 THEN 0 ELSE LENGTH(?1)/LENGTH(T.DESCRIPTION) END " +
-        "    ), 0) AS SCORE " +
-        "FROM USER_ U " +
-        "    LEFT OUTER JOIN STAFF S ON U.STAFF_ID = S.STAFF_ID " +
-        "    LEFT OUTER JOIN STAFF_TEAM ST ON U.STAFF_ID = ST.STAFF_ID " +
-        "    LEFT OUTER JOIN TEAM T ON ST.TEAM_ID = T.TEAM_ID " +
-        "WHERE (?2 = 1 OR U.END_DATE IS NULL OR U.END_DATE >= TRUNC(SYSDATE)) " +
-        "AND (?3 = 0 OR (SELECT COUNT(*) FROM PROBATION_AREA_USER WHERE ROWNUM = 1 AND USER_ID = U.USER_ID  " +
-        "    AND PROBATION_AREA_ID IN (SELECT PROBATION_AREA_ID FROM PROBATION_AREA WHERE CODE IN (?4))) > 0) " +
-        "AND (?1 = '' " +
-        "    OR UPPER(U.DISTINGUISHED_NAME) LIKE '%'||UPPER(?1)||'%' " +
-        "    OR UPPER(U.FORENAME) LIKE '%'||UPPER(?1)||'%' " +
-        "    OR UPPER(U.FORENAME2) LIKE '%'||UPPER(?1)||'%' " +
-        "    OR UPPER(U.SURNAME) LIKE '%'||UPPER(?1)||'%' " +
-        "    OR UPPER(S.OFFICER_CODE) LIKE '%'||UPPER(?1)||'%' " +
-        "    OR S.STAFF_ID IN (SELECT STAFF_ID FROM STAFF_TEAM WHERE TEAM_ID IN ( " +
-        "        SELECT TEAM_ID FROM TEAM  " +
-        "        WHERE UPPER(CODE) LIKE '%'||UPPER(?1)||'%' " +
-        "        OR UPPER(DESCRIPTION) LIKE '%'||UPPER(?1)||'%'))) " +
-        "ORDER BY SCORE DESC, UPPER(U.DISTINGUISHED_NAME);",
+    @Query(value = """
+        select u.user_id||'-'||t.team_id as id,
+            u.distinguished_name,
+            u.forename,
+            u.forename2,
+            u.surname,
+            u.end_date,
+            s.officer_code as staff_code,
+            t.code as team_code,
+            t.description as team_description,
+            coalesce(greatest(
+                length(?1)/length(u.distinguished_name),
+                case when u.forename is null or length(u.forename)=0 then 0 else length(?1)/length(u.forename) end,
+                case when u.forename2 is null or length(u.forename2)=0 then 0 else length(?1)/length(u.forename2) end,
+                case when u.surname is null or length(u.surname)=0 then 0 else length(?1)/length(u.surname) end,
+                case when s.officer_code is null or length(s.officer_code)=0 then 0 else length(?1)/length(s.officer_code) end,
+                case when t.code is null or length(t.code)=0 then 0 else length(?1)/length(t.code) end,
+                case when t.description is null or length(t.description)=0 then 0 else length(?1)/length(t.description) end
+            ), 0) as score
+        from user_ u
+            left outer join staff s on u.staff_id = s.staff_id
+            left outer join staff_team st on u.staff_id = st.staff_id
+            left outer join team t on st.team_id = t.team_id
+        where (?2 = 1 or u.end_date is null or u.end_date >= trunc(sysdate))
+        and (?3 = 0 or (select count(*) from probation_area_user where rownum = 1 and user_id = u.user_id
+            and probation_area_id in (select probation_area_id from probation_area where code in (?4))) > 0)
+        and (?1 = ''
+            or upper(u.distinguished_name) like '%'||upper(?1)||'%'
+            or upper(u.forename) like '%'||upper(?1)||'%'
+            or upper(u.forename2) like '%'||upper(?1)||'%'
+            or upper(u.surname) like '%'||upper(?1)||'%'
+            or upper(s.officer_code) like '%'||upper(?1)||'%'
+            or s.staff_id in (select staff_id from staff_team where team_id in (
+                select team_id from team
+                where upper(code) like '%'||upper(?1)||'%'
+                or upper(description) like '%'||upper(?1)||'%')))
+        order by score desc, upper(u.distinguished_name);
+        """,
         nativeQuery = true)
     List<SearchResultEntity> simpleSearch(String query, int includeInactiveUsers, int filterDatasets, Set<String> datasetCodes);
 }

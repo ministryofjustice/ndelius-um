@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.controller;
 
-import com.google.common.collect.ImmutableMap;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,6 +35,7 @@ import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.springframework.http.ResponseEntity.*;
@@ -71,7 +71,7 @@ public class UserController {
         // paging
         @RequestParam(value = "page", defaultValue = "1") @Min(1) Integer page,
         @RequestParam(value = "pageSize", defaultValue = "50") @Min(1) @Max(100) Integer pageSize) {
-        val groups = ImmutableMap.of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
+        val groups = Map.of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
         return ok(userService.search(query, groups, datasets, role, includeInactiveUsers, page, pageSize));
     }
 
@@ -87,7 +87,7 @@ public class UserController {
         @RequestParam(value = "dataset", defaultValue = "") Set<String> datasets,
         @RequestParam(value = "role", defaultValue = "") String role,
         @RequestParam(value = "includeInactiveUsers", defaultValue = "false") Boolean includeInactiveUsers) throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
-        val groups = ImmutableMap.of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
+        val groups = Map.of("NDMIS-Reporting", reportingGroups, "Fileshare", fileshareGroups);
         val results = userService.search(query, groups, datasets, role, includeInactiveUsers, null, null);
         response.setContentType("text/csv");
         CSVUtils.write(results, response.getWriter());
@@ -124,7 +124,7 @@ public class UserController {
     @PostMapping(path = "/user")
     @UsernameMustNotAlreadyExist
     @PreAuthorize("hasAuthority('SCOPE_UMBI003')")
-    public ResponseEntity addUser(@RequestBody User user) throws URISyntaxException {
+    public ResponseEntity<?> addUser(@RequestBody User user) throws URISyntaxException {
         userService.addUser(user);
         return created(new URI(String.format("/user/%s", user.getUsername()))).build();
     }
@@ -133,7 +133,7 @@ public class UserController {
     @NewUsernameMustNotAlreadyExist
     @PostMapping(path = "/user/{username}")
     @PreAuthorize("hasAuthority('SCOPE_UMBI004')")
-    public ResponseEntity updateUser(@RequestBody User user, @PathVariable("username") String username) {
+    public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable("username") String username) {
         if (!userService.usernameExists(username)) {
             return notFound().build();
         } else {

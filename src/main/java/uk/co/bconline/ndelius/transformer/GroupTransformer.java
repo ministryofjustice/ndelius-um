@@ -1,7 +1,5 @@
 package uk.co.bconline.ndelius.transformer;
 
-import com.google.common.collect.ImmutableMap;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
@@ -14,6 +12,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import static java.util.Optional.ofNullable;
@@ -45,9 +44,8 @@ public class GroupTransformer {
     }
 
     public Map<String, List<Group>> map(Map<String, Set<GroupEntry>> entryMap) {
-        val builder = ImmutableMap.<String, List<Group>>builder();
-        entryMap.forEach((key, value) -> builder.put(key, this.map(value)));
-        return builder.build();
+        return entryMap.entrySet().stream()
+            .collect(toMap(Entry::getKey, entry -> this.map(entry.getValue())));
     }
 
     public List<Group> map(Collection<GroupEntry> entries) {
