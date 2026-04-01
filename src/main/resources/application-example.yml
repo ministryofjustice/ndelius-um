@@ -3,6 +3,10 @@ spring:
     url: 'jdbc:oracle:thin:@localhost:1521:XE'
     username: example
     password: example
+    auth:
+      url: 'jdbc:postgresql://localhost:5432/authdb'
+      username: example
+      password: example
   jpa:
     hibernate.ddl-auto: none
   ldap:

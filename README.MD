@@ -40,9 +40,15 @@ See [Configure](#configure).
 
 ### Dev profile
 To quickly get up and running, you can run the app using the `dev` profile.
-This will start the application with an in-memory LDAP server and H2 database.
-Data is seeded from [data.ldif](src/main/resources/data.ldif). and [data.sql](src/main/resources/data.sql).
+This starts the application with an in-memory LDAP server, an H2 primary database and a Postgres Testcontainers instance for the OAuth2 authorization server database.
+Data for the primary (Delius) database is seeded from [data.ldif](src/main/resources/data.ldif). and [data.sql](src/main/resources/data.sql).
+The schema for the auth database is seeded by Flyway from [db/auth/migration](src/main/resources/db/auth/migration) on startup.
 
+* Using Gradle:
+
+```shell script
+SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
+```
 * Using Java:
 ```shell script
 java -jar build/libs/delius-user-management.jar --spring.profiles.active=dev
@@ -72,8 +78,10 @@ See [application-example.yml](src/main/resources/application-example.yml) for an
 Alternatively, look at [application-dev.yml](src/main/resources/application-dev.yml) to see how the app can be configured with in-memory datasources (see: [Dev Profile](#dev-profile))
 
 ### Data Sources
-* `spring.datasource` defines the Database connection, which is used for user, staff and dataset access information.
-* `spring.ldap` defines the LDAP connection, which contains user authentication, role-based access control (RBAC), and NDelius user preferences.
+
+* `spring.datasource` defines the primary Delius database connection, which is used for user, staff and dataset access information.
+* `spring.ldap` defines the LDAP connection, which contains user credentials, role-based access control (RBAC) and NDelius user preferences.
+* `spring.datasource.auth` defines the OAuth2 database connection used by Spring OAuth2 Authorization Server to persist authorised clients, tokens and consents.
 
 ### Custom configuration items
 * `delius.secret` is a shared secret key between this application and Delius to support authenticating users who have already logged in to Delius (See [Preauthenticated grant](#Preauthenticated grant)).

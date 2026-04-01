@@ -11,7 +11,7 @@ public interface SubContractedProviderRepository extends JpaRepository<SubContra
     @Query("SELECT s FROM SubContractedProviderEntity s " +
         "WHERE s.provider.code = ?1 " +
         "AND s.active = true " +
-        "AND (s.endDate IS NULL OR s.endDate >= SYSDATE)")
+        "AND (s.endDate IS NULL OR s.endDate >= CURRENT_DATE)")
     List<SubContractedProviderEntity> findAllByProviderCode(String providerCode);
 
     Optional<SubContractedProviderEntity> findByCode(String code);

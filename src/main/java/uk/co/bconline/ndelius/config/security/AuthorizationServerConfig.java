@@ -13,7 +13,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientCredentialsAuthenticationProvider;
@@ -41,19 +41,6 @@ import uk.co.bconline.ndelius.config.security.provider.PreAuthenticatedGrantPubl
 @Configuration
 public class AuthorizationServerConfig {
     @Bean
-    public OAuth2AuthorizationService authorizationService() {
-        return new InMemoryOAuth2AuthorizationService();
-    }
-
-    @Bean
-    public OAuth2TokenGenerator<?> tokenGenerator(OAuth2TokenCustomizer<OAuth2TokenClaimsContext> accessTokenCustomizer) {
-        val accessTokenGenerator = new OAuth2AccessTokenGenerator();
-        accessTokenGenerator.setAccessTokenCustomizer(accessTokenCustomizer);
-        val refreshTokenGenerator = new OAuth2RefreshTokenGenerator();
-        return new DelegatingOAuth2TokenGenerator(accessTokenGenerator, refreshTokenGenerator);
-    }
-
-    @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(
         HttpSecurity http,
@@ -62,6 +49,7 @@ public class AuthorizationServerConfig {
         @Value("${delius.secret}") String deliusSecret,
         RegisteredClientRepository registeredClientRepository,
         OAuth2AuthorizationService authorizationService,
+        OAuth2AuthorizationConsentService authorizationConsentService,
         AuthorizationServerSettings authorizationServerSettings,
         OAuth2TokenGenerator<?> tokenGenerator
     ) {
@@ -79,6 +67,8 @@ public class AuthorizationServerConfig {
             .userDetailsService(userDetailsService)
             .oauth2AuthorizationServer(server -> server
                 .registeredClientRepository(registeredClientRepository)
+                .authorizationService(authorizationService)
+                .authorizationConsentService(authorizationConsentService)
                 .authorizationServerSettings(authorizationServerSettings)
                 .clientAuthentication(clientAuthentication -> clientAuthentication
                     .authenticationConverter(preAuthenticatedGrantPublicClientAuthenticationConverter)
@@ -124,6 +114,14 @@ public class AuthorizationServerConfig {
                 context.getClaims().claim("user_name", context.getPrincipal().getName());
             }
         };
+    }
+
+    @Bean
+    public OAuth2TokenGenerator<?> tokenGenerator(OAuth2TokenCustomizer<OAuth2TokenClaimsContext> accessTokenCustomizer) {
+        val accessTokenGenerator = new OAuth2AccessTokenGenerator();
+        accessTokenGenerator.setAccessTokenCustomizer(accessTokenCustomizer);
+        val refreshTokenGenerator = new OAuth2RefreshTokenGenerator();
+        return new DelegatingOAuth2TokenGenerator(accessTokenGenerator, refreshTokenGenerator);
     }
 
     private CorsConfigurationSource corsConfigurationSource() {
