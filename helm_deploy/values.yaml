@@ -59,6 +59,7 @@ generic-service:
     groups:
       - internal
       - unilink_staff
+      - delius-test
 
   readinessProbe:
     httpGet:
