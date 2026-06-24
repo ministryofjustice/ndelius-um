@@ -9,3 +9,7 @@ generic-service:
 
   scheduledDowntime:
     enabled: true
+
+  allowlist:
+    groups:
+      - delius-test
