@@ -4,9 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
-import org.springframework.boot.autoconfigure.ldap.LdapConnectionDetails;
-import org.springframework.boot.autoconfigure.ldap.LdapProperties;
+import org.springframework.boot.ldap.autoconfigure.LdapConnectionDetails;
+import org.springframework.boot.ldap.autoconfigure.LdapProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -29,7 +28,7 @@ import uk.co.bconline.ndelius.util.ReflectionUtils;
 @Slf4j
 @Configuration
 @EnableLdapRepositories(basePackageClasses = UserEntryRepository.class)
-public class LdapConfig extends LdapAutoConfiguration {
+public class LdapConfig extends LdapConfigBase {
     private final Environment environment;
 
     @Autowired

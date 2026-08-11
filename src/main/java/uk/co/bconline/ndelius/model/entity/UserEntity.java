@@ -103,7 +103,7 @@ public class UserEntity implements Serializable {
 
     @Builder.Default
     @OneToMany(mappedBy = "user", fetch = EAGER)
-    private Set<ProbationAreaUserEntity> probationAreaLinks = new HashSet<>();
+    private final Set<ProbationAreaUserEntity> probationAreaLinks = new HashSet<>();
 
     public Set<ProbationAreaEntity> getDatasets() {
         return ofNullable(probationAreaLinks)

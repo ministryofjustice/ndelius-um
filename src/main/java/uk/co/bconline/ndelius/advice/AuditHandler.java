@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import uk.co.bconline.ndelius.util.AuthUtils;
 
+import java.util.Optional;
+
 import static java.util.Optional.ofNullable;
 import static org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_HANDLER_ATTRIBUTE;
 import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
@@ -25,8 +27,8 @@ import static uk.co.bconline.ndelius.util.AuthUtils.myUsername;
 public class AuditHandler {
     @EventListener
     public void authenticationFailure(AbstractAuthenticationFailureEvent event) {
-        val username = ofNullable(event.getAuthentication()).map(Authentication::getPrincipal).orElse("UNKNOWN");
-        val message = ofNullable(event.getException()).map(Exception::getMessage).orElse("Unknown error");
+        val username = Optional.of(event.getAuthentication()).map(Authentication::getPrincipal).orElse("UNKNOWN");
+        val message = Optional.of(event.getException()).map(Exception::getMessage).orElse("Unknown error");
         log.error("{} {} {}", username, "AUTHENTICATION_FAILURE", message);
     }
 

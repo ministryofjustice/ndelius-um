@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.config.security;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -34,8 +35,8 @@ public class ResourceServerConfig {
     public PasswordEncoder passwordEncoder() {
         return new LdapShaPasswordEncoder() {
             @Override
-            public boolean matches(CharSequence rawPassword, String encodedPassword) {
-                return encodedPassword != null && super.matches(rawPassword, LdapUtils.fixPassword(encodedPassword));
+            public boolean matchesNonNull(@NonNull String rawPassword, @NonNull String encodedPassword) {
+                return super.matchesNonNull(rawPassword, LdapUtils.fixPassword(encodedPassword));
             }
         };
     }

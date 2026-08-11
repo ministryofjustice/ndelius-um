@@ -14,13 +14,13 @@ import uk.co.bconline.ndelius.service.GroupService;
 
 import javax.naming.Name;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toSet;
-import static java.util.stream.StreamSupport.stream;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
 
 @Service
@@ -47,10 +47,9 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Set<GroupEntry> getGroups(String type) {
-        return stream(groupRepository.findAll(LdapQueryBuilder.query()
+        return new HashSet<>(groupRepository.findAll(LdapQueryBuilder.query()
             .base(LdapNameBuilder.newInstance(groupsBase).add("ou", type).build())
-            .where(OBJECTCLASS).is("groupOfNames")).spliterator(), false)
-            .collect(toSet());
+            .where(OBJECTCLASS).is("groupOfNames")));
     }
 
     @Override

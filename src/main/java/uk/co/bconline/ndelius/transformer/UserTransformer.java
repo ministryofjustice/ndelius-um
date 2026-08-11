@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.transformer;
 
-import com.google.common.collect.ImmutableSet;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +43,9 @@ import uk.co.bconline.ndelius.util.LdapUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -128,7 +128,7 @@ public class UserTransformer {
                 .map(datasetTransformer::map)
                 .orElse(null))
             .startDate(ofNullable(v.getStaff()).map(StaffEntity::getStartDate).orElse(null))
-            .endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).filter(Objects::nonNull).orElseGet(v::getEndDate))
+            .endDate(ofNullable(v.getStaff()).map(StaffEntity::getEndDate).orElseGet(v::getEndDate))
             .teams(ofNullable(v.getStaff()).map(StaffEntity::getTeams).map(teamTransformer::map).orElse(null))
             .created(changeNoteTransformer.map(v.getCreatedBy(), v.getCreatedAt(), null).orElse(null))
             .updated(changeNoteTransformer.map(v.getUpdatedBy(), v.getUpdatedAt(), null).orElse(null))
@@ -275,22 +275,23 @@ public class UserTransformer {
             .updatedById(myUserId)
             .updatedAt(updateTime)
             .build();
-        val newHistory = ImmutableSet.<ChangeNoteEntity>builder();
+        val newHistory = new HashSet<ChangeNoteEntity>();
         if (!userHistoryService.hasHistory(existingUser.getId())) {
             // If a user has no history records but has created/updated details, then copy the created/updated details into the history
             changeNoteTransformer.mapToEntity(entity, existingUser.getCreatedBy(), existingUser.getCreatedAt()).ifPresent(newHistory::add);
             changeNoteTransformer.mapToEntity(entity, existingUser.getUpdatedBy(), existingUser.getUpdatedAt()).ifPresent(newHistory::add);
         }
-        entity.setHistory(newHistory.add(ChangeNoteEntity.builder()
+        newHistory.add(ChangeNoteEntity.builder()
             .user(entity)
             .updatedById(myUserId)
             .updatedAt(updateTime)
             .notes(user.getChangeNote())
-            .build()).build());
+            .build());
+        entity.setHistory(newHistory);
         entity.getProbationAreaLinks().clear();
         entity.getProbationAreaLinks().addAll(Stream
             .concat(user.getDatasets().stream(),
-                ofNullable(user.getEstablishments()).map(List::stream).orElseGet(Stream::empty))
+                ofNullable(user.getEstablishments()).stream().flatMap(Collection::stream))
             .map(dataset -> datasetService.getDatasetId(dataset.getCode()).orElse(null))
             .filter(Objects::nonNull)
             .map(ProbationAreaEntity::new)

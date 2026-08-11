@@ -15,11 +15,9 @@ import uk.co.bconline.ndelius.model.auth.UserInteraction;
 import uk.co.bconline.ndelius.model.entry.RoleEntry;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.google.common.collect.Lists.asList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toSet;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
@@ -83,11 +81,9 @@ public class AuthUtils {
     }
 
     public static Stream<String> mapToScopes(Collection<RoleEntry> roles) {
-        return ofNullable(roles).stream().flatMap(r -> r.stream()
-            .map(role -> asList(
-                role.getName(),
-                role.getInteractions().toArray(new String[0])))
-            .flatMap(List::stream));
+        return ofNullable(roles).stream()
+            .flatMap(Collection::stream)
+            .flatMap(role -> Stream.concat(Stream.of(role.getName()), role.getInteractions().stream()));
     }
 
     public static Stream<UserInteraction> mapToAuthorities(Collection<RoleEntry> roles) {

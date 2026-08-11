@@ -2,7 +2,6 @@ package uk.co.bconline.ndelius.transformer;
 
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvBindByName;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import lombok.val;
 
 import static uk.co.bconline.ndelius.util.NameUtils.camelCaseToTitleCase;
@@ -18,7 +17,7 @@ public class ColumnNameAndPositionCSVMappingStrategy<T> extends ColumnPositionMa
      * Object)
      */
     @Override
-    public String[] generateHeader(T bean) throws CsvRequiredFieldEmptyException {
+    public String[] generateHeader(T bean) {
         final int numColumns = getFieldMap().values().size();
         final String[] header = new String[numColumns];
         super.setColumnMapping(header);

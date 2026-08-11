@@ -1,12 +1,10 @@
 package uk.co.bconline.ndelius.config.security;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -23,14 +21,13 @@ import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 public class AuthorizationServerConfigTest {
     @Autowired
     private WebApplicationContext context;
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
             .webAppContextSetup(context)
@@ -49,7 +46,7 @@ public class AuthorizationServerConfigTest {
     public void accessingASecureEndpointWithoutATokenIsForbidden() throws Exception {
         mvc.perform(get("/api/user/test.user"))
             .andExpect(status().isUnauthorized())
-            .andExpect(header().string("WWW-Authenticate", "Bearer"));
+            .andExpect(header().string("WWW-Authenticate", startsWith("Bearer")));
     }
 
     @Test

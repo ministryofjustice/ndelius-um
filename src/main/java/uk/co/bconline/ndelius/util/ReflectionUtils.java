@@ -21,7 +21,7 @@ public class ReflectionUtils {
      * Replace class-level annotation data using reflection. Tested in Java 8 and 11.
      * See https://rationaleemotions.wordpress.com/2016/05/27/changing-annotation-values-at-runtime/
      */
-    public static void replaceClassLevelAnnotation(Class annotatedClass,
+    public static void replaceClassLevelAnnotation(Class<?> annotatedClass,
                                                    Class<? extends Annotation> annotationToReplace,
                                                    Annotation newAnnotation) throws ReflectiveOperationException {
         // Class has a private method called annotationData().
