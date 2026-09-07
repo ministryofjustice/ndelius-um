@@ -9,3 +9,8 @@ generic-service:
 
   scheduledDowntime:
     enabled: true
+
+  allowlist:
+    mod-platform-non-live-eu-west-2b-nat: "13.42.163.245/32"
+    mod-platform-non-live-eu-west-2a-nat: "13.43.9.198/32"
+    mod-platform-non-live-eu-west-2c-nat: "18.132.208.127/32"
