@@ -11,3 +11,8 @@ generic-service:
 
   env:
     DELIUS_PASSWORD-RESET_URL: https://password-reset.pre-prod.delius.probation.hmpps.dsd.io/public/forgottenpassword
+
+  allowlist:
+    mod-platform-live-eu-west-2a-nat: "13.41.38.176/32"
+    mod-platform-live-eu-west-2c-nat: "3.11.197.133/32"
+    mod-platform-live-eu-west-2b-nat: "3.8.81.175/32"
