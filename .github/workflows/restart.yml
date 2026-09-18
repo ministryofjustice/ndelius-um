@@ -1,0 +1,51 @@
+name: Restart
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment
+        required: true
+        type: choice
+        options:
+          - dev
+          - test
+          - stage
+          - training
+          - preprod
+          - prod
+
+permissions:
+  contents: read
+
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    env:
+      DEPLOYMENT: delius-user-management
+    steps:
+      - name: Authenticate
+        run: |
+          echo "$KUBE_CERT" > ca.crt
+          kubectl config set-cluster "$KUBE_CLUSTER" --certificate-authority=./ca.crt --server="$KUBE_ENV_API"
+          kubectl config set-credentials cd-serviceaccount --token="$KUBE_TOKEN"
+          kubectl config set-context "$KUBE_CLUSTER" --cluster="$KUBE_CLUSTER" --user=cd-serviceaccount --namespace="$KUBE_NAMESPACE"
+          kubectl config use-context "$KUBE_CLUSTER"
+        env:
+          KUBE_ENV_API: ${{ secrets.KUBE_ENV_API }}
+          KUBE_CERT: ${{ secrets.KUBE_CERT }}
+          KUBE_CLUSTER: ${{ secrets.KUBE_CLUSTER }}
+          KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
+          KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
+
+      - name: Restart
+        run: kubectl rollout restart "deployment/$DEPLOYMENT"
+
+      - name: Wait for restart to complete
+        run: kubectl rollout status "deployment/$DEPLOYMENT" --timeout=5m
