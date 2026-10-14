@@ -17,12 +17,14 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
     @Query("SELECT u.id FROM UserEntity u WHERE UPPER(u.username) = UPPER(?1)")
     Optional<Long> getUserId(String username);
 
-    @Query("SELECT u FROM UserExportEntity u " +
-        "LEFT JOIN FETCH u.datasets " +
-        "LEFT JOIN FETCH u.staff s " +
-        "LEFT JOIN FETCH s.teams " +
-        "LEFT JOIN FETCH s.grade " +
-        "WHERE u.endDate is null OR u.endDate >= ?1 " +
-        "ORDER BY u.username")
+    @Query("""
+        SELECT u FROM UserExportEntity u
+        LEFT JOIN FETCH u.datasets
+        LEFT JOIN FETCH u.staff s
+        LEFT JOIN FETCH s.teams
+        LEFT JOIN FETCH s.grade
+        WHERE u.endDate is null OR u.endDate >= ?1
+        ORDER BY u.username
+        """)
     Stream<UserExportEntity> export(LocalDate currentDate);
 }

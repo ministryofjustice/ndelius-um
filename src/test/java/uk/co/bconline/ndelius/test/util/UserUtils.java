@@ -1,9 +1,9 @@
 package uk.co.bconline.ndelius.test.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import tools.jackson.databind.ObjectMapper;
 import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.User;
 
@@ -42,7 +42,7 @@ public class UserUtils {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+                .content(new ObjectMapper().writeValueAsString(user)))
             .andExpect(status().isCreated());
         return user;
     }
@@ -51,6 +51,6 @@ public class UserUtils {
         return mvc.perform(post("/api/user/" + user.getUsername())
             .header("Authorization", "Bearer " + token(mvc))
             .contentType(MediaType.APPLICATION_JSON)
-            .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)));
+            .content(new ObjectMapper().writeValueAsString(user)));
     }
 }

@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,7 @@ import uk.co.bconline.ndelius.transformer.RoleTransformer;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static java.util.Collections.emptyList;
@@ -138,8 +138,8 @@ public class UserRoleServiceImpl implements UserRoleService {
         val newRoles = ofNullable(roles).map(r -> r.stream()
             .map(RoleEntry::getName)
             .collect(toSet())).orElse(emptySet());
-        val rolesToAdd = Sets.difference(newRoles, existingRoles);
-        val rolesToRemove = Sets.difference(existingRoles, newRoles);
+        val rolesToAdd = newRoles.stream().filter(e -> !existingRoles.contains(e)).collect(Collectors.toSet());
+        val rolesToRemove = existingRoles.stream().filter(e -> !newRoles.contains(e)).collect(Collectors.toSet());
 
         log.debug("Removing {} role association(s)", rolesToRemove.size());
         rolesToRemove.parallelStream()
@@ -156,10 +156,10 @@ public class UserRoleServiceImpl implements UserRoleService {
     public List<String> getAllUsersWithRole(String role) {
         if (role == null || role.isBlank()) return emptyList();
 
-        return stream(roleAssociationRepository.findAll(query()
+        return roleAssociationRepository.findAll(query()
             .searchScope(SUBTREE)
             .base(usersBase)
-            .where(OBJECTCLASS).is("NDRoleAssociation").and("cn").like(role)).spliterator(), false)
+                .where(OBJECTCLASS).is("NDRoleAssociation").and("cn").like(role)).stream()
             .map(user -> LdapUtils.getStringValue(user.getDn(), user.getDn().size() - 2).toLowerCase()) // username is 2nd-to-last part of distinguished name
             .collect(toList());
     }

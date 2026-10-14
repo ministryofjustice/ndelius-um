@@ -33,7 +33,7 @@ import static java.util.stream.Collectors.toSet;
 @ToString(exclude = "clientSecret")
 @Entry(objectClasses = {"NDClient", "inetOrgPerson", "top"}, base = "delius.ldap.base.clients")
 public final class ClientEntry {
-    private static List<String> PUBLIC_GRANT_TYPES = List.of(
+    private static final List<String> PUBLIC_GRANT_TYPES = List.of(
         AuthorizationGrantType.AUTHORIZATION_CODE.getValue(),
         PreAuthenticatedGrantAuthenticationToken.PREAUTHENTICATED
     );
@@ -71,7 +71,7 @@ public final class ClientEntry {
                     methods.add(ClientAuthenticationMethod.NONE);
                 }
             })
-            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+            .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).requireProofKey(false).build())
             .tokenSettings(TokenSettings.builder()
                 .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
                 .accessTokenTimeToLive(authorizedGrantTypes.stream().anyMatch(PUBLIC_GRANT_TYPES::contains) ? Duration.ofHours(12) : Duration.ofHours(1))

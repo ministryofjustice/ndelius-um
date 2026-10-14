@@ -2,7 +2,7 @@ package uk.co.bconline.ndelius.util;
 
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.co.bconline.ndelius.model.SearchResult;
 import uk.co.bconline.ndelius.model.Team;
 
@@ -11,9 +11,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CSVUtilsTest {
 
@@ -25,7 +23,7 @@ public class CSVUtilsTest {
         String csv = writer.toString();
 
         String expectedHeader = "\"Username\",\"Forenames\",\"Surname\",\"End Date\",\"Staff Code\",\"Teams\"\n";
-        assertThat(csv, startsWith(expectedHeader));
+        assertThat(csv).startsWith(expectedHeader);
     }
 
     @Test
@@ -47,7 +45,7 @@ public class CSVUtilsTest {
         String csv = writer.toString();
 
         String expectedTestUser = "\n\"test.user\",\"test\",\"user\",\"2020-01-01\",\"ABC123\",\"Team(code=TEAM01, description=Team 1, providerCode=null) Team(code=TEAM02, description=Team 2, providerCode=null)\"\n";
-        assertThat(csv, containsString(expectedTestUser));
+        assertThat(csv).contains(expectedTestUser);
     }
 
     @Test
@@ -57,7 +55,7 @@ public class CSVUtilsTest {
         CSVUtils.write(Collections.emptyList(), writer);
         String csv = writer.toString();
 
-        assertEquals(csv, "");
-        assertThat(csv.split("\\n"), arrayWithSize(1));
+        assertThat(csv).isEmpty();
+        assertThat(csv.split("\\n")).hasSize(1);
     }
 }

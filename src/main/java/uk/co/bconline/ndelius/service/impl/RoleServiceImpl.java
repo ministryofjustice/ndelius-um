@@ -1,6 +1,5 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import com.google.common.collect.Sets;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -17,11 +16,11 @@ import uk.co.bconline.ndelius.repository.ldap.RoleRepository;
 import uk.co.bconline.ndelius.service.RoleService;
 
 import javax.naming.Name;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
-import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
@@ -60,7 +59,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Cacheable(value = "rolesets", key = "'all'")
     public Set<RoleEntry> getAllRoles() {
-        return Sets.newHashSet(roleRepository.findAll(query()
+        return new HashSet<>(roleRepository.findAll(query()
             .searchScope(ONELEVEL)
             .base(rolesBase)
             .where(OBJECTCLASS).is("NDRole")));
@@ -81,10 +80,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Cacheable(value = "rolesets")
     public Set<RoleEntry> getRolesInGroup(String group) {
-        return stream(roleAssociationRepository.findAll(query()
+        return roleAssociationRepository.findAll(query()
             .searchScope(ONELEVEL)
             .base(join(",", "cn=" + group, roleGroupsBase))
-            .where(OBJECTCLASS).is("NDRoleAssociation")).spliterator(), true)
+                .where(OBJECTCLASS).is("NDRoleAssociation")).parallelStream()
             .map(this::dereference)
             .flatMap(Optionals::toStream)
             .collect(toSet());

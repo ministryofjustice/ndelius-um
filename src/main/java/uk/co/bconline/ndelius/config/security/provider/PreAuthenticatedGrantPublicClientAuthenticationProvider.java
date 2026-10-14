@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.config.security.provider;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -23,7 +24,7 @@ public class PreAuthenticatedGrantPublicClientAuthenticationProvider implements 
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(@NonNull Authentication authentication) throws AuthenticationException {
         OAuth2ClientAuthenticationToken clientAuthentication = (OAuth2ClientAuthenticationToken) authentication;
 
         if (!ClientAuthenticationMethod.NONE.equals(clientAuthentication.getClientAuthenticationMethod())) {
@@ -44,7 +45,7 @@ public class PreAuthenticatedGrantPublicClientAuthenticationProvider implements 
     }
 
     @Override
-    public boolean supports(Class<?> authentication) {
+    public boolean supports(@NonNull Class<?> authentication) {
         return OAuth2ClientAuthenticationToken.class.isAssignableFrom(authentication);
     }
 

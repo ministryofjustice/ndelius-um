@@ -5,9 +5,8 @@ import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
-import org.springframework.boot.autoconfigure.ldap.LdapConnectionDetails;
-import org.springframework.boot.autoconfigure.ldap.LdapProperties;
+import org.springframework.boot.ldap.autoconfigure.LdapConnectionDetails;
+import org.springframework.boot.ldap.autoconfigure.LdapProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.core.ContextSource;
@@ -18,7 +17,7 @@ import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 
 @Slf4j
 @Configuration
-public class LdapExportConfig extends LdapAutoConfiguration {
+public class LdapExportConfig extends LdapConfigBase {
     @Value("${spring.ldap.export.username:${spring.ldap.username}}")
     private String exportUser;
 
