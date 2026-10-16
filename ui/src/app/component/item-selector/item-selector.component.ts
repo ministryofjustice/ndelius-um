@@ -214,8 +214,8 @@ export class ItemSelectorComponent
       });
     }
     return items == null ? items : items.sort((a, b) => {
-      const labelA = this.mapToLabel(a);
-      const labelB = this.mapToLabel(b);
+      const labelA = this.mapToLabel(a).toLowerCase();
+      const labelB = this.mapToLabel(b).toLowerCase();
       return labelA === labelB ? 0 : labelA < labelB ? -1 : 1;
     });
   }
