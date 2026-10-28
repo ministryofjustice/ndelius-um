@@ -126,6 +126,9 @@ public class UserServiceImpl implements UserService {
                 .collect(groupingByConcurrent(SearchResult::getUsername, reducing(searchResultTransformer::reduce)))
                 .values().stream().flatMap(Optionals::toStream);
 
+            // apply email attribute from LDAP to any results that were only matched in the Database
+            stream = stream.map(this::setEmailFromLdap);
+
             // apply conditional filters
             if (!includeInactiveUsers) {
                 stream = stream.filter(result -> result.getEndDate() == null || !result.getEndDate().isBefore(now()));
@@ -268,6 +271,17 @@ public class UserServiceImpl implements UserService {
         val myDatasets = datasetService.getDatasetCodes(myUsername());
         myDatasets.add(userEntryService.getUserHomeArea(myUsername()));
         return myDatasets;
+    }
+
+    private SearchResult setEmailFromLdap(SearchResult result) {
+        // Results from the database only won't have an email, so always take it from the linked LDAP entry
+        if (result.getEmail() == null) {
+            return userEntryService.getUser(result.getUsername())
+                .map(UserEntry::getEmail)
+                .map(result::withEmail)
+                .orElse(result);
+        }
+        return result;
     }
 
     private SearchResult expandEmailSearchToDB(SearchResult ldapResult, String query) {
