@@ -1,21 +1,18 @@
 package uk.co.bconline.ndelius.config.security;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 public class PasswordEncoderTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -27,7 +24,7 @@ public class PasswordEncoderTest {
 
         boolean match = passwordEncoder.matches("secret", oidPassword);
 
-        assertTrue(match);
+        assertThat(match).isTrue();
     }
 
     @Test
@@ -36,6 +33,6 @@ public class PasswordEncoderTest {
 
         boolean match = passwordEncoder.matches("secret", encodedPassword);
 
-        assertTrue(match);
+        assertThat(match).isTrue();
     }
 }

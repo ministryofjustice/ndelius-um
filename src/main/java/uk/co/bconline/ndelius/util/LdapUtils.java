@@ -26,7 +26,7 @@ public class LdapUtils {
             String[] split = password.split(",");
             byte[] bytes = new byte[split.length];
             for (int i = 0; i < split.length; i++) {
-                bytes[i] = Byte.valueOf(split[i]);
+                bytes[i] = Byte.parseByte(split[i]);
             }
             return new String(bytes);
         }

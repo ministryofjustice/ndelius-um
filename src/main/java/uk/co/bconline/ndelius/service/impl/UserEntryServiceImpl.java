@@ -1,8 +1,8 @@
 package uk.co.bconline.ndelius.service.impl;
 
-import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.time.LocalDateTime.now;
@@ -45,7 +46,6 @@ import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toConcurrentMap;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.ldap.query.SearchScope.ONELEVEL;
 import static uk.co.bconline.ndelius.util.LdapUtils.OBJECTCLASS;
@@ -96,7 +96,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public @NonNull UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
         return getUser(username)
             .map(UserEntry::toUserDetails)
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
@@ -122,7 +122,7 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
      *
      * @param query    space-delimited query string
      * @param datasets a set of dataset codes to search within
-     * @return a set of matching users from LDAP
+     * @return a list of matching users from LDAP
      */
     @Override
     public List<SearchResult> search(String query, boolean includeInactiveUsers, Set<String> datasets) {
@@ -150,12 +150,12 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
         }
 
         val t = now();
-        val results = stream(userRepository
+        val results = userRepository
             .findAll(query()
                 .searchScope(ONELEVEL)
                 .base(usersBase)
                 .filter(filter))
-            .spliterator(), true)
+            .parallelStream()
             .map(u -> searchResultTransformer.map(u, deriveScore(query, u)))
             .collect(toList());
 
@@ -214,8 +214,8 @@ public class UserEntryServiceImpl implements UserEntryService, UserDetailsServic
         val userDn = LdapNameBuilder.newInstance(ldapBase).add(getDn(username)).build();
         val existingGroups = getBasicUser(username).map(UserEntry::getGroupNames).orElse(emptySet());
         val newGroups = ofNullable(groups).orElse(emptySet());
-        val groupsToAdd = Sets.difference(newGroups, existingGroups);
-        val groupsToRemove = Sets.difference(existingGroups, newGroups);
+        val groupsToAdd = newGroups.stream().filter(e -> !existingGroups.contains(e)).collect(Collectors.toSet());
+        val groupsToRemove = existingGroups.stream().filter(e -> !newGroups.contains(e)).collect(Collectors.toSet());
         // Note: We must use serial streams here, due to a bug in Spring LDAP meaning the commonPool loads the
         // incorrect DirContext class.
         // See https://github.com/spring-projects/spring-ldap/issues/501

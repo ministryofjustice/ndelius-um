@@ -1,10 +1,7 @@
 package uk.co.bconline.ndelius.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -12,10 +9,10 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.SearchScope;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import tools.jackson.databind.ObjectMapper;
 import uk.co.bconline.ndelius.model.Dataset;
 import uk.co.bconline.ndelius.model.Group;
 import uk.co.bconline.ndelius.model.ReferenceData;
@@ -26,14 +23,14 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertNull;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,7 +45,6 @@ import static uk.co.bconline.ndelius.test.util.UserUtils.nextTestUsername;
 @SpringBootTest
 @DirtiesContext
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 public class UserControllerCreateTest {
     @Autowired
     private WebApplicationContext context;
@@ -56,9 +52,12 @@ public class UserControllerCreateTest {
     @Autowired
     private LdapTemplate ldapTemplate;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
             .webAppContextSetup(context)
@@ -73,7 +72,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(null)
                     .build())))
             .andExpect(status().isBadRequest())
@@ -86,7 +85,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username("test.user")
                     .build())))
             .andExpect(status().isBadRequest())
@@ -100,7 +99,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(username)
                     .email("test1@test.com")
                     .telephoneNumber("0123456789 012")
@@ -121,7 +120,7 @@ public class UserControllerCreateTest {
                     .roles(singletonList(Role.builder()
                         .name("UMBT001")
                         .build()))
-                    .groups(ImmutableMap.of(
+                    .groups(Map.of(
                         "Fileshare", singletonList(Group.builder().name("Group 1").type("Fileshare").build()),
                         "NDMIS-Reporting", singletonList(Group.builder().name("Group 2").type("NDMIS-Reporting").build())
                     ))
@@ -157,7 +156,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(username)
                     .build())))
             .andExpect(status().isCreated());
@@ -169,8 +168,8 @@ public class UserControllerCreateTest {
                 .is("UserPreferences"),
             (Attributes attrs) -> attrs.get("mostRecentlyViewedOffenders"));
 
-        assertThat(attributes, hasSize(1)); // Expect one user to be returned.
-        assertNull(attributes.get(0)); // Expect no user attributes.
+        assertThat(attributes).hasSize(1);
+        assertThat(attributes.getFirst()).isNull();
 
 //		Optional<UserPreferencesEntry> prefs = preferencesRepository.findOne(query()
 //				.searchScope(SearchScope.ONELEVEL)
@@ -185,7 +184,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
                     .staffCode("ZZZA001").build())))
             .andExpect(status().isBadRequest())
@@ -197,9 +196,9 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
-                    .groups(ImmutableMap.of(
+                    .groups(Map.of(
                         "Fileshare", singletonList(Group.builder().build())
                     )).build())))
             .andExpect(status().isBadRequest())
@@ -211,9 +210,9 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
-                    .groups(ImmutableMap.of(
+                    .groups(Map.of(
                         "Fileshare", singletonList(Group.builder().name("NO-TYPE!").build())
                     )).build())))
             .andExpect(status().isBadRequest())
@@ -225,7 +224,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
                     .roles(singletonList(Role.builder().build()))
                     .build())))
@@ -242,9 +241,9 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
-                    .groups(ImmutableMap.of(
+                    .groups(Map.of(
                         "Fileshare", singletonList(Group.builder().name("Group 2").type("Fileshare").build())
                     ))
                     .build())))
@@ -265,9 +264,9 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(objectMapper.writeValueAsString(aValidUser().toBuilder()
                     .username(username)
-                    .groups(ImmutableMap.of(
+                    .groups(Map.of(
                         "Fileshare", singletonList(Group.builder().name("Group 1").type("Fileshare").build())
                     ))
                     .build())))

@@ -11,14 +11,14 @@ import java.time.temporal.TemporalUnit;
 
 public class CustomMatchers {
     public static class WithinMatcherBuilder {
-        private Duration duration;
+        private final Duration duration;
 
         WithinMatcherBuilder(Duration duration) {
             this.duration = duration;
         }
 
         public Matcher<String> of(LocalDateTime expected) {
-            return new TypeSafeMatcher<String>() {
+            return new TypeSafeMatcher<>() {
                 @Override
                 public void describeTo(Description description) {
                     description.appendText(String.format("a value within <%s ms> of <%s>", duration.toMillis(), expected));

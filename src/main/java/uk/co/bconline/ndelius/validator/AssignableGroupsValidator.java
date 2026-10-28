@@ -15,7 +15,6 @@ import java.util.List;
 import static java.util.Collections.emptyMap;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
 import static uk.co.bconline.ndelius.util.AuthUtils.myInteractions;
 import static uk.co.bconline.ndelius.util.Constants.PUBLIC_ACCESS;
 
@@ -36,7 +35,7 @@ public class AssignableGroupsValidator implements ConstraintValidator<Assignable
         val newGroups = ofNullable(user.getGroups()).orElse(emptyMap()).values().stream()
             .flatMap(List::stream)
             .sorted(comparing(Group::getName))
-            .collect(toList());
+            .toList();
         val existingGroups = groupTransformer.map(userEntryService.getUserGroups(username));
 
         // If the groups haven't changed, then this is valid

@@ -117,8 +117,10 @@ public class User {
     private ChangeNote updated;
 
     @Size(max = 4000)
-    @Schema(description = "Only used for create/update, for adding change notes to a user. " +
-        "This will always be blank when fetching a user - to retrieve user change notes, see the /user/{username}/history endpoint.")
+    @Schema(description = """
+        Only used for create/update, for adding change notes to a user.
+        This will always be blank when fetching a user - to retrieve user change notes, see the /user/{username}/history endpoint.
+        """)
     private String changeNote;
 
     @JsonIgnore

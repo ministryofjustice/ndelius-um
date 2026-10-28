@@ -99,7 +99,7 @@ public class StaffEntity implements Serializable {
 
     @Builder.Default
     @OneToMany(mappedBy = "staff", fetch = EAGER)
-    private Set<StaffTeamEntity> teamLinks = new HashSet<>();
+    private final Set<StaffTeamEntity> teamLinks = new HashSet<>();
 
     public Set<TeamEntity> getTeams() {
         return ofNullable(teamLinks)
