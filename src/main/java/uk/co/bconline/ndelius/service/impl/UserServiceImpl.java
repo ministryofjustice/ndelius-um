@@ -126,9 +126,6 @@ public class UserServiceImpl implements UserService {
                 .collect(groupingByConcurrent(SearchResult::getUsername, reducing(searchResultTransformer::reduce)))
                 .values().stream().flatMap(Optionals::toStream);
 
-            // apply email attribute from LDAP to any results that were only matched in the Database
-            stream = stream.map(this::setEmailFromLdap);
-
             // apply conditional filters
             if (!includeInactiveUsers) {
                 stream = stream.filter(result -> result.getEndDate() == null || !result.getEndDate().isBefore(now()));
@@ -151,6 +148,9 @@ public class UserServiceImpl implements UserService {
                     .skip((long) (page - 1) * pageSize)
                     .limit(pageSize);
             }
+
+            // apply email attribute from LDAP to any visible results that were only matched in the Database
+            stream = stream.map(this::setEmailFromLdap);
 
             // collect and return
             return stream
