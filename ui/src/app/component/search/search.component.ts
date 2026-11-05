@@ -47,7 +47,6 @@ export class SearchComponent implements AfterViewInit {
   // state
   searching: boolean;
   hasMoreResults = true;
-  showEmailColumn = true;
   prevPages: User[] = [];
 
   constructor(public auth: AuthorisationService,
@@ -82,7 +81,6 @@ export class SearchComponent implements AfterViewInit {
       tap(() => this.searching = true),                                   // set searching flag (for loading indicator)
       switchMap(() => this.service.search(this.searchParams)),            // perform search
       tap(page => this.hasMoreResults = page.length !== 0),               // check if there are any more pages to load
-      tap(page => this.showEmailColumn = page.some(this.userHasEmail)),   // set email column displayed flag
       map(page => this.prevPages =                                        // append to any previous results
         this.searchParams.page === 1 ? page : [...this.prevPages, ...page]), // (except when loading the first page)
       tap(() => this.router.navigate(['/search'],                         // update query parameter in the url
@@ -93,10 +91,6 @@ export class SearchComponent implements AfterViewInit {
 
   teamDescriptions(teams: Team[]): string {
     return (teams || []).map(t => t.description).join('\n');
-  }
-
-  userHasEmail(user: User) {
-    return user.email != null && user.email.trim().length > 0;
   }
 
   exportSearchResultToCSV(): void {
