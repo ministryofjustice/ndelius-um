@@ -2,6 +2,7 @@ package uk.co.bconline.ndelius.config.data;
 
 import java.util.Collections;
 import java.util.Locale;
+
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.ldap.autoconfigure.LdapConnectionDetails;
 import org.springframework.boot.ldap.autoconfigure.LdapProperties;

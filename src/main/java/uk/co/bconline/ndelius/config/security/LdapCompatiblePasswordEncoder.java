@@ -1,6 +1,7 @@
 package uk.co.bconline.ndelius.config.security;
 
 import java.util.Map;
+
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.AbstractValidatingPasswordEncoder;
