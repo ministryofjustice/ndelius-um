@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static uk.co.bconline.ndelius.test.util.TokenUtils.CODE_VERIFIER;
 import static uk.co.bconline.ndelius.test.util.TokenUtils.token;
 
 @SpringBootTest
@@ -49,7 +50,7 @@ public class AuthorizationServerConfigTest {
     public void accessingASecureEndpointWithoutATokenIsForbidden() throws Exception {
         mvc.perform(get("/api/user/test.user"))
             .andExpect(status().isUnauthorized())
-            .andExpect(header().string("WWW-Authenticate", "Bearer"));
+            .andExpect(header().string("WWW-Authenticate", anyOf(is("Bearer"), startsWith("Bearer "))));
     }
 
     @Test
@@ -82,6 +83,7 @@ public class AuthorizationServerConfigTest {
                 .with(httpBasic("test.web.client", "secret"))
                 .param("code", authCode)
                 .param("grant_type", "authorization_code")
+                .param("code_verifier", CODE_VERIFIER)
                 .param("redirect_uri", "https://example.com/login-success"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("scope", containsString("UMBT001")))    // Granted role (business transaction)

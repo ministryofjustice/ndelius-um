@@ -21,6 +21,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static uk.co.bconline.ndelius.test.util.TokenUtils.CODE_CHALLENGE;
+import static uk.co.bconline.ndelius.test.util.TokenUtils.CODE_VERIFIER;
 import static uk.co.bconline.ndelius.test.util.TokenUtils.authCodeToken;
 import static uk.co.bconline.ndelius.test.util.TokenUtils.getAuthCode;
 
@@ -48,6 +50,8 @@ public class AuthorizationCodeAuthTest {
                 .with(httpBasic("INVALID", "INVALID"))
                 .queryParam("client_id", "test.web.client")
                 .queryParam("response_type", "code")
+                .queryParam("code_challenge", CODE_CHALLENGE)
+                .queryParam("code_challenge_method", "S256")
                 .queryParam("redirect_uri", "https://example.com/login-success"))
             .andExpect(status().isUnauthorized());
     }
@@ -58,6 +62,8 @@ public class AuthorizationCodeAuthTest {
                 .with(httpBasic("test.user", "secret"))
                 .queryParam("client_id", "test.web.client")
                 .queryParam("response_type", "code")
+                .queryParam("code_challenge", CODE_CHALLENGE)
+                .queryParam("code_challenge_method", "S256")
                 .queryParam("redirect_uri", "https://example.com/login-success"))
             .andExpect(status().isFound())
             .andExpect(header().string("Location", containsString("?code=")));
@@ -83,6 +89,7 @@ public class AuthorizationCodeAuthTest {
                     .with(httpBasic("test.web.client", "secret"))
                     .param("code", authCode)
                     .param("grant_type", "authorization_code")
+                    .param("code_verifier", CODE_VERIFIER)
                     .param("redirect_uri", "https://example.com/login-success")
             )
             .andExpect(status().isOk())
@@ -110,10 +117,25 @@ public class AuthorizationCodeAuthTest {
                 .with(httpBasic("test.web.client", "secret"))
                 .param("code", authCode)
                 .param("grant_type", "authorization_code")
+                .param("code_verifier", CODE_VERIFIER)
                 .param("redirect_uri", "https://example.com/login-success"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("token_type", is("Bearer")))
             .andExpect(jsonPath("access_token", notNullValue()));
+    }
+
+    @Test
+    public void authorizationCodeCannotBeSwappedWithWrongVerifier() throws Exception {
+        String authCode = getAuthCode(mvc, "test.user");
+
+        mvc.perform(post("/oauth/token")
+                .with(httpBasic("test.web.client", "secret"))
+                .param("code", authCode)
+                .param("grant_type", "authorization_code")
+                .param("code_verifier", "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG")
+                .param("redirect_uri", "https://example.com/login-success"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("error", is("invalid_grant")));
     }
 
     @Test
@@ -130,8 +152,10 @@ public class AuthorizationCodeAuthTest {
                 .with(httpBasic("test.user", "secret"))
                 .queryParam("client_id", "test.web.client")
                 .queryParam("redirect_uri", "/login-success")
+                .queryParam("code_challenge", CODE_CHALLENGE)
+                .queryParam("code_challenge_method", "S256")
                 .queryParam("response_type", "code"))
             .andExpect(status().isFound())
-            .andExpect(header().string("Location", startsWith("/login-success")));
+            .andExpect(header().string("Location", startsWith("/login-success?code=")));
     }
 }

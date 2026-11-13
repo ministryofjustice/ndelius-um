@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.co.bconline.ndelius.test.util.TokenUtils.CODE_VERIFIER;
 import static uk.co.bconline.ndelius.test.util.TokenUtils.getAuthCode;
 import static uk.co.bconline.ndelius.util.EncryptionUtils.encrypt;
 
@@ -48,6 +49,7 @@ public class RefreshTokenAuthTest {
                 .with(httpBasic("test.web.client", "secret"))
                 .param("code", getAuthCode(mvc, "test.user"))
                 .param("grant_type", "authorization_code")
+                .param("code_verifier", CODE_VERIFIER)
                 .param("redirect_uri", "https://example.com/login-success"))
             .andExpect(status().isOk())
             .andReturn()
