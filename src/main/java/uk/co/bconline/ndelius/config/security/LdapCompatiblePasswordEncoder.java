@@ -33,8 +33,10 @@ final class LdapCompatiblePasswordEncoder extends AbstractValidatingPasswordEnco
 
     private @NonNull String normalize(@NonNull String encodedPassword) {
         String normalized = LdapUtils.fixPassword(encodedPassword);
-        if (normalized.startsWith("{SHA}") || normalized.startsWith("{SSHA}")
-            || normalized.startsWith("{sha}") || normalized.startsWith("{ssha}")) {
+        if (normalized.startsWith("{SHA}")
+            || normalized.startsWith("{SSHA}")
+            || normalized.startsWith("{sha}")
+            || normalized.startsWith("{ssha}")) {
             return "{ldap}" + normalized;
         }
         return normalized;

@@ -25,9 +25,11 @@ final class LdapBeanFactory {
         if (connectionDetails.getBase() != null) source.setBase(connectionDetails.getBase());
         if (connectionDetails.getUrls() != null) source.setUrls(connectionDetails.getUrls());
         if (properties.getAnonymousReadOnly() != null) source.setAnonymousReadOnly(properties.getAnonymousReadOnly());
-        if (properties.getReferral() != null) source.setReferral(properties.getReferral().name().toLowerCase(Locale.ROOT));
+        if (properties.getReferral() != null) source.setReferral(
+            properties.getReferral().name().toLowerCase(Locale.ROOT));
         source.setBaseEnvironmentProperties(Collections.unmodifiableMap(properties.getBaseEnvironment()));
-        source.setPooled(Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false")));
+        source.setPooled(Boolean.parseBoolean(
+            properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false")));
         return source;
     }
 
