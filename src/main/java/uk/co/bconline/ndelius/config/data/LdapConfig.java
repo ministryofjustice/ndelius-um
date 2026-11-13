@@ -4,9 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
-import org.springframework.boot.autoconfigure.ldap.LdapConnectionDetails;
-import org.springframework.boot.autoconfigure.ldap.LdapProperties;
+import org.springframework.boot.ldap.autoconfigure.LdapConnectionDetails;
+import org.springframework.boot.ldap.autoconfigure.LdapProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -29,7 +28,7 @@ import uk.co.bconline.ndelius.util.ReflectionUtils;
 @Slf4j
 @Configuration
 @EnableLdapRepositories(basePackageClasses = UserEntryRepository.class)
-public class LdapConfig extends LdapAutoConfiguration {
+public class LdapConfig {
     private final Environment environment;
 
     @Autowired
@@ -39,21 +38,16 @@ public class LdapConfig extends LdapAutoConfiguration {
 
     @Bean
     @Primary
-    @Override
     public LdapContextSource ldapContextSource(LdapConnectionDetails connectionDetails, LdapProperties properties,
                                                ObjectProvider<DirContextAuthenticationStrategy> dirContextAuthenticationStrategy) {
-        val ctxSource = super.ldapContextSource(connectionDetails, properties, dirContextAuthenticationStrategy);
-        val pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
-        ctxSource.setPooled(pooled);
-        return ctxSource;
+        return LdapBeanFactory.contextSource(connectionDetails, properties, dirContextAuthenticationStrategy, connectionDetails.getUsername());
     }
 
     @Bean
     @Primary
-    @Override
     public LdapTemplate ldapTemplate(LdapProperties properties, ContextSource contextSource,
                                      ObjectDirectoryMapper objectDirectoryMapper) {
-        return super.ldapTemplate(properties, contextSource, objectDirectoryMapper);
+        return LdapBeanFactory.template(properties, contextSource, objectDirectoryMapper);
     }
 
     /*

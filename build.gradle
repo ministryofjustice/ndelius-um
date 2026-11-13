@@ -3,10 +3,10 @@ plugins {
     id 'java'
     id 'idea'
     id 'jacoco'
-    id 'org.springframework.boot'               version '3.5.10'
+    id 'org.springframework.boot'               version '4.1.2'
     id 'io.spring.dependency-management'        version '1.1.7'
     id 'com.github.node-gradle.node'            version '7.1.0'
-    id 'io.gatling.gradle'                      version '3.14.9'
+    id 'io.gatling.gradle'                      version '3.16.0'
     id 'com.gorylenko.gradle-git-properties'    version '2.5.4'
 }
 
@@ -48,7 +48,9 @@ tasks.named('test', Test).configure {
     jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
     finalizedBy jacocoTestReport
 }
-
+ext['jackson-2-bom.version']  = '2.22.4'
+ext['jackson-bom.version']  = '3.2.4'
+ext['logback.version']  = '1.6.3'
 // Project dependencies
 repositories { mavenCentral() }
 dependencies {
@@ -65,14 +67,14 @@ dependencies {
     implementation      'org.springframework.session:spring-session-data-redis'
     implementation      'com.unboundid:unboundid-ldapsdk'
     implementation      'org.signal:embedded-redis:0.9.1'
-    implementation      'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.15'
+    implementation      'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.0'
     implementation      'com.opencsv:opencsv:5.12.0'
     implementation      'io.github.resilience4j:resilience4j-bulkhead:2.3.0'
     implementation      'io.github.resilience4j:resilience4j-spring-boot2:2.3.0'
     compileOnly         'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    developmentOnly     'org.springframework.boot:spring-boot-devtools'
+//    developmentOnly     'org.springframework.boot:spring-boot-devtools'
     runtimeOnly         'com.h2database:h2'
     runtimeOnly         'com.oracle.database.jdbc:ojdbc11'
     testImplementation  'org.junit.vintage:junit-vintage-engine'
