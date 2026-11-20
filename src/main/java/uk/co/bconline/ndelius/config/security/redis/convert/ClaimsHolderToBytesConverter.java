@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.config.security.redis.convert;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
@@ -15,7 +16,7 @@ public class ClaimsHolderToBytesConverter implements Converter<OAuth2Authorizati
     }
 
     @Override
-    public byte[] convert(OAuth2AuthorizationGrantAuthorization.ClaimsHolder value) {
+    public byte[] convert(OAuth2AuthorizationGrantAuthorization.@NonNull ClaimsHolder value) {
         return this.serializer.serialize(value);
     }
 }

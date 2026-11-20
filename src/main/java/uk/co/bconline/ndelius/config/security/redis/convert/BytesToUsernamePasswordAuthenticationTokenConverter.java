@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.config.security.redis.convert;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
@@ -15,7 +16,7 @@ public class BytesToUsernamePasswordAuthenticationTokenConverter implements Conv
     }
 
     @Override
-    public UsernamePasswordAuthenticationToken convert(byte[] value) {
+    public UsernamePasswordAuthenticationToken convert(byte @NonNull [] value) {
         return this.serializer.deserialize(value);
     }
 }
