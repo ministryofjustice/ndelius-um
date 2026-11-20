@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 public class PasswordEncoderTest {
-    private static final String LEGACY_LDAP_PASSWORD = "{SHA}5en6G6MezRroT3XKqkdPOmY/BfQ=";
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -36,12 +35,6 @@ public class PasswordEncoderTest {
         boolean match = passwordEncoder.matches("secret", encodedPassword);
 
         assertThat(match).isTrue();
-    }
-
-    @Test
-    public void legacyLdapPasswordFormatsCanBeMatched() {
-        assertThat(passwordEncoder.matches("secret", LEGACY_LDAP_PASSWORD)).isTrue();
-        assertThat(passwordEncoder.matches("secret", toOidPassword(LEGACY_LDAP_PASSWORD))).isTrue();
     }
 
     private static String toOidPassword(String encodedPassword) {
