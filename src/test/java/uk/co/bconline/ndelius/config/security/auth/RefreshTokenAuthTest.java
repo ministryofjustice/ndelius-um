@@ -1,13 +1,11 @@
 package uk.co.bconline.ndelius.config.security.auth;
 
 import com.jayway.jsonpath.JsonPath;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -21,19 +19,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.co.bconline.ndelius.test.util.TokenUtils.CODE_VERIFIER;
 import static uk.co.bconline.ndelius.test.util.TokenUtils.getAuthCode;
 import static uk.co.bconline.ndelius.util.EncryptionUtils.encrypt;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 public class RefreshTokenAuthTest {
     @Autowired
     private WebApplicationContext context;
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
             .webAppContextSetup(context)
@@ -48,6 +46,7 @@ public class RefreshTokenAuthTest {
                 .with(httpBasic("test.web.client", "secret"))
                 .param("code", getAuthCode(mvc, "test.user"))
                 .param("grant_type", "authorization_code")
+                .param("code_verifier", CODE_VERIFIER)
                 .param("redirect_uri", "https://example.com/login-success"))
             .andExpect(status().isOk())
             .andReturn()

@@ -1,16 +1,14 @@
 package uk.co.bconline.ndelius.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -32,9 +30,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,7 +44,6 @@ import static uk.co.bconline.ndelius.test.util.UserUtils.*;
 @SpringBootTest
 @DirtiesContext
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 public class UserControllerUpdateTest {
     @Autowired
     private WebApplicationContext context;
@@ -60,7 +56,7 @@ public class UserControllerUpdateTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
             .webAppContextSetup(context)
@@ -99,7 +95,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user)))
             .andExpect(status().isCreated())
             .andExpect(redirectedUrl("/user/" + username));
 
@@ -109,7 +105,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user.toBuilder()
                     .email("test2@test.com")
                     .telephoneNumber("9999")
                     .forenames("A B C")
@@ -167,7 +163,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(username)
                     .build())))
             .andExpect(status().isCreated());
@@ -176,7 +172,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(username + "-renamed")
                     .build())))
             .andExpect(status().isNoContent());
@@ -190,7 +186,7 @@ public class UserControllerUpdateTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.username", is(username + "-renamed")));
 
-        assertEquals(preDomainEventCount + 1, domainEventRepository.findAll().size());
+        assertThat(domainEventRepository.findAll()).hasSize(preDomainEventCount + 1);
     }
 
     @Test
@@ -201,7 +197,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(username)
                     .build())))
             .andExpect(status().isCreated());
@@ -209,7 +205,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username("test.user")
                     .build())))
             .andExpect(status().isBadRequest());
@@ -230,14 +226,14 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user)))
             .andExpect(status().isCreated());
 
         // When
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user.toBuilder()
                     .username(username + "-renamed")
                     .build())))
             .andExpect(status().isNoContent());
@@ -276,19 +272,19 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user1)))
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user1)))
             .andExpect(status().isCreated());
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user2)))
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user2)))
             .andExpect(status().isCreated());
 
         // When I update user 2's staff code to that of user 1
         mvc.perform(post("/api/user/" + username2)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user2.toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user2.toBuilder()
                     .staffCode("N01B501")
                     .staffGrade(ReferenceData.builder().code("GRADE1").description("Grade 1").build())
                     .teams(singletonList(Team.builder().code("N01TST").build()))
@@ -318,7 +314,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(username)
                     .email(username + "@test.test")
                     .build())))
@@ -328,7 +324,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(username + "-renamed")
                     .email(username + "@test.test")
                     .build())))
@@ -353,7 +349,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user/test.user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username("test.user-renamed")
                     .build())))
             .andExpect(status().isNoContent());
@@ -372,7 +368,7 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user/test.user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder().username("test.user").build())))
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder().username("test.user").build())))
 
             // Then I should receive an error message
             .andExpect(status().isBadRequest())
@@ -393,22 +389,22 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user)))
             .andExpect(status().isCreated());
 
         // When I update the staff code to N01A602
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user.toBuilder()
                     .staffCode("N01A602")
                     .build())))
             .andExpect(status().isNoContent());
 
         // Then the old staff record (N01A601) should have an end date of today
         Optional<StaffEntity> oldStaff = staffRepository.findByCode("N01A601");
-        assertTrue(oldStaff.isPresent());
-        assertEquals(oldStaff.get().getEndDate(), LocalDate.now().minus(1, DAYS));
+        assertThat(oldStaff).isPresent();
+        assertThat(oldStaff.orElseThrow().getEndDate()).isEqualTo(LocalDate.now().minus(1, DAYS));
     }
 
     @Test
@@ -425,14 +421,14 @@ public class UserControllerUpdateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user)))
             .andExpect(status().isCreated());
 
         // When I update the home area to N02
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user.toBuilder()
                     .homeArea(Dataset.builder().code("N02").build())
                     .build())))
             .andExpect(status().isNoContent());
@@ -446,8 +442,8 @@ public class UserControllerUpdateTest {
 
         // And the staff record should be end-dated
         Optional<StaffEntity> staff = staffRepository.findByCode("N01A603");
-        assertTrue(staff.isPresent());
-        assertEquals(staff.get().getEndDate(), LocalDate.now().minus(1, DAYS));
+        assertThat(staff).isPresent();
+        assertThat(staff.orElseThrow().getEndDate()).isEqualTo(LocalDate.now().minus(1, DAYS));
     }
 
     // Verify fix for defect DST-7302 - 500 Error when removing a user's phone number
@@ -562,8 +558,8 @@ public class UserControllerUpdateTest {
 
         // And the start and end date on the staff record are updated to yesterday's date
         StaffEntity previousStaff = staffRepository.findByCode("N01A208").orElseThrow();
-        assertEquals(LocalDate.now().minusDays(1), previousStaff.getEndDate());
-        assertEquals(LocalDate.now().minusDays(1), previousStaff.getStartDate());
+        assertThat(previousStaff.getEndDate()).isEqualTo(LocalDate.now().minusDays(1));
+        assertThat(previousStaff.getStartDate()).isEqualTo(LocalDate.now().minusDays(1));
     }
 
 
@@ -585,8 +581,8 @@ public class UserControllerUpdateTest {
 
         // And the start and end date on the staff record are updated to yesterday's date
         StaffEntity previousStaff = staffRepository.findByCode("N01A209").orElseThrow();
-        assertEquals(LocalDate.now().minusDays(1), previousStaff.getEndDate());
-        assertEquals(LocalDate.now().minusDays(1), previousStaff.getStartDate());
+        assertThat(previousStaff.getEndDate()).isEqualTo(LocalDate.now().minusDays(1));
+        assertThat(previousStaff.getStartDate()).isEqualTo(LocalDate.now().minusDays(1));
     }
 
     @Test
@@ -598,9 +594,9 @@ public class UserControllerUpdateTest {
                 .username(nextTestUsername())
                 .startDate(LocalDate.now())
                 .build());
-        assertEquals(preDomainEventCount, domainEventRepository.findAll().size());
+        assertThat(domainEventRepository.findAll()).hasSize(preDomainEventCount);
         updateUser(mvc, noCodeUser.toBuilder().surname("Update").build()).andExpect(status().isNoContent());
-        assertEquals(preDomainEventCount, domainEventRepository.findAll().size());
+        assertThat(domainEventRepository.findAll()).hasSize(preDomainEventCount);
 
         // Given a user with staff code
         User codeUser = createUser(mvc,
@@ -611,12 +607,12 @@ public class UserControllerUpdateTest {
                 .staffGrade(ReferenceData.builder().code("GRADE 1").description("Grade 1").build())
                 .build());
 
-        assertEquals(preDomainEventCount + 1, domainEventRepository.findAll().size());
+        assertThat(domainEventRepository.findAll()).hasSize(preDomainEventCount + 1);
         // Updating the user on email should NOT update the count
         updateUser(mvc, codeUser.toBuilder().email("TEST").build()).andExpect(status().isNoContent());
-        assertEquals(preDomainEventCount + 1, domainEventRepository.findAll().size());
+        assertThat(domainEventRepository.findAll()).hasSize(preDomainEventCount + 1);
         // Updating the user on surname should also update the domainEvent
         updateUser(mvc, codeUser.toBuilder().surname("AnotherSurname").build()).andExpect(status().isNoContent());
-        assertEquals(preDomainEventCount + 2, domainEventRepository.findAll().size());
+        assertThat(domainEventRepository.findAll()).hasSize(preDomainEventCount + 2);
     }
 }

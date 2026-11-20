@@ -32,10 +32,16 @@ public class ResourceServerConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new LdapShaPasswordEncoder() {
+        LdapShaPasswordEncoder delegate = new LdapShaPasswordEncoder();
+        return new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence rawPassword) {
+                return delegate.encode(rawPassword);
+            }
+
             @Override
             public boolean matches(CharSequence rawPassword, String encodedPassword) {
-                return encodedPassword != null && super.matches(rawPassword, LdapUtils.fixPassword(encodedPassword));
+                return encodedPassword != null && delegate.matches(rawPassword, LdapUtils.fixPassword(encodedPassword));
             }
         };
     }

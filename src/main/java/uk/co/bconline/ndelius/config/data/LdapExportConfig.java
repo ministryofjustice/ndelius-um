@@ -1,13 +1,10 @@
 package uk.co.bconline.ndelius.config.data;
 
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
-import org.springframework.boot.autoconfigure.ldap.LdapConnectionDetails;
-import org.springframework.boot.autoconfigure.ldap.LdapProperties;
+import org.springframework.boot.ldap.autoconfigure.LdapConnectionDetails;
+import org.springframework.boot.ldap.autoconfigure.LdapProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.core.ContextSource;
@@ -16,29 +13,21 @@ import org.springframework.ldap.core.support.DirContextAuthenticationStrategy;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.odm.core.ObjectDirectoryMapper;
 
-@Slf4j
 @Configuration
-public class LdapExportConfig extends LdapAutoConfiguration {
+public class LdapExportConfig {
     @Value("${spring.ldap.export.username:${spring.ldap.username}}")
     private String exportUser;
 
-    @Override
     @Bean("exportLdapContextSource")
     public LdapContextSource ldapContextSource(LdapConnectionDetails connectionDetails, LdapProperties properties,
                                                ObjectProvider<DirContextAuthenticationStrategy> dirContextAuthenticationStrategy) {
-        properties.setUsername(exportUser);
-        val ctxSource = super.ldapContextSource(connectionDetails, properties, dirContextAuthenticationStrategy);
-        val pooled = Boolean.parseBoolean(properties.getBaseEnvironment().getOrDefault("com.sun.jndi.ldap.connect.pool", "false"));
-        ctxSource.setPooled(pooled);
-        return ctxSource;
+        return LdapBeanFactory.contextSource(connectionDetails, properties, dirContextAuthenticationStrategy, exportUser);
     }
 
-    @Override
     @Bean("exportLdapTemplate")
     public LdapTemplate ldapTemplate(LdapProperties properties,
                                      @Qualifier("exportLdapContextSource") ContextSource contextSource,
                                      ObjectDirectoryMapper objectDirectoryMapper) {
-        properties.setUsername(exportUser);
-        return super.ldapTemplate(properties, contextSource, objectDirectoryMapper);
+        return LdapBeanFactory.template(properties, contextSource, objectDirectoryMapper);
     }
 }

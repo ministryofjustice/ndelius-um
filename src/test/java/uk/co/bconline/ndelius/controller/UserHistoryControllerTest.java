@@ -1,15 +1,13 @@
 package uk.co.bconline.ndelius.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import tools.jackson.databind.json.JsonMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -33,7 +31,6 @@ import static uk.co.bconline.ndelius.test.util.UserUtils.nextTestUsername;
 @SpringBootTest
 @DirtiesContext
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 public class UserHistoryControllerTest {
 
     @Autowired
@@ -41,7 +38,7 @@ public class UserHistoryControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
             .webAppContextSetup(context)
@@ -67,7 +64,7 @@ public class UserHistoryControllerTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(username).build())))
             .andExpect(status().isCreated());
 
@@ -99,14 +96,14 @@ public class UserHistoryControllerTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user)))
             .andExpect(status().isCreated());
 
         // When they are updated with a change note
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user.toBuilder()
                     .changeNote("Test note 123").build())))
             .andExpect(status().isNoContent());
 
@@ -136,7 +133,7 @@ public class UserHistoryControllerTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
                     .changeNote(String.join("*", new String[4001])).build())))
             .andExpect(status().isBadRequest());

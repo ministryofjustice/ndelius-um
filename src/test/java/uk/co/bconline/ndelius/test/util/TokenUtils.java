@@ -15,6 +15,9 @@ import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 import static uk.co.bconline.ndelius.util.EncryptionUtils.encrypt;
 
 public class TokenUtils {
+    public static final String CODE_VERIFIER = "testVerifierCodeString";
+    public static final String CODE_CHALLENGE = "iKK4z1cfrFIYprR_zWxPnYrLiqqM6ANEckPFmCrbwTI";
+
     public static String token(MockMvc mvc) throws Exception {
         return token(mvc, "test.user");
     }
@@ -33,6 +36,8 @@ public class TokenUtils {
                 .queryParam("client_id", "test.web.client")
                 .queryParam("response_type", "code")
                 .queryParam("redirect_uri", "https://example.com/login-success")
+                .queryParam("code_challenge", CODE_CHALLENGE)
+                .queryParam("code_challenge_method", "S256")
                 .queryParam("scope", scopes))
             .andExpect(status().isFound())
             .andExpect(header().string("Location", containsString("?code=")))
@@ -50,6 +55,7 @@ public class TokenUtils {
                 .with(httpBasic("test.web.client", "secret"))
                 .param("code", authCode)
                 .param("grant_type", "authorization_code")
+                .param("code_verifier", CODE_VERIFIER)
                 .param("redirect_uri", "https://example.com/login-success"))
             .andExpect(status().isOk())
             .andReturn()
