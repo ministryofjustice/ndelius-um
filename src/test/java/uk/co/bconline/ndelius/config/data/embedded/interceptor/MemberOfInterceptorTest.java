@@ -24,10 +24,10 @@ public class MemberOfInterceptorTest {
         Optional<UserEntry> user = userEntryRepository.findByUsername("test.user");
         assertThat(user).isPresent();
         assertThat(user.orElseThrow().getGroupNames())
-                .hasSize(3)
-                .contains(
-            LdapUtils.newLdapName("cn=Group 1,ou=NDMIS-Reporting,ou=Groups,dc=bcl,dc=local"),
-            LdapUtils.newLdapName("cn=Group 2,ou=NDMIS-Reporting,ou=Groups,dc=bcl,dc=local"),
-                        LdapUtils.newLdapName("cn=Group 1,ou=Fileshare,ou=Groups,dc=bcl,dc=local"));
+            .hasSize(3)
+            .contains(
+                LdapUtils.newLdapName("cn=Group 1,ou=NDMIS-Reporting,ou=Groups,dc=bcl,dc=local"),
+                LdapUtils.newLdapName("cn=Group 2,ou=NDMIS-Reporting,ou=Groups,dc=bcl,dc=local"),
+                LdapUtils.newLdapName("cn=Group 1,ou=Fileshare,ou=Groups,dc=bcl,dc=local"));
     }
 }

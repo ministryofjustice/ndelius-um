@@ -27,20 +27,20 @@ public class UserEntryServiceImplTest {
         Set<String> roles = roleService.getUserInteractions("test.user");
 
         assertThat(roles)
-                .isNotEmpty()
-                .contains("UMBI001")
-                .doesNotContain("UMBI999");
+            .isNotEmpty()
+            .contains("UMBI001")
+            .doesNotContain("UMBI999");
     }
 
     @Test
     public void retrieveUserEntry() {
         assertThat(service.getUser("test.user"))
-                .isPresent()
-                .get()
-                .satisfies(entry -> {
-                    assertThat(entry.getForenames()).isEqualTo("Test");
-                    assertThat(entry.getSurname()).isEqualTo("User");
-                });
+            .isPresent()
+            .get()
+            .satisfies(entry -> {
+                assertThat(entry.getForenames()).isEqualTo("Test");
+                assertThat(entry.getSurname()).isEqualTo("User");
+            });
     }
 
     @Test
@@ -48,8 +48,8 @@ public class UserEntryServiceImplTest {
         List<SearchResult> results = service.search("test.user", false, Set.of("N01"));
 
         assertThat(results)
-                .isNotEmpty()
-                .anySatisfy(user -> assertThat(user.getUsername()).isEqualTo("test.user"));
+            .isNotEmpty()
+            .anySatisfy(user -> assertThat(user.getUsername()).isEqualTo("test.user"));
     }
 
     @Test
@@ -57,8 +57,8 @@ public class UserEntryServiceImplTest {
         List<SearchResult> results = service.search("test.user.inactive", true, Collections.emptySet());
 
         assertThat(results)
-                .isNotEmpty()
-                .anySatisfy(user -> assertThat(user.getUsername()).isEqualTo("test.user.inactive"));
+            .isNotEmpty()
+            .anySatisfy(user -> assertThat(user.getUsername()).isEqualTo("test.user.inactive"));
     }
 
     @Test
@@ -66,8 +66,8 @@ public class UserEntryServiceImplTest {
         List<SearchResult> results = service.search("test.user@test.com", false, Collections.emptySet());
 
         assertThat(results)
-                .isNotEmpty()
-                .anySatisfy(user -> assertThat(user.getEmail()).isEqualTo("test.user@test.com"));
+            .isNotEmpty()
+            .anySatisfy(user -> assertThat(user.getEmail()).isEqualTo("test.user@test.com"));
     }
 
     @Test
