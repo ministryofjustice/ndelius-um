@@ -15,8 +15,8 @@ import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 import static uk.co.bconline.ndelius.util.EncryptionUtils.encrypt;
 
 public class TokenUtils {
-    public static final String CODE_VERIFIER = "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
-    public static final String CODE_CHALLENGE = "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM";
+    public static final String CODE_VERIFIER = "testVerifierCodeString";
+    public static final String CODE_CHALLENGE = "iKK4z1cfrFIYprR_zWxPnYrLiqqM6ANEckPFmCrbwTI";
 
     public static String token(MockMvc mvc) throws Exception {
         return token(mvc, "test.user");
