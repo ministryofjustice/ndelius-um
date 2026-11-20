@@ -1,13 +1,12 @@
 package uk.co.bconline.ndelius.config.security.redis.service;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -24,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static uk.co.bconline.ndelius.test.util.TokenUtils.*;
 
 @SpringBootTest
+@DirtiesContext
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 public class RedisTtlIntegrationTest {
     @Autowired
     private WebApplicationContext context;
@@ -38,7 +37,7 @@ public class RedisTtlIntegrationTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
             .webAppContextSetup(context)

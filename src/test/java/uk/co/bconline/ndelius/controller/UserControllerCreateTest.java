@@ -1,5 +1,7 @@
 package uk.co.bconline.ndelius.controller;
 
+import tools.jackson.databind.json.JsonMapper;
+import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +69,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(null)
                     .build())))
             .andExpect(status().isBadRequest())
@@ -80,7 +82,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username("test.user")
                     .build())))
             .andExpect(status().isBadRequest())
@@ -94,7 +96,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(username)
                     .email("test1@test.com")
                     .telephoneNumber("0123456789 012")
@@ -151,7 +153,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(username)
                     .build())))
             .andExpect(status().isCreated());
@@ -179,7 +181,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
                     .staffCode("ZZZA001").build())))
             .andExpect(status().isBadRequest())
@@ -191,7 +193,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
                     .groups(ImmutableMap.of(
                         "Fileshare", singletonList(Group.builder().build())
@@ -205,7 +207,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
                     .groups(ImmutableMap.of(
                         "Fileshare", singletonList(Group.builder().name("NO-TYPE!").build())
@@ -219,7 +221,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
                     .roles(singletonList(Role.builder().build()))
                     .build())))
@@ -236,7 +238,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
                     .groups(ImmutableMap.of(
                         "Fileshare", singletonList(Group.builder().name("Group 2").type("Fileshare").build())
@@ -259,7 +261,7 @@ public class UserControllerCreateTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(username)
                     .groups(ImmutableMap.of(
                         "Fileshare", singletonList(Group.builder().name("Group 1").type("Fileshare").build())

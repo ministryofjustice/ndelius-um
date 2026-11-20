@@ -1,5 +1,6 @@
 package uk.co.bconline.ndelius.controller;
 
+import tools.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ public class UserHistoryControllerTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(username).build())))
             .andExpect(status().isCreated());
 
@@ -95,14 +96,14 @@ public class UserHistoryControllerTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user)))
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user)))
             .andExpect(status().isCreated());
 
         // When they are updated with a change note
         mvc.perform(post("/api/user/" + username)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(user.toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(user.toBuilder()
                     .changeNote("Test note 123").build())))
             .andExpect(status().isNoContent());
 
@@ -132,7 +133,7 @@ public class UserHistoryControllerTest {
         mvc.perform(post("/api/user")
                 .header("Authorization", "Bearer " + token(mvc))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().findAndRegisterModules().writeValueAsString(aValidUser().toBuilder()
+                .content(JsonMapper.builder().findAndAddModules().build().writeValueAsString(aValidUser().toBuilder()
                     .username(nextTestUsername())
                     .changeNote(String.join("*", new String[4001])).build())))
             .andExpect(status().isBadRequest());
