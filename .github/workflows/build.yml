@@ -52,7 +52,7 @@ jobs:
           docker push "$ghcr_image_name:latest"
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@e7f100cf4c008499ea8adda475de1042d6975c7b # v6.2.0
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           role-to-assume: arn:aws:iam::326912278139:role/modernisation-platform-oidc-cicd
           role-session-name: delius-user-management-build-${{ github.run_number }}
