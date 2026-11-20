@@ -3,6 +3,7 @@ package uk.co.bconline.ndelius.config.security;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -21,7 +22,7 @@ public class PasswordEncoderTest {
 
     @Test
     public void oidPasswordFormatCanBeMatched() {
-        String oidPassword = toOidPassword(new LdapCompatiblePasswordEncoder().encode("secret"));
+        String oidPassword = toOidPassword(new LdapShaPasswordEncoder().encode("secret"));
 
         boolean match = passwordEncoder.matches("secret", oidPassword);
 
@@ -30,7 +31,7 @@ public class PasswordEncoderTest {
 
     @Test
     public void normalPasswordFormatCanBeMatched() {
-        String encodedPassword = new LdapCompatiblePasswordEncoder().encode("secret");
+        String encodedPassword = new LdapShaPasswordEncoder().encode("secret");
 
         boolean match = passwordEncoder.matches("secret", encodedPassword);
 

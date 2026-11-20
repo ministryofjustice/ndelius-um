@@ -8,8 +8,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import uk.co.bconline.ndelius.util.LdapUtils;
 
 @Configuration
 public class ResourceServerConfig {
@@ -30,6 +32,17 @@ public class ResourceServerConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new LdapCompatiblePasswordEncoder();
+        LdapShaPasswordEncoder delegate = new LdapShaPasswordEncoder();
+        return new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence rawPassword) {
+                return delegate.encode(rawPassword);
+            }
+
+            @Override
+            public boolean matches(CharSequence rawPassword, String encodedPassword) {
+                return encodedPassword != null && delegate.matches(rawPassword, LdapUtils.fixPassword(encodedPassword));
+            }
+        };
     }
 }
