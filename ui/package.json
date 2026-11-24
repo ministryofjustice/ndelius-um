@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@aarongoldenthal/pa11y-ci": "^4.6.2",
-    "@angular-devkit/build-angular": "^20.3.15",
+    "@angular-devkit/build-angular": "^22.3.0",
     "@angular-eslint/builder": "^19.4.0",
     "@angular-eslint/eslint-plugin": "^19.4.0",
     "@angular-eslint/eslint-plugin-template": "^19.4.0",
